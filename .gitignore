@@ -1,0 +1,7 @@
+# distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# byte-compiled / optimized / DLL files
+__pycache__/
