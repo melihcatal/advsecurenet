@@ -1,5 +1,7 @@
 # Does Adversarial Training Improve Adversarial Stability?
 
+## AdvSecureNet - Adversarial Secure Network
+
 ## Student: Melih Catal
 
 ## Supervisor: [Prof. Dr. Manuel Günther](https://www.ifi.uzh.ch/en/aiml/people/guenther.html)

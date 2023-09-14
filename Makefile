@@ -10,5 +10,7 @@ package: remove-dist
 install-cli-dev: package
 	pip install -e .
 
+# test if command line tool is installed 
+#TODO: add more comprehensive tests here
 test-cli-dev: 
 	advsecurenet --help

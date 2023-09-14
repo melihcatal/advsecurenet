@@ -5,3 +5,13 @@ dist/
 
 # byte-compiled / optimized / DLL files
 __pycache__/
+
+# log files
+*.log
+
+# experiment outputs
+outputs/
+
+# data
+data/
+datasets/

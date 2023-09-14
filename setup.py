@@ -8,8 +8,11 @@ setup(
     author_email="melih.catal@uzh.ch",
     url="https://github.com/melihcatal/masters_thesis",
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         "click",
+        "torch",
+        "torchvision",
     ],
     entry_points={
         'console_scripts': [
