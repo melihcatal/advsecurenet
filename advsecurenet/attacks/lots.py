@@ -1,92 +1,185 @@
+from typing import Optional, Tuple, Union
 import torch
+from tqdm.auto import trange
+from torchvision.models.feature_extraction import create_feature_extractor
 
-def lots_iterative(network, data, target, target_class=None, epsilon=None, stepwidth=1./255., iterations=1):
-  """Computes LOTS adversarial for the given input (which should be a single image)
-  and returns the adversarial image and whether it was classified as the intended target_class or has reached the desired epsilon.
-
-  :param network: The network that extracts the logits and the deep features
-  :param data: The input image
-  :param target: The target that should be reached (this is in deep feature dimensions)
-  :param target_class: The target class as int. If given, LOTS will stop as soon as the target class is reached.
-  :param epsilon: The distance between target and deep feature representation of the adversarial. If given, LOTS will stop when this distance is reached.
-  :param stepwidth: The size of one step of LOTS. Can be small for iterative approach, and large for single step.
-  :param iterations: The maximum number of iterations that LOTS should run.
-
-  :return adversarial: The adversarial image that has been created
-  :return reached_target: Boolean indicating whether the target has been reached.
-  """
-  # add required batch dimension
-  target = torch.unsqueeze(target, 0)
-  data = data.unsqueeze(0)
-  # iterate for the given number of iterations
-  for iteration in range(iterations):
-    data.requires_grad_(True)
-    network.zero_grad()
-
-    # forward image and extract the given layer and the logits
-    logits, features = network.forward(data)
-
-    with torch.no_grad():
-      # check if already correctly classified
-      if target_class is not None:
-        if torch.max(logits, dim=-1)[1] == target_class:
-          return data.squeeze(0), True
-
-      # check if we are close enough to our target
-      # this is not used in our small example but only given as possible success criterion
-      if epsilon is not None:
-        if torch.norm(features-target) < epsilon:
-          return data.squeeze(0), True
-
-    # compute MSE loss between output and target
-    loss = torch.nn.functional.mse_loss(features, target, reduction="sum")
-
-    # get gradient
-    loss.backward()
-    gradient = data.grad.detach()
-    with torch.no_grad():
-      # normalize gradient to have its max abs value at 1
-      gradient_step = gradient * (stepwidth / torch.max(torch.abs(gradient)))
-
-      # reduce loss by moving toward negative gradient, and assure to be in image dimensions
-      data = torch.clamp(data - gradient_step, 0., 1.)
-
-  # target has not been reached in the given number of iterations
-  return data.squeeze(0), False
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.shared.types import LotsAttackConfig, LotsAttackMode
+from advsecurenet.shared.colors import red, yellow, reset
+from advsecurenet.utils import get_device
+from advsecurenet.models.base_model import BaseModel
 
 
-def lots_single(network, data, target, stepwidth):
-  """Computes single-step LOTS adversarial for the given input (which should be a batch of images)
-  and returns the adversarial images.
+class LOTS(AdversarialAttack):
+    """
+    LOTS attack
 
-  :param network: The network that extracts the logits and the deep features
-  :param data: The input images as a full batch
-  :param target: The targets that should be reached (this is in deep feature dimensions), a full batch of targets is required
-  :param stepwidth: The size of the step of LOTS.
-
-  :return adversarial: The adversarial image that has been created
-  """
-  data.requires_grad_(True)
-  network.zero_grad()
-
-  # forward image and extract the given layer and the logits
-  logits, features = network.forward(data)
-
-  # compute MSE loss between output and target
-  loss = torch.nn.functional.mse_loss(features, target, reduction="mean")
-
-  # get gradient
-  loss.backward()
-  gradient = data.grad.detach()
-  with torch.no_grad():
-    # normalize gradient to have its max abs value at 1
-    N = gradient.size(0)
-    norm = torch.max(torch.abs(gradient.view(N, -1)), dim=-1)[0].reshape((N,1,1,1))
-    gradient_step = gradient * (stepwidth / norm)
-
-    # reduce loss by moving toward negative gradient, and assure to be in image dimensions
-    data = torch.clamp(data - gradient_step, 0., 1.)
-
-  return data
+    Args:
+        deep_feature_layer (str): The name of the layer to use for the attack.
+        mode (LotsAttackMode): The mode to use for the attack. Defaults to LotsAttackMode.ITERATIVE.
+        epsilon (float): The epsilon value to use for the attack. Defaults to 0.1.
+        learning_rate (float): The learning rate to use for the attack. Defaults to 1./255.
+        max_iterations (int): The maximum number of iterations to use for the attack. Defaults to 1000.
+        verbose (bool): Whether to print progress of the attack. Defaults to True.
+        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
 
 
+    References:
+           [1] Rozsa, A., Güunther, M., and Boult, T. E. (2017). LOTS about attacking deep features. In International Joint Conference on Biometrics (IJCB), pages 168{176. IEEE. https://arxiv.org/abs/1611.06179
+
+    """
+
+    def __init__(self, config: LotsAttackConfig) -> None:
+
+        self.validate_config(config)
+
+        self.deep_feature_layer: str = config.deep_feature_layer
+        self.mode: LotsAttackMode = config.mode
+        self.epsilon: float = config.epsilon
+        self.learning_rate: float = config.learning_rate
+        self.max_iterations: int = config.max_iterations
+        self.verbose: bool = config.verbose
+        self.device: str = config.device.value if config.device is not None else get_device()
+
+    @staticmethod
+    def validate_config(config: LotsAttackConfig) -> None:
+        """
+        Validate the provided configuration settings.
+
+        :param config: An instance of LotsAttackConfig containing the configuration settings.
+        :raises ValueError: If any of the configuration settings are invalid.
+        """
+        # Validate config type
+        if not isinstance(config, LotsAttackConfig):
+            raise ValueError(
+                "Invalid config type provided. Expected LotsAttackConfig. But got: " + str(type(config)))
+
+        # Validate mode type
+        if not isinstance(config.mode, LotsAttackMode):
+            allowed_modes = ", ".join([mode.value for mode in LotsAttackMode])
+            raise ValueError(
+                f"Invalid mode type provided. Allowed modes are: {allowed_modes}")
+
+        # Validate epsilon, learning rate, and max_iterations
+        for attribute, name in [("epsilon", "Epsilon"),
+                                ("learning_rate", "Learning rate"),
+                                ("max_iterations", "Max iterations")]:
+            value = getattr(config, attribute)
+            if value is not None and value < 0:
+                raise ValueError(
+                    f"Invalid {name.lower()} value provided. {name} must be greater than 0.")
+
+        # Validate deep_feature_layer
+        if config.deep_feature_layer is None:
+            raise ValueError(
+                "Deep feature layer that you want to use for the attack must be provided.")
+
+    def attack(self, model: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: Optional[Union[torch.Tensor, int]] = None) -> Tuple[torch.Tensor, bool]:
+        """
+        Generates adversarial examples using the LOTS attack. Based on the provided mode, either the iterative or single attack will be used. If the iterative attack is used, the attack will be run for the specified number of iterations. If the single attack is used, the attack will be run for a single iteration.
+
+        Args:
+            model (BaseModel): The model to attack.
+            data (torch.tensor): The original input tensor. Expected shape is (batch_size, channels, height, width).
+            target (torch.tensor): The target tensor. Expected shape is (batch_size, channels, height, width).
+            target_classes (torch.tensor): The target classes tensor. Expected shape is (batch_size,).
+
+        Returns:
+            torch.tensor: The adversarial example tensor.
+        """
+        data = data.clone().detach().to(self.device)
+        target = target.clone().detach().to(self.device)
+
+        if self.mode == LotsAttackMode.ITERATIVE:
+            return self._lots_iterative(model, data, target, target_classes)
+        if self.mode == LotsAttackMode.SINGLE:
+            return self._lots_single(model, data, target, target_classes)
+
+        # if we reach here, the mode is invalid
+        raise ValueError("Invalid mode provided.")
+
+    def _lots_iterative(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, bool]:
+
+        feature_extractor_model = create_feature_extractor(
+            network, {self.deep_feature_layer: "deep_feature_layer"})
+        target = feature_extractor_model.forward(target)["deep_feature_layer"]
+
+        if target_classes is not None:
+            if not torch.is_tensor(target_classes):
+                target_classes = torch.tensor(
+                    [target_classes] * data.size(0)).to(data.device)
+        else:
+            target_classes = torch.tensor([-1] * data.size(0)).to(data.device)
+
+        # Make data a Parameter so it can be updated by optimizer
+        data = torch.nn.Parameter(data)
+
+        # Create an optimizer for the data
+        optimizer = torch.optim.Adam([data], lr=self.learning_rate)
+
+        for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=0, disable=not self.verbose):
+            optimizer.zero_grad()
+
+            logits = network.forward(data)
+            features = feature_extractor_model.forward(
+                data)["deep_feature_layer"]
+
+            with torch.no_grad():
+                pred_classes = torch.argmax(logits, dim=-1)
+                success_indices = pred_classes == target_classes
+                if self.epsilon is not None:
+                    distances = torch.norm(features - target, dim=1)
+                    success_distances = distances < self.epsilon
+                    if success_indices.all() or success_distances.all():
+                        data = torch.clamp(data, 0, 1)
+                        return data.detach(), True
+
+            loss = torch.nn.functional.mse_loss(
+                features, target, reduction="sum")
+            loss.backward(retain_graph=True)
+
+            optimizer.step()
+
+            # Clipping data to ensure it remains in [0, 1]
+            data.data.clamp_(0, 1)
+
+        return data.detach(), False
+
+    def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, bool]:
+
+        feature_extractor_model = create_feature_extractor(
+            network, {self.deep_feature_layer: "deep_feature_layer"})
+        target = feature_extractor_model.forward(target)["deep_feature_layer"]
+
+        # Convert data into a Parameter so it can be updated by optimizer
+        data = torch.nn.Parameter(data)
+
+        # Create an optimizer for the data
+        optimizer = torch.optim.Adam([data], lr=self.learning_rate)
+
+        network.zero_grad()
+        features = feature_extractor_model.forward(data)["deep_feature_layer"]
+        loss = torch.nn.functional.mse_loss(features, target, reduction="mean")
+        loss.backward(retain_graph=True)
+
+        optimizer.step()
+
+        data = torch.clamp(data, 0, 1)
+        logits = network.forward(data)
+
+        if target_classes is not None:
+            if not torch.is_tensor(target_classes):
+                target_classes = torch.tensor(
+                    [target_classes] * data.size(0)).to(data.device)
+        else:
+            target_classes = torch.tensor([-1] * data.size(0)).to(data.device)
+
+        pred_classes = torch.argmax(logits, dim=-1)
+        success_indices = pred_classes == target_classes
+
+        if self.epsilon is not None:
+            distances = torch.norm(features - target, dim=1)
+            success_distances = distances < self.epsilon
+
+            is_sucess = success_indices.all() or success_distances.all()
+            return data.detach(), is_sucess
