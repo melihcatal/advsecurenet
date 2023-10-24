@@ -1,11 +1,13 @@
 import torch
-from torch import nn
 import torch.optim as optim
-from tqdm import tqdm
-import torch
 import os
 import pkg_resources
+import requests
+from torch import nn
+from tqdm import tqdm
+from tqdm import tqdm
 from advsecurenet.shared.types import DeviceType
+from advsecurenet.utils.get_device import get_device
 
 def train(model, train_loader, device=None, criterion=None, optimizer=None, epochs=3, learning_rate=0.001):
     """
@@ -14,7 +16,7 @@ def train(model, train_loader, device=None, criterion=None, optimizer=None, epoc
     Args:
         model (nn.Module): The model to train.
         train_loader (torch.utils.data.DataLoader): The train loader.
-        device (torch.device, optional): The device to train on. Defaults to cuda if available, otherwise cpu.
+        device (DeviceType, optional): The device to train on. Defaults to CPU
         criterion (nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
         optimizer (torch.optim, optional): The optimizer. Defaults to Adam with learning rate 0.001.
         epochs (int, optional): The number of epochs to train for. Defaults to 3.
@@ -26,7 +28,7 @@ def train(model, train_loader, device=None, criterion=None, optimizer=None, epoc
         raise ValueError("Cannot train a pretrained model!")
 
     if device is None:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = get_device().value
     
     if criterion is None:
         criterion = torch.nn.CrossEntropyLoss()
@@ -64,7 +66,7 @@ def test(model, test_loader, criterion=None, device=None):
         model (nn.Module): The model to test.
         test_loader (torch.utils.data.DataLoader): The test loader.
         criterion (nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
-        device (torch.device, optional): The device to test on. Defaults to cuda if available, otherwise cpu.
+        device (DeviceType, optional): The device to test on. Defaults to CPU.
 
     Returns:
         tuple: A tuple containing the average loss and accuracy.
@@ -72,7 +74,7 @@ def test(model, test_loader, criterion=None, device=None):
     """
  
     if device is None:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = get_device().value
     
     if criterion is None:
         criterion = torch.nn.CrossEntropyLoss()
@@ -138,9 +140,72 @@ def load_model(model, filename, filepath= None, device=None):
     
     if device is None:
         device = DeviceType.CPU
-    
-    
-    print(f"Loading model from {os.path.join(filepath, filename)}")
-    
+        
     model.load_state_dict(torch.load(os.path.join(filepath, filename), map_location=device.value))
     return model
+
+
+def download_weights(model_name=None, dataset_name=None, filename=None, save_path=None):
+    """
+    Downloads model weights from a remote source based on the model and dataset names.
+
+    Args:
+        model_name (str, optional): The name of the model (e.g. "resnet50").
+        dataset_name (str, optional): The name of the dataset the model was trained on (e.g. "cifar10").
+        filename (str, optional): The filename of the weights on the remote server. If provided, this will be used directly.
+        save_path (str, optional): The directory to save the weights to. Defaults to weights directory.
+    """
+    
+    base_url = "https://advsecurenet.s3.eu-central-1.amazonaws.com/weights/"  # Replace with the base URL of your remote server
+    
+    # Generate filename and remote_url based on model_name and dataset_name if filename is not provided
+    if not filename:
+        if model_name is None or dataset_name is None:
+            raise ValueError("Both model_name and dataset_name must be provided if filename is not specified.")
+        filename = f"{model_name}_{dataset_name}.pth"
+    
+    remote_url = os.path.join(base_url, filename)
+    
+    if save_path is None:
+        save_path = pkg_resources.resource_filename("advsecurenet", "weights")
+    
+    # Ensure directory exists
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    
+    local_file_path = os.path.join(save_path, filename)
+    
+    # Only download if file doesn't exist
+    if not os.path.exists(local_file_path):
+        try:
+            response = requests.get(remote_url, stream=True)
+            response.raise_for_status()  # Raise an error for bad responses
+            
+            total_size = int(response.headers.get('content-length', 0))
+            block_size = 8192
+            
+            progress_bar = tqdm(total=total_size, unit='B', unit_scale=True, desc=filename)
+            
+            with open(local_file_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=block_size):
+                    f.write(chunk)
+                    progress_bar.update(len(chunk))
+            
+            progress_bar.close()
+            
+            if total_size != 0 and progress_bar.n != total_size:
+                raise Exception("Error, something went wrong while downloading.")
+            
+            print(f"Downloaded weights to {local_file_path}")
+        
+        except (Exception, KeyboardInterrupt) as e:
+            # If any error occurs, delete the file and re-raise the exception
+            if os.path.exists(local_file_path):
+                os.remove(local_file_path)
+            progress_bar.close()
+            raise e
+        
+    else:
+        print(f"Weights already exist at {local_file_path}")
+    
+    return local_file_path
