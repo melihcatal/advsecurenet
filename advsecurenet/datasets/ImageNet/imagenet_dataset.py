@@ -3,7 +3,7 @@ from torch.utils.data import Dataset as TorchDataset
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.shared.types import DataType
 from typing import Optional
-
+import pkg_resources
 
 class ImageNetDataset(BaseDataset):
     """
@@ -28,7 +28,7 @@ class ImageNetDataset(BaseDataset):
         self.num_input_channels = 3
 
     def load_dataset(self,
-                     root: Optional[str] = './data/imagenet',
+                     root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = False,
                      **kwargs) -> TorchDataset:
@@ -44,6 +44,11 @@ class ImageNetDataset(BaseDataset):
         Returns:
             TorchDataset: The ImageNet dataset loaded into memory.
         """
+        
+        # If root is not given, use the default data directory 
+        if root is None:
+            root = pkg_resources.resource_filename("advsecurenet", "data")
+
         transform = self.get_transforms()
         self._dataset = datasets.ImageFolder(
             root=root, transform=transform, **kwargs)

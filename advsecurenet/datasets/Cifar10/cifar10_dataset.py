@@ -3,6 +3,7 @@ from torchvision import datasets
 from torch.utils.data import Dataset as TorchDataset
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.shared.types import DataType
+import pkg_resources
 
 
 class CIFAR10Dataset(BaseDataset):
@@ -28,7 +29,7 @@ class CIFAR10Dataset(BaseDataset):
         self.num_input_channels = 3
 
     def load_dataset(self,
-                     root: Optional[str] = './data',
+                     root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
                      **kwargs) -> TorchDataset:
@@ -44,6 +45,11 @@ class CIFAR10Dataset(BaseDataset):
         Returns:
             TorchDataset: The CIFAR-10 dataset loaded into memory.
         """
+        
+        # If root is not given, use the default data directory 
+        if root is None:
+            root = pkg_resources.resource_filename("advsecurenet", "data")
+
         transform = self.get_transforms()
         self._dataset = datasets.CIFAR10(
             root=root, train=train, transform=transform, download=download, **kwargs)

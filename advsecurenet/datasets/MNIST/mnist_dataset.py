@@ -3,6 +3,7 @@ from advsecurenet.shared.types import DataType
 from torchvision import datasets
 from torch.utils.data import Dataset as TorchDataset
 from typing import Optional
+import pkg_resources
 
 
 class MNISTDataset(BaseDataset):
@@ -26,7 +27,7 @@ class MNISTDataset(BaseDataset):
         self.num_classes = 10
 
     def load_dataset(self,
-                     root: Optional[str] = './data',
+                     root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
                      **kwargs) -> TorchDataset:
@@ -42,6 +43,11 @@ class MNISTDataset(BaseDataset):
         Returns:
             TorchDataset: The MNIST dataset loaded into memory.
         """
+
+        # If root is not given, use the default data directory 
+        if root is None:
+            root = pkg_resources.resource_filename("advsecurenet", "data")
+
         transform = self.get_transforms()
         self._dataset = datasets.MNIST(
             root=root, train=train, transform=transform, download=download, **kwargs)

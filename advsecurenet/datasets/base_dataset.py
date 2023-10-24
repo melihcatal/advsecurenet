@@ -73,7 +73,7 @@ class BaseDataset(TorchDataset, ABC):
 
     @abstractmethod
     def load_dataset(self,
-                     root: Optional[str] = './data',
+                     root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
                      **kwargs) -> None:
