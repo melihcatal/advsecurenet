@@ -48,7 +48,10 @@
 <li><a class="reference internal" href="#advsecurenet.defenses.adversarial_training.AdversarialTraining"><code class="docutils literal notranslate"><span class="pre">AdversarialTraining()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-advsecurenet.defenses">Module contents</a></li>
+<li><a class="reference internal" href="#module-advsecurenet.defenses">Module contents</a><ul>
+<li><a class="reference internal" href="#advsecurenet.defenses.AdversarialTraining"><code class="docutils literal notranslate"><span class="pre">AdversarialTraining()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -90,7 +93,7 @@
 <dd><p>This function implements the adversarial training defense. It allows to train a model using multiple models and attacks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="advsecurenet.shared.types.DefenseConfigs.html#advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig" title="advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig"><em>AdversarialTrainingConfig</em></a>) – The configuration of the adversarial training defense.</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="advsecurenet.shared.types.DefenseConfigs.html#advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig" title="advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig"><em>AdversarialTrainingConfig</em></a>) – The configuration for the adversarial training defense.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -106,6 +109,25 @@
 </section>
 <section id="module-advsecurenet.defenses">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.defenses" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.defenses.AdversarialTraining">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.defenses.</span></span><span class="sig-name descname"><span class="pre">AdversarialTraining</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.DefenseConfigs.html#advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig" title="advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig"><span class="pre">AdversarialTrainingConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.defenses.AdversarialTraining" title="Link to this definition"></a></dt>
+<dd><p>This function implements the adversarial training defense. It allows to train a model using multiple models and attacks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="advsecurenet.shared.types.DefenseConfigs.html#advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig" title="advsecurenet.shared.types.DefenseConfigs.adversarial_training_config.AdversarialTrainingConfig"><em>AdversarialTrainingConfig</em></a>) – The configuration for the adversarial training defense.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the target_model is not a subclass of BaseModel.</p></li>
+<li><p><strong>ValueError</strong> – If any of the models is not a subclass of BaseModel.</p></li>
+<li><p><strong>ValueError</strong> – If any of the attacks is not a subclass of AdversarialAttack.</p></li>
+<li><p><strong>ValueError</strong> – If the train_dataloader is not a DataLoader.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

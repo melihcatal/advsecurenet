@@ -196,7 +196,7 @@
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations for the Adam optimizer. Defaults to 10.</p></li>
 <li><p><strong>abort_early</strong> (<em>bool</em>) – If True, aborts the attack early if the loss stops decreasing. Defaults to False.</p></li>
 <li><p><strong>binary_search_steps</strong> (<em>int</em>) – Number of binary search steps. Defaults to 10.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 <li><p><strong>clip_min</strong> (<em>float</em>) – Minimum value of the input. Defaults to 0.</p></li>
 <li><p><strong>clip_max</strong> (<em>float</em>) – Maximum value of the input. Defaults to 1.</p></li>
 <li><p><strong>c_lower</strong> (<em>float</em>) – Lower bound for c. Defaults to 1e-6.</p></li>
@@ -245,7 +245,7 @@
 <li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes in the dataset. Defaults to 10.</p></li>
 <li><p><strong>overshoot</strong> (<em>float</em>) – Overshoot parameter. Defaults to 0.02.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations. Defaults to 50.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -286,7 +286,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -332,7 +332,7 @@
 <li><p><strong>learning_rate</strong> (<em>float</em>) – The learning rate to use for the attack. Defaults to 1./255.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – The maximum number of iterations to use for the attack. Defaults to 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print progress of the attack. Defaults to True.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -390,7 +390,7 @@
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – The alpha value to use for the attack. Defaults to 2/255.</p></li>
 <li><p><strong>num_iter</strong> (<em>int</em>) – The number of iterations to use for the attack. Defaults to 40.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -466,7 +466,7 @@
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations for the Adam optimizer. Defaults to 10.</p></li>
 <li><p><strong>abort_early</strong> (<em>bool</em>) – If True, aborts the attack early if the loss stops decreasing. Defaults to False.</p></li>
 <li><p><strong>binary_search_steps</strong> (<em>int</em>) – Number of binary search steps. Defaults to 10.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 <li><p><strong>clip_min</strong> (<em>float</em>) – Minimum value of the input. Defaults to 0.</p></li>
 <li><p><strong>clip_max</strong> (<em>float</em>) – Maximum value of the input. Defaults to 1.</p></li>
 <li><p><strong>c_lower</strong> (<em>float</em>) – Lower bound for c. Defaults to 1e-6.</p></li>
@@ -512,7 +512,7 @@
 <li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes in the dataset. Defaults to 10.</p></li>
 <li><p><strong>overshoot</strong> (<em>float</em>) – Overshoot parameter. Defaults to 0.02.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations. Defaults to 50.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -550,7 +550,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -593,7 +593,7 @@
 <li><p><strong>learning_rate</strong> (<em>float</em>) – The learning rate to use for the attack. Defaults to 1./255.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – The maximum number of iterations to use for the attack. Defaults to 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print progress of the attack. Defaults to True.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -648,7 +648,7 @@
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – The alpha value to use for the attack. Defaults to 2/255.</p></li>
 <li><p><strong>num_iter</strong> (<em>int</em>) – The number of iterations to use for the attack. Defaults to 40.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.device.DeviceType" title="advsecurenet.shared.types.device.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
 </ul>
 </dd>
 </dl>
