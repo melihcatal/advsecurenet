@@ -154,6 +154,14 @@ def download_weights(model_name=None, dataset_name=None, filename=None, save_pat
         dataset_name (str, optional): The name of the dataset the model was trained on (e.g. "cifar10").
         filename (str, optional): The filename of the weights on the remote server. If provided, this will be used directly.
         save_path (str, optional): The directory to save the weights to. Defaults to weights directory.
+
+    Examples:
+
+        >>> download_weights(model_name="resnet50", dataset_name="cifar10")
+        Downloaded weights to /home/user/advsecurenet/weights/resnet50_cifar10.pth
+
+        >>> download_weights(filename="resnet50_cifar10.pth")
+        Downloaded weights to /home/user/advsecurenet/weights/resnet50_cifar10.pth
     """
     
     base_url = "https://advsecurenet.s3.eu-central-1.amazonaws.com/weights/"  # Replace with the base URL of your remote server

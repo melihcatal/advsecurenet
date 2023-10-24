@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="AdvSecureNet",
     version="0.1",
-    description="Adversarial Secure Network",
+    description="Adversarial Secure Networks",
     author="Melih Catal",
     author_email="melih.catal@uzh.ch",
     url="https://github.com/melihcatal/advsecurenet",

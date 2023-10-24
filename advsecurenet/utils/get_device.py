@@ -1,4 +1,15 @@
 def get_device():
+    """
+    Returns the device to work on. The order of preference is:
+    
+    1. CUDA GPU
+    2. Apple Silicon MPS
+    3. CPU
+
+    Returns:
+        DeviceType: The device to work on.
+
+    """
     # lazy import to avoid circular imports
     import torch
     import os

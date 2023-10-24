@@ -1,33 +1,26 @@
 import torch
 from torch import nn
+from torch.utils.data import DataLoader
 from tqdm.auto import trange
 from advsecurenet.utils import train, test
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
-
 from advsecurenet.shared.types import AdversarialTrainingConfig
-from torch.utils.data import DataLoader
 
 
 def AdversarialTraining(config: AdversarialTrainingConfig) -> None:
     """
     This function implements the adversarial training defense. It allows to train a model using multiple models and attacks.
 
-    Parameters
-    ----------
-    config: AdversarialTrainingConfig
-        The configuration of the adversarial training defense.
+    Args:
+        config (AdversarialTrainingConfig): The configuration for the adversarial training defense.
 
-    Raises
-    ------
-    ValueError
-        If the target_model is not a subclass of BaseModel.
-    ValueError
-        If any of the models is not a subclass of BaseModel.
-    ValueError
-        If any of the attacks is not a subclass of AdversarialAttack.
-    ValueError
-        If the train_dataloader is not a DataLoader.
+    Raises:
+        ValueError: If the target_model is not a subclass of BaseModel.
+        ValueError: If any of the models is not a subclass of BaseModel.
+        ValueError: If any of the attacks is not a subclass of AdversarialAttack.
+        ValueError: If the train_dataloader is not a DataLoader.
+
 
     """
 
