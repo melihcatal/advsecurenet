@@ -44,8 +44,20 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">advsecurenet.datasets.ImageNet package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#advsecurenet-datasets-imagenet-imagenet-dataset-module">advsecurenet.datasets.ImageNet.imagenet_dataset module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-advsecurenet.datasets.ImageNet.imagenet_dataset">advsecurenet.datasets.ImageNet.imagenet_dataset module</a><ul>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset</span></code></a><ul>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.mean"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.mean</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.std"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.std</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.input_size"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.input_size</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.name"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.name</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_classes"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.num_classes</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_input_channels"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.num_input_channels</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.load_dataset"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.load_dataset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-advsecurenet.datasets.ImageNet">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -79,11 +91,106 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="advsecurenet-datasets-imagenet-imagenet-dataset-module">
-<h2>advsecurenet.datasets.ImageNet.imagenet_dataset module<a class="headerlink" href="#advsecurenet-datasets-imagenet-imagenet-dataset-module" title="Link to this heading"></a></h2>
+<section id="module-advsecurenet.datasets.ImageNet.imagenet_dataset">
+<span id="advsecurenet-datasets-imagenet-imagenet-dataset-module"></span><h2>advsecurenet.datasets.ImageNet.imagenet_dataset module<a class="headerlink" href="#module-advsecurenet.datasets.ImageNet.imagenet_dataset" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.datasets.ImageNet.imagenet_dataset.</span></span><span class="sig-name descname"><span class="pre">ImageNetDataset</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="advsecurenet.datasets.html#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataset</span></code></a></p>
+<p>The ImageNetDataset class that loads the ImageNet dataset.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.mean">
+<span class="sig-name descname"><span class="pre">mean</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.mean" title="Link to this definition"></a></dt>
+<dd><p>Mean of the ImageNet dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.std">
+<span class="sig-name descname"><span class="pre">std</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.std" title="Link to this definition"></a></dt>
+<dd><p>Standard deviation of the ImageNet dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.input_size" title="Link to this definition"></a></dt>
+<dd><p>Input size of the ImageNet images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_classes">
+<span class="sig-name descname"><span class="pre">num_classes</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_classes" title="Link to this definition"></a></dt>
+<dd><p>Number of classes in the ImageNet dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_input_channels">
+<span class="sig-name descname"><span class="pre">num_input_channels</span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_input_channels" title="Link to this definition"></a></dt>
+<dd><p>Number of input channels in the ImageNet images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.load_dataset">
+<span class="sig-name descname"><span class="pre">load_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./data/imagenet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span></span></span><a class="headerlink" href="#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.load_dataset" title="Link to this definition"></a></dt>
+<dd><p>Loads the ImageNet dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em>, </em><em>optional</em>) – The root directory where the dataset should be stored. Defaults to ‘./data/imagenet’.</p></li>
+<li><p><strong>train</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, assumes the dataset is the training set. Otherwise, assumes it’s the validation set. Defaults to True.</p></li>
+<li><p><strong>download</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, would download the dataset from the internet (though this is generally not feasible for ImageNet). Defaults to False.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the ImageNet dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ImageNet dataset loaded into memory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TorchDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-advsecurenet.datasets.ImageNet">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.datasets.ImageNet" title="Link to this heading"></a></h2>
 </section>
 </section>
 

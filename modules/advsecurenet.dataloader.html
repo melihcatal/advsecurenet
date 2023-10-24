@@ -44,8 +44,22 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">advsecurenet.dataloader package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#advsecurenet-dataloader-data-loader-factory-module">advsecurenet.dataloader.data_loader_factory module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-advsecurenet.dataloader.data_loader_factory">advsecurenet.dataloader.data_loader_factory module</a><ul>
+<li><a class="reference internal" href="#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory"><code class="docutils literal notranslate"><span class="pre">DataLoaderFactory</span></code></a><ul>
+<li><a class="reference internal" href="#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><code class="docutils literal notranslate"><span class="pre">DataLoaderFactory.None</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.get_dataloader"><code class="docutils literal notranslate"><span class="pre">DataLoaderFactory.get_dataloader()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-advsecurenet.dataloader">Module contents</a><ul>
+<li><a class="reference internal" href="#advsecurenet.dataloader.DataLoaderFactory"><code class="docutils literal notranslate"><span class="pre">DataLoaderFactory</span></code></a><ul>
+<li><a class="reference internal" href="#advsecurenet.dataloader.DataLoaderFactory.None"><code class="docutils literal notranslate"><span class="pre">DataLoaderFactory.None</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.dataloader.DataLoaderFactory.get_dataloader"><code class="docutils literal notranslate"><span class="pre">DataLoaderFactory.get_dataloader()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -79,11 +93,88 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="advsecurenet-dataloader-data-loader-factory-module">
-<h2>advsecurenet.dataloader.data_loader_factory module<a class="headerlink" href="#advsecurenet-dataloader-data-loader-factory-module" title="Link to this heading"></a></h2>
+<section id="module-advsecurenet.dataloader.data_loader_factory">
+<span id="advsecurenet-dataloader-data-loader-factory-module"></span><h2>advsecurenet.dataloader.data_loader_factory module<a class="headerlink" href="#module-advsecurenet.dataloader.data_loader_factory" title="Link to this heading"></a></h2>
+<p>This module contains the DataLoaderFactory class that creates a DataLoader for the given dataset.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.dataloader.data_loader_factory.</span></span><span class="sig-name descname"><span class="pre">DataLoaderFactory</span></span><a class="headerlink" href="#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The DataLoaderFactory class that creates a DataLoader for the given dataset.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None">
+<span class="sig-name descname"><span class="pre">None</span></span><a class="headerlink" href="#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.get_dataloader">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataLoader</span></span></span><a class="headerlink" href="#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.get_dataloader" title="Link to this definition"></a></dt>
+<dd><p>A static method that creates a DataLoader for the given dataset with the given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<em>TorchDataset</em>) – The dataset for which the DataLoader is to be created.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The batch size. Defaults to 32.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of workers. Defaults to 4.</p></li>
+<li><p><strong>shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, shuffles the data. Defaults to False.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the DataLoader.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DataLoader for the given dataset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TorchDataLoader</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the dataset is not of type TorchDataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-advsecurenet.dataloader">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.dataloader" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.dataloader.DataLoaderFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.dataloader.</span></span><span class="sig-name descname"><span class="pre">DataLoaderFactory</span></span><a class="headerlink" href="#advsecurenet.dataloader.DataLoaderFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The DataLoaderFactory class that creates a DataLoader for the given dataset.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.dataloader.DataLoaderFactory.None">
+<span class="sig-name descname"><span class="pre">None</span></span><a class="headerlink" href="#advsecurenet.dataloader.DataLoaderFactory.None" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.dataloader.DataLoaderFactory.get_dataloader">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataLoader</span></span></span><a class="headerlink" href="#advsecurenet.dataloader.DataLoaderFactory.get_dataloader" title="Link to this definition"></a></dt>
+<dd><p>A static method that creates a DataLoader for the given dataset with the given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<em>TorchDataset</em>) – The dataset for which the DataLoader is to be created.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The batch size. Defaults to 32.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of workers. Defaults to 4.</p></li>
+<li><p><strong>shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, shuffles the data. Defaults to False.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the DataLoader.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The DataLoader for the given dataset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TorchDataLoader</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the dataset is not of type TorchDataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

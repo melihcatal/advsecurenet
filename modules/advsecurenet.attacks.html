@@ -44,7 +44,13 @@
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">advsecurenet.attacks package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#advsecurenet-attacks-adversarial-attack-module">advsecurenet.attacks.adversarial_attack module</a></li>
+<li><a class="reference internal" href="#module-advsecurenet.attacks.adversarial_attack">advsecurenet.attacks.adversarial_attack module</a><ul>
+<li><a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a><ul>
+<li><a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack.attack"><code class="docutils literal notranslate"><span class="pre">AdversarialAttack.attack()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#advsecurenet-attacks-cw-module">advsecurenet.attacks.cw module</a></li>
 <li><a class="reference internal" href="#advsecurenet-attacks-deepfool-module">advsecurenet.attacks.deepfool module</a></li>
 <li><a class="reference internal" href="#advsecurenet-attacks-fgsm-module">advsecurenet.attacks.fgsm module</a></li>
@@ -84,8 +90,36 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="advsecurenet-attacks-adversarial-attack-module">
-<h2>advsecurenet.attacks.adversarial_attack module<a class="headerlink" href="#advsecurenet-attacks-adversarial-attack-module" title="Link to this heading"></a></h2>
+<section id="module-advsecurenet.attacks.adversarial_attack">
+<span id="advsecurenet-attacks-adversarial-attack-module"></span><h2>advsecurenet.attacks.adversarial_attack module<a class="headerlink" href="#module-advsecurenet.attacks.adversarial_attack" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.attacks.adversarial_attack.AdversarialAttack">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.adversarial_attack.</span></span><span class="sig-name descname"><span class="pre">AdversarialAttack</span></span><a class="headerlink" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract class for adversarial attacks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.attacks.adversarial_attack.AdversarialAttack.attack">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack.attack" title="Link to this definition"></a></dt>
+<dd><p>Performs the attack on the specified model and input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.BaseModel" title="advsecurenet.models.BaseModel"><em>BaseModel</em></a>) – The model to attack.</p></li>
+<li><p><strong>x</strong> (<em>torch.tensor</em>) – The original input tensor. Expected shape is (batch_size, channels, height, width).</p></li>
+<li><p><strong>y</strong> (<em>torch.tensor</em>) – The true labels for the input tensor. Expected shape is (batch_size,).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The adversarial example tensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="advsecurenet-attacks-cw-module">
 <h2>advsecurenet.attacks.cw module<a class="headerlink" href="#advsecurenet-attacks-cw-module" title="Link to this heading"></a></h2>
