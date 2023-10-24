@@ -18,6 +18,7 @@ setup(
         "pytest",
         "pytest-mock",
         "tqdm", 
+        "yaml"
     ],
     entry_points={
         'console_scripts': [
