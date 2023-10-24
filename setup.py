@@ -18,7 +18,8 @@ setup(
         "pytest",
         "pytest-mock",
         "tqdm", 
-        "PyYAML"
+        "PyYAML",
+        "opencv-python"
     ],
     entry_points={
         'console_scripts': [
