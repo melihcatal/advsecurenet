@@ -16,7 +16,8 @@ setup(
         "torchvision",
         "colored",
         "pytest",
-        "pytest-mock"
+        "pytest-mock",
+        "tqdm", 
     ],
     entry_points={
         'console_scripts': [
