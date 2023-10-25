@@ -170,7 +170,7 @@ def download_weights(model_name=None, dataset_name=None, filename=None, save_pat
     if not filename:
         if model_name is None or dataset_name is None:
             raise ValueError("Both model_name and dataset_name must be provided if filename is not specified.")
-        filename = f"{model_name}_{dataset_name}.pth"
+        filename = f"{model_name}_{dataset_name}_weights.pth"
     
     remote_url = os.path.join(base_url, filename)
     
@@ -185,6 +185,7 @@ def download_weights(model_name=None, dataset_name=None, filename=None, save_pat
     
     # Only download if file doesn't exist
     if not os.path.exists(local_file_path):
+        progress_bar = None
         try:
             response = requests.get(remote_url, stream=True)
             response.raise_for_status()  # Raise an error for bad responses
@@ -205,15 +206,15 @@ def download_weights(model_name=None, dataset_name=None, filename=None, save_pat
                 raise Exception("Error, something went wrong while downloading.")
             
             print(f"Downloaded weights to {local_file_path}")
-        
         except (Exception, KeyboardInterrupt) as e:
             # If any error occurs, delete the file and re-raise the exception
             if os.path.exists(local_file_path):
                 os.remove(local_file_path)
-            progress_bar.close()
+            if progress_bar is not None:
+                progress_bar.close()
             raise e
         
     else:
-        print(f"Weights already exist at {local_file_path}")
+        raise FileExistsError(f"Weights already exist at {local_file_path}")
     
     return local_file_path
