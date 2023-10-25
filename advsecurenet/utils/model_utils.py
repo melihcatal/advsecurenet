@@ -5,7 +5,6 @@ import pkg_resources
 import requests
 from torch import nn
 from tqdm import tqdm
-from tqdm import tqdm
 from advsecurenet.shared.types import DeviceType
 from advsecurenet.utils.get_device import get_device
 
@@ -58,6 +57,7 @@ def train(model, train_loader, device=None, criterion=None, optimizer=None, epoc
 
 
 
+
 def test(model, test_loader, criterion=None, device=None):
     """
     Tests the model on the given test_loader. Prints the average loss and accuracy.
@@ -72,7 +72,6 @@ def test(model, test_loader, criterion=None, device=None):
         tuple: A tuple containing the average loss and accuracy.
 
     """
- 
     if device is None:
         device = get_device().value
     
@@ -83,8 +82,10 @@ def test(model, test_loader, criterion=None, device=None):
     model.eval()
     test_loss = 0
     correct = 0
+    print(f"Testing on {device}")
     with torch.no_grad():
-        for data, target in test_loader:
+        # Wrap the loop with tqdm for the progress bar
+        for data, target in tqdm(test_loader, desc="Testing", unit="batch"):
             data, target = data.to(device), target.to(device)
             output = model(data)
             test_loss += criterion(output, target).item()
@@ -93,7 +94,7 @@ def test(model, test_loader, criterion=None, device=None):
 
     test_loss /= len(test_loader.dataset)
     accuracy = 100. * correct / len(test_loader.dataset)
-    print(f'Test set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)')
+    print(f'\nTest set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)')
     return test_loss, accuracy
 
 
@@ -140,8 +141,11 @@ def load_model(model, filename, filepath= None, device=None):
     
     if device is None:
         device = DeviceType.CPU
+    
+    if isinstance(device, DeviceType):
+        device = device.value
         
-    model.load_state_dict(torch.load(os.path.join(filepath, filename), map_location=device.value))
+    model.load_state_dict(torch.load(os.path.join(filepath, filename), map_location=device))
     return model
 
 
