@@ -1,14 +1,15 @@
 from dataclasses import dataclass
+from torch.optim import Optimizer
+from torch import nn
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.device import DeviceType
-from torch.optim import Optimizer
-from torch import nn
+from advsecurenet.shared.types.DefenseConfigs import DefenseConfig
 
 
 @dataclass
-class AdversarialTrainingConfig:
+class AdversarialTrainingConfig(DefenseConfig):
     """
     This class is used to store the configuration of the adversarial training defense.
 
