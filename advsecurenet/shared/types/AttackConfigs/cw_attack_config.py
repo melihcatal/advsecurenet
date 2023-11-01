@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from advsecurenet.shared.types.device import DeviceType
+from advsecurenet.shared.types.AttackConfigs import AttackConfig
 
 
 @dataclass
-class CWAttackConfig:
+class CWAttackConfig(AttackConfig):
     targeted: bool = False
     c_init: float = 0.1
     kappa: float = 0

@@ -3,8 +3,10 @@ from advsecurenet.shared.types.AttackConfigs.deepfool_attack_config import DeepF
 from advsecurenet.shared.types.AttackConfigs.fgsm_attack_config import FgsmAttackConfig
 from advsecurenet.shared.types.AttackConfigs.lots_attack_config import LotsAttackConfig, LotsAttackMode
 from advsecurenet.shared.types.AttackConfigs.pgd_attack_config import PgdAttackConfig
+from advsecurenet.shared.types.AttackConfigs.attack_config import AttackConfig
 
 __all__ = [
+    "AttackConfig",
     "CWAttackConfig",
     "DeepFoolAttackConfig",
     "FgsmAttackConfig",

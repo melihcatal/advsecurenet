@@ -1,13 +1,14 @@
+from enum import Enum
 from dataclasses import dataclass
 from advsecurenet.shared.types.device import DeviceType
-from enum import Enum
+from advsecurenet.shared.types.AttackConfigs import AttackConfig
 
 class LotsAttackMode(Enum):
     ITERATIVE = "iterative"
     SINGLE = "single"
 
 @dataclass
-class LotsAttackConfig:
+class LotsAttackConfig(AttackConfig):
     deep_feature_layer : str 
     mode : str = LotsAttackMode.ITERATIVE
     epsilon : float = 0.1
