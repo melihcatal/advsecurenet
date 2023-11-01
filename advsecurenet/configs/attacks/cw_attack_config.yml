@@ -1,0 +1,16 @@
+# Description: Configuration file for Carlini-Wagner attack. 
+
+targeted: False
+c_init: 0.1
+kappa: 0
+learning_rate: 0.01
+max_iterations: 10
+abort_early: False
+binary_search_steps: 10
+device: CPU  
+clip_min: 0
+clip_max: 1
+c_lower: 1e-6
+c_upper: 1
+patience: 5
+verbose: True

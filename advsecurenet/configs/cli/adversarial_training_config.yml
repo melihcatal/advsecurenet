@@ -1,0 +1,39 @@
+# Description: The configuration file for adversarial training.
+
+# --- Target Model and Attack Configurations ---
+target_mode: null  # The model that will be trained.
+models: []  # List of models used for generating adversarial examples.
+attacks: []  # List of attacks used for generating adversarial examples.
+
+# --- Dataset Configurations ---
+dataset_type: mnist  # The dataset on which the model will be trained.
+dataset_path: null  # Path to the dataset. Required if dataset_type is custom.
+
+# --- Training Configurations ---
+optimizer: adam  # The optimizer used for training.
+criterion: cross_entropy  # The criterion used for training.
+epochs: 10  # Number of training epochs.
+batch_size: 32  # Batch size for training.
+adv_coeff: 0.5  # Coefficient to combine clean and adversarial examples.
+verbose: True  # Whether to print training progress.
+
+# --- Optimizer Configurations ---
+lr: 0.001  # Learning rate.
+momentum: 0.9  # Momentum.
+weight_decay: 0.0005  # Weight decay.
+
+# --- Scheduler Configurations ---
+scheduler: null  # The scheduler type used for training.
+scheduler_step_size: 10  # Step size for the scheduler.
+scheduler_gamma: 0.1  # Gamma for the scheduler.
+
+# --- DataLoader Configurations ---
+num_workers: 4  # Number of workers for the dataloader.
+
+# --- Device Configuration ---
+device: CPU  # Training device. Options: [CPU, CUDA, MPS].
+
+# --- Model Saving Configurations ---
+save_model: True  # Whether to save the model after training.
+save_model_path: null  # Path to save the trained model.
+save_model_name: null  # Name of the saved model.

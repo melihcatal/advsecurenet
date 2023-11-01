@@ -4,9 +4,10 @@ model_name: resnet18
 dataset_name: cifar10
 epochs: 10
 batch_size: 32
+# TODO: change lr to learning_rate
 lr: 0.001
 optimizer: adam
 loss: cross_entropy
 save_path: null
 save_name: null
-device: GPU
+device: CPU
