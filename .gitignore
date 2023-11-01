@@ -23,3 +23,6 @@ docs/_build/
 
 # weights
 weights/
+
+# config files on example folder
+examples/*/**_config.yml
