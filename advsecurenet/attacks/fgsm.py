@@ -1,6 +1,5 @@
 import torch
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-
 from advsecurenet.utils import get_device
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types import FgsmAttackConfig

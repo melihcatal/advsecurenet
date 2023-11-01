@@ -105,7 +105,8 @@ class CustomModel(BaseModel):
         # Extract the model names by stripping the '.py' from filenames
         model_names = [os.path.splitext(f)[0] for f in all_files]
 
-        # Here you can also filter out non-model python files if needed
-        # model_names = [name for name in model_names if "SomeCondition" in name]
+        # remove __init__ from model names
+        model_names = [
+            model_name for model_name in model_names if model_name != "__init__"]
 
         return model_names

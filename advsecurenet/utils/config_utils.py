@@ -4,6 +4,7 @@ import pkg_resources
 import os
 from dataclasses import asdict
 from typing import Type, TypeVar
+from ruamel.yaml import YAML
 
 T = TypeVar('T')
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
@@ -128,13 +129,18 @@ def generate_default_config_yaml(config_name: str, output_path: str) -> None:
         config_name = config_name + "_config.yml"
         
     default_config_path = get_default_config_yml(config_name)
+    print(default_config_path)
+    # if the file does not exist, raise an error
+    if not os.path.exists(default_config_path):
+        raise FileNotFoundError("The default config file does not exist!")
+
     default_config = read_yml_file(default_config_path)
-    print(" config name " , config_name)
     output_path = os.path.join(output_path, config_name)
 
     # create the yml file 
+    yaml = YAML()
     with open(output_path, 'w') as file:
-        yaml.dump(default_config, file, default_flow_style=False)
+        yaml.dump(default_config, file)
 
 
 
@@ -172,9 +178,10 @@ def get_available_configs() -> list:
         ['lots_attack_config.yml', 'cw_attack_config.yml']
 
     """
-    
+    # full_paths= [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(os.path.join(config_path, "cli")) for f in files if f.endswith(".yml")]
+    # return [os.path.basename(path) for path in full_paths]
     # consider the subdirectories as well
-    full_paths= [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(config_path) for f in files if f.endswith(".yml")]
+    full_paths= [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(os.path.join(config_path, "cli")) for f in files if f.endswith(".yml")]
     return [os.path.basename(path) for path in full_paths]
 
 
@@ -190,8 +197,9 @@ def read_yml_file(yml_path: str) -> dict:
         dict: The YAML file as a dictionary.
 
     """
+    yaml = YAML()
     with open(yml_path, 'r') as file:
-        return yaml.safe_load(file)
+        return yaml.load(file)
 
 def get_default_config_yml(config_name: str) :
     """
@@ -207,13 +215,11 @@ def get_default_config_yml(config_name: str) :
         raise ValueError("config_name must be specified and not None!")
     
 
-    
-    
     # find in which subdirectory the config is
     file_path = [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(config_path) for f in files if f.endswith(config_name)]
 
     if len(file_path) == 0:
-        raise ValueError(f"Config file {config_name} not found!")
+        raise FileNotFoundError(f"Config file {config_name} not found!")
     
     return file_path[0]
 

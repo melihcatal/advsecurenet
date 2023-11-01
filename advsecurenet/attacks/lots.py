@@ -30,7 +30,6 @@ class LOTS(AdversarialAttack):
     """
 
     def __init__(self, config: LotsAttackConfig) -> None:
-
         self.validate_config(config)
 
         self.deep_feature_layer: str = config.deep_feature_layer
@@ -117,7 +116,7 @@ class LOTS(AdversarialAttack):
         # Create an optimizer for the data
         optimizer = torch.optim.Adam([data], lr=self.learning_rate)
 
-        for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=0, disable=not self.verbose):
+        for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=1, disable=not self.verbose):
             optimizer.zero_grad()
 
             logits = network.forward(data)

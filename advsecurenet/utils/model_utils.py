@@ -219,6 +219,6 @@ def download_weights(model_name=None, dataset_name=None, filename=None, save_pat
             raise e
         
     else:
-        raise FileExistsError(f"Weights already exist at {local_file_path}")
+        print(f"File {local_file_path} already exists. Skipping download.")
     
     return local_file_path

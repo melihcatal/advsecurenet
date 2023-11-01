@@ -5,7 +5,7 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.device import DeviceType
-from advsecurenet.shared.types.DefenseConfigs import DefenseConfig
+from advsecurenet.shared.types.Configs.DefenseConfigs import DefenseConfig
 
 
 @dataclass

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from advsecurenet.shared.types.device import DeviceType
-from advsecurenet.shared.types.AttackConfigs import AttackConfig
+from advsecurenet.shared.types.Configs.AttackConfigs import AttackConfig
 
 @dataclass
 class DeepFoolAttackConfig(AttackConfig):
