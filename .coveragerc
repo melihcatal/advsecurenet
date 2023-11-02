@@ -1,0 +1,4 @@
+[run]
+omit =
+    advsecurenet/datasets/*
+    advsecurenet/models/CustomModels/*

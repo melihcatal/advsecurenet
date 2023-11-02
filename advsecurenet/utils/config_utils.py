@@ -86,34 +86,6 @@ def load_default_config(config_class: Type[T]) -> T:
     return load_config_from_yaml(default_yaml_path, config_class)
 
 
-def verify_config(config: T, config_class: Type[T]) -> None:
-    """
-    Verify that a configuration is valid.
-
-    Args:
-        config (T): The configuration to verify.
-        config_class (Type[T]): The dataclass type to verify the configuration against.
-
-    Raises:
-        ValueError: If the configuration is not valid.
-
-    """
-
-    # Start with dataclass defaults
-    config_data = asdict(config_class())
-
-    # Check if all keys are present
-    for key in config_data.keys():
-        if key not in config_data:
-            raise ValueError(f"Key {key} is missing from the configuration!")
-
-    # Check if all values are valid
-    for key, value in config_data.items():
-        if not isinstance(value, type(config_data[key])):
-            raise ValueError(
-                f"Value {value} for key {key} is not of type {type(config_data[key])}!")
-
-
 def generate_default_config_yaml(config_name: str, output_path: str, save=False, config_subdir=None) -> dict:
     """
     Generate a default configuration YAML based on the name of the configuration.
@@ -130,7 +102,7 @@ def generate_default_config_yaml(config_name: str, output_path: str, save=False,
             "config_name and output_path must be specified and not None!")
     if not config_name.endswith("_config.yml"):
         config_name = config_name + "_config.yml"
-        
+    print (f"config_name: {config_name} config_subdir: {config_subdir}")
     default_config_path = get_default_config_yml(config_name, config_subdir)
     # if the file does not exist, raise an error
     if not os.path.exists(default_config_path):
@@ -218,20 +190,24 @@ def get_default_config_yml(config_name: str, config_subdir: str = None):
     """
     if config_name is None:
         raise ValueError("config_name must be specified and not None!")
-    
+
+    file_paths = []
+
     if config_subdir:
         # If specific subdir is provided, search only in that
         dirpath = os.path.join(config_path, config_subdir)
-        file_path = [os.path.join(dirpath, f) for f in os.listdir(dirpath) if f.endswith(config_name)]
+        file_paths.extend([os.path.join(dirpath, f) for f in os.listdir(dirpath) if f.endswith(config_name)])
     else:
-        # Otherwise search in all subdirectories excluding the specified one ('cli' in this case)
-        file_path = [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(config_path) 
-                     if config_subdir not in dirpath for f in files if f.endswith(config_name)]
+        # Otherwise search in all subdirectories
+        for dirpath, _, files in os.walk(config_path):
+            file_paths.extend([os.path.join(dirpath, f) for f in files if f.endswith(config_name)])
     
-    if len(file_path) == 0:
+    if not file_paths:
         raise FileNotFoundError(f"Config file {config_name} not found!")
 
-    return file_path[0]
+    return file_paths[0]
+
+
 
 def override_with_cli_args(config_data, **cli_args):
     """

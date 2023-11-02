@@ -54,6 +54,3 @@ def test_download_weights(mock_exists, mock_get):
     weights = download_weights(model_name="resnet50", dataset_name="cifar10")
     # shouldn't download weights if they already exist
     mock_get.assert_not_called()
-    
-
-

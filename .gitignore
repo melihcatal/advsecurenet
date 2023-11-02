@@ -26,3 +26,7 @@ weights/
 
 # config files on example folder
 examples/*/**_config.yml
+
+# coverage files
+.coverage.*
+.coverage
