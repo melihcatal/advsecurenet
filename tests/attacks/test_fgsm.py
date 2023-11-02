@@ -1,7 +1,8 @@
 import torch
 import pytest
 from advsecurenet.attacks import FGSM
-from advsecurenet.shared.types import FgsmAttackConfig, DeviceType
+from advsecurenet.shared.types import DeviceType
+from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
 
 
 @pytest.fixture(scope="module")

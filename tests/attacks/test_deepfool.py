@@ -2,8 +2,8 @@ import torch
 import pytest
 from torch import nn
 from advsecurenet.attacks import DeepFool
-from advsecurenet.shared.types import DeepFoolAttackConfig, DeviceType
-from advsecurenet.utils import get_device
+from advsecurenet.shared.types import  DeviceType
+from advsecurenet.shared.types.configs.attack_configs import DeepFoolAttackConfig
 
 
 class SimpleModel(nn.Module):

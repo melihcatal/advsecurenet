@@ -3,7 +3,8 @@ import pytest
 from advsecurenet.attacks.lots import LOTS
 from collections import OrderedDict
 import torch.nn as nn
-from advsecurenet.shared.types import LotsAttackConfig, LotsAttackMode, DeviceType
+from advsecurenet.shared.types import DeviceType
+from advsecurenet.shared.types.configs.attack_configs import LotsAttackConfig, LotsAttackMode
 
 
 class TestLOTS:

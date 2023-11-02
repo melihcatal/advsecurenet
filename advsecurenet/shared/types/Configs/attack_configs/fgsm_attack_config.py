@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from advsecurenet.shared.types.device import DeviceType
-from advsecurenet.shared.types.Configs.AttackConfigs import AttackConfig
+from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 
 @dataclass
 class FgsmAttackConfig(AttackConfig):

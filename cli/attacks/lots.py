@@ -5,7 +5,7 @@ from tqdm import tqdm
 from advsecurenet.attacks.lots import LOTS
 from advsecurenet.dataloader.data_loader_factory import DataLoaderFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
-from advsecurenet.shared.types.Configs import AttackConfigs
+from advsecurenet.shared.types.configs import attack_configs
 from advsecurenet.shared.types.device import DeviceType
 from cli.utils.config import build_config
 
@@ -57,9 +57,9 @@ def execute_lots_attack(config_data):
 
     # Adjust the mode for the LOTS attack
     mode_string = config_data.get("mode")
-    config_data["mode"] = AttackConfigs.LotsAttackMode[mode_string.upper()]
+    config_data["mode"] = attack_configs.LotsAttackMode[mode_string.upper()]
     
-    attack_config = build_config(config_data, AttackConfigs.LotsAttackConfig)
+    attack_config = build_config(config_data, attack_configs.LotsAttackConfig)
 
     if isinstance(device, DeviceType):
         device = device.value

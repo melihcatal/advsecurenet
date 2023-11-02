@@ -1,21 +1,18 @@
-# ignore warnings
+import os
 import warnings
 import click
-import os 
-from advsecurenet.shared.types.Configs import AttackConfigs
-from advsecurenet.shared.types.Configs.DefenseConfigs import defense_config
+from requests.exceptions import HTTPError
+from advsecurenet.shared.types.configs import attack_configs
+from advsecurenet.shared.types.configs import TrainConfig, TestConfig, ConfigType
+from advsecurenet.shared.types.model import ModelType
+from advsecurenet.shared.types.attacks import AttackType
+from advsecurenet.utils import download_weights as util_download_weights, get_available_configs, generate_default_config_yaml
 from cli.utils.attack import execute_attack
 from cli.utils.config import build_config, load_configuration
 from cli.utils.data import load_and_prepare_data
-from cli.utils.model import get_models as _get_models, prepare_model
-from cli.utils.model import cli_train, cli_test
+from cli.utils.model import get_models as _get_models, prepare_model, cli_train, cli_test
 from cli.attacks.lots import execute_lots_attack
-from advsecurenet.utils.model_utils import download_weights as util_download_weights
-from advsecurenet.shared.types.model import ModelType
-from requests.exceptions import HTTPError
-from advsecurenet.shared.types.dataset import DatasetType
-from advsecurenet.utils.config_utils import get_available_configs, generate_default_config_yaml
-from advsecurenet.shared.types import TrainConfig, TestConfig, ConfigType, AttackType
+
 
 warnings.simplefilter(action='ignore', category=UserWarning)
 
@@ -254,7 +251,7 @@ def common_attack_options(func):
         func = option(func)
     return func
 
-def execute_general_attack(attack_type: AttackType, config_file: str, attack_config_class: AttackConfigs.AttackConfig, **kwargs):
+def execute_general_attack(attack_type: AttackType, config_file: str, attack_config_class: attack_configs.AttackConfig, **kwargs):
     """
     The general function to execute an attack based on the attack type.
 
@@ -293,7 +290,7 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
 @click.option('--max-iterations', default=None, type=click.INT, help='Number of iterations for the attack.')
 @click.option('--overshoot', default=None, type=click.FLOAT, help='Overshoot value for the attack.')
 def deepfool(config, **kwargs):
-    return execute_general_attack(AttackType.DEEPFOOL, config, AttackConfigs.DeepFoolAttackConfig, **kwargs)
+    return execute_general_attack(AttackType.DEEPFOOL, config, attack_configs.DeepFoolAttackConfig, **kwargs)
 
 
 
@@ -313,7 +310,7 @@ def deepfool(config, **kwargs):
 @click.option('--patience', type=click.INT, default=None, help='The number of iterations to wait before early stopping. Defaults to 5.')
 @click.option('--verbose', type=click.BOOL, default=None, help='Whether to print progress of the attack. Defaults to True.')
 def cw(config, **kwargs):
-    return execute_general_attack(AttackType.CW, config, AttackConfigs.CWAttackConfig, **kwargs)
+    return execute_general_attack(AttackType.CW, config, attack_configs.CWAttackConfig, **kwargs)
 
 
 @attack.command()
@@ -322,14 +319,14 @@ def cw(config, **kwargs):
 @click.option('--num-iter', default=None, type=click.INT, help='Number of iterations for the attack.')
 @click.option('--alpha', default=None, type=click.FLOAT, help='Alpha value for the attack.')
 def pgd(config, **kwargs):
-    return execute_general_attack(AttackType.PGD, config, AttackConfigs.PgdAttackConfig, **kwargs)
+    return execute_general_attack(AttackType.PGD, config, attack_configs.PgdAttackConfig, **kwargs)
 
 
 @attack.command()
 @common_attack_options
 @click.option('--epsilon', default=None, type=click.FLOAT, help='Epsilon value for the attack.')
 def fgsm(config, **kwargs):
-    return execute_general_attack(AttackType.FGSM, config, AttackConfigs.FgsmAttackConfig, **kwargs)
+    return execute_general_attack(AttackType.FGSM, config, attack_configs.FgsmAttackConfig, **kwargs)
 
 @attack.command()
 @common_attack_options
@@ -343,6 +340,6 @@ def fgsm(config, **kwargs):
 @click.option('--target_images_dir', default=None, type=click.STRING, help='Target images path.')
 @click.option('--maximum_generation_attempts', default=None, type=click.INT, help='Maximum number of attempts to generate target images.')
 def lots(config, **kwargs):
-    return execute_general_attack(AttackType.LOTS, config, AttackConfigs.LotsAttackConfig, **kwargs)
+    return execute_general_attack(AttackType.LOTS, config, attack_configs.LotsAttackConfig, **kwargs)
     
    

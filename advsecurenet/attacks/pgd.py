@@ -1,10 +1,12 @@
 import torch
 from tqdm.auto import trange
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-from advsecurenet.shared.types import PgdAttackConfig, DeviceType
-from advsecurenet.shared.colors import red, yellow, reset
-from advsecurenet.models.base_model import BaseModel
 from advsecurenet.utils import get_device
+from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.device import DeviceType
+from advsecurenet.shared.colors import red, yellow, reset
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.shared.types.configs.attack_configs import PgdAttackConfig
+
 
 """
 This module contains the implementation of the Projected Gradient Descent attack.

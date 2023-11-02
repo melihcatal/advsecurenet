@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import pytest
 from advsecurenet.attacks import PGD
-from advsecurenet.shared.types import PgdAttackConfig, DeviceType
-
+from advsecurenet.shared.types import DeviceType
+from advsecurenet.shared.types.configs.attack_configs import PgdAttackConfig
 
 class SimpleModel(nn.Module):
     def __init__(self):

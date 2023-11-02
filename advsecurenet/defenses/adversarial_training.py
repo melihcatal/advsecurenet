@@ -5,7 +5,7 @@ from tqdm.auto import trange
 from advsecurenet.utils import train, test
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
-from advsecurenet.shared.types import AdversarialTrainingConfig
+from advsecurenet.shared.types.configs import AdversarialTrainingConfig
 
 
 def AdversarialTraining(config: AdversarialTrainingConfig) -> None:

@@ -9,7 +9,7 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 
 from advsecurenet.defenses import AdversarialTraining
-from advsecurenet.shared.types import AdversarialTrainingConfig
+from advsecurenet.shared.types.configs import AdversarialTrainingConfig
 
 
 class DummyModel(BaseModel):

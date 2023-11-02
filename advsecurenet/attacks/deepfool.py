@@ -1,10 +1,10 @@
 import torch
 import cv2
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-
-from advsecurenet.shared.types import DeepFoolAttackConfig
 from advsecurenet.utils import get_device
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.shared.types.configs.attack_configs import DeepFoolAttackConfig
+
 
 
 class DeepFool(AdversarialAttack):

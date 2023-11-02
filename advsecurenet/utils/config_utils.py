@@ -155,7 +155,7 @@ def get_config_file_name(config_class: Type[T]) -> str:
         str: The config file name.
 
     Examples:
-        >>> from advsecurenet.shared.types import LotsAttackConfig
+        >>> from advsecurenet.shared.types.configs import LotsAttackConfig
         >>> from advsecurenet.utils.config_utils import get_config_file_name
         >>> get_config_file_name(LotsAttackConfig)
         'lots_attack_config.yml'

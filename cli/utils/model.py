@@ -1,15 +1,14 @@
 import os
 import click
 import pkg_resources
-from advsecurenet.utils.config_utils import override_with_cli_args
 from advsecurenet.shared.types.device import DeviceType
 from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.utils.model_utils import download_weights as util_download_weights, train as util_train, test as util_test, save_model, load_model
-from advsecurenet.shared.types import TrainConfig
-from advsecurenet.shared.types import TestConfig
+from advsecurenet.shared.types.configs import TrainConfig
+from advsecurenet.shared.types.configs import TestConfig
+from advsecurenet.utils.model_utils import train as util_train, test as util_test, save_model, load_model
 
 def prepare_model(config_data, num_classes, device):
     """Loads the model and sets its weights."""

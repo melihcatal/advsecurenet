@@ -1,10 +1,10 @@
 import torch
-import torch.optim as optim
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from torch import optim
 from tqdm.auto import trange
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types import DeviceType
-from advsecurenet.shared.types import CWAttackConfig
+from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig
 from advsecurenet.utils import get_device
 
 
@@ -166,6 +166,5 @@ class CWAttack(AdversarialAttack):
         outputs = model(adv_image)
         predicted = torch.argmax(outputs, 1)
         if self.targeted:
-            return (predicted == label)
-        else:
-            return (predicted != label)
+            return predicted == label
+        return predicted != label

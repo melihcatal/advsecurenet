@@ -1,13 +1,14 @@
 import torch
 import pytest
-import torchvision.models as models
+import warnings
+
 from torch import nn
 from pytest_mock import mocker
 from advsecurenet.attacks import CWAttack
 from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.utils import get_device
-from advsecurenet.shared.types import CWAttackConfig, DeviceType
-import warnings
+from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig
+from advsecurenet.shared.types.device import DeviceType
+
 warnings.simplefilter("always", category=ImportWarning)
 
 
