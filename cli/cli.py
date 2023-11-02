@@ -2,6 +2,8 @@ import os
 import warnings
 import click
 from requests.exceptions import HTTPError
+from advsecurenet.shared.loss import Loss
+from advsecurenet.shared.optimizer import Optimizer
 from advsecurenet.shared.types.configs import attack_configs
 from advsecurenet.shared.types.configs import TrainConfig, TestConfig, ConfigType
 from advsecurenet.shared.types.model import ModelType
@@ -44,8 +46,8 @@ if __name__ == "__main__":
 @click.option('--epochs', default=1, type= click.INT, help='Number of epochs to train for. Defaults to 1.')
 @click.option('--batch-size', default=32, type=click.INT, help='Batch size for training.')
 @click.option('--lr', default=0.001, type=click.FLOAT, help='Learning rate for training.')
-@click.option('--optimizer', default='adam', help='Optimizer to use for training.')
-@click.option('--loss', default='cross_entropy', help='Loss function to use for training.')
+@click.option('--optimizer', default='adam', help='Optimizer to use for training. Available options: ' + ', '.join([e.name for e in Optimizer]))
+@click.option('--loss', default='cross_entropy', help='Loss function to use for training. Available options: ' + ', '.join([e.name for e in Loss]))
 @click.option('--save-path', default=None, help='The directory to save the model to. If not specified, defaults to the weights directory.')
 @click.option('--save-name', default=None, help='The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.')
 @click.option('--device', default=None, help='The device to train on. Defaults to CPU')
@@ -65,6 +67,12 @@ def train(config: str, **kwargs):
         save_name (str, optional): The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.
         device (str, optional): The device to train on. Defaults to CPU
 
+    Examples:
+    
+            >>> advsecurenet train --model-name=resnet18 --dataset-name=cifar10
+            or
+            >>> advsecurenet train --config=train_config.yml
+
     Raises:
         ValueError: If the model name or dataset name is not provided.
 
@@ -72,6 +80,9 @@ def train(config: str, **kwargs):
         If a configuration file is provided, the CLI arguments will override the configuration file. The CLI arguments have priority.
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
+    if not config:
+        click.echo("No configuration file provided for training! Using default configuration...")
+        config = get_default_config_yml("train_config.yml", "cli")
 
     config_data:TrainConfig = load_configuration(config_type=ConfigType.TRAIN, config_file=config, **kwargs)
 
@@ -85,7 +96,7 @@ def train(config: str, **kwargs):
 @click.option('--model_weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
 @click.option('--device', default=None, help='The device to evaluate on. Defaults to CPU')
 @click.option('--batch-size', default=32, help='Batch size for evaluation.')
-@click.option('--loss', default=None, help='Loss function to use for evaluation.')
+@click.option('--loss', default=None, help='Loss function to use for evaluation. Available options: ' + ', '.join([e.name for e in Loss]))
 def test(config: str, **kwargs):
     """
     Command to evaluate a model.
@@ -113,6 +124,9 @@ def test(config: str, **kwargs):
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     
     """
+    if not config:
+        click.echo("No configuration file provided for evaluation! Using default configuration...")
+        config = get_default_config_yml("test_config.yml", "cli")
 
     config_data:TestConfig = load_configuration(config_type=ConfigType.TEST, config_file=config, **kwargs)
 

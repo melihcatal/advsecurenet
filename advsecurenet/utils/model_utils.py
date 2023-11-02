@@ -5,19 +5,95 @@ import pkg_resources
 import requests
 from torch import nn
 from tqdm import tqdm
-from advsecurenet.shared.types import DeviceType
 from advsecurenet.utils.get_device import get_device
+from advsecurenet.shared.loss import Loss
+from advsecurenet.shared.types import DeviceType
+from advsecurenet.shared.optimizer import Optimizer
 
-def train(model, train_loader, device=None, criterion=None, optimizer=None, epochs=3, learning_rate=0.001):
+
+def _get_loss_function(criterion: str or nn.Module = None, **kwargs) -> nn.Module:
+    """
+    Returns the loss function based on the given loss_function string or nn.Module.
+
+    Args:
+        criterion (str or nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
+        
+    Returns:
+        nn.Module: The loss function.
+
+    Examples:
+
+        >>> _get_loss_function("cross_entropy")
+        >>> _get_loss_function(nn.CrossEntropyLoss())
+    
+    """
+    # If nothing is provided, use CrossEntropyLoss as default
+    if criterion is None:
+        criterion = torch.nn.CrossEntropyLoss(**kwargs)
+    else:
+        # if criterion is a string, convert it to the corresponding loss function
+        if isinstance(criterion, str):
+
+            if criterion.upper() not in Loss.__members__:
+                raise ValueError("Unsupported loss function! Choose from: " + ", ".join([e.name for e in Loss]))
+            criterion_function_class = Loss[criterion.upper()].value
+            criterion = criterion_function_class(**kwargs)
+        elif not isinstance(criterion, nn.Module):
+            raise ValueError("Criterion must be a string or an instance of nn.Module.")
+    return criterion
+
+def _get_optimizer(optimizer: str or optim.Optimizer = None, model: nn.Module = None, learning_rate: float = 0.001, **kwargs) -> optim.Optimizer:
+    """
+    Returns the optimizer based on the given optimizer string or optim.Optimizer.
+
+    Args:
+        optimizer (str or optim.Optimizer, optional): The optimizer. Defaults to Adam with learning rate 0.001.
+        model (nn.Module, optional): The model to optimize. Required if optimizer is a string.
+        learning_rate (float, optional): The learning rate. Defaults to 0.001.
+
+    Returns:
+        optim.Optimizer: The optimizer.
+
+    Examples:
+
+        >>> _get_optimizer("adam")
+        >>> _get_optimizer(optim.Adam(model.parameters(), lr=0.001))
+    
+    """
+    if model is None and isinstance(optimizer, str):
+        raise ValueError("Model must be provided if optimizer is a string.")
+
+    if optimizer is None:
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    else:
+        if isinstance(optimizer, str):
+            if optimizer.upper() not in Optimizer.__members__:
+                raise ValueError("Unsupported optimizer! Choose from: " + ", ".join([e.name for e in Optimizer]))
+            
+            optimizer_class = Optimizer[optimizer.upper()].value
+            optimizer = optimizer_class(model.parameters(), lr=learning_rate, **kwargs)
+
+        elif not isinstance(optimizer, optim.Optimizer):
+            raise ValueError("Optimizer must be a string or an instance of optim.Optimizer.")
+    return optimizer
+
+
+def train(model: nn.Module,
+          train_loader: torch.utils.data.DataLoader,
+          device: DeviceType = None,
+          criterion: str or nn.Module = None,
+          optimizer: str or optim.Optimizer = None,
+          epochs: int = 3, 
+          learning_rate: float = 0.001) -> None:
     """
     Trains the model on the given train_loader for the given number of epochs.
 
     Args:
         model (nn.Module): The model to train.
         train_loader (torch.utils.data.DataLoader): The train loader.
-        device (DeviceType, optional): The device to train on. Defaults to CPU
-        criterion (nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
-        optimizer (torch.optim, optional): The optimizer. Defaults to Adam with learning rate 0.001.
+        device (DeviceType, optional): The device to train on. Defaults to CPU.
+        criterion (str or nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
+        optimizer (str or optim.Optimizer, optional): The optimizer. Defaults to Adam with learning rate 0.001.
         epochs (int, optional): The number of epochs to train for. Defaults to 3.
         learning_rate (float, optional): The learning rate. Defaults to 0.001.
 
@@ -29,11 +105,9 @@ def train(model, train_loader, device=None, criterion=None, optimizer=None, epoc
     if device is None:
         device = get_device().value
     
-    if criterion is None:
-        criterion = torch.nn.CrossEntropyLoss()
-    
-    if optimizer is None:
-        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    loss_function = _get_loss_function(criterion)
+ 
+    optimizer = _get_optimizer(optimizer, model, learning_rate)
     
     print(f"Training on {device}")
     model.to(device)
@@ -46,7 +120,7 @@ def train(model, train_loader, device=None, criterion=None, optimizer=None, epoc
             
             optimizer.zero_grad() 
             outputs = model(data)  
-            loss = criterion(outputs, target)  
+            loss = loss_function(outputs, target)  
             loss.backward()  
             optimizer.step() 
             
@@ -58,7 +132,10 @@ def train(model, train_loader, device=None, criterion=None, optimizer=None, epoc
 
 
 
-def test(model, test_loader, criterion=None, device=None):
+def test(model: nn.Module, 
+         test_loader:torch.utils.data.DataLoader,
+         criterion: str or nn.Module = None,
+         device: DeviceType = None) -> None:
     """
     Tests the model on the given test_loader. Prints the average loss and accuracy.
 
@@ -74,9 +151,7 @@ def test(model, test_loader, criterion=None, device=None):
     """
     if device is None:
         device = get_device().value
-    
-    if criterion is None:
-        criterion = torch.nn.CrossEntropyLoss()
+    loss_function = _get_loss_function(criterion)
 
     model.to(device)
     model.eval()
@@ -88,7 +163,7 @@ def test(model, test_loader, criterion=None, device=None):
         for data, target in tqdm(test_loader, desc="Testing", unit="batch"):
             data, target = data.to(device), target.to(device)
             output = model(data)
-            test_loss += criterion(output, target).item()
+            test_loss += loss_function(output, target).item()
             pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
 
@@ -98,7 +173,9 @@ def test(model, test_loader, criterion=None, device=None):
     return test_loss, accuracy
 
 
-def save_model(model, filename, filepath = None):
+def save_model(model: nn.Module, 
+               filename: str, 
+               filepath: str= None):
     """
     Saves the model weights to the given filepath.
 
@@ -149,13 +226,16 @@ def load_model(model, filename, filepath= None, device=None):
     return model
 
 
-def download_weights(model_name=None, dataset_name=None, filename=None, save_path=None):
+def download_weights(model_name: str,
+                     dataset_name: str,
+                     filename: str = None, 
+                     save_path: str = None):
     """
     Downloads model weights from a remote source based on the model and dataset names.
 
     Args:
-        model_name (str, optional): The name of the model (e.g. "resnet50").
-        dataset_name (str, optional): The name of the dataset the model was trained on (e.g. "cifar10").
+        model_name (str): The name of the model (e.g. "resnet50").
+        dataset_name (str): The name of the dataset the model was trained on (e.g. "cifar10").
         filename (str, optional): The filename of the weights on the remote server. If provided, this will be used directly.
         save_path (str, optional): The directory to save the weights to. Defaults to weights directory.
 
@@ -168,7 +248,7 @@ def download_weights(model_name=None, dataset_name=None, filename=None, save_pat
         Downloaded weights to /home/user/advsecurenet/weights/resnet50_cifar10.pth
     """
     
-    base_url = "https://advsecurenet.s3.eu-central-1.amazonaws.com/weights/"  # Replace with the base URL of your remote server
+    base_url = "https://advsecurenet.s3.eu-central-1.amazonaws.com/weights/" 
     
     # Generate filename and remote_url based on model_name and dataset_name if filename is not provided
     if not filename:

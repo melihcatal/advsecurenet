@@ -55,7 +55,7 @@ def cli_train(config_data:TrainConfig):
         model = ModelFactory.get_model(config_data['model_name'], num_classes=dataset_obj.num_classes)
         model.train()
 
-        util_train(model, train_data_loader, epochs=config_data['epochs'], learning_rate=config_data['lr'], device=device)
+        util_train(model, train_data_loader, epochs=config_data['epochs'], learning_rate=config_data['lr'], device=device, criterion=config_data['loss'], optimizer=config_data['optimizer'])
 
         save_name = config_data['save_name'] if config_data['save_name'] else f"{config_data['model_name']}_{dataset_name}_weights.pth"
 
@@ -105,8 +105,7 @@ def cli_test(config_data:TestConfig):
         model = load_model(model, config_data['model_weights'], device=device)
 
         model.eval()
-
-        util_test(model, test_data_loader, device=device, criterion=loss)
+        util_test(model, test_data_loader, device=device, criterion=config_data['loss'])
 
     except Exception as e:
         click.echo(f"Error evaluating model {config_data['model_name']} on {dataset_name}! Details: {e}")
