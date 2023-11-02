@@ -1,11 +1,13 @@
 """
 This module contains utility functions for working with configuration data through the CLI.
 """
+import os
 import yaml
+import pkg_resources
 from dataclasses import fields
 from typing import Dict, Callable
 from advsecurenet.shared.types import ConfigType
-
+config_path = pkg_resources.resource_filename("advsecurenet", "configs")
 
 def build_config(config_data, config_type):
     """
@@ -28,8 +30,9 @@ def read_config_file(config_file: str):
         raise ValueError(f"Invalid configuration file: {e}")
 
 def load_configuration(config_type: ConfigType, config_file: str, **overrides: Dict):
-    """Loads and overrides the configuration."""
+    """Loads and overrides the configuration."""    
     # Load the base configuration
+    print(config_file)
     config_data = read_config_file(config_file)
     
     # Call specific checks
@@ -47,7 +50,6 @@ def attack_config_check(config_data: Dict, overrides: Dict):
         raise ValueError("Please provide a valid path for custom-data-dir when using the custom dataset.")
     if overrides.get('dataset_name') != 'custom' and overrides.get('custom_data_dir'):
         raise ValueError("Please set dataset-name to 'custom' when specifying custom-data-dir.")
-
 
 CHECK_HANDLERS = {
     ConfigType.ATTACK: attack_config_check,

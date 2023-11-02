@@ -6,7 +6,7 @@ from advsecurenet.shared.types.configs import attack_configs
 from advsecurenet.shared.types.configs import TrainConfig, TestConfig, ConfigType
 from advsecurenet.shared.types.model import ModelType
 from advsecurenet.shared.types.attacks import AttackType
-from advsecurenet.utils import download_weights as util_download_weights, get_available_configs, generate_default_config_yaml
+from advsecurenet.utils import download_weights as util_download_weights, get_available_configs, generate_default_config_yaml, get_default_config_yml
 from cli.utils.attack import execute_attack
 from cli.utils.config import build_config, load_configuration
 from cli.utils.data import load_and_prepare_data
@@ -138,8 +138,10 @@ def configs():
 
 @main.command()
 @click.option('-c', '--config-name', default=None, help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.')
+@click.option('-s', '--save' , type=click.BOOL, default=False, help='Whether to save the configuration file to the current directory. Defaults to False.')
+@click.option('-p', '--print-output', 'print_output', is_flag=True, default=False, help='Whether to print the configuration file to the console. Defaults to True.')
 @click.option('-o', '--output-path', default=None, help='The directory to save the configuration file to. If not specified, defaults to the current working directory.')
-def config_default(config_name: str, output_path:str):
+def config_default(config_name: str, save: bool, print_output:bool, output_path:str):
     """
     Generate a default configuration file based on the name of the configuration to use.
 
@@ -165,12 +167,20 @@ def config_default(config_name: str, output_path:str):
         output_path = os.getcwd()
 
     try:
-        generate_default_config_yaml(config_name, output_path)
-        click.echo(f"Generated default configuration file {config_name}!")
+        default_config = generate_default_config_yaml(config_name, output_path, save= save, config_subdir="cli")
+        
+        if print_output:
+            click.echo("*"*50)
+            click.echo(f"Default configuration file for {config_name}:\n")
+            formatted_config = '\n'.join([f"{key}: {value}" for key, value in default_config.items()])
+            click.echo(formatted_config)
+            click.echo("*"*50)
+        if save:
+            click.echo(f"Generated default configuration file {config_name}!")
     except FileNotFoundError as e:
         click.echo(f"Configuration file {config_name} not found! You can use the 'configs' command to list available configuration files.")
-    except:
-        click.echo(f"Error generating default configuration file {config_name}!")
+    except Exception as e:
+        click.echo(f"Error generating default configuration file {config_name}!" , e)
     
 
 @main.command()
@@ -266,10 +276,18 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
     Raises:
         ValueError: If the attack type is not supported.
     """
+
+    # if the config file is not provided, use the default config file
+    attack_name = attack_type.name.lower()
+    if not config_file:
+        click.echo(f"No configuration file provided for {attack_name} attack! Using default configuration...")
+        file_name = f'{attack_name}_attack_config.yml'
+        config_file = get_default_config_yml(file_name, "cli")
+
     config_data = load_configuration(config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
-    
+
     if attack_type == AttackType.LOTS:
-        click.echo(f"Executing {attack_type.name} attack...")
+        click.echo(f"Executing {attack_name} attack...")
         adversarial_images = execute_lots_attack(config_data)
     else:
         data, num_classes, device = load_and_prepare_data(config_data)
@@ -278,7 +296,7 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
 
         attack_class = attack_type.value  # Get the class from the Enum
         attack = attack_class(attack_config)
-        click.echo(f"Executing {attack_type.name} attack...")
+        click.echo(f"Executing {attack_name} attack...")
         adversarial_images = execute_attack(model=model, data=data, batch_size=config_data['batch_size'], attack=attack, device=device, verbose=config_data['verbose'])
 
     return adversarial_images

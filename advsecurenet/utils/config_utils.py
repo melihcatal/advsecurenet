@@ -114,13 +114,16 @@ def verify_config(config: T, config_class: Type[T]) -> None:
                 f"Value {value} for key {key} is not of type {type(config_data[key])}!")
 
 
-def generate_default_config_yaml(config_name: str, output_path: str) -> None:
+def generate_default_config_yaml(config_name: str, output_path: str, save=False, config_subdir=None) -> dict:
     """
     Generate a default configuration YAML based on the name of the configuration.
 
     Args:
         config_name (str): The name of the configuration yml file (e.g., "cw_attack_config.yml").
         output_path (str): The path where the YAML file should be saved.
+
+    Returns:
+        dict: The default configuration YAML as a dictionary.
     """
     if config_name is None or output_path is None:
         raise ValueError(
@@ -128,19 +131,20 @@ def generate_default_config_yaml(config_name: str, output_path: str) -> None:
     if not config_name.endswith("_config.yml"):
         config_name = config_name + "_config.yml"
         
-    default_config_path = get_default_config_yml(config_name)
-    print(default_config_path)
+    default_config_path = get_default_config_yml(config_name, config_subdir)
     # if the file does not exist, raise an error
     if not os.path.exists(default_config_path):
         raise FileNotFoundError("The default config file does not exist!")
 
     default_config = read_yml_file(default_config_path)
     output_path = os.path.join(output_path, config_name)
-
     # create the yml file 
-    yaml = YAML()
-    with open(output_path, 'w') as file:
-        yaml.dump(default_config, file)
+    if save:
+        yaml = YAML()
+        with open(output_path, 'w') as file:
+             yaml.dump(default_config, file)
+    
+    return default_config
 
 
 
@@ -201,26 +205,32 @@ def read_yml_file(yml_path: str) -> dict:
     with open(yml_path, 'r') as file:
         return yaml.load(file)
 
-def get_default_config_yml(config_name: str) :
+def get_default_config_yml(config_name: str, config_subdir: str = None):
     """
     Get the default configuration YAML based on the name of the configuration.
 
     Args:
         config_name (str): The name of the configuration (e.g., "cw_attack").
+        config_subdir (str, optional): The sub-directory to search in. Defaults to None.
 
     Returns:
-        str: The default configuration YAML.
+        str: The path to the configuration YAML file.
     """
     if config_name is None:
         raise ValueError("config_name must be specified and not None!")
     
-
-    # find in which subdirectory the config is
-    file_path = [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(config_path) for f in files if f.endswith(config_name)]
-
+    if config_subdir:
+        # If specific subdir is provided, search only in that
+        dirpath = os.path.join(config_path, config_subdir)
+        file_path = [os.path.join(dirpath, f) for f in os.listdir(dirpath) if f.endswith(config_name)]
+    else:
+        # Otherwise search in all subdirectories excluding the specified one ('cli' in this case)
+        file_path = [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(config_path) 
+                     if config_subdir not in dirpath for f in files if f.endswith(config_name)]
+    
     if len(file_path) == 0:
         raise FileNotFoundError(f"Config file {config_name} not found!")
-    
+
     return file_path[0]
 
 def override_with_cli_args(config_data, **cli_args):
