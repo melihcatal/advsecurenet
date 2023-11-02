@@ -137,8 +137,8 @@ def configs():
 
 
 @main.command()
-@click.option('--config-name', default=None, help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.')
-@click.option('--output-path', default=None, help='The directory to save the configuration file to. If not specified, defaults to the current working directory.')
+@click.option('-c', '--config-name', default=None, help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.')
+@click.option('-o', '--output-path', default=None, help='The directory to save the configuration file to. If not specified, defaults to the current working directory.')
 def config_default(config_name: str, output_path:str):
     """
     Generate a default configuration file based on the name of the configuration to use.
@@ -174,7 +174,7 @@ def config_default(config_name: str, output_path:str):
     
 
 @main.command()
-@click.option('--model-type', 
+@click.option('-m', '--model-type', 
               type=click.Choice([e.value for e in ModelType] + ['all']), 
               default='all', 
               help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.")
