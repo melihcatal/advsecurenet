@@ -1,16 +1,16 @@
 # Description: Configuration file for the LOTS attack.
 
 # Model Configuration
-model_name: resnet18               # Name of the model to be attacked
-trained_on: cifar10                # Dataset on which the model was trained
+model_name: CustomMnistModel       # Name of the model to be attacked
+trained_on: mnist                  # Dataset on which the model was trained
 model_weights: null                # Path to model weights. If null, uses weights/{model_name}_{trained_on}_weights.pth. You can leave it empty if you have downloaded the weights to the default path
 device: CPU                        # Device for executing attacks. Options: [CPU, CUDA, MPS]
 
 # Attack Dataset Configuration
-dataset_name: cifar10              # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
+dataset_name: mnist                # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
 custom_data_dir: null              # Required if dataset_name is 'custom': path to custom dataset. Leave it empty if the dataset_name is not custom
-dataset_part: null                 # Required if dataset_name isn't 'custom'. Which part of dataset to use for attack. Options: [train, test, all, random]. Leave it empty if the dataset_name is custom
-random_samples: null               # Required if dataset_part is 'random'. Number of random samples for attack. Leave it empty if the dataset_part isn't random
+dataset_part: random               # Required if dataset_name isn't 'custom'. Which part of dataset to use for attack. Options: [train, test, all, random]. Leave it empty if the dataset_name is custom
+random_samples: 10                 # Required if dataset_part is 'random'. Number of random samples for attack. Leave it empty if the dataset_part isn't random
 
 # Attack Execution Configuration
 batch_size: 32                     # Batch size for attack execution
