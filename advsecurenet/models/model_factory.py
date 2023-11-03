@@ -65,21 +65,21 @@ class ModelFactory:
                 f"Unsupported model type: {model_variant}. If you are trying to load a custom model, please ensure that the model file is in the 'advsecurenet/models/custom' directory.") from e
 
     @staticmethod
-    def get_available_models() -> list[str]:
+    def available_models() -> list[str]:
         """
         Returns a list of all available models.
         """
         return StandardModel.models() + CustomModel.models()
 
     @staticmethod
-    def get_available_standard_models() -> list[str]:
+    def available_standard_models() -> list[str]:
         """
         Returns a list of all available standard models that are supported by torchvision.
         """
         return StandardModel.models()
 
     @staticmethod
-    def get_available_custom_models() -> list[str]:
+    def available_custom_models() -> list[str]:
         """
         Returns a list of all available custom models that are created by the user. These models are stored in the 'advsecurenet/models/CustomModels' directory.
         """

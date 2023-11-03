@@ -33,16 +33,16 @@ def test_get_model_unsupported():
         ModelFactory.get_model('unsupported_model', num_classes=10)
 
 
-def test_get_available_models():
-    models = ModelFactory.get_available_models()
+def test_available_models():
+    models = ModelFactory.available_models()
     assert len(models) > 0
 
 
 def test_get_available_standard_models():
-    models = ModelFactory.get_available_standard_models()
+    models = ModelFactory.available_standard_models()
     assert len(models) > 0
 
 
 def test_get_available_custom_models():
-    models = ModelFactory.get_available_custom_models()
+    models = ModelFactory.available_custom_models()
     assert len(models) > 0

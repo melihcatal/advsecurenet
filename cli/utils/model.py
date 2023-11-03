@@ -113,9 +113,9 @@ def cli_test(config_data:TestConfig):
 
 def get_models(model_type: str) -> list[str]:
     model_list_getters = {
-            "all": ModelFactory.get_available_models,
-            "custom": ModelFactory.get_available_custom_models,
-            "standard": ModelFactory.get_available_standard_models
+            "all": ModelFactory.available_models,
+            "custom": ModelFactory.available_custom_models,
+            "standard": ModelFactory.available_standard_models
         }
 
     model_list = model_list_getters.get(model_type, lambda: [])()
