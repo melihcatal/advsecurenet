@@ -6,7 +6,7 @@ from advsecurenet.datasets.ImageNet import ImageNetDataset
 
 DATASET_MAP = {
     DatasetType.CIFAR10: CIFAR10Dataset,
-    DatasetType.IMAGE_NET: ImageNetDataset,
+    DatasetType.IMAGENET: ImageNetDataset,
     DatasetType.MNIST: MNISTDataset
 }
 
@@ -42,3 +42,16 @@ class DatasetFactory:
 
         DatasetClass = DATASET_MAP[dataset_type]
         return DatasetClass(**kwargs)
+    
+    @staticmethod
+    def available_datasets() -> list:
+        """
+        Returns a list of available datasets.
+
+        Returns
+        -------
+        list
+            A list of available datasets.
+        """
+
+        return list(DATASET_MAP.keys())
