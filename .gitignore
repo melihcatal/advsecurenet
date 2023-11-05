@@ -30,3 +30,6 @@ examples/*/**_config.yml
 # coverage files
 .coverage.*
 .coverage
+
+# ide settings
+.vscode/

@@ -110,3 +110,10 @@ class CustomModel(BaseModel):
             model_name for model_name in model_names if model_name != "__init__"]
 
         return model_names
+
+    @staticmethod
+    def available_weights(model_name: str) -> list[str]:
+        """
+        Not applicable for custom models.
+        """
+        raise NotImplementedError("This method is not applicable for custom models.")

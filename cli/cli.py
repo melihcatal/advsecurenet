@@ -2,6 +2,7 @@ import os
 import warnings
 import click
 from requests.exceptions import HTTPError
+from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
 from advsecurenet.shared.types.configs import attack_configs
@@ -132,15 +133,47 @@ def test(config: str, **kwargs):
 
     cli_test(config_data)
 
+@main.command()
+@click.option('-m','--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
+def available_weights(model_name:str):
+    """
+    Command to list available weights for a model.
+
+    Args:
+        model_name (str): The name of the model (e.g. "resnet18").
     
+    Raises:
+        ClickException: If the model name is not provided.,
+    
+    Examples:
+        >>> advsecurenet available-weights --model-name=resnet18
+            IMAGENET1K_V1
+
+    """
+    if not model_name:
+        raise click.ClickException("Model name must be provided! You can use the 'models' command to list available models.")
+
+    weights = StandardModel.available_weights(model_name)
+    click.echo(f"Available weights for {model_name}:")
+    for weight in weights:
+        click.echo(f"\t{weight.name}")
+
+
 @main.command()
 def configs():
     """
     Return the list of available configuration files.
+
+    Raises:
+        ClickException: If no configuration file is found
+
+    Examples:
+        >>> advsecurenet configs
+
     """
     config_list = get_available_configs()
     if len(config_list) == 0:
-        click.echo("No configuration files found!")
+        click.ClickException("No configuration file found!")
         return
     
     click.echo("Available configuration files: \n")
