@@ -1,17 +1,22 @@
+from torch import nn
+from torch import optim
+from torch.utils.data import DataLoader
 from dataclasses import dataclass
 from advsecurenet.shared.types.device import DeviceType
 
+
 @dataclass
 class TrainConfig:
-    model_name: str = "resnet18"
-    dataset_name: str = "cifar10"
+    model: nn.Module = None
+    train_loader: DataLoader = None
+    criterion: str or nn.Module = "cross_entropy"
+    optimizer: str or optim = "adam"
     epochs: int = 10
-    batch_size: int = 32
-    # TODO: change lr to learning_rate
-    lr: float = 0.1
-    optimizer: str = "adam"
-    loss: str = "cross_entropy"
+    learning_rate: float = 0.001
     device: DeviceType = DeviceType.CPU
-    save_path: str = "saved_models"
-    save_name: str = "model"
-    
+    save_checkpoint: bool = False
+    save_checkpoint_path: str = None
+    save_checkpoint_name: str = None
+    checkpoint_interval: int = 1
+    load_checkpoint: bool = False
+    load_checkpoint_path: str = None
