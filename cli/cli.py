@@ -19,17 +19,21 @@ from cli.attacks.lots import execute_lots_attack
 
 warnings.simplefilter(action='ignore', category=UserWarning)
 
+
 @click.group()
 def main():
     pass
+
 
 @click.group()
 def attack():
     pass
 
+
 @click.group()
 def defense():
     pass
+
 
 main.add_command(attack)
 main.add_command(defense)
@@ -38,23 +42,28 @@ if __name__ == "__main__":
     main()
 
 
-
-
 @main.command()
-@click.option('--config', type=click.Path(exists=True), default=None, help='Path to the training configuration yml file.')
-@click.option('--model-name', default=None, help='Name of the model to train (e.g. "resnet18").')
-@click.option('--dataset-name', default=None, help='Name of the dataset to train on (e.g. "cifar10").')
-@click.option('--epochs', default=1, type= click.INT, help='Number of epochs to train for. Defaults to 1.')
-@click.option('--batch-size', default=32, type=click.INT, help='Batch size for training.')
-@click.option('--lr', default=0.001, type=click.FLOAT, help='Learning rate for training.')
-@click.option('--optimizer', default='adam', help='Optimizer to use for training. Available options: ' + ', '.join([e.name for e in Optimizer]))
-@click.option('--loss', default='cross_entropy', help='Loss function to use for training. Available options: ' + ', '.join([e.name for e in Loss]))
+@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the training configuration yml file.')
+@click.option('-m', '--model-name', default=None, help='Name of the model to train (e.g. "resnet18").')
+@click.option('-d', '--dataset-name', default=None, help='Name of the dataset to train on (e.g. "cifar10").')
+@click.option('-e', '--epochs', default=None, type=click.INT, help='Number of epochs to train for. Defaults to 1.')
+@click.option('-b', '--batch-size', default=None, type=click.INT, help='Batch size for training.')
+@click.option('--lr', default=None, type=click.FLOAT, help='Learning rate for training.')
+@click.option('--optimizer', default=None, help='Optimizer to use for training. Available options: ' + ', '.join([e.name for e in Optimizer]))
+@click.option('--loss', default=None, help='Loss function to use for training. Available options: ' + ', '.join([e.name for e in Loss]))
+@click.option('-s', '--save', type=click.BOOL, is_flag=True, default=None, help='Whether to save the model after training. Defaults to False.')
 @click.option('--save-path', default=None, help='The directory to save the model to. If not specified, defaults to the weights directory.')
 @click.option('--save-name', default=None, help='The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.')
 @click.option('--device', default=None, help='The device to train on. Defaults to CPU')
+@click.option('--save-checkpoint', type=click.BOOL, is_flag=True, default=None, help='Whether to save model checkpoints during training. Defaults to False.')
+@click.option('--checkpoint_interval', default=None, type=click.INT, help='The interval at which to save model checkpoints. Defaults to 1.')
+@click.option('--save-checkpoint-path', default=None, help='The directory to save model checkpoints to. If not specified, defaults to the checkpoints directory.')
+@click.option('--save-checkpoint-name', default=None, help='The name to save the model checkpoints as. If not specified, defaults to the {model_name}_{dataset_name}_checkpoint_{epoch}.pth.')
+@click.option('--load-checkpoint', type=click.BOOL, is_flag=True, default=None, help='Whether to load model checkpoints before training. Defaults to False.')
+@click.option('--load-checkpoint-path', default=None, help='The file path to load model checkpoint.')
 def train(config: str, **kwargs):
     """Command to train a model.
-    
+
     Args:
         config (str, optional): Path to the training configuration yml file.
         model_name (str): The name of the model (e.g. "resnet18").
@@ -64,12 +73,13 @@ def train(config: str, **kwargs):
         lr (float, optional): The learning rate for training.
         optimizer (str, optional): The optimizer to use for training.
         loss (str, optional): The loss function to use for training.
+        save (bool, optional): Whether to save the model after training. Defaults to False.
         save_path (str, optional): The directory to save the model to. If not specified, defaults to the weights directory
         save_name (str, optional): The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.
         device (str, optional): The device to train on. Defaults to CPU
 
     Examples:
-    
+
             >>> advsecurenet train --model-name=resnet18 --dataset-name=cifar10
             or
             >>> advsecurenet train --config=train_config.yml
@@ -82,11 +92,12 @@ def train(config: str, **kwargs):
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
     if not config:
-        click.echo("No configuration file provided for training! Using default configuration...")
+        click.echo(
+            "No configuration file provided for training! Using default configuration...")
         config = get_default_config_yml("train_config.yml", "cli")
 
-    config_data:TrainConfig = load_configuration(config_type=ConfigType.TRAIN, config_file=config, **kwargs)
-
+    config_data = load_configuration(
+        config_type=ConfigType.TRAIN, config_file=config, **kwargs)
     cli_train(config_data)
 
 
@@ -94,9 +105,9 @@ def train(config: str, **kwargs):
 @click.option('--config', type=click.Path(exists=True), default=None, help='Path to the evaluation configuration yml file.')
 @click.option('--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset to evaluate on (e.g. "cifar10").')
-@click.option('--model_weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
+@click.option('--model-weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
 @click.option('--device', default=None, help='The device to evaluate on. Defaults to CPU')
-@click.option('--batch-size', default=32, help='Batch size for evaluation.')
+@click.option('--batch-size', default=None, help='Batch size for evaluation.')
 @click.option('--loss', default=None, help='Loss function to use for evaluation. Available options: ' + ', '.join([e.name for e in Loss]))
 def test(config: str, **kwargs):
     """
@@ -123,35 +134,39 @@ def test(config: str, **kwargs):
     Notes:
         If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
-    
+
     """
     if not config:
-        click.echo("No configuration file provided for evaluation! Using default configuration...")
+        click.echo(
+            "No configuration file provided for evaluation! Using default configuration...")
         config = get_default_config_yml("test_config.yml", "cli")
 
-    config_data:TestConfig = load_configuration(config_type=ConfigType.TEST, config_file=config, **kwargs)
+    config_data: TestConfig = load_configuration(
+        config_type=ConfigType.TEST, config_file=config, **kwargs)
 
     cli_test(config_data)
 
+
 @main.command()
-@click.option('-m','--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
-def available_weights(model_name:str):
+@click.option('-m', '--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
+def available_weights(model_name: str):
     """
     Command to list available weights for a model.
 
     Args:
         model_name (str): The name of the model (e.g. "resnet18").
-    
+
     Raises:
         ClickException: If the model name is not provided.,
-    
+
     Examples:
         >>> advsecurenet available-weights --model-name=resnet18
             IMAGENET1K_V1
 
     """
     if not model_name:
-        raise click.ClickException("Model name must be provided! You can use the 'models' command to list available models.")
+        raise click.ClickException(
+            "Model name must be provided! You can use the 'models' command to list available models.")
 
     weights = StandardModel.available_weights(model_name)
     click.echo(f"Available weights for {model_name}:")
@@ -173,71 +188,81 @@ def configs():
     """
     config_list = get_available_configs()
     if len(config_list) == 0:
+        click.echo("No configuration file found!")
         click.ClickException("No configuration file found!")
         return
-    
+
     click.echo("Available configuration files: \n")
     for i, config in enumerate(config_list):
         click.echo(f"{i+1}. {config}")
-    # add space 
+    # add space
     click.echo("")
 
 
 @main.command()
 @click.option('-c', '--config-name', default=None, help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.')
-@click.option('-s', '--save' , type=click.BOOL, default=False, help='Whether to save the configuration file to the current directory. Defaults to False.')
-@click.option('-p', '--print-output', 'print_output', is_flag=True, default=False, help='Whether to print the configuration file to the console. Defaults to True.')
+@click.option('-s', '--save', type=click.BOOL, is_flag=True, default=False, help='Whether to save the configuration file to the current directory. Defaults to False.')
+@click.option('-p', '--print-output', 'print_output', is_flag=True, default=False, help='Whether to print the configuration file to the console. Defaults to False.')
 @click.option('-o', '--output-path', default=None, help='The directory to save the configuration file to. If not specified, defaults to the current working directory.')
-def config_default(config_name: str, save: bool, print_output:bool, output_path:str):
+def config_default(config_name: str, save: bool, print_output: bool, output_path: str):
     """
     Generate a default configuration file based on the name of the configuration to use.
 
     Args:
 
         config_name (str): The name of the configuration file to use.
-        output_path (str): The directory to save the configuration file to. If not specified, defaults to the current working directory.
+        output_path (str): The directory to save the configuration file to. If not specified, defaults to the current working directory. It can also be a full path including the filename.
 
     Examples:
 
-        >>>  advsecurenet config-default --config-name=train_config.yml
-        Generated default configuration file train_config.yml!
-
+        >>>  advsecurenet config-default -c train -p
+        Default configuration file for train: ....
+        >>> advsecurenet config-default -c train -s
+        Saving default config to ... Generated default configuration file train!
+        >>> advsecurenet config-default -c train -s -o ./myconfigs/mytrain_config.yml
+        Saving default config to ./myconfigs/mytrain_config.yml ... Generated default configuration file train!
     Notes:
 
         If you are unsure which configuration file to use, use the "configs" command to list available configuration files. You can discard the _config.yml suffix when specifying the configuration name.
+        You can provide a full path including the filename to the output path. If the directory does not exist, it will be created. If the file already exists, it will be overwritten.
+        You can provide the relative path to the output path. Make sure it ends with a slash (e.g., ./myconfigs/).
     """
 
     if config_name is None:
         raise ValueError("config-name must be specified and not None!")
-    
+
     if output_path is None:
         output_path = os.getcwd()
 
     try:
-        default_config = generate_default_config_yaml(config_name, output_path, save= save, config_subdir="cli")
-        
+        default_config = generate_default_config_yaml(
+            config_name, output_path, save=save, config_subdir="cli")
+
         if print_output:
             click.echo("*"*50)
             click.echo(f"Default configuration file for {config_name}:\n")
-            formatted_config = '\n'.join([f"{key}: {value}" for key, value in default_config.items()])
+            formatted_config = '\n'.join(
+                [f"{key}: {value}" for key, value in default_config.items()])
             click.echo(formatted_config)
             click.echo("*"*50)
         if save:
             click.echo(f"Generated default configuration file {config_name}!")
     except FileNotFoundError as e:
-        click.echo(f"Configuration file {config_name} not found! You can use the 'configs' command to list available configuration files.")
+        click.echo(
+            f"Configuration file {config_name} not found! You can use the 'configs' command to list available configuration files.")
     except Exception as e:
-        click.echo(f"Error generating default configuration file {config_name}!" , e)
-    
+        click.echo(
+            f"Error generating default configuration file {config_name}!", e)
+
 
 @main.command()
-@click.option('-m', '--model-type', 
-              type=click.Choice([e.value for e in ModelType] + ['all']), 
-              default='all', 
+@click.option('-m', '--model-type',
+              type=click.Choice([e.value for e in ModelType] + ['all']),
+              default='all',
               help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.")
 def models(model_type):
     """Command to list available models.
-    
+
     Args:
 
         model_type (str, optional): The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.
@@ -251,18 +276,19 @@ def models(model_type):
     # show numbers too
     for i, model in enumerate(model_list):
         click.echo(f"{i+1}. {model}")
-    
+
     # add space
     click.echo("")
+
 
 @main.command()
 @click.option('--model-name', default=None, help='Name of the model for which weights are to be downloaded (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset the model was trained on (e.g. "cifar10").')
 @click.option('--filename', default=None, help='The filename of the weights on the remote server. If provided, this will be used directly.')
 @click.option('--save-path', default=None, help='The directory to save the weights to. If not specified, defaults to the weights directory.')
-def download_weights(model_name, dataset_name, filename, save_path):    
+def download_weights(model_name, dataset_name, filename, save_path):
     """Command to download model weights from a remote source based on the model and dataset names.
-    
+
     Args: 
         model_name (str, optional): The name of the model (e.g. "resnet18").
         dataset_name (str, optional): The name of the dataset the model was trained on (e.g. "cifar10").
@@ -274,39 +300,57 @@ def download_weights(model_name, dataset_name, filename, save_path):
     try:
         save_path_print = save_path if save_path else "weights directory"
         util_download_weights(model_name, dataset_name, filename, save_path)
-        click.echo(f"Downloaded weights to {save_path_print}. You can now use them for training or evaluation!")
+        click.echo(
+            f"Downloaded weights to {save_path_print}. You can now use them for training or evaluation!")
     except FileExistsError as e:
-        print(f"Model weights for {model_name} trained on {dataset_name} already exist at {save_path_print}!")
+        print(
+            f"Model weights for {model_name} trained on {dataset_name} already exist at {save_path_print}!")
     except HTTPError as e:
-        print(f"Model weights for {model_name} trained on {dataset_name} not found on remote server!")
+        print(
+            f"Model weights for {model_name} trained on {dataset_name} not found on remote server!")
     except Exception as e:
-        print(f"Error downloading model weights for {model_name} trained on {dataset_name}!") 
-    
+        print(
+            f"Error downloading model weights for {model_name} trained on {dataset_name}!")
+
 
 ################################# ATTACKS #####################################
-
 
 
 def common_attack_options(func):
     """Decorator to define common options for attack commands."""
     for option in reversed([
-    click.option('--config', type=click.Path(exists=True), default=None, help='Path to the attack configuration yml file.'),
-    click.option('--model-name', type=click.STRING, default=None, help='Name of the model to be attacked.'),
-    click.option('--trained-on',type=click.STRING, default=None, help='Dataset on which the model was trained.'),
-    click.option('--model-weights', type=click.Path(exists=True), default=None, help='Path to model weights. If unspecified, uses the default path based on model_name and trained_on.'),
-    click.option('--device', default=None, type=click.Choice(['CPU', 'CUDA', 'MPS'], case_sensitive=False), help='Device for executing attacks.'),
-    click.option('--dataset-name', type=click.Choice(['cifar10', 'mnist', 'custom'], case_sensitive=False), default=None, help='Dataset for the attack. Choose "custom" for your own dataset.'),
-    click.option('--custom-data-dir', type=click.Path(exists=True), default=None, help='Path to custom dataset. Required if dataset_name is "custom".'),
-    click.option('--dataset-part', type=click.Choice(['train', 'test', 'all', 'random'], case_sensitive=False), default=None, help='Which part of dataset to use for attack. Ignored if dataset_name is "custom".'),
-    click.option('--random-samples', type=click.INT, default=None, help='Number of random samples for attack. Relevant only if dataset_part is "random" and dataset_name isn\'t "custom".'),
-    click.option('--batch-size', type=click.INT, default=None, help='Batch size for attack execution.'),
-    click.option('--verbose', type=click.BOOL, default=None, help='Whether to print progress of the attack.'),
-    click.option('--save_result_images', type=click.BOOL, default=None, help='Whether to save the adversarial images.'),
-    click.option('--result_images_dir', type=click.Path(exists=True), default=None, help='Directory to save the adversarial images.'),
-    click.option('--result_images_prefix', type=click.STRING, default=None, help='Prefix for the adversarial images.'),
+        click.option('--config', type=click.Path(exists=True), default=None,
+                     help='Path to the attack configuration yml file.'),
+        click.option('--model-name', type=click.STRING, default=None,
+                     help='Name of the model to be attacked.'),
+        click.option('--trained-on', type=click.STRING, default=None,
+                     help='Dataset on which the model was trained.'),
+        click.option('--model-weights', type=click.Path(exists=True), default=None,
+                     help='Path to model weights. If unspecified, uses the default path based on model_name and trained_on.'),
+        click.option('--device', default=None, type=click.Choice(
+            ['CPU', 'CUDA', 'MPS'], case_sensitive=False), help='Device for executing attacks.'),
+        click.option('--dataset-name', type=click.Choice(['cifar10', 'mnist', 'custom'], case_sensitive=False),
+                     default=None, help='Dataset for the attack. Choose "custom" for your own dataset.'),
+        click.option('--custom-data-dir', type=click.Path(exists=True), default=None,
+                     help='Path to custom dataset. Required if dataset_name is "custom".'),
+        click.option('--dataset-part', type=click.Choice(['train', 'test', 'all', 'random'], case_sensitive=False),
+                     default=None, help='Which part of dataset to use for attack. Ignored if dataset_name is "custom".'),
+        click.option('--random-samples', type=click.INT, default=None,
+                     help='Number of random samples for attack. Relevant only if dataset_part is "random" and dataset_name isn\'t "custom".'),
+        click.option('--batch-size', type=click.INT, default=None,
+                     help='Batch size for attack execution.'),
+        click.option('--verbose', type=click.BOOL, default=None,
+                     help='Whether to print progress of the attack.'),
+        click.option('--save_result_images', type=click.BOOL,
+                     default=None, help='Whether to save the adversarial images.'),
+        click.option('--result_images_dir', type=click.Path(exists=True),
+                     default=None, help='Directory to save the adversarial images.'),
+        click.option('--result_images_prefix', type=click.STRING,
+                     default=None, help='Prefix for the adversarial images.'),
     ]):
         func = option(func)
     return func
+
 
 def execute_general_attack(attack_type: AttackType, config_file: str, attack_config_class: attack_configs.AttackConfig, **kwargs):
     """
@@ -327,11 +371,13 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
     # if the config file is not provided, use the default config file
     attack_name = attack_type.name.lower()
     if not config_file:
-        click.echo(f"No configuration file provided for {attack_name} attack! Using default configuration...")
+        click.echo(
+            f"No configuration file provided for {attack_name} attack! Using default configuration...")
         file_name = f'{attack_name}_attack_config.yml'
         config_file = get_default_config_yml(file_name, "cli")
 
-    config_data = load_configuration(config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
+    config_data = load_configuration(
+        config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
 
     if attack_type == AttackType.LOTS:
         click.echo(f"Executing {attack_name} attack...")
@@ -344,7 +390,8 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
         attack_class = attack_type.value  # Get the class from the Enum
         attack = attack_class(attack_config)
         click.echo(f"Executing {attack_name} attack...")
-        adversarial_images = execute_attack(model=model, data=data, batch_size=config_data['batch_size'], attack=attack, device=device, verbose=config_data['verbose'])
+        adversarial_images = execute_attack(
+            model=model, data=data, batch_size=config_data['batch_size'], attack=attack, device=device, verbose=config_data['verbose'])
 
     return adversarial_images
 
@@ -378,18 +425,17 @@ def deepfool(config, **kwargs):
         overshoot (float, optional): Overshoot value for the attack. Defaults to None.
 
     Examples:
-    
+
             >>> advsecurenet attack deepfool --model-name=resnet18 --trained-on=cifar10 --model-weights=resnet18_cifar10_weights.pth
             or
             >>> advsecurenet attack deepfool --config=deepfool_attack_config.yml
 
     Notes:
-    
+
             If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
     return execute_general_attack(AttackType.DEEPFOOL, config, attack_configs.DeepFoolAttackConfig, **kwargs)
-
 
 
 @attack.command()
@@ -439,7 +485,7 @@ def cw(config, **kwargs):
         patience (int, optional): The number of iterations to wait before early stopping. Defaults to 5.
 
     Examples:
-    
+
             >>> advsecurenet attack cw --model-name=resnet18 --trained-on=cifar10 --model-weights=resnet18_cifar10_weights.pth
             or
             >>> advsecurenet attack cw --config=cw_attack_config.yml
@@ -481,13 +527,13 @@ def pgd(config, **kwargs):
         alpha (float, optional): Alpha value for the attack. Defaults to 0.01.
 
     Examples:
-        
+
                 >>> advsecurenet attack pgd --model-name=resnet18 --trained-on=cifar10 --model-weights=resnet18_cifar10_weights.pth
                 or
                 >>> advsecurenet attack pgd --config=pgd_attack_config.yml
 
     Notes:
-            
+
                 If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
                 Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.  
     """
@@ -519,18 +565,19 @@ def fgsm(config, **kwargs):
         epsilon (float, optional): Epsilon value for the attack. Defaults to 0.3.
 
     Examples:
-        
+
                 >>> advsecurenet attack fgsm --epsilon 0.1
                 or
                 >>> advsecurenet attack fgsm --config=fgsm_attack_config.yml
 
     Notes:
-                
+
                     If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
                     Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
-    
+
     """
     return execute_general_attack(AttackType.FGSM, config, attack_configs.FgsmAttackConfig, **kwargs)
+
 
 @attack.command()
 @common_attack_options
@@ -571,17 +618,15 @@ def lots(config, **kwargs):
         maximum_generation_attempts (int, optional): Maximum number of attempts to generate target images. Defaults to 100.
 
     Examples:
-            
+
                     >>> advsecurenet attack lots --model-name=resnet18 --trained-on=cifar10 --model-weights=resnet18_cifar10_weights.pth
                     or
                     >>> advsecurenet attack lots --config=lots_attack_config.yml
 
     Notes:
-                        
+
                             If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
                             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.   
-        
+
     """
     return execute_general_attack(AttackType.LOTS, config, attack_configs.LotsAttackConfig, **kwargs)
-    
-   

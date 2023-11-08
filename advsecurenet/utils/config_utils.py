@@ -9,6 +9,7 @@ from ruamel.yaml import YAML
 T = TypeVar('T')
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
 
+
 def load_config_from_yaml(yaml_path: str, config_class: Type[T]) -> T:
     """
     Load a YAML file into a dataclass.
@@ -100,24 +101,33 @@ def generate_default_config_yaml(config_name: str, output_path: str, save=False,
     if config_name is None or output_path is None:
         raise ValueError(
             "config_name and output_path must be specified and not None!")
+
     if not config_name.endswith("_config.yml"):
         config_name = config_name + "_config.yml"
-    print (f"config_name: {config_name} config_subdir: {config_subdir}")
+
     default_config_path = get_default_config_yml(config_name, config_subdir)
     # if the file does not exist, raise an error
     if not os.path.exists(default_config_path):
         raise FileNotFoundError("The default config file does not exist!")
 
     default_config = read_yml_file(default_config_path)
-    output_path = os.path.join(output_path, config_name)
-    # create the yml file 
+    if not output_path.endswith(".yml"):
+        # If it's not a .yml file, assume it's a directory and append the filename
+        output_path = os.path.join(output_path, config_name)
+
+    # if the directory does not exist, create it
+    if not os.path.exists(os.path.dirname(output_path)):
+        os.makedirs(os.path.dirname(output_path))
+
+    # create the yml file
     if save:
         yaml = YAML()
-        with open(output_path, 'w') as file:
-             yaml.dump(default_config, file)
-    
-    return default_config
+        print(f"Saving default config to {output_path}")
+        # if the file does not exist, create it otherwise overwrite it
+        with open(output_path, 'w+') as file:
+            yaml.dump(default_config, file)
 
+    return default_config
 
 
 def get_config_file_name(config_class: Type[T]) -> str:
@@ -154,12 +164,9 @@ def get_available_configs() -> list:
         ['lots_attack_config.yml', 'cw_attack_config.yml']
 
     """
-    # full_paths= [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(os.path.join(config_path, "cli")) for f in files if f.endswith(".yml")]
-    # return [os.path.basename(path) for path in full_paths]
-    # consider the subdirectories as well
-    full_paths= [os.path.join(dirpath, f) for dirpath, dirnames, files in os.walk(os.path.join(config_path, "cli")) for f in files if f.endswith(".yml")]
-    return [os.path.basename(path) for path in full_paths]
-
+    cli_configs_dir = os.path.join(config_path, "cli")
+    # return all files in the cli directory that end with _config.yml
+    return [f for f in os.listdir(cli_configs_dir) if f.endswith("_config.yml")]
 
 
 def read_yml_file(yml_path: str) -> dict:
@@ -176,6 +183,7 @@ def read_yml_file(yml_path: str) -> dict:
     yaml = YAML()
     with open(yml_path, 'r') as file:
         return yaml.load(file)
+
 
 def get_default_config_yml(config_name: str, config_subdir: str = None):
     """
@@ -196,17 +204,18 @@ def get_default_config_yml(config_name: str, config_subdir: str = None):
     if config_subdir:
         # If specific subdir is provided, search only in that
         dirpath = os.path.join(config_path, config_subdir)
-        file_paths.extend([os.path.join(dirpath, f) for f in os.listdir(dirpath) if f.endswith(config_name)])
+        file_paths.extend([os.path.join(dirpath, f)
+                          for f in os.listdir(dirpath) if f.endswith(config_name)])
     else:
         # Otherwise search in all subdirectories
         for dirpath, _, files in os.walk(config_path):
-            file_paths.extend([os.path.join(dirpath, f) for f in files if f.endswith(config_name)])
-    
+            file_paths.extend([os.path.join(dirpath, f)
+                              for f in files if f.endswith(config_name)])
+
     if not file_paths:
         raise FileNotFoundError(f"Config file {config_name} not found!")
 
     return file_paths[0]
-
 
 
 def override_with_cli_args(config_data, **cli_args):
@@ -224,6 +233,7 @@ def override_with_cli_args(config_data, **cli_args):
         if value is not None:  # CLI argument was provided
             config_data[key] = value
         elif key not in config_data:
-            config_data[key] = None  # Add keys that might not exist in config_data without a value
+            # Add keys that might not exist in config_data without a value
+            config_data[key] = None
 
     return config_data

@@ -44,10 +44,10 @@ class CustomModel(BaseModel):
 
     def __init__(self, model_name, custom_models_path="CustomModels", **kwargs):
         self.custom_models_path = custom_models_path
-        self.model_name = model_name
+        self.model_variant = model_name
 
         # Initialize the BaseModel
-        super().__init__(**kwargs)
+        super().__init__()
 
     def load_model(self):
         """
@@ -62,16 +62,16 @@ class CustomModel(BaseModel):
         """
 
         # Dynamically import the custom model based on its name
-        custom_module_name = f"advsecurenet.models.{self.custom_models_path}.{self.model_name}"
-        print(" custom_module_name ", custom_module_name)
+        custom_module_name = f"advsecurenet.models.{self.custom_models_path}.{self.model_variant}"
+        print("custom module name", custom_module_name)
         custom_module = importlib.import_module(custom_module_name)
 
         # Assume the model class inside the custom model file has the same name as the file
-        if not hasattr(custom_module, self.model_name):
+        if not hasattr(custom_module, self.model_variant):
             raise ValueError(
-                f"Model class {self.model_name} not found in module {custom_module_name}")
+                f"Model class {self.model_variant} not found in module {custom_module_name}")
 
-        model_class = getattr(custom_module, self.model_name)
+        model_class = getattr(custom_module, self.model_variant)
 
         self.model = model_class()
 
@@ -116,4 +116,5 @@ class CustomModel(BaseModel):
         """
         Not applicable for custom models.
         """
-        raise NotImplementedError("This method is not applicable for custom models.")
+        raise NotImplementedError(
+            "This method is not applicable for custom models.")

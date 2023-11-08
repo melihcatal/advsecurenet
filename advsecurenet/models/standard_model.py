@@ -3,67 +3,79 @@ import torchvision.models as models
 from enum import EnumMeta
 from torchvision.models._api import get_model_weights
 from advsecurenet.models.base_model import BaseModel
+
+
 class StandardModel(BaseModel):
     """
     This class is used to load standard models from torchvision.models. It supports loading pretrained models and
     modifying the model after loading.
 
-    Attributes
-    ----------
-    model_variant: str
-        The name of the model to load. For example, 'resnet18'.
-    num_input_channels: int
-        The number of input channels in the model. For example, 3 for RGB images.
-    weights: str
-        The weights for the pretrained model. Default is IMAGENET1K_V1. Weight li
+    Args: 
+        model_variant: str
+            The name of the model to load. For example, 'resnet18'.
+        num_classes: int
+            The number of classes in the dataset.
+        pretrained: bool
+            Whether to load pretrained weights or not. Default is False.
+        weights: str
+            The weights for the pretrained model. Default is IMAGENET1K_V1. Weight list can be obtained using StandardModel.available_weights(model_name).
 
     """
 
-    def __init__(self, 
+    def __init__(self,
                  model_variant: str,
-                 num_input_channels: int = 3,
+                 num_classes: int,
+                 pretrained: bool = False,
                  weights: str = "IMAGENET1K_V1",
-                **kwargs):
+                 **kwargs):
         self.model_variant = model_variant
-        self.num_input_channels = num_input_channels
+        self.pretrained = pretrained
         self.weights = weights
+        self.num_classes = num_classes
+        self.model: nn.Module = None
 
         # Initialize the BaseModel
-        super().__init__(**kwargs)
+        super().__init__()
 
-    def load_model(self) -> models:
+    def load_model(self) -> None:
         """
-        Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute.
+        Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute and sets the model attribute.
 
-        Raises
-        ------
-        ValueError
-            If the model_variant is not supported.
+        Raises:
+            ValueError: If the model_variant is not supported by torchvision.
 
         """
-
         if not hasattr(models, self.model_variant):
             raise ValueError(f"Unsupported model type: {self.model_variant}")
 
+        model_fn = getattr(models, self.model_variant)
         if self.pretrained:
-            weights = self.weights
+            self.model = model_fn(weights=self.weights)
+            if self.num_classes != 1000:  # ImageNet has 1000 classes, pretrained models are trained on ImageNet
+                self.modify_model()
         else:
-            # this is equivalent to pretrained=False
-            weights = None
-
-        self.model = getattr(models, self.model_variant)(
-            weights=weights, num_classes=self.num_classes)
-
-        # Perform necessary modifications after model load
-        self.modify_model()
+            # if not pretrained, load the model without weights and with the specified number of classes
+            self.model = model_fn(num_classes=self.num_classes, weights=None)
 
     def modify_model(self):
-        pass
+        """
+        Modifies the model after loading. It updates the number of output classes of the pretrained model to the number of classes in the dataset.
+        """
+        # Adjust for number of output classes
+        named_children_list = list(self.model.named_children())
+        for name, module in reversed(named_children_list):
+            if isinstance(module, nn.Linear):
+                setattr(self.model, name, nn.Linear(
+                    module.in_features, self.num_classes))
+                break
 
     @staticmethod
-    def models():
+    def models() -> list:
+        """
+        Returns a list of available standard models from torchvision.models.
+        """
         return models.list_models()
-    
+
     @staticmethod
     def available_weights(model_name: str) -> EnumMeta:
         """
@@ -71,7 +83,7 @@ class StandardModel(BaseModel):
 
         Args:
             model_name (str): The name of the model. You can get the list of available models using StandardModel.models().
-       
+
         Returns:
             EnumMeta: A EnumMeta object containing the available weights for the given model_name.
 

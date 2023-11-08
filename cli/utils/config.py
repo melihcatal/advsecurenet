@@ -9,12 +9,14 @@ from typing import Dict, Callable
 from advsecurenet.shared.types import ConfigType
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
 
+
 def build_config(config_data, config_type):
     """
     Build a configuration object from the provided configuration data.
     """
     expected_keys = [f.name for f in fields(config_type)]
-    filtered_config_data = {k: config_data[k] for k in expected_keys if k in config_data}
+    filtered_config_data = {k: config_data[k]
+                            for k in expected_keys if k in config_data}
     return config_type(**filtered_config_data)
 
 
@@ -25,16 +27,16 @@ def read_config_file(config_file: str):
             config_data = yaml.safe_load(file)
         return config_data
     except FileNotFoundError:
-        raise FileNotFoundError(f"Configuration file not found at {config_file}")
+        raise FileNotFoundError(
+            f"Configuration file not found at {config_file}")
     except yaml.YAMLError as e:
         raise ValueError(f"Invalid configuration file: {e}")
 
+
 def load_configuration(config_type: ConfigType, config_file: str, **overrides: Dict):
-    """Loads and overrides the configuration."""    
+    """Loads and overrides the configuration."""
     # Load the base configuration
-    print(config_file)
     config_data = read_config_file(config_file)
-    
     # Call specific checks
     handler = CHECK_HANDLERS.get(config_type)
     if handler:
@@ -45,11 +47,15 @@ def load_configuration(config_type: ConfigType, config_file: str, **overrides: D
 
     return config_data
 
+
 def attack_config_check(config_data: Dict, overrides: Dict):
     if overrides.get('dataset_name') == 'custom' and not overrides.get('custom_data_dir'):
-        raise ValueError("Please provide a valid path for custom-data-dir when using the custom dataset.")
+        raise ValueError(
+            "Please provide a valid path for custom-data-dir when using the custom dataset.")
     if overrides.get('dataset_name') != 'custom' and overrides.get('custom_data_dir'):
-        raise ValueError("Please set dataset-name to 'custom' when specifying custom-data-dir.")
+        raise ValueError(
+            "Please set dataset-name to 'custom' when specifying custom-data-dir.")
+
 
 CHECK_HANDLERS = {
     ConfigType.ATTACK: attack_config_check,
