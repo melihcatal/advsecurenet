@@ -6,29 +6,33 @@ from requests import HTTPError
 
 from cli.cli import download_weights, config_default, deepfool, fgsm, pgd, cw, lots
 
+
 class TestDownloadWeights:
     """
     Test the download_weights command.
     """
-    
+
     def setup_method(self, method):
         self.runner = CliRunner()
-    
+
     def teardown_method(self, method):
         pass
 
     def test_download_weights_success(self):
         with patch('cli.cli.util_download_weights', return_value=None) as mock_download:
-            result = self.runner.invoke(download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
-            
+            result = self.runner.invoke(
+                download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
+
             # Assertions
             assert result.exit_code == 0
             assert 'Downloaded weights to weights directory.' in result.output
-            mock_download.assert_called_once_with('resnet18', 'cifar10', None, None)
+            mock_download.assert_called_once_with(
+                'resnet18', 'cifar10', None, None)
 
     def test_download_weights_file_exists(self):
         with patch('cli.cli.util_download_weights', side_effect=FileExistsError()) as mock_download:
-            result = self.runner.invoke(download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
+            result = self.runner.invoke(
+                download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
             # Assertions
             assert result.exit_code == 0
@@ -36,21 +40,21 @@ class TestDownloadWeights:
 
     def test_download_weights_model_not_found(self):
         with patch('cli.cli.util_download_weights', side_effect=HTTPError()) as mock_download:
-            result = self.runner.invoke(download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
+            result = self.runner.invoke(
+                download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
             # Assertions
             assert result.exit_code == 0
             assert 'Model weights for resnet18 trained on cifar10 not found' in result.output
-    
+
     def test_download_weights_other_exception(self):
         with patch('cli.cli.util_download_weights', side_effect=Exception()) as mock_download:
-            result = self.runner.invoke(download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
+            result = self.runner.invoke(
+                download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
             # Assertions
             assert result.exit_code == 0
             assert 'Error downloading model weights for resnet18 trained on cifar10!' in result.output
-
-
 
 
 class TestAttackCommands:
@@ -83,10 +87,11 @@ class TestConfigDefaultCommand:
         # Mock the inner methods
         mock_default_config = {"key1": "value1", "key2": "value2"}
         with patch("advsecurenet.utils.get_default_config_yml", return_value="/path/to/mock/config"), \
-            patch("os.path.exists", return_value=True), \
-            patch("advsecurenet.utils.config_utils.read_yml_file", return_value=mock_default_config):
-            
-            result = self.runner.invoke(config_default, ["--config-name", config_name, "--print-output"])
+                patch("os.path.exists", return_value=True), \
+                patch("advsecurenet.utils.config_utils.read_yml_file", return_value=mock_default_config):
+
+            result = self.runner.invoke(
+                config_default, ["--config-name", config_name, "--print-output"])
 
         # Assertions
         assert result.exit_code == 0
@@ -103,10 +108,11 @@ class TestConfigDefaultCommand:
 
     def test_config_default_file_not_found(self):
         config_name = "nonexistent_config.yml"
-        
+
         # Mock the generate_default_config_yaml function to raise FileNotFoundError
         with patch("advsecurenet.utils.generate_default_config_yaml", side_effect=FileNotFoundError()):
-            result = self.runner.invoke(config_default, ["--config-name", config_name])
-        
+            result = self.runner.invoke(
+                config_default, ["--config-name", config_name])
+
         # Assertions
         assert f"Configuration file {config_name} not found!" in result.output
