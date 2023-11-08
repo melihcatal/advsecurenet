@@ -9,6 +9,7 @@ setup(
     url="https://github.com/melihcatal/advsecurenet",
     packages=find_packages(),
     include_package_data=True,
+    package_data={'': ['*.yml']},
     install_requires=[
         "click",
         "torch",
@@ -16,9 +17,10 @@ setup(
         "colored",
         "pytest",
         "pytest-mock",
-        "tqdm", 
+        "tqdm",
         "PyYAML",
-        "opencv-python"
+        "opencv-python",
+        "ruamel.yaml"
     ],
     entry_points={
         'console_scripts': [
