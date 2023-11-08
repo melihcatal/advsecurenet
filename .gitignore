@@ -24,6 +24,9 @@ docs/_build/
 # weights
 weights/
 
+# checkpoints
+checkpoints/ 
+
 # config files on example folder
 examples/*/**_config.yml
 
