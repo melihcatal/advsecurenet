@@ -1,7 +1,22 @@
-from abc import ABC
+from dataclasses import dataclass, field
+import torch
+from typing import Any, Union
 
-"""
-AttackConfig is an abstract class that defines the interface for all attack configurations. It's used as a type hint for the config parameter of the attack's constructor. All attack configurations must inherit from this class.
-"""
-class AttackConfig(ABC):
-    pass
+
+@dataclass(kw_only=True)
+class AttackConfig:
+    device: torch.device = torch.device("cpu")
+
+    def __setattr__(self, prop, value):
+        if prop == "device":
+            value = self._check_device(value)
+        super().__setattr__(prop, value)
+
+    @staticmethod
+    def _check_device(device: Union[str, torch.device]):
+        if isinstance(device, str):
+            try:
+                device = torch.device(device)
+            except:
+                device = torch.device("cpu")
+        return device

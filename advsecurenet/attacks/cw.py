@@ -3,9 +3,7 @@ from torch import optim
 from tqdm.auto import trange
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types import DeviceType
 from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig
-from advsecurenet.utils import get_device
 
 
 class CWAttack(AdversarialAttack):
@@ -21,7 +19,7 @@ class CWAttack(AdversarialAttack):
         max_iterations (int): Maximum number of iterations for the Adam optimizer. Defaults to 10.
         abort_early (bool): If True, aborts the attack early if the loss stops decreasing. Defaults to False.
         binary_search_steps (int): Number of binary search steps. Defaults to 10.
-        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
+        device (torch.device): Device to use for the attack. Defaults to "cpu".
         clip_min (float): Minimum value of the input. Defaults to 0.
         clip_max (float): Maximum value of the input. Defaults to 1.
         c_lower (float): Lower bound for c. Defaults to 1e-6.
@@ -43,7 +41,7 @@ class CWAttack(AdversarialAttack):
         self.abort_early: bool = config.abort_early
         self.targeted: bool = config.targeted
         self.binary_search_steps: int = config.binary_search_steps
-        self.device: DeviceType = config.device.value if config.device is not None else get_device()
+        self.device: torch.device = config.device
         self.clip_min: float = config.clip_min
         self.clip_max: float = config.clip_max
         self.c_lower: float = config.c_lower

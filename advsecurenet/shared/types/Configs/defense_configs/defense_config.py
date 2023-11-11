@@ -1,8 +1,26 @@
-from abc import ABC 
+import torch
+from typing import Union
+from dataclasses import dataclass
 
-"""
-DefenseConfig is an abstract class that defines the interface for all defense configurations. It's used as a type hint for the config parameter of the defense's constructor. All defense configurations must inherit from this class.
-"""
 
-class DefenseConfig(ABC):
-    pass
+@dataclass(kw_only=True)
+class DefenseConfig:
+    """
+    Abstract class for defense configurations.
+    """
+
+    device: torch.device = torch.device("cpu")
+
+    def __setattr__(self, prop, value):
+        if prop == "device":
+            value = self._check_device(value)
+        super().__setattr__(prop, value)
+
+    @staticmethod
+    def _check_device(device: Union[str, torch.device]):
+        if isinstance(device, str):
+            try:
+                device = torch.device(device)
+            except:
+                device = torch.device("cpu")
+        return device

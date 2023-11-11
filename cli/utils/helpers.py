@@ -5,7 +5,8 @@ import torch
 import os
 from torchvision.transforms import ToPILImage
 
-def save_img(img:torch.tensor, path: str = None, name:str = None) -> None:
+
+def save_img(img: torch.tensor, path: str = None, name: str = None) -> None:
     """
     Save an image tensor to the given path. If no path is provided, the image is saved to the current directory.
 
@@ -59,4 +60,19 @@ def to_bchw_format(tensor):
     elif len(tensor.shape) == 4 and (tensor.shape[3] == 3 or tensor.shape[3] == 1):
         return tensor.permute(0, 3, 1, 2)
     else:
-        raise ValueError("Tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images")
+        raise ValueError(
+            "Tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images")
+
+
+def get_device_from_cfg(config) -> torch.device:
+    """
+    Returns the device to use from the config. If the device is not specified or is invalid, the device is set to "cpu".
+
+    Args:
+        config (any): The config object to use.
+    """
+    try:
+        device = torch.device(config.device)
+    except ValueError:
+        device = torch.device("cpu")
+    return device

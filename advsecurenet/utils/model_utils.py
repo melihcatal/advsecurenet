@@ -3,17 +3,16 @@ import torch.optim as optim
 import os
 import pkg_resources
 import requests
-from typing import cast, Any
+from typing import Optional, cast, Any, Union, cast
 from torch import nn
 from tqdm import tqdm
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 from advsecurenet.shared.types.configs.train_config import TrainConfig
-from advsecurenet.utils.get_device import get_device
 from advsecurenet.shared.loss import Loss
-from advsecurenet.shared.types import DeviceType
 from advsecurenet.shared.optimizer import Optimizer
 
 
-def _get_loss_function(criterion: str or nn.Module = None, **kwargs) -> nn.Module:
+def _get_loss_function(criterion: Union[str, nn.Module], **kwargs) -> nn.Module:
     """
     Returns the loss function based on the given loss_function string or nn.Module.
 
@@ -44,10 +43,10 @@ def _get_loss_function(criterion: str or nn.Module = None, **kwargs) -> nn.Modul
         elif not isinstance(criterion, nn.Module):
             raise ValueError(
                 "Criterion must be a string or an instance of nn.Module.")
-    return criterion
+    return cast(nn.Module, criterion)
 
 
-def _get_optimizer(optimizer: str or optim.Optimizer = None, model: nn.Module = None, learning_rate: float = 0.001, **kwargs) -> optim.Optimizer:
+def _get_optimizer(optimizer: Union[str, optim.Optimizer], model: nn.Module, learning_rate: float = 0.001, **kwargs) -> optim.Optimizer:
     """
     Returns the optimizer based on the given optimizer string or optim.Optimizer.
 
@@ -83,28 +82,28 @@ def _get_optimizer(optimizer: str or optim.Optimizer = None, model: nn.Module = 
         elif not isinstance(optimizer, optim.Optimizer):
             raise ValueError(
                 "Optimizer must be a string or an instance of optim.Optimizer.")
-    return optimizer
+    return cast(optim.Optimizer, optimizer)
 
 
-def _setup_device(train_config: TrainConfig) -> torch.device:
-    return train_config.device.value if train_config.device else get_device()
+def _setup_device(config: Union[TrainConfig, AdversarialTrainingConfig]) -> torch.device:
+    return config.device if config.device else torch.device("cpu")
 
 
 # Replace Any with the actual type
-def _initialize_optimizer(train_config: TrainConfig) -> optim.Optimizer:
-    return _get_optimizer(train_config.optimizer, train_config.model, train_config.learning_rate)
+def _initialize_optimizer(config:  Union[TrainConfig, AdversarialTrainingConfig]) -> optim.Optimizer:
+    return _get_optimizer(config.optimizer, config.model, config.learning_rate)
 
 
-def _load_checkpoint_if_any(train_config: TrainConfig, device: torch.device, optimizer: Any) -> int:
+def _load_checkpoint_if_any(config: Union[TrainConfig, AdversarialTrainingConfig], device: torch.device, optimizer: optim.Optimizer) -> int:
     start_epoch = 1
-    if train_config.load_checkpoint and train_config.load_checkpoint_path:
-        if os.path.isfile(train_config.load_checkpoint_path):
+    if config.load_checkpoint and config.load_checkpoint_path:
+        if os.path.isfile(config.load_checkpoint_path):
             print(
-                f"Loading checkpoint from '{train_config.load_checkpoint_path}'")
+                f"Loading checkpoint from '{config.load_checkpoint_path}'")
             checkpoint = torch.load(
-                train_config.load_checkpoint_path, map_location=device)
-            train_config.model.load_state_dict(checkpoint['model_state_dict'])
-            train_config.model.to(device)
+                config.load_checkpoint_path, map_location=device)
+            config.model.load_state_dict(checkpoint['model_state_dict'])
+            config.model.to(device)
             optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
             for state in optimizer.state.values():
                 for k, v in state.items():
@@ -114,28 +113,30 @@ def _load_checkpoint_if_any(train_config: TrainConfig, device: torch.device, opt
             print(f"Resuming training from epoch {start_epoch}")
         else:
             print(
-                f"No checkpoint found at '{train_config.load_checkpoint_path}', starting from scratch.")
+                f"No checkpoint found at '{config.load_checkpoint_path}', starting from scratch.")
     return start_epoch
 
 
-def _get_save_checkpoint_prefix(train_config: TrainConfig) -> str:
-    if train_config.save_checkpoint_name:
-        return train_config.save_checkpoint_name
+def _get_save_checkpoint_prefix(config: Union[TrainConfig, AdversarialTrainingConfig]) -> str:
+    if config.save_checkpoint_name:
+        return config.save_checkpoint_name
     else:
-        return f"{train_config.model.model_variant}_{train_config.train_loader.dataset.__class__.__name__}_checkpoint"
+        return f"{config.model.model_variant}_{config.train_loader.dataset.__class__.__name__}_checkpoint"
 
 
-def _save_checkpoint(train_config: TrainConfig, epoch: int, optimizer: optim.Optimizer) -> None:
+def _save_checkpoint(config: Union[TrainConfig, AdversarialTrainingConfig], epoch: int, optimizer: optim.Optimizer) -> None:
+    checkpoint_sub_dir = "adversarial_training" if isinstance(
+        config, AdversarialTrainingConfig) else "training"
     # if save_checkpoint_path is not provided, save in the current working directory
-    checkpoint_dir = train_config.save_checkpoint_path or os.path.join(
-        os.getcwd(), "checkpoints")
+    checkpoint_dir = config.save_checkpoint_path or os.path.join(
+        os.getcwd(), f"checkpoints/{checkpoint_sub_dir}")
     os.makedirs(checkpoint_dir, exist_ok=True)
-    save_checkpoint_prefix = _get_save_checkpoint_prefix(train_config)
+    save_checkpoint_prefix = _get_save_checkpoint_prefix(config)
     checkpoint_filename = f"{save_checkpoint_prefix}_{epoch}.pth"
     checkpoint_path = os.path.join(checkpoint_dir, checkpoint_filename)
     torch.save({
         'epoch': epoch,
-        'model_state_dict': train_config.model.state_dict(),
+        'model_state_dict': config.model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict()
     }, checkpoint_path)
     print(f"Checkpoint saved at '{checkpoint_path}'")
@@ -187,7 +188,7 @@ def train(train_config: TrainConfig) -> None:
 def test(model: nn.Module,
          test_loader: torch.utils.data.DataLoader,
          criterion: str or nn.Module = None,
-         device: DeviceType or torch.device = None) -> None:
+         device: torch.device = torch.device("cpu")) -> None:
     """
     Tests the model on the given test_loader. Prints the average loss and accuracy.
 
@@ -195,17 +196,13 @@ def test(model: nn.Module,
         model (nn.Module): The model to test.
         test_loader (torch.utils.data.DataLoader): The test loader.
         criterion (nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
-        device (DeviceType, optional): The device to test on. Defaults to CPU.
+        device (torch.device, optional): The device to test on. Defaults to CPU.
 
     Returns:
         tuple: A tuple containing the average loss and accuracy.
 
     """
-    if device is None:
-        device = get_device().value
-    if isinstance(device, DeviceType):
-        device = device.value
-    device = cast(torch.device, device)
+
     loss_function = _get_loss_function(criterion)
     model.to(device)
     model.eval()
@@ -254,7 +251,7 @@ def save_model(model: nn.Module,
     torch.save(model.state_dict(), os.path.join(filepath, filename))
 
 
-def load_model(model, filename, filepath=None, device=None):
+def load_model(model, filename, filepath=None, device: torch.device = torch.device("cpu")):
     """
     Loads the model weights from the given filepath.
 
@@ -262,7 +259,7 @@ def load_model(model, filename, filepath=None, device=None):
         model (nn.Module): The model to load the weights into.
         filename (str): The filename to load the model weights from.
         filepath (str, optional): The filepath to load the model weights from. Defaults to weights directory.
-        device (DeviceType, optional): The device to load the model weights to. Defaults to CPU.
+        device (torch.device, optional): The device to load the model weights to. Defaults to CPU.
     """
     # check if filename contains a path if so, use that instead of filepath
     if os.path.dirname(filename):
@@ -276,21 +273,15 @@ def load_model(model, filename, filepath=None, device=None):
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
 
-    if device is None:
-        device = DeviceType.CPU
-
-    if isinstance(device, DeviceType):
-        device = device.value
-
     model.load_state_dict(torch.load(os.path.join(
         filepath, filename), map_location=device))
     return model
 
 
-def download_weights(model_name: str,
-                     dataset_name: str,
-                     filename: str = None,
-                     save_path: str = None):
+def download_weights(model_name: Optional[str] = None,
+                     dataset_name: Optional[str] = None,
+                     filename: Optional[str] = None,
+                     save_path: Optional[str] = None):
     """
     Downloads model weights from a remote source based on the model and dataset names.
 

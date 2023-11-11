@@ -1,97 +1,117 @@
+import os
 import torch
-from torch import nn
+from torch import nn, optim
+from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
-from tqdm.auto import trange
-from advsecurenet.utils import train, test
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
-from advsecurenet.shared.types.configs import AdversarialTrainingConfig
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
+from advsecurenet.utils.model_utils import _save_checkpoint, _load_checkpoint_if_any, _get_loss_function, _initialize_optimizer, _setup_device, save_model
 
 
-def AdversarialTraining(config: AdversarialTrainingConfig) -> None:
+class AdversarialTraining:
     """
-    This function implements the adversarial training defense. It allows to train a model using multiple models and attacks.
-
-    Args:
-        config (AdversarialTrainingConfig): The configuration for the adversarial training defense.
-
-    Raises:
-        ValueError: If the target_model is not a subclass of BaseModel.
-        ValueError: If any of the models is not a subclass of BaseModel.
-        ValueError: If any of the attacks is not a subclass of AdversarialAttack.
-        ValueError: If the train_dataloader is not a DataLoader.
-
-
+    Adversarial Training class.
     """
 
-    # First check if the model is subsclass of BaseModel
-    if not isinstance(config.target_model, BaseModel):
-        raise ValueError("Target model must be a subclass of BaseModel!")
+    def __init__(self, config: AdversarialTrainingConfig) -> None:
+        self.config = config
 
-    # Check if the models are subclass of BaseModel
-    if not all([isinstance(model, BaseModel) for model in config.models]):
-        raise ValueError("All models must be a subclass of BaseModel!")
+    def adversarial_training(self) -> None:
+        # Check configuration validity
+        self._check_config(self.config)
+        device = _setup_device(self.config)
+        optimizer = _initialize_optimizer(self.config)
+        print(f"Adversarial Training: Using {device} for training")
+        self._adversarial_training(self.config, device, optimizer)
 
-    # Check if the attacks are subclass of AdversarialAttack
-    if not all([isinstance(attack, AdversarialAttack) for attack in config.attacks]):
-        raise ValueError(
-            "All attacks must be a subclass of AdversarialAttack!")
+    # Helper function to generate adversarial examples for the given batch
 
-    # Check if the train_dataloader is a DataLoader
-    if not isinstance(config.train_dataloader, DataLoader):
-        raise ValueError(
-            "train_dataloader must be a torch.utils.data.DataLoader!")
+    def _generate_adversarial_batch(self, models, attacks, data, target, device) -> tuple[torch.Tensor, torch.Tensor]:
+        adv_data = []
+        adv_target = []
+        data = data.to(device)
+        target = target.to(device)
+        for model, attack in zip(models, attacks):
+            model.to(device)
+            adv_data.append(attack.attack(model, data, target))
+            adv_target.append(target)
+        return torch.cat(adv_data, dim=0), torch.cat(adv_target, dim=0)
 
-    models = config.models
-    attacks = config.attacks
-    target_model = config.target_model
-    optimizer = config.optimizer
-    criterion = config.criterion
-    epochs = config.epochs
-    verbose = config.verbose
-    device = config.device.value
-    train_dataloader = config.train_dataloader
+    # Helper function to shuffle the combined clean and adversarial data
 
-    for epoch in trange(epochs, desc="Epochs", leave=False, position=0, disable=not verbose):
+    def _shuffle_data(self, data: torch.Tensor, target: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        permutation = torch.randperm(data.size(0))
+        return data[permutation], target[permutation]
+
+    def _check_config(self, config: AdversarialTrainingConfig) -> None:
+        # Check configuration validity
+        if not isinstance(config.model, BaseModel):
+            raise ValueError("Target model must be a subclass of BaseModel!")
+        if not all(isinstance(model, BaseModel) for model in config.models):
+            raise ValueError("All models must be a subclass of BaseModel!")
+        if not all(isinstance(attack, AdversarialAttack) for attack in config.attacks):
+            raise ValueError(
+                "All attacks must be a subclass of AdversarialAttack!")
+        if not isinstance(config.train_loader, DataLoader):
+            raise ValueError("train_dataloader must be a DataLoader!")
+
+    def _train_epoch(self, config: AdversarialTrainingConfig, device: torch.device, optimizer: optim.Optimizer, loss_function: nn.Module, epoch: int) -> float:
         total_loss = 0.0
-
-        # add target model to list of models if not already present
-        if target_model not in models:
-            models.append(target_model)
-
-        # for batch_idx, (data, target) in enumerate(tqdm(train_dataloader, desc=f"Epoch {epoch}/{epochs} ", leave=False, position=0, disable=not verbose)):
-        for batch_idx, (data, target) in enumerate(train_dataloader):
-            data, target = data.to(device), target.to(device)
-
+        for batch_idx, (data, target) in enumerate(tqdm(config.train_loader, desc=f"Epoch {epoch}/{config.epochs}", total=len(config.train_loader))):
             # generate adversarial examples
-            adv_data = []
-            adv_target = []
-            for model, attack in zip(models, attacks):
-                adv_data.append(attack.attack(model, data, target))
-                adv_target.append(target)
+            adv_data, adv_target = self._generate_adversarial_batch(
+                config.models, config.attacks, data, target, device)
 
-            # concatenate adversarial examples
-            adv_data = torch.cat(adv_data, dim=0)
-            adv_target = torch.cat(adv_target, dim=0)
+            data = data.to(device)
+            target = target.to(device)
+            adv_data = adv_data.to(device)
+            adv_target = adv_target.to(device)
 
-            # concatenate clean and adversarial examples
-            data = torch.cat([data, adv_data], dim=0)
-            target = torch.cat([target, adv_target], dim=0)
-
-            # shuffle data
-            permutation = torch.randperm(data.size(0))
-            data = data[permutation]
-            target = target[permutation]
+            # Combine clean and adversarial examples
+            combined_data, combined_target = self._shuffle_data(
+                torch.cat([data, adv_data], dim=0),
+                torch.cat([target, adv_target], dim=0)
+            )
 
             # train model
             optimizer.zero_grad()
-            outputs = target_model(data)
-            loss = criterion(outputs, target)
+            outputs = config.model(combined_data)
+            loss = loss_function(outputs, combined_target)
             loss.backward()
             optimizer.step()
 
             total_loss += loss.item()
-            break
 
-        average_loss = total_loss / len(train_dataloader)
-        print(f'Epoch {epoch} - Average Loss: {average_loss:.6f}')
+        return total_loss
+
+    def _adversarial_training(self, config: AdversarialTrainingConfig, device: torch.device, optimizer: optim.Optimizer) -> None:
+        # set each model to device
+        config.models = [model.to(device) for model in config.models]
+
+        config.model = config.model.to(device)
+
+        # add target model to list of models if not already present
+        if config.model not in config.models:
+            config.models.append(config.model)
+
+        # set each model to train mode
+        config.models = [model.train() for model in config.models]
+
+        # initalize loss function
+        loss_function = _get_loss_function(config.criterion)
+        start_epoch = _load_checkpoint_if_any(config, device, optimizer)
+
+        # train model
+        for epoch in range(start_epoch, config.epochs + 1):
+            total_loss = self._train_epoch(
+                config, device, optimizer, loss_function, epoch)
+            average_loss = total_loss / len(config.train_loader)
+            if config.verbose:
+                print(f'Epoch {epoch} - Average Loss: {average_loss:.6f}')
+
+            # Save checkpoint if applicable
+            if config.save_checkpoint and epoch % config.checkpoint_interval == 0:
+                _save_checkpoint(config, epoch, optimizer=optimizer)
+
+        print("Adversarial Training: Training complete!")

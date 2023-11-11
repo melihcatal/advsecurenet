@@ -1,17 +1,16 @@
 import torch
 import pytest
 from advsecurenet.attacks import FGSM
-from advsecurenet.shared.types import DeviceType
 from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
 
 
 @pytest.fixture(scope="module")
 def setup_attack():
-    device = DeviceType.CPU
+    device = torch.device("cpu")
     epsilon = 0.3
     config = FgsmAttackConfig(epsilon=epsilon, device=device)
     attack = FGSM(config)
-    return device.value, epsilon, attack
+    return device, epsilon, attack
 
 
 def create_simple_model(device, input_size=10):

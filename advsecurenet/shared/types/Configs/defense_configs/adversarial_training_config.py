@@ -1,48 +1,67 @@
-from dataclasses import dataclass
+import torch
+from dataclasses import dataclass, field
+from typing import List, Union, Optional
 from torch.optim import Optimizer
 from torch import nn
+from torch.utils.data import DataLoader
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.shared.types.device import DeviceType
 from advsecurenet.shared.types.configs.defense_configs import DefenseConfig
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AdversarialTrainingConfig(DefenseConfig):
     """
     This class is used to store the configuration of the adversarial training defense.
 
-    Attributes
-    ----------
-    target_model: BaseModel
+    Args:
+    target_model : BaseModel
         The model that will be trained.
-    models: list[BaseModel]
+    models : List[BaseModel]
         A list of models that will be used to generate adversarial examples.
-    attacks: list[AdversarialAttack]
+    attacks : List[AdversarialAttack]
         A list of attacks that will be used to generate adversarial examples.
-    train_dataloader: DataLoaderFactory
+    train_dataloader : DataLoader
         A dataloader that will be used to train the model.
-    optimizer: Optimizer
+    optimizer : Optimizer
         This is an optimizer such as torch.optim.Adam().
-    criterion: nn.Module
+    criterion : nn.Module
         This is a loss function such as nn.CrossEntropyLoss().
-    epochs: int
+    epochs : int
         The number of epochs to train the model.
-    adv_coeff: float
-        The coefficient that will be used to combine the clean and adversarial examples.
-    device: DeviceType
+    learning_rate : float
+        The learning rate for the optimizer.
+    device : torch.device
         The device that will be used to train the model.
-    verbose: bool
-        Whether to print progress or not. 
+    save_checkpoint : bool
+        Whether to save model checkpoints.
+    checkpoint_path : Optional[str]
+        Path where checkpoints will be saved.
+    checkpoint_interval : int
+        Interval between saving checkpoints.
+    load_checkpoint : bool
+        Whether to load a model checkpoint.
+    load_checkpoint_path : Optional[str]
+        Path from where the checkpoint will be loaded.
+    verbose : bool
+        Whether to print progress or not.
+    adv_coeff : float
+        The coefficient that will be used to combine the clean and adversarial examples.
     """
-    target_model: BaseModel
-    models: list[BaseModel]
-    attacks: list[AdversarialAttack]
-    train_dataloader: DataLoaderFactory
-    optimizer: Optimizer
-    criterion: nn.Module
+    model: BaseModel  # the target model
+    models: List[BaseModel]
+    attacks: List[AdversarialAttack]
+    train_loader: DataLoader
+    optimizer: Union[str, Optimizer] = "adam"
+    criterion: Union[str, nn.Module] = "cross_entropy"
     epochs: int = 5
-    adv_coeff: float = 0.5
-    device: DeviceType = DeviceType.CPU
+    learning_rate: float = 0.001
+    save_checkpoint: bool = False
+    save_checkpoint_path: Optional[str] = None
+    save_checkpoint_name: Optional[str] = None
+    checkpoint_interval: int = 1
+    load_checkpoint: bool = False
+    load_checkpoint_path: Optional[str] = None
     verbose: bool = True
+    adv_coeff: float = 0.5
+    device: Union[str, torch.device]

@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import pytest
 from advsecurenet.attacks import PGD
-from advsecurenet.shared.types import DeviceType
 from advsecurenet.shared.types.configs.attack_configs import PgdAttackConfig
+
 
 class SimpleModel(nn.Module):
     def __init__(self):
@@ -41,7 +41,7 @@ def test_initialization(pgd_attack):
 
 
 def test_device_configuration(pgd_attack):
-    assert pgd_attack.device == DeviceType.CPU.value
+    assert pgd_attack.device == torch.device("cpu")
 
 
 def test_attack_outcome(pgd_attack, simple_model, sample_image, sample_label):

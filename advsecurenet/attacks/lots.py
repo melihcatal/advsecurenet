@@ -1,7 +1,6 @@
 import torch
 from tqdm.auto import trange
 from typing import Optional, Tuple, Union
-from advsecurenet.utils import get_device
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.colors import red, yellow, reset
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
@@ -20,7 +19,7 @@ class LOTS(AdversarialAttack):
         learning_rate (float): The learning rate to use for the attack. Defaults to 1./255.
         max_iterations (int): The maximum number of iterations to use for the attack. Defaults to 1000.
         verbose (bool): Whether to print progress of the attack. Defaults to True.
-        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
+        device (torch.device): Device to use for the attack. Defaults to "cpu".
 
 
     References:
@@ -37,7 +36,7 @@ class LOTS(AdversarialAttack):
         self.learning_rate: float = config.learning_rate
         self.max_iterations: int = config.max_iterations
         self.verbose: bool = config.verbose
-        self.device: str = config.device.value if config.device is not None else get_device()
+        self.device: torch.device = config.device
 
     @staticmethod
     def validate_config(config: LotsAttackConfig) -> None:
@@ -85,6 +84,7 @@ class LOTS(AdversarialAttack):
         Returns:
             torch.tensor: The adversarial example tensor.
         """
+        print(f"device is {self.device}")
         data = data.clone().detach().to(self.device)
         target = target.clone().detach().to(self.device)
 

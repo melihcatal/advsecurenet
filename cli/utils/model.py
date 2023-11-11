@@ -1,7 +1,7 @@
 import os
 import click
 import pkg_resources
-from advsecurenet.shared.types.device import DeviceType
+from cli.utils.helpers import get_device_from_cfg
 from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
@@ -37,9 +37,7 @@ def cli_train(config_data):
 
     try:
         save_path_print = config_data['save_path'] if config_data['save_path'] else "weights directory"
-        device = DeviceType.from_string(
-            config_data['device']) if config_data['device'] else DeviceType.CPU
-        # device = device.value
+        device = get_device_from_cfg(config_data)
 
         # match the dataset name to the dataset type
         dataset_name = config_data['dataset_name'].upper()
@@ -101,7 +99,6 @@ def cli_train(config_data):
 
 
 def cli_test(config_data: TestConfig):
-
     # set weights path to weights directory if not specified
     if not config_data['model_weights']:
         folder_path = pkg_resources.resource_filename(
@@ -113,9 +110,7 @@ def cli_test(config_data: TestConfig):
         raise ValueError("Please provide both model name and dataset name!")
 
     try:
-        device = DeviceType.from_string(
-            config_data['device']) if config_data['device'] else DeviceType.CPU
-        device = device.value
+        device = get_device_from_cfg(config_data)
 
         # match the dataset name to the dataset type
         dataset_name = config_data['dataset_name'].upper()

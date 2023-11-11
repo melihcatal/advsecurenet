@@ -1,8 +1,6 @@
 import torch
 from tqdm.auto import trange
-from advsecurenet.utils import get_device
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.device import DeviceType
 from advsecurenet.shared.colors import red, yellow, reset
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.shared.types.configs.attack_configs import PgdAttackConfig
@@ -21,7 +19,7 @@ class PGD(AdversarialAttack):
         epsilon (float): The epsilon value to use for the attack. Defaults to 0.3.
         alpha (float): The alpha value to use for the attack. Defaults to 2/255.
         num_iter (int): The number of iterations to use for the attack. Defaults to 40.
-        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
+        device (torch.device): Device to use for the attack. Defaults to "cpu".
 
     References:
         [1] Madry, Aleksander, et al. "Towards deep learning models resistant to adversarial attacks." arXiv preprint arXiv:1706.06083 (2017).  
@@ -31,7 +29,7 @@ class PGD(AdversarialAttack):
         self.epsilon: float = config.epsilon
         self.alpha: float = config.alpha
         self.num_iter: int = config.num_iter
-        self.device: DeviceType = config.device.value if config.device is not None else get_device()
+        self.device: torch.device = config.device
 
     def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool = False) -> torch.Tensor:
         """
@@ -51,7 +49,7 @@ class PGD(AdversarialAttack):
         delta = torch.zeros_like(x).uniform_(-self.epsilon, self.epsilon)
         delta = torch.clamp(delta, min=-self.epsilon, max=self.epsilon)
 
-        for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset)):
+        for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False):
             delta = self._pgd_step(model, x, y, targeted, delta)
 
         adv_x = torch.clamp(x + delta, 0, 1)

@@ -5,21 +5,18 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.shared.types.device import DeviceType
 
 
 def execute_attack(model: BaseModel,
                    data: BaseDataset,
                    batch_size: int,
                    attack: AdversarialAttack,
-                   device: torch.device,
-                    verbose: bool = False
+                   device: torch.device = torch.device("cpu"),
+                   verbose: bool = False
                    ) -> None:
     try:
-        data_loader = DataLoaderFactory.get_dataloader(data, batch_size=batch_size)
-
-        if isinstance(device, DeviceType):
-            device = device.value
+        data_loader = DataLoaderFactory.get_dataloader(
+            data, batch_size=batch_size)
 
         model.eval()
         adversarial_images = []
@@ -30,7 +27,7 @@ def execute_attack(model: BaseModel,
         for images, labels in tqdm(data_loader, desc="Generating adversarial samples"):
             images = images.to(device)
             labels = labels.to(device)
-            
+
             # Get predictions for the original images
             original_preds = torch.argmax(model(images), dim=1)
 
@@ -42,13 +39,16 @@ def execute_attack(model: BaseModel,
             adversarial_preds = torch.argmax(model(adv_images), dim=1)
 
             # Check how many attacks were successful
-            successful_attacks += (adversarial_preds != original_preds).sum().item()
+            successful_attacks += (adversarial_preds !=
+                                   original_preds).sum().item()
             total_samples += images.size(0)
             if verbose:
-                click.echo(f"Attack success rate: {successful_attacks / total_samples * 100:.2f}%")
+                click.echo(
+                    f"Attack success rate: {successful_attacks / total_samples * 100:.2f}%")
 
         success_rate = (successful_attacks / total_samples) * 100
-        print(f"Succesfully generated adversarial samples! Attack success rate: {success_rate:.2f}%")
+        print(
+            f"Succesfully generated adversarial samples! Attack success rate: {success_rate:.2f}%")
 
         return adversarial_images
     except Exception as e:

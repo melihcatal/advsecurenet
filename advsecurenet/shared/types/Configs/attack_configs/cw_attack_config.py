@@ -1,9 +1,10 @@
+from typing import Union
+import torch
 from dataclasses import dataclass
-from advsecurenet.shared.types.device import DeviceType
 from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CWAttackConfig(AttackConfig):
     targeted: bool = False
     c_init: float = 0.1
@@ -12,10 +13,10 @@ class CWAttackConfig(AttackConfig):
     max_iterations: int = 10
     abort_early: bool = False
     binary_search_steps: int = 10
-    device: DeviceType = DeviceType.CPU
     clip_min: float = 0
     clip_max: float = 1
     c_lower: float = 1e-6
     c_upper: float = 1
     patience: int = 5
     verbose: bool = True
+    device: Union[str, torch.device]

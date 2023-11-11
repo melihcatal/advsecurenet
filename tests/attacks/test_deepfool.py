@@ -2,7 +2,6 @@ import torch
 import pytest
 from torch import nn
 from advsecurenet.attacks import DeepFool
-from advsecurenet.shared.types import  DeviceType
 from advsecurenet.shared.types.configs.attack_configs import DeepFoolAttackConfig
 
 
@@ -17,7 +16,7 @@ class SimpleModel(nn.Module):
 
 @pytest.fixture(scope="module")
 def setup_attack():
-    device = DeviceType.CPU
+    device = torch.device("cpu")
     config = DeepFoolAttackConfig(device=device)
     return config
 
@@ -32,7 +31,7 @@ def test_deepfool_initialization(setup_attack):
 def test_deepfool_device_configuration(setup_attack):
     # default is CPU
     attack = DeepFool(setup_attack)
-    assert attack.device == DeviceType.CPU.value
+    assert attack.device == torch.device("cpu")
 
 
 def test_deepfool_attack_outcome(setup_attack):
