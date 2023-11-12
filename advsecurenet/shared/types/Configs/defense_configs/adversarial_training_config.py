@@ -1,12 +1,21 @@
 import torch
 from dataclasses import dataclass, field
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Dict, TypedDict
 from torch.optim import Optimizer
 from torch import nn
 from torch.utils.data import DataLoader
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs import DefenseConfig
+
+
+class AttackConfigDict(TypedDict):
+    config: Dict[str, str]
+
+
+class AttackWithConfigDict(TypedDict):
+    attack: AdversarialAttack
+    config: AttackConfigDict
 
 
 @dataclass(kw_only=True)
@@ -19,8 +28,8 @@ class AdversarialTrainingConfig(DefenseConfig):
         The model that will be trained.
     models : List[BaseModel]
         A list of models that will be used to generate adversarial examples.
-    attacks : List[AdversarialAttack]
-        A list of attacks that will be used to generate adversarial examples.
+    attacks : List[AttackWithConfigDict]
+        A list of attacks that will be used to generate adversarial examples along with their configurations.
     train_dataloader : DataLoader
         A dataloader that will be used to train the model.
     optimizer : Optimizer

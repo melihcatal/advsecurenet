@@ -14,3 +14,5 @@ __all__ = [
     "LotsAttackMode",
     "PgdAttackConfig"
 ]
+
+__iter__ = __all__.__iter__

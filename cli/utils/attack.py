@@ -13,7 +13,7 @@ def execute_attack(model: BaseModel,
                    attack: AdversarialAttack,
                    device: torch.device = torch.device("cpu"),
                    verbose: bool = False
-                   ) -> None:
+                   ) -> list[torch.Tensor]:
     try:
         data_loader = DataLoaderFactory.get_dataloader(
             data, batch_size=batch_size)

@@ -77,7 +77,7 @@ class BaseDataset(TorchDataset, ABC):
                      root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
-                     **kwargs) -> None:
+                     **kwargs) -> TorchDataset[any]:
         """
         Loads the dataset.
 

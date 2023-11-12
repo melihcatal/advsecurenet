@@ -3,9 +3,11 @@
 # --- Target Model and Attack Configurations ---
 model: null  # The model that will be trained.
 models: []  # List of models used for generating adversarial examples.
-attacks: []  # List of attacks used for generating adversarial examples.
-attack_kwargs: {}  # Keyword arguments for the attack.
-attack_configs: [] # List of attack configuration yml files.
+attacks:    # List of attacks used for generating adversarial examples.
+  Attack1:  # Name of the attack.
+    config: path/to/attack1_config.yml # Path to the attack configuration file.
+  Attack2:  # Name of the attack.
+    config: path/to/attack2_config.yml # Path to the attack configuration file.
 
 # --- Dataset Configurations ---
 dataset_type: mnist  # The dataset on which the model will be trained.

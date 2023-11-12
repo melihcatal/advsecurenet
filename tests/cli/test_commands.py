@@ -4,7 +4,7 @@ from unittest.mock import patch, Mock
 from click.testing import CliRunner
 from requests import HTTPError
 
-from cli.cli import download_weights, config_default, deepfool, fgsm, pgd, cw, lots
+from cli.cli import download_weights, config_default, deepfool, fgsm, pgd, cw, lots, adversarial_training
 
 
 class TestDownloadWeights:
@@ -116,3 +116,44 @@ class TestConfigDefaultCommand:
 
         # Assertions
         assert f"Configuration file {config_name} not found!" in result.output
+
+
+class TestAdversarialTrainingCommand:
+    """
+    Test the adversarial_training command.
+    """
+
+    def setup_method(self, method):
+        self.runner = CliRunner()
+
+    def test_adversarial_training_success(self):
+        mocked_config_data = {'model': 'CustomMnistModel', 'models': [], 'attacks': [{'fgsm': [{'config': './fgsm_attack_config.yml'}]}], 'dataset_type': 'mnist', 'num_classes': 10, 'dataset_path': None, 'optimizer': 'adam', 'criterion': 'cross_entropy', 'epochs': 10, 'batch_size': 32, 'adv_coeff': 0.5, 'verbose': True, 'learning_rate': 0.001, 'momentum': 0.9,
+                              'weight_decay': 0.0005, 'scheduler': None, 'scheduler_step_size': 10, 'scheduler_gamma': 0.1, 'num_workers': 4, 'device': 'CPU', 'save_model': True, 'save_model_path': None, 'save_model_name': None, 'save_checkpoint': False, 'save_checkpoint_path': None, 'save_checkpoint_name': None, 'checkpoint_interval': 1, 'load_checkpoint': False, 'load_checkpoint_path': None}
+        with patch('cli.cli.load_configuration', return_value=mocked_config_data), \
+                patch('cli.utils.adversarial_training_cli.AdversarialTrainingCLI') as mock_adversarial_training:
+            mock_adversarial_training_instance = mock_adversarial_training.return_value
+            mock_adversarial_training_instance.train.return_value = None
+
+            result = self.runner.invoke(adversarial_training, [
+                                        '--config', 'path/to/config.yml'])
+
+            # Assertions
+            assert result.exit_code == 0
+            mock_adversarial_training.assert_called_once()
+            mock_adversarial_training_instance.train.assert_called_once()
+
+    def test_adversarial_training_no_config(self):
+        result = self.runner.invoke(adversarial_training)
+
+        # Assertions
+        assert result.exit_code != 0
+        assert "No configuration file provided for adversarial training!" in result.output
+
+    def test_adversarial_training_config_not_found(self):
+        with patch('cli.cli.load_configuration', side_effect=FileNotFoundError()) as mock_load_config:
+            result = self.runner.invoke(adversarial_training, [
+                                        '--config', 'path/to/nonexistent.yml'])
+
+            # Assertions
+            assert result.exit_code != 0
+            assert "does not exist" in result.output

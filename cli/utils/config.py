@@ -5,9 +5,11 @@ import os
 import yaml
 import pkg_resources
 from dataclasses import fields
-from typing import Dict, Callable
+from typing import Dict, Callable, TypeVar, Type
 from advsecurenet.shared.types import ConfigType
+
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
+T = TypeVar('T')
 
 
 def build_config(config_data, config_type):
@@ -44,7 +46,6 @@ def load_configuration(config_type: ConfigType, config_file: str, **overrides: D
 
     # Override the base config with the provided overrides if not None
     config_data.update({k: v for k, v in overrides.items() if v is not None})
-
     return config_data
 
 

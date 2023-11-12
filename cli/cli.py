@@ -15,7 +15,8 @@ from cli.utils.config import build_config, load_configuration
 from cli.utils.data import load_and_prepare_data
 from cli.utils.model import get_models as _get_models, prepare_model, cli_train, cli_test
 from cli.attacks.lots import execute_lots_attack
-from cli.utils.defense import cli_adversarial_training
+from cli.utils.adversarial_training_cli import AdversarialTrainingCLI
+from cli.types.adversarial_training import ATCliConfigType
 
 
 warnings.simplefilter(action='ignore', category=UserWarning)
@@ -642,49 +643,27 @@ def lots(config, **kwargs):
 
 
 @defense.command()
-@click.option('--config', type=click.Path(exists=True), default=None, help='Path to the defense configuration yml file.')
-@click.option('-tm', '--model', default=None, help='Name of the target model to be defended.')
-@click.option('-m', '--models', default=None, multiple=True, help='Names of the models that will be used for adversarial sample generation.')
-@click.option('-a', '--attacks', default=None, multiple=True, help='Names of the attacks that will be used for adversarial sample generation.')
-@click.option('--attack-kwargs', default=None, help='JSON string for keyword arguments for the attack.')
-@click.option('--attack-configs', default=None, multiple=True, help='Paths to attack configuration yml files.')
-@click.option('--dataset-type', default='mnist', help='The type of dataset to use.')
-@click.option('--num-classes', default=10, type=int, help='Number of classes in the dataset.')
-@click.option('--dataset-path', type=click.Path(exists=True), default=None, help='Path to the dataset.')
-@click.option('--optimizer', default='adam', help='The optimizer used for training.')
-@click.option('--criterion', default='cross_entropy', help='The criterion used for training.')
-@click.option('--epochs', default=10, type=int, help='Number of training epochs.')
-@click.option('--batch-size', default=32, type=int, help='Batch size for training.')
-@click.option('--adv-coeff', default=0.5, type=float, help='Coefficient for combining clean and adversarial examples.')
-@click.option('--verbose', is_flag=True, help='Enable verbose output.')
-@click.option('--learning-rate', default=0.001, type=float, help='Learning rate for the optimizer.')
-@click.option('--momentum', default=0.9, type=float, help='Momentum for the optimizer.')
-@click.option('--weight-decay', default=0.0005, type=float, help='Weight decay for the optimizer.')
-@click.option('--scheduler', default=None, help='The scheduler type used for training.')
-@click.option('--scheduler-step-size', default=10, type=int, help='Step size for the scheduler.')
-@click.option('--scheduler-gamma', default=0.1, type=float, help='Gamma for the scheduler.')
-@click.option('--num-workers', default=4, type=int, help='Number of workers for the dataloader.')
-@click.option('--device', default='CPU', type=click.Choice(['CPU', 'CUDA', 'MPS']), help='Training device.')
-@click.option('--save-model', is_flag=True, help='Enable model saving after training.')
-@click.option('--save-model-path', type=click.Path(), default=None, help='Path to save the trained model.')
-@click.option('--save-model-name', default=None, help='Name of the saved model.')
-@click.option('--save-checkpoint', is_flag=True, help='Enable checkpoint saving during training.')
-@click.option('--save-checkpoint-path', type=click.Path(), default=None, help='Path to save the model checkpoint.')
-@click.option('--save-checkpoint-name', default=None, help='Name of the saved model checkpoint.')
-@click.option('--checkpoint-interval', default=1, type=int, help='Interval epochs to save the model checkpoint.')
-@click.option('--load-checkpoint', is_flag=True, help='Enable loading model checkpoint before training.')
-@click.option('--load-checkpoint-path', type=click.Path(exists=True), default=None, help='Path to load the model checkpoint.')
+@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the adversarial configuration yml file.')
 def adversarial_training(config, **kwargs):
     """
     Command to execute adversarial training. It can be used to train a single model or an ensemble of models and attacks.
+
+    Args:
+        config (str, optional): Path to the adversarial training configuration yml file.
+
+    Examples:
+        >>> advsecurenet defense adversarial-training --config= ./adversarial_training_config.yml
+
+    Notes:
+        Because of the large number of arguments, it is mandatory to use a configuration file for adversarial training.
+
     """
     if not config:
-        click.echo(
-            "No configuration file provided for adversarial training! Using default configuration...")
-        config = get_default_config_yml(
-            "adversarial_training_config.yml", "cli")
+        raise click.ClickException(
+            "No configuration file provided for adversarial training! Use the 'config-default' command to generate a default configuration file.")
 
     config_data = load_configuration(
         config_type=ConfigType.DEFENSE, config_file=config, **kwargs)
-
-    cli_adversarial_training(config_data)
+    config_data = ATCliConfigType(**config_data)
+    adversarial_training = AdversarialTrainingCLI(config_data)
+    adversarial_training.train()
