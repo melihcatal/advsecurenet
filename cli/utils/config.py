@@ -6,7 +6,7 @@ import yaml
 import pkg_resources
 from dataclasses import fields
 from typing import Dict, Callable, TypeVar, Type
-from advsecurenet.shared.types import ConfigType
+from advsecurenet.shared.types.configs.configs import ConfigType
 
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
 T = TypeVar('T')
