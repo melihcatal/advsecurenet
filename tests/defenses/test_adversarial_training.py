@@ -4,12 +4,10 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss, BCEWithLogitsLoss
-
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-
 from advsecurenet.defenses import AdversarialTraining
-from advsecurenet.shared.types import AdversarialTrainingConfig
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 
 
 class DummyModel(BaseModel):
@@ -55,75 +53,83 @@ def setup():
 
 def test_target_model_is_not_base_model(setup):
     config = AdversarialTrainingConfig(
-        target_model="NotAModel",
+        model="NotAModel",
         models=[],
         attacks=[],
-        train_dataloader=setup['data_loader'],
+        train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
     )
     with pytest.raises(ValueError, match="Target model must be a subclass of BaseModel!"):
-        AdversarialTraining(config)
+        at_training = AdversarialTraining(config)
+        at_training.adversarial_training()
 
 
 def test_models_list_contains_non_base_model(setup):
     config = AdversarialTrainingConfig(
-        target_model=DummyModel(),
+        model=DummyModel(),
         models=["NotAModel"],
         attacks=[],
-        train_dataloader=setup['data_loader'],
+        train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
     )
     with pytest.raises(ValueError, match="All models must be a subclass of BaseModel!"):
-        AdversarialTraining(config)
+        at_training = AdversarialTraining(config)
+        at_training.adversarial_training()
 
 
 def test_attacks_list_contains_non_adversarial_attack(setup):
     config = AdversarialTrainingConfig(
-        target_model=DummyModel(),
+        model=DummyModel(),
         models=[DummyModel()],
         attacks=["NotAnAttack"],
-        train_dataloader=setup['data_loader'],
+        train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
     )
     with pytest.raises(ValueError, match="All attacks must be a subclass of AdversarialAttack!"):
-        AdversarialTraining(config)
+        at_training = AdversarialTraining(config)
+        at_training.adversarial_training()
 
 
 def test_train_dataloader_is_not_dataloader(setup):
     config = AdversarialTrainingConfig(
-        target_model=DummyModel(),
+        model=DummyModel(),
         models=[DummyModel()],
         attacks=[DummyAttack()],
-        train_dataloader="NotADataLoader",
+        train_loader="NotADataLoader",
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
     )
-    with pytest.raises(ValueError, match="train_dataloader must be a torch.utils.data.DataLoader!"):
-        AdversarialTraining(config)
+    with pytest.raises(ValueError, match="must be a DataLoader!"):
+        at_training = AdversarialTraining(config)
+        at_training.adversarial_training()
 
 
 def test_adversarial_training_runs_successfully(setup):
     config = AdversarialTrainingConfig(
-        target_model=DummyModel(),
+        model=DummyModel(),
         models=[DummyModel()],
         attacks=[DummyAttack()],
-        train_dataloader=setup['data_loader'],
+        train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
     )
-    AdversarialTraining(config)  # Should not raise any exceptions
+    # Should not raise any exceptions
+    at_training = AdversarialTraining(config)
+    at_training.adversarial_training()
 
 
 def test_adversarial_training_runs_successfully_with_bce_loss(setup):
     config = AdversarialTrainingConfig(
-        target_model=DummyModel(),
+        model=DummyModel(),
         models=[DummyModel()],
         attacks=[DummyAttack()],
-        train_dataloader=setup['data_loader'],
+        train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=BCEWithLogitsLoss()
     )
-    AdversarialTraining(config)  # Should not raise any exceptions
+    # Should not raise any exceptions
+    at_training = AdversarialTraining(config)
+    at_training.adversarial_training()

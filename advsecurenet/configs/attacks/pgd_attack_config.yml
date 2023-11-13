@@ -1,0 +1,6 @@
+# Description: Configuration file for PGD attack.
+
+epsilon: 0.3
+alpha: 0.00784313725490196  # This is the decimal representation of 2/255.
+num_iter: 40
+device: cpu  # torch.device("cpu")

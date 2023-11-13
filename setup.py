@@ -9,21 +9,20 @@ setup(
     url="https://github.com/melihcatal/advsecurenet",
     packages=find_packages(),
     include_package_data=True,
-    py_modules=["cli"],  # Add this line to include cli.py
+    package_data={'': ['*.yml']},
     install_requires=[
         "click",
         "torch",
         "torchvision",
         "colored",
-        "pytest",
-        "pytest-mock",
-        "tqdm", 
+        "tqdm",
         "PyYAML",
-        "opencv-python"
+        "opencv-python",
+        "ruamel.yaml"
     ],
     entry_points={
         'console_scripts': [
-            'advsecurenet=cli:main',
+            'advsecurenet=cli.cli:main',
         ],
     },
 )

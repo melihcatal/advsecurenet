@@ -1,13 +1,11 @@
-from typing import Optional, Tuple, Union
 import torch
 from tqdm.auto import trange
-from torchvision.models.feature_extraction import create_feature_extractor
-
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-from advsecurenet.shared.types import LotsAttackConfig, LotsAttackMode
-from advsecurenet.shared.colors import red, yellow, reset
-from advsecurenet.utils import get_device
+from typing import Optional, Tuple, Union
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.colors import red, yellow, reset
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from torchvision.models.feature_extraction import create_feature_extractor
+from advsecurenet.shared.types.configs.attack_configs import LotsAttackConfig, LotsAttackMode
 
 
 class LOTS(AdversarialAttack):
@@ -21,7 +19,7 @@ class LOTS(AdversarialAttack):
         learning_rate (float): The learning rate to use for the attack. Defaults to 1./255.
         max_iterations (int): The maximum number of iterations to use for the attack. Defaults to 1000.
         verbose (bool): Whether to print progress of the attack. Defaults to True.
-        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
+        device (torch.device): Device to use for the attack. Defaults to "cpu".
 
 
     References:
@@ -30,7 +28,6 @@ class LOTS(AdversarialAttack):
     """
 
     def __init__(self, config: LotsAttackConfig) -> None:
-
         self.validate_config(config)
 
         self.deep_feature_layer: str = config.deep_feature_layer
@@ -39,7 +36,7 @@ class LOTS(AdversarialAttack):
         self.learning_rate: float = config.learning_rate
         self.max_iterations: int = config.max_iterations
         self.verbose: bool = config.verbose
-        self.device: str = config.device.value if config.device is not None else get_device()
+        self.device: torch.device = config.device
 
     @staticmethod
     def validate_config(config: LotsAttackConfig) -> None:
@@ -87,6 +84,7 @@ class LOTS(AdversarialAttack):
         Returns:
             torch.tensor: The adversarial example tensor.
         """
+        print(f"device is {self.device}")
         data = data.clone().detach().to(self.device)
         target = target.clone().detach().to(self.device)
 
@@ -117,7 +115,7 @@ class LOTS(AdversarialAttack):
         # Create an optimizer for the data
         optimizer = torch.optim.Adam([data], lr=self.learning_rate)
 
-        for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=0, disable=not self.verbose):
+        for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=1, disable=not self.verbose):
             optimizer.zero_grad()
 
             logits = network.forward(data)

@@ -41,6 +41,7 @@ class BaseDataset(TorchDataset, ABC):
         return transforms.Compose([
             transforms.Resize(self.input_size),
             transforms.ToTensor(),
+            transforms.Normalize(mean=self.mean, std=self.std)
         ])
 
     def __len__(self) -> int:
@@ -76,7 +77,7 @@ class BaseDataset(TorchDataset, ABC):
                      root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
-                     **kwargs) -> None:
+                     **kwargs) -> TorchDataset[any]:
         """
         Loads the dataset.
 

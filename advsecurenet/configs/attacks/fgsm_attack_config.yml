@@ -1,0 +1,4 @@
+# Description: Configuration file for FGSM attack
+
+epsilon: 0.3
+device: CPU

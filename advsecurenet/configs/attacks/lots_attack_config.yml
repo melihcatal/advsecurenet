@@ -1,0 +1,9 @@
+# Description: Configuration file for the LOTS attack.
+
+deep_feature_layer: ""  
+mode: iterative  #LotsAttackMode.ITERATIVE
+epsilon: 0.1
+learning_rate: 0.004 # This is the decimal representation of 1/255.
+max_iterations: 1000
+verbose: true
+device: cpu  # torch.device("cpu")

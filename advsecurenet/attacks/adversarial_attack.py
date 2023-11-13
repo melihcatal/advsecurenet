@@ -12,7 +12,9 @@ class AdversarialAttack(ABC):
     def attack(self,
                model: BaseModel,
                x: torch.Tensor,
-               y: torch.Tensor) -> torch.Tensor:
+               y: torch.Tensor,
+               *args, **kwargs
+               ) -> torch.Tensor:
         """
         Performs the attack on the specified model and input. 
 
