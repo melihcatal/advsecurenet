@@ -31,7 +31,6 @@ jobs:
         run: |
           pytest
 
-      # - name: Lint with pylint
-      #   run: |
-      #     pylint --disable=line-too-long *.py
-
+      - name: Lint with pylint
+        run: |
+          pylint advsecurenet cli

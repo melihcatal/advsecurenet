@@ -1,5 +1,14 @@
-[TYPECHECK]
+[MASTER]
+fail-under=7.0
+jobs=2
 
-# List of members which are set dynamically and missed by Pylint inference
-# system, and so shouldn't trigger E1101 when accessed.
+[MESSAGES CONTROL]
+enable=W
+disable=line-too-long
+
+[REPORTS]
+score=y
+reports=n
+
+[TYPECHECK]
 generated-members=numpy.*, torch.*
