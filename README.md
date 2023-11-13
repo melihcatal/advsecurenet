@@ -31,3 +31,7 @@ TODO: Add further examples
 ## License
 
 TODO: Add license
+
+## Further Information
+
+Further information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/).
