@@ -4,10 +4,8 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 from torch.optim import Adam
 from torch.nn import CrossEntropyLoss, BCEWithLogitsLoss
-
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-
 from advsecurenet.defenses import AdversarialTraining
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 

@@ -1,13 +1,11 @@
 # Description: The configuration file for adversarial training.
 
 # --- Target Model and Attack Configurations ---
-model: null  # The model that will be trained.
+model: resnet18  # The model that will be trained.
 models: []  # List of models used for generating adversarial examples.
 attacks:    # List of attacks used for generating adversarial examples.
   Attack1:  # Name of the attack.
     config: path/to/attack1_config.yml # Path to the attack configuration file.
-  Attack2:  # Name of the attack.
-    config: path/to/attack2_config.yml # Path to the attack configuration file.
 
 # --- Dataset Configurations ---
 dataset_type: mnist  # The dataset on which the model will be trained.

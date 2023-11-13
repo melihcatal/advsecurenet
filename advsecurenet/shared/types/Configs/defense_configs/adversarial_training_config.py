@@ -9,13 +9,13 @@ from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs import DefenseConfig
 
 
-class AttackConfigDict(TypedDict):
-    config: Dict[str, str]
+# class AttackConfigDict(TypedDict):
+#     config: Dict[str, str]
 
 
-class AttackWithConfigDict(TypedDict):
-    attack: AdversarialAttack
-    config: AttackConfigDict
+# class AttackWithConfigDict(TypedDict):
+#     attack: AdversarialAttack
+#     config: AttackConfigDict
 
 
 @dataclass(kw_only=True)
@@ -28,7 +28,7 @@ class AdversarialTrainingConfig(DefenseConfig):
         The model that will be trained.
     models : List[BaseModel]
         A list of models that will be used to generate adversarial examples.
-    attacks : List[AttackWithConfigDict]
+    attacks : List[AdversarialAttack]
         A list of attacks that will be used to generate adversarial examples along with their configurations.
     train_dataloader : DataLoader
         A dataloader that will be used to train the model.
