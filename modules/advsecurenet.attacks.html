@@ -157,7 +157,7 @@
 <p>Abstract class for adversarial attacks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.attacks.adversarial_attack.AdversarialAttack.attack">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack.attack" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack.attack" title="Link to this definition"></a></dt>
 <dd><p>Performs the attack on the specified model and input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -183,7 +183,7 @@
 <span id="advsecurenet-attacks-cw-module"></span><h2>advsecurenet.attacks.cw module<a class="headerlink" href="#module-advsecurenet.attacks.cw" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.cw.CWAttack">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.cw.</span></span><span class="sig-name descname"><span class="pre">CWAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.cw_attack_config.CWAttackConfig" title="advsecurenet.shared.types.AttackConfigs.cw_attack_config.CWAttackConfig"><span class="pre">CWAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.cw.CWAttack" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.cw.</span></span><span class="sig-name descname"><span class="pre">CWAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CWAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.cw.CWAttack" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>Carlini-Wagner L2 attack</p>
 <dl class="field-list simple">
@@ -196,7 +196,7 @@
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations for the Adam optimizer. Defaults to 10.</p></li>
 <li><p><strong>abort_early</strong> (<em>bool</em>) – If True, aborts the attack early if the loss stops decreasing. Defaults to False.</p></li>
 <li><p><strong>binary_search_steps</strong> (<em>int</em>) – Number of binary search steps. Defaults to 10.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 <li><p><strong>clip_min</strong> (<em>float</em>) – Minimum value of the input. Defaults to 0.</p></li>
 <li><p><strong>clip_max</strong> (<em>float</em>) – Maximum value of the input. Defaults to 1.</p></li>
 <li><p><strong>c_lower</strong> (<em>float</em>) – Lower bound for c. Defaults to 1e-6.</p></li>
@@ -236,7 +236,7 @@
 <span id="advsecurenet-attacks-deepfool-module"></span><h2>advsecurenet.attacks.deepfool module<a class="headerlink" href="#module-advsecurenet.attacks.deepfool" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.deepfool.DeepFool">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.deepfool.</span></span><span class="sig-name descname"><span class="pre">DeepFool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.deepfool_attack_config.DeepFoolAttackConfig" title="advsecurenet.shared.types.AttackConfigs.deepfool_attack_config.DeepFoolAttackConfig"><span class="pre">DeepFoolAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.deepfool.DeepFool" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.deepfool.</span></span><span class="sig-name descname"><span class="pre">DeepFool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DeepFoolAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.deepfool.DeepFool" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>DeepFool attack</p>
 <dl class="field-list simple">
@@ -245,7 +245,7 @@
 <li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes in the dataset. Defaults to 10.</p></li>
 <li><p><strong>overshoot</strong> (<em>float</em>) – Overshoot parameter. Defaults to 0.02.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations. Defaults to 50.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -279,14 +279,14 @@
 <span id="advsecurenet-attacks-fgsm-module"></span><h2>advsecurenet.attacks.fgsm module<a class="headerlink" href="#module-advsecurenet.attacks.fgsm" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.fgsm.FGSM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.fgsm.</span></span><span class="sig-name descname"><span class="pre">FGSM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.fgsm_attack_config.FgsmAttackConfig" title="advsecurenet.shared.types.AttackConfigs.fgsm_attack_config.FgsmAttackConfig"><span class="pre">FgsmAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.fgsm.FGSM" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.fgsm.</span></span><span class="sig-name descname"><span class="pre">FGSM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FgsmAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.fgsm.FGSM" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>Fast Gradient Sign Method attack</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -320,19 +320,19 @@
 <span id="advsecurenet-attacks-lots-module"></span><h2>advsecurenet.attacks.lots module<a class="headerlink" href="#module-advsecurenet.attacks.lots" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.lots.LOTS">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.lots.</span></span><span class="sig-name descname"><span class="pre">LOTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig" title="advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig"><span class="pre">LotsAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.lots.LOTS" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.lots.</span></span><span class="sig-name descname"><span class="pre">LOTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LotsAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.lots.LOTS" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>LOTS attack</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deep_feature_layer</strong> (<em>str</em>) – The name of the layer to use for the attack.</p></li>
-<li><p><strong>mode</strong> (<a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackMode" title="advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackMode"><em>LotsAttackMode</em></a>) – The mode to use for the attack. Defaults to LotsAttackMode.ITERATIVE.</p></li>
+<li><p><strong>mode</strong> (<em>LotsAttackMode</em>) – The mode to use for the attack. Defaults to LotsAttackMode.ITERATIVE.</p></li>
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.1.</p></li>
 <li><p><strong>learning_rate</strong> (<em>float</em>) – The learning rate to use for the attack. Defaults to 1./255.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – The maximum number of iterations to use for the attack. Defaults to 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print progress of the attack. Defaults to True.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -362,7 +362,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.attacks.lots.LOTS.validate_config">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig" title="advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig"><span class="pre">LotsAttackConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.attacks.lots.LOTS.validate_config" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LotsAttackConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.attacks.lots.LOTS.validate_config" title="Link to this definition"></a></dt>
 <dd><p>Validate the provided configuration settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -381,7 +381,7 @@
 <span id="advsecurenet-attacks-pgd-module"></span><h2>advsecurenet.attacks.pgd module<a class="headerlink" href="#module-advsecurenet.attacks.pgd" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.pgd.PGD">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.pgd.</span></span><span class="sig-name descname"><span class="pre">PGD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.pgd_attack_config.PgdAttackConfig" title="advsecurenet.shared.types.AttackConfigs.pgd_attack_config.PgdAttackConfig"><span class="pre">PgdAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.pgd.PGD" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.pgd.</span></span><span class="sig-name descname"><span class="pre">PGD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PgdAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.pgd.PGD" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>Projected Gradient Descent targeted / untargeted attack using l-infinity norm.</p>
 <dl class="field-list simple">
@@ -390,7 +390,7 @@
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – The alpha value to use for the attack. Defaults to 2/255.</p></li>
 <li><p><strong>num_iter</strong> (<em>int</em>) – The number of iterations to use for the attack. Defaults to 40.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -430,7 +430,7 @@
 <p>Abstract class for adversarial attacks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.attacks.AdversarialAttack.attack">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.attacks.AdversarialAttack.attack" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.attacks.AdversarialAttack.attack" title="Link to this definition"></a></dt>
 <dd><p>Performs the attack on the specified model and input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -453,7 +453,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.CWAttack">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">CWAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.cw_attack_config.CWAttackConfig" title="advsecurenet.shared.types.AttackConfigs.cw_attack_config.CWAttackConfig"><span class="pre">CWAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.CWAttack" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">CWAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CWAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.CWAttack" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>Carlini-Wagner L2 attack</p>
 <dl class="field-list simple">
@@ -466,7 +466,7 @@
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations for the Adam optimizer. Defaults to 10.</p></li>
 <li><p><strong>abort_early</strong> (<em>bool</em>) – If True, aborts the attack early if the loss stops decreasing. Defaults to False.</p></li>
 <li><p><strong>binary_search_steps</strong> (<em>int</em>) – Number of binary search steps. Defaults to 10.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 <li><p><strong>clip_min</strong> (<em>float</em>) – Minimum value of the input. Defaults to 0.</p></li>
 <li><p><strong>clip_max</strong> (<em>float</em>) – Maximum value of the input. Defaults to 1.</p></li>
 <li><p><strong>c_lower</strong> (<em>float</em>) – Lower bound for c. Defaults to 1e-6.</p></li>
@@ -503,7 +503,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.DeepFool">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">DeepFool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.deepfool_attack_config.DeepFoolAttackConfig" title="advsecurenet.shared.types.AttackConfigs.deepfool_attack_config.DeepFoolAttackConfig"><span class="pre">DeepFoolAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.DeepFool" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">DeepFool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DeepFoolAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.DeepFool" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>DeepFool attack</p>
 <dl class="field-list simple">
@@ -512,7 +512,7 @@
 <li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes in the dataset. Defaults to 10.</p></li>
 <li><p><strong>overshoot</strong> (<em>float</em>) – Overshoot parameter. Defaults to 0.02.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations. Defaults to 50.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -543,14 +543,14 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.FGSM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">FGSM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.fgsm_attack_config.FgsmAttackConfig" title="advsecurenet.shared.types.AttackConfigs.fgsm_attack_config.FgsmAttackConfig"><span class="pre">FgsmAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.FGSM" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">FGSM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FgsmAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.FGSM" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>Fast Gradient Sign Method attack</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -581,19 +581,19 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.LOTS">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">LOTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig" title="advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig"><span class="pre">LotsAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.LOTS" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">LOTS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LotsAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.LOTS" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>LOTS attack</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>deep_feature_layer</strong> (<em>str</em>) – The name of the layer to use for the attack.</p></li>
-<li><p><strong>mode</strong> (<a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackMode" title="advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackMode"><em>LotsAttackMode</em></a>) – The mode to use for the attack. Defaults to LotsAttackMode.ITERATIVE.</p></li>
+<li><p><strong>mode</strong> (<em>LotsAttackMode</em>) – The mode to use for the attack. Defaults to LotsAttackMode.ITERATIVE.</p></li>
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.1.</p></li>
 <li><p><strong>learning_rate</strong> (<em>float</em>) – The learning rate to use for the attack. Defaults to 1./255.</p></li>
 <li><p><strong>max_iterations</strong> (<em>int</em>) – The maximum number of iterations to use for the attack. Defaults to 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em>) – Whether to print progress of the attack. Defaults to True.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -623,7 +623,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.attacks.LOTS.validate_config">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig" title="advsecurenet.shared.types.AttackConfigs.lots_attack_config.LotsAttackConfig"><span class="pre">LotsAttackConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.attacks.LOTS.validate_config" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LotsAttackConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.attacks.LOTS.validate_config" title="Link to this definition"></a></dt>
 <dd><p>Validate the provided configuration settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -639,7 +639,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.attacks.PGD">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">PGD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.AttackConfigs.html#advsecurenet.shared.types.AttackConfigs.pgd_attack_config.PgdAttackConfig" title="advsecurenet.shared.types.AttackConfigs.pgd_attack_config.PgdAttackConfig"><span class="pre">PgdAttackConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.PGD" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.attacks.</span></span><span class="sig-name descname"><span class="pre">PGD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PgdAttackConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.attacks.PGD" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.attacks.adversarial_attack.AdversarialAttack" title="advsecurenet.attacks.adversarial_attack.AdversarialAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialAttack</span></code></a></p>
 <p>Projected Gradient Descent targeted / untargeted attack using l-infinity norm.</p>
 <dl class="field-list simple">
@@ -648,7 +648,7 @@
 <li><p><strong>epsilon</strong> (<em>float</em>) – The epsilon value to use for the attack. Defaults to 0.3.</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – The alpha value to use for the attack. Defaults to 2/255.</p></li>
 <li><p><strong>num_iter</strong> (<em>int</em>) – The number of iterations to use for the attack. Defaults to 40.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a>) – Device to use for the attack. Defaults to DeviceType.CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to use for the attack. Defaults to “cpu”.</p></li>
 </ul>
 </dd>
 </dl>

@@ -52,10 +52,7 @@
 <li><a class="reference internal" href="#advsecurenet.utils.data_splitter.split_data"><code class="docutils literal notranslate"><span class="pre">split_data()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-advsecurenet.utils.get_device">advsecurenet.utils.get_device module</a><ul>
-<li><a class="reference internal" href="#advsecurenet.utils.get_device.get_device"><code class="docutils literal notranslate"><span class="pre">get_device()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#advsecurenet-utils-get-device-module">advsecurenet.utils.get_device module</a></li>
 <li><a class="reference internal" href="#module-advsecurenet.utils.model_utils">advsecurenet.utils.model_utils module</a><ul>
 <li><a class="reference internal" href="#advsecurenet.utils.model_utils.download_weights"><code class="docutils literal notranslate"><span class="pre">download_weights()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.utils.model_utils.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
@@ -66,7 +63,9 @@
 </li>
 <li><a class="reference internal" href="#module-advsecurenet.utils">Module contents</a><ul>
 <li><a class="reference internal" href="#advsecurenet.utils.download_weights"><code class="docutils literal notranslate"><span class="pre">download_weights()</span></code></a></li>
-<li><a class="reference internal" href="#advsecurenet.utils.get_device"><code class="docutils literal notranslate"><span class="pre">get_device()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.utils.generate_default_config_yaml"><code class="docutils literal notranslate"><span class="pre">generate_default_config_yaml()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.utils.get_available_configs"><code class="docutils literal notranslate"><span class="pre">get_available_configs()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.utils.get_default_config_yml"><code class="docutils literal notranslate"><span class="pre">get_default_config_yml()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.utils.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.utils.save_model"><code class="docutils literal notranslate"><span class="pre">save_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.utils.split_data"><code class="docutils literal notranslate"><span class="pre">split_data()</span></code></a></li>
@@ -146,39 +145,20 @@ y_test (list): List of test targets.</p>
 </dd></dl>
 
 </section>
-<section id="module-advsecurenet.utils.get_device">
-<span id="advsecurenet-utils-get-device-module"></span><h2>advsecurenet.utils.get_device module<a class="headerlink" href="#module-advsecurenet.utils.get_device" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="advsecurenet.utils.get_device.get_device">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.get_device.</span></span><span class="sig-name descname"><span class="pre">get_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.get_device.get_device" title="Link to this definition"></a></dt>
-<dd><p>Returns the device to work on. The order of preference is:</p>
-<ol class="arabic simple">
-<li><p>CUDA GPU</p></li>
-<li><p>Apple Silicon MPS</p></li>
-<li><p>CPU</p></li>
-</ol>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The device to work on.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType">DeviceType</a></p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="advsecurenet-utils-get-device-module">
+<h2>advsecurenet.utils.get_device module<a class="headerlink" href="#advsecurenet-utils-get-device-module" title="Link to this heading"></a></h2>
 </section>
 <section id="module-advsecurenet.utils.model_utils">
 <span id="advsecurenet-utils-model-utils-module"></span><h2>advsecurenet.utils.model_utils module<a class="headerlink" href="#module-advsecurenet.utils.model_utils" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.model_utils.download_weights">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">download_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.download_weights" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">download_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.download_weights" title="Link to this definition"></a></dt>
 <dd><p>Downloads model weights from a remote source based on the model and dataset names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the model (e.g. “resnet50”).</p></li>
-<li><p><strong>dataset_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the dataset the model was trained on (e.g. “cifar10”).</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – The name of the model (e.g. “resnet50”).</p></li>
+<li><p><strong>dataset_name</strong> (<em>str</em>) – The name of the dataset the model was trained on (e.g. “cifar10”).</p></li>
 <li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The filename of the weights on the remote server. If provided, this will be used directly.</p></li>
 <li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory to save the weights to. Defaults to weights directory.</p></li>
 </ul>
@@ -197,7 +177,7 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.model_utils.load_model">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.load_model" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.load_model" title="Link to this definition"></a></dt>
 <dd><p>Loads the model weights from the given filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -205,7 +185,7 @@ y_test (list): List of test targets.</p>
 <li><p><strong>model</strong> (<em>nn.Module</em>) – The model to load the weights into.</p></li>
 <li><p><strong>filename</strong> (<em>str</em>) – The filename to load the model weights from.</p></li>
 <li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath to load the model weights from. Defaults to weights directory.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a><em>, </em><em>optional</em>) – The device to load the model weights to. Defaults to CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to load the model weights to. Defaults to CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -213,7 +193,7 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.model_utils.save_model">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.save_model" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.save_model" title="Link to this definition"></a></dt>
 <dd><p>Saves the model weights to the given filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -228,7 +208,7 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.model_utils.test">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.test" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.model_utils.test" title="Link to this definition"></a></dt>
 <dd><p>Tests the model on the given test_loader. Prints the average loss and accuracy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -236,7 +216,7 @@ y_test (list): List of test targets.</p>
 <li><p><strong>model</strong> (<em>nn.Module</em>) – The model to test.</p></li>
 <li><p><strong>test_loader</strong> (<em>torch.utils.data.DataLoader</em>) – The test loader.</p></li>
 <li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – The loss function. Defaults to nn.CrossEntropyLoss().</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a><em>, </em><em>optional</em>) – The device to test on. Defaults to CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to test on. Defaults to CPU.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -250,19 +230,11 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.model_utils.train">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.train" title="Link to this definition"></a></dt>
-<dd><p>Trains the model on the given train_loader for the given number of epochs.</p>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.model_utils.train" title="Link to this definition"></a></dt>
+<dd><p>Trains the model based on the given train_config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>nn.Module</em>) – The model to train.</p></li>
-<li><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – The train loader.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a><em>, </em><em>optional</em>) – The device to train on. Defaults to CPU</p></li>
-<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – The loss function. Defaults to nn.CrossEntropyLoss().</p></li>
-<li><p><strong>optimizer</strong> (<em>torch.optim</em><em>, </em><em>optional</em>) – The optimizer. Defaults to Adam with learning rate 0.001.</p></li>
-<li><p><strong>epochs</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of epochs to train for. Defaults to 3.</p></li>
-<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – The learning rate. Defaults to 0.001.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>train_config</strong> (<em>TrainConfig</em>) – The train configuration.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -272,13 +244,13 @@ y_test (list): List of test targets.</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.utils" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.download_weights">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">download_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.download_weights" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">download_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.download_weights" title="Link to this definition"></a></dt>
 <dd><p>Downloads model weights from a remote source based on the model and dataset names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the model (e.g. “resnet50”).</p></li>
-<li><p><strong>dataset_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the dataset the model was trained on (e.g. “cifar10”).</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – The name of the model (e.g. “resnet50”).</p></li>
+<li><p><strong>dataset_name</strong> (<em>str</em>) – The name of the dataset the model was trained on (e.g. “cifar10”).</p></li>
 <li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The filename of the weights on the remote server. If provided, this will be used directly.</p></li>
 <li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory to save the weights to. Defaults to weights directory.</p></li>
 </ul>
@@ -296,27 +268,68 @@ y_test (list): List of test targets.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="advsecurenet.utils.get_device">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">get_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.get_device" title="Link to this definition"></a></dt>
-<dd><p>Returns the device to work on. The order of preference is:</p>
-<ol class="arabic simple">
-<li><p>CUDA GPU</p></li>
-<li><p>Apple Silicon MPS</p></li>
-<li><p>CPU</p></li>
-</ol>
+<dt class="sig sig-object py" id="advsecurenet.utils.generate_default_config_yaml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">generate_default_config_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#advsecurenet.utils.generate_default_config_yaml" title="Link to this definition"></a></dt>
+<dd><p>Generate a default configuration YAML based on the name of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_name</strong> (<em>str</em>) – The name of the configuration yml file (e.g., “cw_attack_config.yml”).</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path where the YAML file should be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The default configuration YAML as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.get_available_configs">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">get_available_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#advsecurenet.utils.get_available_configs" title="Link to this definition"></a></dt>
+<dd><p>Get a list of all available configuration files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The device to work on.</p>
+<dd class="field-odd"><p>A list of all available configuration files.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType">DeviceType</a></p>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.utils.config_utils</span> <span class="kn">import</span> <span class="n">get_available_configs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_available_configs</span><span class="p">()</span>
+<span class="go">[&#39;lots_attack_config.yml&#39;, &#39;cw_attack_config.yml&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.get_default_config_yml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">get_default_config_yml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.get_default_config_yml" title="Link to this definition"></a></dt>
+<dd><p>Get the default configuration YAML based on the name of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_name</strong> (<em>str</em>) – The name of the configuration (e.g., “cw_attack”).</p></li>
+<li><p><strong>config_subdir</strong> (<em>str</em><em>, </em><em>optional</em>) – The sub-directory to search in. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The path to the configuration YAML file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.load_model">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.load_model" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.load_model" title="Link to this definition"></a></dt>
 <dd><p>Loads the model weights from the given filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -324,7 +337,7 @@ y_test (list): List of test targets.</p>
 <li><p><strong>model</strong> (<em>nn.Module</em>) – The model to load the weights into.</p></li>
 <li><p><strong>filename</strong> (<em>str</em>) – The filename to load the model weights from.</p></li>
 <li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath to load the model weights from. Defaults to weights directory.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a><em>, </em><em>optional</em>) – The device to load the model weights to. Defaults to CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to load the model weights to. Defaults to CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -332,7 +345,7 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.save_model">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.save_model" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.save_model" title="Link to this definition"></a></dt>
 <dd><p>Saves the model weights to the given filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -375,7 +388,7 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.test">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.test" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.test" title="Link to this definition"></a></dt>
 <dd><p>Tests the model on the given test_loader. Prints the average loss and accuracy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -383,7 +396,7 @@ y_test (list): List of test targets.</p>
 <li><p><strong>model</strong> (<em>nn.Module</em>) – The model to test.</p></li>
 <li><p><strong>test_loader</strong> (<em>torch.utils.data.DataLoader</em>) – The test loader.</p></li>
 <li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – The loss function. Defaults to nn.CrossEntropyLoss().</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a><em>, </em><em>optional</em>) – The device to test on. Defaults to CPU.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to test on. Defaults to CPU.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -397,19 +410,11 @@ y_test (list): List of test targets.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="advsecurenet.utils.train">
-<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.train" title="Link to this definition"></a></dt>
-<dd><p>Trains the model on the given train_loader for the given number of epochs.</p>
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TrainConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.train" title="Link to this definition"></a></dt>
+<dd><p>Trains the model based on the given train_config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>nn.Module</em>) – The model to train.</p></li>
-<li><p><strong>train_loader</strong> (<em>torch.utils.data.DataLoader</em>) – The train loader.</p></li>
-<li><p><strong>device</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.DeviceType" title="advsecurenet.shared.types.DeviceType"><em>DeviceType</em></a><em>, </em><em>optional</em>) – The device to train on. Defaults to CPU</p></li>
-<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – The loss function. Defaults to nn.CrossEntropyLoss().</p></li>
-<li><p><strong>optimizer</strong> (<em>torch.optim</em><em>, </em><em>optional</em>) – The optimizer. Defaults to Adam with learning rate 0.001.</p></li>
-<li><p><strong>epochs</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of epochs to train for. Defaults to 3.</p></li>
-<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – The learning rate. Defaults to 0.001.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>train_config</strong> (<em>TrainConfig</em>) – The train configuration.</p>
 </dd>
 </dl>
 </dd></dl>

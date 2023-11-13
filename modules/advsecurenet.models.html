@@ -51,16 +51,19 @@
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.pretrained"><code class="docutils literal notranslate"><span class="pre">BaseModel.pretrained</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.target_layer"><code class="docutils literal notranslate"><span class="pre">BaseModel.target_layer</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.forward"><code class="docutils literal notranslate"><span class="pre">BaseModel.forward()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.get_layer"><code class="docutils literal notranslate"><span class="pre">BaseModel.get_layer()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.get_layer_names"><code class="docutils literal notranslate"><span class="pre">BaseModel.get_layer_names()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.load_model"><code class="docutils literal notranslate"><span class="pre">BaseModel.load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.models"><code class="docutils literal notranslate"><span class="pre">BaseModel.models()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.predict"><code class="docutils literal notranslate"><span class="pre">BaseModel.predict()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel.set_layer"><code class="docutils literal notranslate"><span class="pre">BaseModel.set_layer()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-advsecurenet.models.custom_model">advsecurenet.models.custom_model module</a><ul>
 <li><a class="reference internal" href="#advsecurenet.models.custom_model.CustomModel"><code class="docutils literal notranslate"><span class="pre">CustomModel</span></code></a><ul>
+<li><a class="reference internal" href="#advsecurenet.models.custom_model.CustomModel.available_weights"><code class="docutils literal notranslate"><span class="pre">CustomModel.available_weights()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.custom_model.CustomModel.load_model"><code class="docutils literal notranslate"><span class="pre">CustomModel.load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.custom_model.CustomModel.models"><code class="docutils literal notranslate"><span class="pre">CustomModel.models()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.custom_model.CustomModel.modify_model"><code class="docutils literal notranslate"><span class="pre">CustomModel.modify_model()</span></code></a></li>
@@ -70,9 +73,10 @@
 </li>
 <li><a class="reference internal" href="#module-advsecurenet.models.model_factory">advsecurenet.models.model_factory module</a><ul>
 <li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory"><code class="docutils literal notranslate"><span class="pre">ModelFactory</span></code></a><ul>
-<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.get_available_custom_models"><code class="docutils literal notranslate"><span class="pre">ModelFactory.get_available_custom_models()</span></code></a></li>
-<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.get_available_models"><code class="docutils literal notranslate"><span class="pre">ModelFactory.get_available_models()</span></code></a></li>
-<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.get_available_standard_models"><code class="docutils literal notranslate"><span class="pre">ModelFactory.get_available_standard_models()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.available_custom_models"><code class="docutils literal notranslate"><span class="pre">ModelFactory.available_custom_models()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.available_models"><code class="docutils literal notranslate"><span class="pre">ModelFactory.available_models()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.available_standard_models"><code class="docutils literal notranslate"><span class="pre">ModelFactory.available_standard_models()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.available_weights"><code class="docutils literal notranslate"><span class="pre">ModelFactory.available_weights()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.get_model"><code class="docutils literal notranslate"><span class="pre">ModelFactory.get_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.model_factory.ModelFactory.infer_model_type"><code class="docutils literal notranslate"><span class="pre">ModelFactory.infer_model_type()</span></code></a></li>
 </ul>
@@ -81,8 +85,7 @@
 </li>
 <li><a class="reference internal" href="#module-advsecurenet.models.standard_model">advsecurenet.models.standard_model module</a><ul>
 <li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel"><code class="docutils literal notranslate"><span class="pre">StandardModel</span></code></a><ul>
-<li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel.model_variant"><code class="docutils literal notranslate"><span class="pre">StandardModel.model_variant</span></code></a></li>
-<li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel.num_input_channels"><code class="docutils literal notranslate"><span class="pre">StandardModel.num_input_channels</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel.available_weights"><code class="docutils literal notranslate"><span class="pre">StandardModel.available_weights()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel.load_model"><code class="docutils literal notranslate"><span class="pre">StandardModel.load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel.models"><code class="docutils literal notranslate"><span class="pre">StandardModel.models()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.standard_model.StandardModel.modify_model"><code class="docutils literal notranslate"><span class="pre">StandardModel.modify_model()</span></code></a></li>
@@ -96,21 +99,23 @@
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.pretrained"><code class="docutils literal notranslate"><span class="pre">BaseModel.pretrained</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.target_layer"><code class="docutils literal notranslate"><span class="pre">BaseModel.target_layer</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.forward"><code class="docutils literal notranslate"><span class="pre">BaseModel.forward()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.BaseModel.get_layer"><code class="docutils literal notranslate"><span class="pre">BaseModel.get_layer()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.get_layer_names"><code class="docutils literal notranslate"><span class="pre">BaseModel.get_layer_names()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.load_model"><code class="docutils literal notranslate"><span class="pre">BaseModel.load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.models"><code class="docutils literal notranslate"><span class="pre">BaseModel.models()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.BaseModel.predict"><code class="docutils literal notranslate"><span class="pre">BaseModel.predict()</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.BaseModel.set_layer"><code class="docutils literal notranslate"><span class="pre">BaseModel.set_layer()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#advsecurenet.models.CustomModel"><code class="docutils literal notranslate"><span class="pre">CustomModel</span></code></a><ul>
+<li><a class="reference internal" href="#advsecurenet.models.CustomModel.available_weights"><code class="docutils literal notranslate"><span class="pre">CustomModel.available_weights()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.CustomModel.load_model"><code class="docutils literal notranslate"><span class="pre">CustomModel.load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.CustomModel.models"><code class="docutils literal notranslate"><span class="pre">CustomModel.models()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.CustomModel.modify_model"><code class="docutils literal notranslate"><span class="pre">CustomModel.modify_model()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#advsecurenet.models.StandardModel"><code class="docutils literal notranslate"><span class="pre">StandardModel</span></code></a><ul>
-<li><a class="reference internal" href="#advsecurenet.models.StandardModel.model_variant"><code class="docutils literal notranslate"><span class="pre">StandardModel.model_variant</span></code></a></li>
-<li><a class="reference internal" href="#advsecurenet.models.StandardModel.num_input_channels"><code class="docutils literal notranslate"><span class="pre">StandardModel.num_input_channels</span></code></a></li>
+<li><a class="reference internal" href="#advsecurenet.models.StandardModel.available_weights"><code class="docutils literal notranslate"><span class="pre">StandardModel.available_weights()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.StandardModel.load_model"><code class="docutils literal notranslate"><span class="pre">StandardModel.load_model()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.StandardModel.models"><code class="docutils literal notranslate"><span class="pre">StandardModel.models()</span></code></a></li>
 <li><a class="reference internal" href="#advsecurenet.models.StandardModel.modify_model"><code class="docutils literal notranslate"><span class="pre">StandardModel.modify_model()</span></code></a></li>
@@ -181,7 +186,7 @@
 <span id="advsecurenet-models-base-model-module"></span><h2>advsecurenet.models.base_model module<a class="headerlink" href="#module-advsecurenet.models.base_model" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.models.base_model.BaseModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.base_model.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.base_model.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Abstract class for models.</p>
 <dl class="py attribute">
@@ -235,14 +240,25 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.base_model.BaseModel.get_layer">
+<span class="sig-name descname"><span class="pre">get_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.get_layer" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a specific layer module based on its name.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">StandardModel</span><span class="p">(</span><span class="n">model_variant</span><span class="o">=</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;layer1.0.conv1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.base_model.BaseModel.get_layer_names">
-<span class="sig-name descname"><span class="pre">get_layer_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.get_layer_names" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_layer_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.get_layer_names" title="Link to this definition"></a></dt>
 <dd><p>Return a list of layer names in the model.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.base_model.BaseModel.load_model">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.load_model" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.load_model" title="Link to this definition"></a></dt>
 <dd><p>Abstract method to load the model. This method should be implemented
 in derived classes (e.g., StandardModel, CustomModel).</p>
 </dd></dl>
@@ -255,19 +271,34 @@ in derived classes (e.g., StandardModel, CustomModel).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.base_model.BaseModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.predict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.predict" title="Link to this definition"></a></dt>
 <dd><p>Predicts the class of the input tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – The input tensor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The predicted class.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p>The predicted class index.</p></li>
+<li><p>The probability of the predicted class.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
+<dd class="field-odd"><p>Tuple[torch.Tensor, torch.Tensor]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.base_model.BaseModel.set_layer">
+<span class="sig-name descname"><span class="pre">set_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.base_model.BaseModel.set_layer" title="Link to this definition"></a></dt>
+<dd><p>Replace a specific layer module based on its name with a new module.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">StandardModel</span><span class="p">(</span><span class="n">model_variant</span><span class="o">=</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">set_layer</span><span class="p">(</span><span class="s1">&#39;layer1.0.conv1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -313,6 +344,12 @@ in derived classes (e.g., StandardModel, CustomModel).</p>
 </pre></div>
 </div>
 <dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.custom_model.CustomModel.available_weights">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.custom_model.CustomModel.available_weights" title="Link to this definition"></a></dt>
+<dd><p>Not applicable for custom models.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.custom_model.CustomModel.load_model">
 <span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.custom_model.CustomModel.load_model" title="Link to this definition"></a></dt>
 <dd><p>Load the custom model. This method is called by the BaseModel constructor.
@@ -354,26 +391,66 @@ i.e., for ‘CustomMnistModel.py’, there should be a class ‘CustomMnistModel
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.model_factory.</span></span><span class="sig-name descname"><span class="pre">ModelFactory</span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.get_available_custom_models">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_available_custom_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.get_available_custom_models" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.available_custom_models">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_custom_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.available_custom_models" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of all available custom models that are created by the user. These models are stored in the ‘advsecurenet/models/CustomModels’ directory.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.get_available_models">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_available_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.get_available_models" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.available_models">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.available_models" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of all available models.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.get_available_standard_models">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_available_standard_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.get_available_standard_models" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.available_standard_models">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_standard_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.available_standard_models" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of all available standard models that are supported by torchvision.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.available_weights">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EnumMeta</span></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.available_weights" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of available weights for the given model_name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – The name of the model. You can get the list of available models using StandardModel.models().</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A EnumMeta object containing the available weights for the given model_name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>EnumMeta</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the model_name is not supported.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can get the list of available weights for a model using list(StandardModel.available_weights(model_name)).
+This is only applicable for standard models.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the model_name is not supported.</p></li>
+<li><p><strong>ValueError</strong> – If the model_name is a custom model.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ModelFactory</span><span class="o">.</span><span class="n">available_weights</span><span class="p">(</span><span class="s2">&quot;resnet18&quot;</span><span class="p">)</span>
+<span class="go">&lt;enum &#39;ResNet18Weights&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">ModelFactory</span><span class="o">.</span><span class="n">available_weights</span><span class="p">(</span><span class="s2">&quot;resnet18&quot;</span><span class="p">))</span>
+<span class="go">[ResNet18_Weights.IMAGENET1K_V1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.model_factory.ModelFactory.get_model">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_variant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_input_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.get_model" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_variant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_input_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></span><a class="headerlink" href="#advsecurenet.models.model_factory.ModelFactory.get_model" title="Link to this definition"></a></dt>
 <dd><p>This function returns a model based on the model_variant. If the model_variant is a standard model, it will be loaded from torchvision.models. If the model_variant is a custom model, it will be loaded from advsecurenet.models.CustomModels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -382,8 +459,21 @@ i.e., for ‘CustomMnistModel.py’, there should be a class ‘CustomMnistModel
 <li><p><strong>num_classes</strong> (<em>int</em>) – The number of classes in the dataset.</p></li>
 <li><p><strong>num_input_channels</strong> (<em>int</em>) – The number of input channels in the dataset. Default is 3 for RGB images.</p></li>
 <li><p><strong>pretrained</strong> (<em>bool</em>) – Whether to load pretrained weights or not. Default is False. This is only applicable for standard models.</p></li>
+<li><p><strong>weights</strong> (<em>str</em>) – The weights for the pretrained standard model. Default is IMAGENET1K_V1. This is only applicable for standard models.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments that will be passed to the model.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the model_variant is not supported by torchvision or is not a custom model.</p></li>
+<li><p><strong>ValueError</strong> – If the model_variant is a custom model and weights is not None.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The model for the given model_variant. It will be of type StandardModel or CustomModel.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#advsecurenet.models.BaseModel" title="advsecurenet.models.BaseModel">BaseModel</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -415,53 +505,77 @@ i.e., for ‘CustomMnistModel.py’, there should be a class ‘CustomMnistModel
 <span id="advsecurenet-models-standard-model-module"></span><h2>advsecurenet.models.standard_model module<a class="headerlink" href="#module-advsecurenet.models.standard_model" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.standard_model.</span></span><span class="sig-name descname"><span class="pre">StandardModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_variant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_input_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.standard_model.</span></span><span class="sig-name descname"><span class="pre">StandardModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_variant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'IMAGENET1K_V1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
 <p>This class is used to load standard models from torchvision.models. It supports loading pretrained models and
 modifying the model after loading.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel.model_variant">
-<span class="sig-name descname"><span class="pre">model_variant</span></span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.model_variant" title="Link to this definition"></a></dt>
-<dd><p>The name of the model to load. For example, ‘resnet18’.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_variant</strong> – str
+The name of the model to load. For example, ‘resnet18’.</p></li>
+<li><p><strong>num_classes</strong> – int
+The number of classes in the dataset.</p></li>
+<li><p><strong>pretrained</strong> – bool
+Whether to load pretrained weights or not. Default is False.</p></li>
+<li><p><strong>weights</strong> – str
+The weights for the pretrained model. Default is IMAGENET1K_V1. Weight list can be obtained using StandardModel.available_weights(model_name).</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel.num_input_channels">
-<span class="sig-name descname"><span class="pre">num_input_channels</span></span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.num_input_channels" title="Link to this definition"></a></dt>
-<dd><p>The number of input channels in the model. For example, 3 for RGB images.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel.available_weights">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EnumMeta</span></span></span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.available_weights" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of available weights for the given model_name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – The name of the model. You can get the list of available models using StandardModel.models().</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A EnumMeta object containing the available weights for the given model_name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>EnumMeta</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the model_name is not supported.</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can get the list of available weights for a model using list(StandardModel.available_weights(model_name)).</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">StandardModel</span><span class="o">.</span><span class="n">available_weights</span><span class="p">(</span><span class="s2">&quot;resnet18&quot;</span><span class="p">)</span>
+<span class="go">&lt;enum &#39;ResNet18Weights&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">StandardModel</span><span class="o">.</span><span class="n">available_weights</span><span class="p">(</span><span class="s2">&quot;resnet18&quot;</span><span class="p">))</span>
+<span class="go">[ResNet18_Weights.IMAGENET1K_V1]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel.load_model">
-<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;module</span> <span class="pre">'torchvision.models'</span> <span class="pre">from</span> <span class="pre">'/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/torchvision/models/__init__.py'&gt;</span></span></span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.load_model" title="Link to this definition"></a></dt>
-<dd><p>Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute.</p>
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.load_model" title="Link to this definition"></a></dt>
+<dd><p>Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute and sets the model attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the model_variant is not supported.</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the model_variant is not supported by torchvision.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel.models">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.models" title="Link to this definition"></a></dt>
-<dd><p>Return a list of available models.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.models" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of available standard models from torchvision.models.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.standard_model.StandardModel.modify_model">
 <span class="sig-name descname"><span class="pre">modify_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.standard_model.StandardModel.modify_model" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Modifies the model after loading. It updates the number of output classes of the pretrained model to the number of classes in the dataset.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -470,7 +584,7 @@ modifying the model after loading.</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.models" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.models.BaseModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.BaseModel" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><a class="headerlink" href="#advsecurenet.models.BaseModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Abstract class for models.</p>
 <dl class="py attribute">
@@ -524,14 +638,25 @@ modifying the model after loading.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.BaseModel.get_layer">
+<span class="sig-name descname"><span class="pre">get_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="headerlink" href="#advsecurenet.models.BaseModel.get_layer" title="Link to this definition"></a></dt>
+<dd><p>Retrieve a specific layer module based on its name.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">StandardModel</span><span class="p">(</span><span class="n">model_variant</span><span class="o">=</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;layer1.0.conv1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.BaseModel.get_layer_names">
-<span class="sig-name descname"><span class="pre">get_layer_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.BaseModel.get_layer_names" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_layer_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.BaseModel.get_layer_names" title="Link to this definition"></a></dt>
 <dd><p>Return a list of layer names in the model.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.BaseModel.load_model">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.BaseModel.load_model" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.models.BaseModel.load_model" title="Link to this definition"></a></dt>
 <dd><p>Abstract method to load the model. This method should be implemented
 in derived classes (e.g., StandardModel, CustomModel).</p>
 </dd></dl>
@@ -544,19 +669,34 @@ in derived classes (e.g., StandardModel, CustomModel).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.BaseModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="headerlink" href="#advsecurenet.models.BaseModel.predict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.BaseModel.predict" title="Link to this definition"></a></dt>
 <dd><p>Predicts the class of the input tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – The input tensor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The predicted class.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p>The predicted class index.</p></li>
+<li><p>The probability of the predicted class.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
+<dd class="field-odd"><p>Tuple[torch.Tensor, torch.Tensor]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.BaseModel.set_layer">
+<span class="sig-name descname"><span class="pre">set_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_layer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.BaseModel.set_layer" title="Link to this definition"></a></dt>
+<dd><p>Replace a specific layer module based on its name with a new module.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">StandardModel</span><span class="p">(</span><span class="n">model_variant</span><span class="o">=</span><span class="s1">&#39;resnet18&#39;</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">set_layer</span><span class="p">(</span><span class="s1">&#39;layer1.0.conv1&#39;</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -599,6 +739,12 @@ in derived classes (e.g., StandardModel, CustomModel).</p>
 </pre></div>
 </div>
 <dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.CustomModel.available_weights">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.models.CustomModel.available_weights" title="Link to this definition"></a></dt>
+<dd><p>Not applicable for custom models.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.CustomModel.load_model">
 <span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.CustomModel.load_model" title="Link to this definition"></a></dt>
 <dd><p>Load the custom model. This method is called by the BaseModel constructor.
@@ -634,53 +780,77 @@ i.e., for ‘CustomMnistModel.py’, there should be a class ‘CustomMnistModel
 
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.models.StandardModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.</span></span><span class="sig-name descname"><span class="pre">StandardModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_variant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_input_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.StandardModel" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.models.</span></span><span class="sig-name descname"><span class="pre">StandardModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_variant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'IMAGENET1K_V1'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.StandardModel" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
 <p>This class is used to load standard models from torchvision.models. It supports loading pretrained models and
 modifying the model after loading.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="advsecurenet.models.StandardModel.model_variant">
-<span class="sig-name descname"><span class="pre">model_variant</span></span><a class="headerlink" href="#advsecurenet.models.StandardModel.model_variant" title="Link to this definition"></a></dt>
-<dd><p>The name of the model to load. For example, ‘resnet18’.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_variant</strong> – str
+The name of the model to load. For example, ‘resnet18’.</p></li>
+<li><p><strong>num_classes</strong> – int
+The number of classes in the dataset.</p></li>
+<li><p><strong>pretrained</strong> – bool
+Whether to load pretrained weights or not. Default is False.</p></li>
+<li><p><strong>weights</strong> – str
+The weights for the pretrained model. Default is IMAGENET1K_V1. Weight list can be obtained using StandardModel.available_weights(model_name).</p></li>
+</ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="advsecurenet.models.StandardModel.num_input_channels">
-<span class="sig-name descname"><span class="pre">num_input_channels</span></span><a class="headerlink" href="#advsecurenet.models.StandardModel.num_input_channels" title="Link to this definition"></a></dt>
-<dd><p>The number of input channels in the model. For example, 3 for RGB images.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.models.StandardModel.available_weights">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EnumMeta</span></span></span><a class="headerlink" href="#advsecurenet.models.StandardModel.available_weights" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of available weights for the given model_name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<em>str</em>) – The name of the model. You can get the list of available models using StandardModel.models().</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A EnumMeta object containing the available weights for the given model_name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>EnumMeta</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the model_name is not supported.</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can get the list of available weights for a model using list(StandardModel.available_weights(model_name)).</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">StandardModel</span><span class="o">.</span><span class="n">available_weights</span><span class="p">(</span><span class="s2">&quot;resnet18&quot;</span><span class="p">)</span>
+<span class="go">&lt;enum &#39;ResNet18Weights&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">StandardModel</span><span class="o">.</span><span class="n">available_weights</span><span class="p">(</span><span class="s2">&quot;resnet18&quot;</span><span class="p">))</span>
+<span class="go">[ResNet18_Weights.IMAGENET1K_V1]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.StandardModel.load_model">
-<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">&lt;module</span> <span class="pre">'torchvision.models'</span> <span class="pre">from</span> <span class="pre">'/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/torchvision/models/__init__.py'&gt;</span></span></span><a class="headerlink" href="#advsecurenet.models.StandardModel.load_model" title="Link to this definition"></a></dt>
-<dd><p>Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute.</p>
+<span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.models.StandardModel.load_model" title="Link to this definition"></a></dt>
+<dd><p>Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute and sets the model attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the model_variant is not supported.</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the model_variant is not supported by torchvision.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.StandardModel.models">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.StandardModel.models" title="Link to this definition"></a></dt>
-<dd><p>Return a list of available models.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#advsecurenet.models.StandardModel.models" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of available standard models from torchvision.models.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.models.StandardModel.modify_model">
 <span class="sig-name descname"><span class="pre">modify_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.models.StandardModel.modify_model" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Modifies the model after loading. It updates the number of output classes of the pretrained model to the number of classes in the dataset.</p>
+</dd></dl>
 
 </dd></dl>
 
