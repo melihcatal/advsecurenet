@@ -1,0 +1,14 @@
+# Description: Configuration file for adversarial training
+
+target_model: BaseModel
+models:
+  - BaseModel
+attacks:
+  - AdversarialAttack
+train_dataloader: DataLoaderFactory
+optimizer: Optimizer
+criterion: nn.Module
+epochs: 5
+adv_coeff: 0.5
+device: CPU
+verbose: true

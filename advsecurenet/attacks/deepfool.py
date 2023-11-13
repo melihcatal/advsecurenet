@@ -1,10 +1,8 @@
 import torch
 import cv2
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-
-from advsecurenet.shared.types import DeepFoolAttackConfig
-from advsecurenet.utils import get_device
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.shared.types.configs.attack_configs import DeepFoolAttackConfig
 
 
 class DeepFool(AdversarialAttack):
@@ -16,7 +14,7 @@ class DeepFool(AdversarialAttack):
         num_classes (int): Number of classes in the dataset. Defaults to 10.
         overshoot (float): Overshoot parameter. Defaults to 0.02.
         max_iterations (int): Maximum number of iterations. Defaults to 50.
-        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
+        device (torch.device): Device to use for the attack. Defaults to "cpu".
 
 
     References:
@@ -24,10 +22,10 @@ class DeepFool(AdversarialAttack):
     """
 
     def __init__(self, config: DeepFoolAttackConfig) -> None:
-        self.num_classes = config.num_classes
-        self.overshoot = config.overshoot
-        self.max_iterations = config.max_iterations
-        self.device = config.device.value if config.device is not None else get_device()
+        self.num_classes: int = config.num_classes
+        self.overshoot: float = config.overshoot
+        self.max_iterations: int = config.max_iterations
+        self.device: torch.device = config.device
 
     def attack(self,
                model: BaseModel,

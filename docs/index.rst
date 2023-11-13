@@ -32,3 +32,18 @@ Models
     :members:
     :undoc-members:
     :show-inheritance:
+
+Utils  
+=====
+.. automodule:: advsecurenet.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Types
+======
+.. automodule:: advsecurenet.shared.types
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

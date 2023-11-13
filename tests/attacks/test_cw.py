@@ -1,13 +1,13 @@
 import torch
 import pytest
-import torchvision.models as models
+import warnings
+
 from torch import nn
 from pytest_mock import mocker
 from advsecurenet.attacks import CWAttack
 from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.utils import get_device
-from advsecurenet.shared.types import CWAttackConfig, DeviceType
-import warnings
+from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig
+
 warnings.simplefilter("always", category=ImportWarning)
 
 
@@ -25,7 +25,7 @@ def setup():
     max_iterations = 1
     binary_search_steps = 1
 
-    device = DeviceType.CPU
+    device = torch.device("cpu")
     config = CWAttackConfig(max_iterations=max_iterations,
                             binary_search_steps=binary_search_steps, device=device)
 
@@ -109,7 +109,7 @@ def test_clip_min_max(setup):
 def test_device(setup):
     model, x, y, config = setup
 
-    config.device = DeviceType.CPU
+    config.device = torch.device("cpu")
 
     # Define the attack
     attack = CWAttack(config)

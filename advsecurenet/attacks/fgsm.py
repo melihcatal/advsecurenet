@@ -1,9 +1,7 @@
 import torch
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
-
-from advsecurenet.utils import get_device
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types import FgsmAttackConfig
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
 
 
 class FGSM(AdversarialAttack):
@@ -12,7 +10,7 @@ class FGSM(AdversarialAttack):
 
     Args:
         epsilon (float): The epsilon value to use for the attack. Defaults to 0.3.
-        device (DeviceType): Device to use for the attack. Defaults to DeviceType.CPU.
+        device (torch.device): Device to use for the attack. Defaults to "cpu".
 
 
     References:
@@ -21,7 +19,7 @@ class FGSM(AdversarialAttack):
     """
 
     def __init__(self, config: FgsmAttackConfig) -> None:
-        self.device = config.device.value if config.device is not None else get_device()
+        self.device = config.device
         self.epsilon = config.epsilon
 
     """

@@ -1,4 +1,4 @@
-# AdvSecureNet - Adversarial Secure Network
+# AdvSecureNet - Adversarial Secure Networks
 
 <p align="center">
   <img src="https://drive.switch.ch/index.php/s/DAaKZEh9OeuvTEQ/download" alt="AdvSecureNet" width="400" />
