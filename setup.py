@@ -15,8 +15,6 @@ setup(
         "torch",
         "torchvision",
         "colored",
-        "pytest",
-        "pytest-mock",
         "tqdm",
         "PyYAML",
         "opencv-python",
