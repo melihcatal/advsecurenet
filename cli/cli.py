@@ -1,6 +1,7 @@
 import os
 import warnings
 import click
+import pkg_resources
 from requests.exceptions import HTTPError
 from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.shared.loss import Loss
@@ -22,7 +23,10 @@ from cli.types.adversarial_training import ATCliConfigType
 warnings.simplefilter(action='ignore', category=UserWarning)
 
 
+version = pkg_resources.require("advsecurenet")[0].version
 @click.group()
+@click.version_option(version)
+@click.pass_context
 def main():
     pass
 
