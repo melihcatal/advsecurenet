@@ -74,16 +74,29 @@ model_names = ["resnet18", "vgg16", "alexnet",
 
 @pytest.mark.parametrize("model_name", model_names)
 def test_save_checkpoint_prefix(model_name: str):
-    model = ModelFactory.get_model(model_name, num_classes=10)
-    dataset_obj = DatasetFactory.load_dataset(DatasetType.CIFAR10)
-    train_data = dataset_obj.load_dataset(train=True)
-    train_data_loader = DataLoaderFactory.get_dataloader(
-        train_data, batch_size=10, shuffle=True)
+    # Create a mock dataset object with the necessary class name attribute
+    mock_dataset_class = type('CIFAR10', (object,), {})
+    mock_dataset = MagicMock(spec=mock_dataset_class)
 
-    train_config = TrainConfig(
-        model=model,
-        train_loader=train_data_loader,
-    )
+    # Mock the dataset loading and dataloader creation
+    with patch('advsecurenet.datasets.dataset_factory.DatasetFactory.load_dataset', return_value=mock_dataset), \
+            patch('advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.get_dataloader') as mock_dataloader:
 
-    prefix = _get_save_checkpoint_prefix(train_config)
-    assert prefix == f"{model_name}_CIFAR10_checkpoint"
+        # Set the return value for the dataloader mock
+        mock_dataloader.return_value = MagicMock(dataset=mock_dataset)
+
+        # Create the model without mocking as it's not time-consuming
+        model = ModelFactory.get_model(model_name, num_classes=10)
+
+        # Proceed with the test using the mocked objects
+        train_data_loader = DataLoaderFactory.get_dataloader(
+            mock_dataset, batch_size=10, shuffle=True)
+
+        train_config = TrainConfig(
+            model=model,
+            train_loader=train_data_loader,
+        )
+
+        prefix = _get_save_checkpoint_prefix(train_config)
+        assert prefix == f"{model_name}_CIFAR10_checkpoint"
+
