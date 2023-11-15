@@ -6,6 +6,7 @@ from typing import Any, Union
 @dataclass(kw_only=True)
 class AttackConfig:
     device: torch.device = torch.device("cpu")
+    distributed_mode: bool = False
 
     def __setattr__(self, prop, value):
         if prop == "device":

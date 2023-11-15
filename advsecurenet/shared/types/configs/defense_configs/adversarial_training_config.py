@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs import DefenseConfig
+from advsecurenet.shared.types.configs.train_config import TrainConfig
 
 
 # class AttackConfigDict(TypedDict):
@@ -19,7 +20,7 @@ from advsecurenet.shared.types.configs.defense_configs import DefenseConfig
 
 
 @dataclass(kw_only=True)
-class AdversarialTrainingConfig(DefenseConfig):
+class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
     """
     This class is used to store the configuration of the adversarial training defense.
 
@@ -73,4 +74,19 @@ class AdversarialTrainingConfig(DefenseConfig):
     load_checkpoint_path: Optional[str] = None
     verbose: bool = True
     adv_coeff: float = 0.5
-    device: Union[str, torch.device]
+    device: torch.device = torch.device("cpu")
+    distributed_mode: bool = False
+
+    def __setattr__(self, prop, value):
+        if prop == "device":
+            value = self._check_device(value)
+        super().__setattr__(prop, value)
+
+    @staticmethod
+    def _check_device(device: Union[str, torch.device]):
+        if isinstance(device, str):
+            try:
+                device = torch.device(device)
+            except:
+                device = torch.device("cpu")
+        return device

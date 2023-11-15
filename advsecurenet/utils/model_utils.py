@@ -6,6 +6,10 @@ import requests
 from typing import Optional, cast, Any, Union, cast
 from torch import nn
 from tqdm import tqdm
+import torch.multiprocessing as mp
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.distributed import init_process_group, destroy_process_group
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 from advsecurenet.shared.types.configs.train_config import TrainConfig
 from advsecurenet.shared.loss import Loss
@@ -156,6 +160,12 @@ def _train_model(train_config: TrainConfig, device: torch.device, optimizer: opt
             _save_checkpoint(train_config, epoch, optimizer=optimizer)
     print("Training completed.")
 
+def _should_save_checkpoint(save_checkpoint: bool, checkpoint_interval: int, epoch: int, distributed: bool, device_id: int) -> bool:
+    if distributed:
+        return save_checkpoint and (epoch % checkpoint_interval == 0) and (device_id == 0)
+    else:
+        return save_checkpoint and (epoch % checkpoint_interval == 0)
+
 
 def _run_training_epoch(train_config: TrainConfig, device: torch.device, optimizer: Any, loss_function: nn.Module, epoch: int) -> float:
     total_loss = 0.0
@@ -227,7 +237,9 @@ def test(model: nn.Module,
 
 def save_model(model: nn.Module,
                filename: str,
-               filepath: str = None):
+               filepath: str = None,
+               distributed: bool = False,
+               ):
     """
     Saves the model weights to the given filepath.
 
@@ -248,7 +260,10 @@ def save_model(model: nn.Module,
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
 
-    torch.save(model.state_dict(), os.path.join(filepath, filename))
+    if distributed:
+        torch.save(model.module.state_dict(), os.path.join(filepath, filename))
+    else:
+        torch.save(model.state_dict(), os.path.join(filepath, filename))
 
 
 def load_model(model, filename, filepath=None, device: torch.device = torch.device("cpu")):

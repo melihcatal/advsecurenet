@@ -20,6 +20,7 @@ class TrainConfig:
     checkpoint_interval: int = 1
     load_checkpoint: bool = False
     load_checkpoint_path: Optional[str] = None
+    save_final_model: bool = False
 
     device: torch.device = torch.device("cpu")
 

@@ -21,6 +21,7 @@ class FGSM(AdversarialAttack):
     def __init__(self, config: FgsmAttackConfig) -> None:
         self.device = config.device
         self.epsilon = config.epsilon
+        self.distributed_mode = config.distributed_mode
 
     """
     Generates adversarial examples using the FGSM attack.
@@ -35,9 +36,11 @@ class FGSM(AdversarialAttack):
         torch.tensor: The adversarial example tensor.
     """
 
-    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs) -> torch.Tensor:
         # Get the gradient of the model with respect to the inputs.
-        x = x.clone().detach().to(self.device)
+        x = x.clone().detach()
+        if not self.distributed_mode:
+            x = x.to(self.device)
         x.requires_grad = True
         outputs = model(x)
         loss = torch.nn.functional.cross_entropy(outputs, y)

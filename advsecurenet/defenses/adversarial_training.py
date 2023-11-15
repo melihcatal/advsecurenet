@@ -6,7 +6,6 @@ from torch.utils.data import DataLoader
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.utils.model_utils import _save_checkpoint, _load_checkpoint_if_any, _get_loss_function, _initialize_optimizer, _setup_device, save_model
 
 
 class AdversarialTraining:
@@ -26,7 +25,6 @@ class AdversarialTraining:
         self._adversarial_training(self.config, device, optimizer)
 
     # Helper function to generate adversarial examples for the given batch
-
     def _generate_adversarial_batch(self, models, attacks, data, target, device) -> tuple[torch.Tensor, torch.Tensor]:
         adv_data = []
         adv_target = []
@@ -39,7 +37,6 @@ class AdversarialTraining:
         return torch.cat(adv_data, dim=0), torch.cat(adv_target, dim=0)
 
     # Helper function to shuffle the combined clean and adversarial data
-
     def _shuffle_data(self, data: torch.Tensor, target: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         permutation = torch.randperm(data.size(0))
         return data[permutation], target[permutation]
