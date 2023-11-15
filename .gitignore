@@ -36,3 +36,6 @@ examples/*/**_config.yml
 
 # ide settings
 .vscode/
+
+# model weights
+*.pth
