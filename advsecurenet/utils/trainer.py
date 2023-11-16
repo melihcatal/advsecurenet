@@ -1,3 +1,4 @@
+
 import torch
 import torch.optim as optim
 import os
@@ -16,49 +17,47 @@ from advsecurenet.shared.optimizer import Optimizer
 
 class Trainer:
     """
-    Trainer class for training a model in a distributed manner.
-
-    Args:
-        config (TrainConfig): The train config.
-        rank (int): The rank of the current process.
-        world_size (int): The total number of processes.
-
-    Examples:
-
-            >>> trainer = Trainer(config, rank, world_size)
-            >>> trainer.train()
-
+    Base trainer module for training a model.
     """
 
-    def __init__(self, config: TrainConfig, rank: int, world_size: int) -> None:
+    def __init__(self, config: TrainConfig):
+        """
+        Initialize the trainer.
+
+        Args:
+            config (TrainConfig): The train config.
+        """
         self.config = config
-        self.rank = rank
-        self.world_size = world_size
         self.device = self._setup_device()
         self.model = self._setup_model()
         self.optimizer = self._setup_optimizer()
-        self.loss_fn = self._get_loss_function(self.config.criterion)
+        self.loss_fn = self._get_loss_function(config.criterion)
         self.start_epoch = self._load_checkpoint_if_any()
 
     def _setup_device(self) -> torch.device:
         """
-        Initializes the device based on the rank of the current process.
+        Setup the device.
+        """
+        device = self.config.device or torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu")
+        return device
+
+    def _setup_model(self) -> torch.nn.Module:
+        """
+        Initializes the model and moves it to the device.
+        """
+        return self.config.model.to(self.device)
+
+    def _setup_optimizer(self) -> optim.Optimizer:
+        """
+        Initializes the optimizer based on the given optimizer string or optim.Optimizer.
 
         Returns:
-            torch.device: The device.
+            optim.Optimizer: The optimizer. I.e. Adam, SGD, etc.
         """
-        torch.cuda.set_device(self.rank)
-        return torch.device(f"cuda:{self.rank}")
-
-    def _setup_model(self) -> torch.nn.parallel.DistributedDataParallel:
-        """
-        Initializes the model based on the rank of the current process.
-
-        Returns:
-            DistributedDataParallel: The model.
-        """
-        model = self.config.model.to(self.device)
-        return DDP(model, device_ids=[self.rank])
+        optimizer = self._get_optimizer(
+            self.config.optimizer, self.model, self.config.learning_rate)
+        return optimizer
 
     def _get_loss_function(self, criterion: Union[str, nn.Module], **kwargs) -> nn.Module:
         """
@@ -132,17 +131,6 @@ class Trainer:
                     "Optimizer must be a string or an instance of optim.Optimizer.")
         return cast(optim.Optimizer, optimizer)
 
-    def _setup_optimizer(self) -> optim.Optimizer:
-        """
-        Initializes the optimizer based on the given optimizer string or optim.Optimizer.
-
-        Returns:
-            optim.Optimizer: The optimizer. I.e. Adam, SGD, etc.
-        """
-        optimizer = self._get_optimizer(
-            self.config.optimizer, self.model, self.config.learning_rate)
-        return optimizer
-
     def _load_checkpoint_if_any(self) -> int:
         """
         Loads the checkpoint if any and returns the start epoch.
@@ -153,22 +141,34 @@ class Trainer:
         start_epoch = 1
         if self.config.load_checkpoint and self.config.load_checkpoint_path:
             if os.path.isfile(self.config.load_checkpoint_path):
-                print("=> loading checkpoint '{}'".format(
-                    self.config.load_checkpoint_path))
+                print(
+                    f"=> loading checkpoint '{self.config.load_checkpoint_path}'")
                 checkpoint = torch.load(self.config.load_checkpoint_path)
                 start_epoch = checkpoint['epoch']
-                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self._load_model_state_dict(checkpoint['model_state_dict'])
                 self.optimizer.load_state_dict(
                     checkpoint['optimizer_state_dict'])
-                for state in self.optimizer.state.values():
-                    for k, v in state.items():
-                        if isinstance(v, torch.Tensor):
-                            state[k] = v.cuda(self.rank)
+                self._assign_device_to_optimizer_state()
                 start_epoch = checkpoint['epoch'] + 1
             else:
-                print("=> no checkpoint found at '{}'".format(
-                    self.config.load_checkpoint_path))
+                print(
+                    f"=> no checkpoint found at '{self.config.load_checkpoint_path}'")
         return start_epoch
+
+    def _load_model_state_dict(self, state_dict):
+        # Loads the given model state dict.
+        self.model.load_state_dict(state_dict)
+
+    def _get_model_state_dict(self) -> dict:
+        # Returns the model state dict.
+        return self.model.state_dict()
+
+    def _assign_device_to_optimizer_state(self):
+        # Default implementation
+        for state in self.optimizer.state.values():
+            for k, v in state.items():
+                if isinstance(v, torch.Tensor):
+                    state[k] = v.to(self.device)
 
     def _get_save_checkpoint_prefix(self) -> str:
         """
@@ -195,20 +195,19 @@ class Trainer:
             optimizer (optim.Optimizer): The optimizer.
         """
         checkpoint_sub_dir = "training"
-        # set the checkpoint directory
         checkpoint_dir = self.config.save_checkpoint_path or os.path.join(
             os.getcwd(), f"checkpoints/{checkpoint_sub_dir}")
-        # if the checkpoint directory does not exist, create it
+
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
 
-        # set chkpt prefix
         save_checkpoint_prefix = self._get_save_checkpoint_prefix()
         checkpoint_filename = f"{save_checkpoint_prefix}_epoch_{epoch}.pth"
         checkpoint_path = os.path.join(checkpoint_dir, checkpoint_filename)
+
         torch.save({
             'epoch': epoch,
-            'model_state_dict': self.model.state_dict(),
+            'model_state_dict': self._get_model_state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
         }, checkpoint_path)
         print(f"=> saved checkpoint '{checkpoint_path}'")
@@ -221,13 +220,13 @@ class Trainer:
         Returns:
             bool: True if a checkpoint should be saved, False otherwise.  
         """
-        return self.rank == 0 and self.config.save_checkpoint and self.config.checkpoint_interval > 0 and epoch % self.config.checkpoint_interval == 0
+        return self.config.save_checkpoint and self.config.checkpoint_interval > 0 and epoch % self.config.checkpoint_interval == 0
 
     def _should_save_final_model(self) -> bool:
         """
         Determines if the final model should be saved based on the given save_final_model flag and the current rank.
         """
-        return self.rank == 0 and self.config.save_final_model
+        return self.config.save_final_model
 
     def _save_final_model(self) -> None:
         """
@@ -240,7 +239,7 @@ class Trainer:
             index += 1
             file_name = f"{self.config.model.model_variant}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
 
-        torch.save(self.model.module.state_dict(), file_name)
+        torch.save(self._get_model_state_dict(), file_name)
         print(f"=> saved final model '{file_name}'")
 
     def _run_batch(self, source: torch.Tensor, targets: torch.Tensor) -> float:
@@ -266,7 +265,6 @@ class Trainer:
         Runs the given epoch.
         """
         total_loss = 0.0
-        self.config.train_loader.sampler.set_epoch(epoch)
 
         # for source, targets in self.config.train_loader:
         for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader)):
@@ -281,7 +279,7 @@ class Trainer:
         """
         Public method for training the model.
         """
-        print(f"Training basic DDP example on rank {self.rank}.")
+        print("Training started...")
         self.model.train()
         for epoch in range(self.start_epoch, self.config.epochs + 1):
             self._run_epoch(epoch)

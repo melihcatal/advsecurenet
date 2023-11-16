@@ -1,5 +1,5 @@
 """
-This example python script shows how to use the DDPTrainer class to train a model using DistributedDataParallel in a multi-GPU setting.
+This example python script shows how to use the DDPTrainingCoordinator class to train a model using DistributedDataParallel in a multi-GPU setting.
 
 Make sure to change the port number if the default port 12355 is not free on your machine. And also change the gpu_ids list to the GPUs you want to use.
 To use the script, run the following command:
@@ -14,9 +14,9 @@ from advsecurenet.datasets import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types import DatasetType
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.defenses.multi_adversarial_training import MultiGPUAdversarialTraining
+from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
 from advsecurenet.attacks.fgsm import FGSM
-from advsecurenet.utils.ddp_trainer import DDPTrainer
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 
 
 def main_training_function(rank, world_size, save_every, total_epochs, batch_size):
@@ -46,7 +46,7 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
         distributed_mode=True)
 
     # Create and run the trainer
-    trainer = MultiGPUAdversarialTraining(
+    trainer = DDPAdversarialTraining(
         adv_training_config, rank, world_size)
     print(f"Training on rank {rank}")
     trainer.train()
@@ -59,7 +59,7 @@ def run_training(world_size: int, save_every: int, total_epochs: int, batch_size
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(x) for x in gpu_ids)
 
     # Create and run the DDP trainer
-    ddp_trainer = DDPTrainer(
+    ddp_trainer = DDPTrainingCoordinator(
         main_training_function,  # Training function
         world_size,              # World size
         save_every=save_every,

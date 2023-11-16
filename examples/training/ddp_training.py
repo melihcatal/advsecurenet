@@ -1,5 +1,5 @@
 """
-This example script shows how to use the DDPTrainer class to train a model using DistributedDataParallel in a multi-GPU setting.
+This example script shows how to use the DDPTrainingCoordinator class to train a model using DistributedDataParallel in a multi-GPU setting.
 """
 
 import time
@@ -13,10 +13,10 @@ from advsecurenet.datasets import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types import DatasetType
 from advsecurenet.shared.types.configs.train_config import TrainConfig
-from advsecurenet.defenses.multi_adversarial_training import MultiGPUAdversarialTraining
+from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
 from advsecurenet.attacks.fgsm import FGSM
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.ddp_trainer import DDPTrainer
-from advsecurenet.utils.trainer import Trainer
 from advsecurenet.utils.model_utils import test as test_model
 
 
@@ -44,7 +44,7 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
     )
 
     # Create and run the trainer
-    traier = Trainer(train_config, rank, world_size)
+    traier = DDPTrainer(train_config, rank, world_size)
     traier.train()
 
 
@@ -65,7 +65,7 @@ def run_training(world_size: int, save_every: int, total_epochs: int, batch_size
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(x) for x in gpu_ids)
 
     # Create and run the DDP trainer
-    ddp_trainer = DDPTrainer(
+    ddp_trainer = DDPTrainingCoordinator(
         main_training_function, world_size, world_size, save_every, total_epochs, batch_size
     )
     ddp_trainer.run()

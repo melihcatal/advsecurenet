@@ -7,10 +7,10 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 from advsecurenet.utils.model_utils import _save_checkpoint, _load_checkpoint_if_any, _get_loss_function, _initialize_optimizer, _setup_device, save_model
-from advsecurenet.utils.trainer import Trainer
+from advsecurenet.utils.ddp_trainer import DDPTrainer
 
 
-class MultiGPUAdversarialTraining(Trainer):
+class DDPAdversarialTraining(DDPTrainer):
     """
     Adversarial Training class. This class is used to train a model using adversarial training.
     """
