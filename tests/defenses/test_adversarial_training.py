@@ -118,7 +118,7 @@ def test_adversarial_training_runs_successfully(setup):
     )
     # Should not raise any exceptions
     at_training = AdversarialTraining(config)
-    at_training.adversarial_training()
+    at_training.train()
 
 
 def test_adversarial_training_runs_successfully_with_bce_loss(setup):
@@ -132,4 +132,4 @@ def test_adversarial_training_runs_successfully_with_bce_loss(setup):
     )
     # Should not raise any exceptions
     at_training = AdversarialTraining(config)
-    at_training.adversarial_training()
+    at_training.train()
