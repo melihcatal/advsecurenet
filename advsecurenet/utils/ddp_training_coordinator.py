@@ -39,6 +39,9 @@ class DDPTrainingCoordinator:
         self.world_size = world_size
         self.args = args
         self.kwargs = kwargs
+        self.port = find_free_port()
+        os.environ['MASTER_ADDR'] = 'localhost'
+        os.environ['MASTER_PORT'] = str(self.port)
 
     def ddp_setup(self, rank: int):
         """
@@ -48,10 +51,10 @@ class DDPTrainingCoordinator:
 
         The default backend is nccl.
         """
-        os.environ['MASTER_ADDR'] = 'localhost'
-        os.environ['MASTER_PORT'] = str(find_free_port())
+        print(f"Running basic DDP example on rank {rank}.")
         init_process_group(backend='nccl', rank=rank,
                            world_size=self.world_size)
+        print(f"Initialized process group on rank {rank}.")
 
     def run_process(self, rank: int):
         """

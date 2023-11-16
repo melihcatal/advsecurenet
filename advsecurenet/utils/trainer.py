@@ -275,15 +275,23 @@ class Trainer:
         total_loss /= len(self.config.train_loader)
         print(f"Epoch {epoch} loss: {total_loss}")
 
+    def _pre_training(self) -> None:
+        # Method to run before training starts.
+        self.model.train()
+
+    def _post_training(self) -> None:
+        # Method to run after training ends.
+        if self._should_save_final_model():
+            self._save_final_model()
+
     def train(self) -> None:
         """
         Public method for training the model.
         """
         print("Training started...")
-        self.model.train()
+        self._pre_training()
         for epoch in range(self.start_epoch, self.config.epochs + 1):
             self._run_epoch(epoch)
             if self._should_save_checkpoint(epoch):
                 self._save_checkpoint(epoch, self.optimizer)
-        if self._should_save_final_model():
-            self._save_final_model()
+        self._post_training()

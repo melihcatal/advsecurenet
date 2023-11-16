@@ -17,7 +17,7 @@ from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTrainin
 from advsecurenet.attacks.fgsm import FGSM
 from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.ddp_trainer import DDPTrainer
-from advsecurenet.utils.model_utils import test as test_model
+from advsecurenet.utils.tester import Tester
 
 
 def main_training_function(rank, world_size, save_every, total_epochs, batch_size):
@@ -84,12 +84,13 @@ def testing():
         test_data, batch_size=64, shuffle=False)
     # Test the model
     device = torch.device("cuda:1")
-    test_model(model, test_loader, device=device)
+    tester = Tester(model, test_loader, device=device)
+    tester.test()
 
 
 if __name__ == "__main__":
     begin = time.time()
-    gpu_ids = [1, 2, 3]
+    gpu_ids = [2, 7]
     world_size = len(gpu_ids)
     save_every = 1
     total_epochs = 5

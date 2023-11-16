@@ -8,7 +8,9 @@ from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.configs import TrainConfig
 from advsecurenet.shared.types.configs import TestConfig
-from advsecurenet.utils.model_utils import train as util_train, test as util_test, save_model, load_model
+from advsecurenet.utils.model_utils import save_model, load_model
+from advsecurenet.utils.trainer import Trainer
+from advsecurenet.utils.tester import Tester
 
 
 def prepare_model(config_data, num_classes, device):
@@ -75,8 +77,9 @@ def cli_train(config_data):
             load_checkpoint=config_data['load_checkpoint'],
             load_checkpoint_path=config_data['load_checkpoint_path']
         )
+        trainer = Trainer(train_config)
 
-        util_train(train_config)
+        trainer.train()
 
         save_name = config_data['save_name'] if config_data[
             'save_name'] else f"{config_data['model_name']}_{dataset_name}_weights.pth"
@@ -132,8 +135,9 @@ def cli_test(config_data: TestConfig):
         model = load_model(model, config_data['model_weights'], device=device)
 
         model.eval()
-        util_test(model, test_data_loader, device=device,
-                  criterion=config_data['loss'])
+        tester = Tester(model=model, test_loader=test_data_loader,
+                        device=device, criterion=config_data['loss'])
+        tester.test()
 
     except Exception as e:
         click.echo(

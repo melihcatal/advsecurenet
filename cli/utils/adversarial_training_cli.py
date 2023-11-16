@@ -15,7 +15,7 @@ from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 from advsecurenet.shared.types.configs import TestConfig
-from advsecurenet.utils.model_utils import train as util_train, test as util_test, save_model, load_model
+from advsecurenet.utils.model_utils import save_model, load_model
 from advsecurenet.shared.types.attacks import AttackType as AdversarialAttackType
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from cli.utils.config import build_config, load_configuration
@@ -240,7 +240,7 @@ class AdversarialTrainingCLI:
         click.echo(
             f"Starting adversarial training on {dataset_name} with attacks {self.config_data.attacks} on target model {self.config_data.model}!")
         adversarial_training = AdversarialTraining(self.config)
-        adversarial_training.adversarial_training()
+        adversarial_training.train()
         click.echo(
             f"Model trained on {dataset_name} with attacks {attacks}!")
 

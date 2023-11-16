@@ -7,8 +7,10 @@ To use the script, run the following command:
 """
 
 import os
+import torch
 import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
 from torch.utils.data.distributed import DistributedSampler
+from typing import Optional
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.datasets import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
@@ -17,6 +19,7 @@ from advsecurenet.shared.types.configs.defense_configs.adversarial_training_conf
 from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
 from advsecurenet.attacks.fgsm import FGSM
 from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
+from advsecurenet.utils.tester import Tester
 
 
 def main_training_function(rank, world_size, save_every, total_epochs, batch_size):
@@ -48,34 +51,54 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
     # Create and run the trainer
     trainer = DDPAdversarialTraining(
         adv_training_config, rank, world_size)
-    print(f"Training on rank {rank}")
     trainer.train()
 
 
-def run_training(world_size: int, save_every: int, total_epochs: int, batch_size: int, gpu_ids: list[int]) -> None:
+def run_training(world_size: int, save_every: int, total_epochs: int, batch_size: int, gpu_ids: Optional[list[int]] = None) -> None:
     """ 
     Run the training function using DDP.
+
+    Args:
+        world_size (int): The number of processes to spawn.
+        save_every (int): The number of epochs after which the model is saved.
+        total_epochs (int): The total number of epochs to train.
+        batch_size (int): The batch size per GPU.
+        gpu_ids (Optional[list[int]], optional): The list of GPU IDs to use. Defaults to None. If None, all available GPUs are used.
     """
+    if gpu_ids is None:
+        gpu_ids = list(range(torch.cuda.device_count()))
+
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(x) for x in gpu_ids)
 
     # Create and run the DDP trainer
     ddp_trainer = DDPTrainingCoordinator(
-        main_training_function,  # Training function
-        world_size,              # World size
-        save_every=save_every,
-        total_epochs=total_epochs,
-        batch_size=batch_size)
-
+        main_training_function, world_size, world_size, save_every, total_epochs, batch_size
+    )
     ddp_trainer.run()
-
     print("Training complete!")
 
 
+def testing():
+    file = "resnet18_cifar10.pth"  # Change this to the path of the saved model
+    # Load the model and dataset
+    model = ModelFactory.get_model("resnet18", num_classes=10)
+    model.load_state_dict(torch.load(file, map_location=torch.device('cpu')))
+    model.eval()
+    dataset = DatasetFactory.load_dataset(DatasetType.CIFAR10)
+    test_data = dataset.load_dataset(train=False)
+    test_loader = DataLoaderFactory.get_dataloader(
+        test_data, batch_size=64, shuffle=False, pin_memory=True)
+    # Test the model
+    device = torch.device("cuda:1")
+    tester = Tester(model, test_loader, device=device)
+    tester.test()
+
+
 if __name__ == "__main__":
-    gpu_ids = [1, 3]
+    gpu_ids = [2, 7]
     world_size = len(gpu_ids)
     save_every = 1
     total_epochs = 1
     batch_size = 64 * world_size
-
     run_training(world_size, save_every, total_epochs, batch_size, gpu_ids)
+    testing()

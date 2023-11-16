@@ -24,9 +24,11 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 
 
 version = pkg_resources.require("advsecurenet")[0].version
+
+
 @click.group()
 @click.version_option(version)
-@click.pass_context
+# @click.pass_context
 def main():
     pass
 
