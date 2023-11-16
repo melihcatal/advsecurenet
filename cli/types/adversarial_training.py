@@ -47,3 +47,6 @@ class ATCliConfigType:
     checkpoint_interval: int
     load_checkpoint: bool
     load_checkpoint_path: str
+    use_ddp: bool
+    gpu_ids: list[int]
+    pin_memory: bool

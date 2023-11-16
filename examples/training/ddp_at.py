@@ -46,7 +46,7 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
         attacks=[fgsm],
         train_loader=train_loader,
         epochs=total_epochs,
-        distributed_mode=True)
+        use_ddp=True)
 
     # Create and run the trainer
     trainer = DDPAdversarialTraining(
@@ -72,7 +72,7 @@ def run_training(world_size: int, save_every: int, total_epochs: int, batch_size
 
     # Create and run the DDP trainer
     ddp_trainer = DDPTrainingCoordinator(
-        main_training_function, world_size, world_size, save_every, total_epochs, batch_size
+        main_training_function, world_size, save_every, total_epochs, batch_size
     )
     ddp_trainer.run()
     print("Training complete!")

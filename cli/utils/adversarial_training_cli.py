@@ -2,6 +2,8 @@
 import os
 import click
 import pkg_resources
+from typing import Optional
+from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import Dataset as TorchDataset, DataLoader as TorchDataLoader
 from typing import Dict, cast, Any, Type
 from dataclasses import dataclass
@@ -21,6 +23,8 @@ from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from cli.utils.config import build_config, load_configuration
 from cli.types.adversarial_training import ATCliConfigType, AttackConfigDict, AttackWithConfigDict
 from advsecurenet.shared.types.configs import attack_configs
+from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 
 
 class AdversarialTrainingCLI:
@@ -224,9 +228,43 @@ class AdversarialTrainingCLI:
             optimizer=self.config_data.optimizer,
             criterion=self.config_data.criterion,
             device=self.config_data.device,
+            use_ddp=self.config_data.use_ddp,
+            gpu_ids=self.config_data.gpu_ids,
+            pin_memory=self.config_data.pin_memory,
         )
 
-    def _execute_adversarial_training(self, dataset_name: str, attacks: list[AdversarialAttack]) -> None:
+    def _execute_ddp_adversarial_training(self, config: AdversarialTrainingConfig, dataset_name: str, train_data: TorchDataset, attacks: list[AdversarialAttack]) -> None:
+        if self.config.gpu_ids is None:
+            self.config.gpu_ids = list(range(torch.cuda.device_count()))
+
+        world_size = len(self.config.gpu_ids)
+
+        os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(
+            str(x) for x in self.config.gpu_ids)
+        ddp_trainer = DDPTrainingCoordinator(
+            self._ddp_training_fn,
+            world_size,
+            train_data,
+        )
+        ddp_trainer.run()
+
+    def _ddp_training_fn(self, rank, world_size, train_data):
+        """
+        This function is used to run adversarial training using DDP.
+
+        Args:
+            rank (int): The rank of the current process.
+            world_size (int): The number of processes to spawn.
+        """
+        train_data_loader = DataLoaderFactory.get_dataloader(
+            train_data, batch_size=self.config_data.batch_size, shuffle=False, pin_memory=True, sampler=DistributedSampler(train_data))
+        self.config.train_loader = train_data_loader
+
+        ddp_trainer = DDPAdversarialTraining(
+            self.config, rank, world_size)
+        ddp_trainer.train()
+
+    def _execute_adversarial_training(self, dataset_name: str, attacks: list[AdversarialAttack], rank: Optional[int] = None, world_size: Optional[int] = None) -> None:
         """
         Execute adversarial training.
 
@@ -259,4 +297,10 @@ class AdversarialTrainingCLI:
 
         self.config = self._configure_adversarial_training(
             target_model, models, attacks, train_data_loader)
-        self._execute_adversarial_training(dataset_name, attacks)
+
+        if self.config.use_ddp:
+            self._execute_ddp_adversarial_training(
+                self.config, dataset_name, train_data, attacks)
+        else:
+            self._execute_adversarial_training(
+                dataset_name, attacks)

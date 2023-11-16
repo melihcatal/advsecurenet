@@ -75,7 +75,9 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
     verbose: bool = True
     adv_coeff: float = 0.5
     device: torch.device = torch.device("cpu")
-    distributed_mode: bool = False
+    use_ddp: bool = False
+    gpu_ids: Optional[List[int]] = None
+    pin_memory: bool = False
 
     def __setattr__(self, prop, value):
         if prop == "device":

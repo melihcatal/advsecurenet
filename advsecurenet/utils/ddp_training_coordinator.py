@@ -51,21 +51,20 @@ class DDPTrainingCoordinator:
 
         The default backend is nccl.
         """
-        print(f"Running basic DDP example on rank {rank}.")
         init_process_group(backend='nccl', rank=rank,
                            world_size=self.world_size)
-        print(f"Initialized process group on rank {rank}.")
 
     def run_process(self, rank: int):
         """
         Setup DDP and call the training function.
         """
         self.ddp_setup(rank)
-        self.train_func(rank, *self.args, **self.kwargs)
+        self.train_func(rank, self.world_size, *self.args, **self.kwargs)
         destroy_process_group()
 
     def run(self):
         """
         Spawn the processes for DDP training.
         """
-        mp.spawn(self.run_process, args=(), nprocs=self.world_size, join=True)
+        mp.spawn(self.run_process, args=(),
+                 nprocs=self.world_size, join=True)
