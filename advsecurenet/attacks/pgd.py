@@ -29,9 +29,9 @@ class PGD(AdversarialAttack):
         self.epsilon: float = config.epsilon
         self.alpha: float = config.alpha
         self.num_iter: int = config.num_iter
-        self.device: torch.device = config.device
+        super().__init__(config)
 
-    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool = False) -> torch.Tensor:
+    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool = False, *args, **kwargs) -> torch.Tensor:
         """
         Performs the PGD attack on the specified model and input.
 
