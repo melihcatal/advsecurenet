@@ -15,3 +15,6 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
         DDPTrainer.__init__(self, config=config, rank=rank,
                             world_size=world_size)
         AdversarialTraining.__init__(self, config=config)
+
+    def _run_epoch(self, epoch: int) -> None:
+        AdversarialTraining._run_epoch(self, epoch=epoch)

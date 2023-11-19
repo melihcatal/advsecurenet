@@ -14,6 +14,7 @@ from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
 from advsecurenet.utils.trainer import Trainer
 from torch.utils.data.distributed import DistributedSampler
+from torch.profiler import profile, record_function, ProfilerActivity
 
 
 class DDPTrainer(Trainer):
@@ -44,6 +45,7 @@ class DDPTrainer(Trainer):
         Returns:
             torch.device: The device.
         """
+        print(f"Setting up device for rank {self.rank}")
         torch.cuda.set_device(self.rank)
         return torch.device(f"cuda:{self.rank}")
 
@@ -54,6 +56,7 @@ class DDPTrainer(Trainer):
         Returns:
             DistributedDataParallel: The model.
         """
+        print(f"Setting up model for rank {self.rank}")
         model = self.config.model.to(self.device)
         return DDP(model, device_ids=[self.rank])
 
@@ -108,18 +111,29 @@ class DDPTrainer(Trainer):
     def _run_epoch(self, epoch: int) -> None:
         """
         Runs the given epoch.
+        Args:
+            epoch (int): Current epoch number.
         """
+        print("Normal training...")
         total_loss = 0.0
         sampler = self.config.train_loader.sampler
         assert isinstance(
             sampler, DistributedSampler), "Sampler must be of type DistributedSampler"
         sampler.set_epoch(epoch)
 
-        # for source, targets in self.config.train_loader:
-        for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader)):
-            source, targets = source.to(self.device), targets.to(self.device)
+        if self.rank == 0:
+            # Only initialize tqdm in the master process
+            data_iterator = tqdm(self.config.train_loader)
+        else:
+            data_iterator = self.config.train_loader
+        for source, targets in data_iterator:
+            source, targets = source.to(
+                self.device), targets.to(self.device)
             loss = self._run_batch(source, targets)
             total_loss += loss
 
         total_loss /= len(self.config.train_loader)
-        print(f"Epoch {epoch} loss: {total_loss}")
+
+        if self.rank == 0:
+            # Only print in the master process
+            print(f"Epoch {epoch} loss: {total_loss}")

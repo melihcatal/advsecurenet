@@ -24,8 +24,6 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
     """
     This is the main training function that is called by each process. It adversarially trains a model using FGSM attack in a multi-GPU setting.
     """
-    print(f"Running basic DDP example on rank {rank}.")
-
     # Load the model and dataset
     mnist_model = ModelFactory.get_model("resnet18", num_classes=10)
     dataset = DatasetFactory.load_dataset(DatasetType.CIFAR10)
@@ -33,8 +31,7 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
 
     # Initialize the data loader with DistributedSampler
     train_loader = DataLoaderFactory.get_dataloader(
-        train_data, batch_size=batch_size, shuffle=False, pin_memory=True, sampler=DistributedSampler(train_data))
-
+        train_data, batch_size=batch_size, shuffle=False, pin_memory=True, sampler=DistributedSampler(train_data), num_workers=1)
     # Initialize the train config
     train_config = TrainConfig(
         model=mnist_model,
@@ -42,10 +39,9 @@ def main_training_function(rank, world_size, save_every, total_epochs, batch_siz
         epochs=total_epochs,
         save_final_model=True,
     )
-
     # Create and run the trainer
-    traier = DDPTrainer(train_config, rank, world_size)
-    traier.train()
+    trainer = DDPTrainer(train_config, rank, world_size)
+    trainer.train()
 
 
 def run_training(world_size: int, save_every: int, total_epochs: int, batch_size: int, gpu_ids: Optional[list[int]] = None) -> None:
@@ -66,7 +62,7 @@ def run_training(world_size: int, save_every: int, total_epochs: int, batch_size
 
     # Create and run the DDP trainer
     ddp_trainer = DDPTrainingCoordinator(
-        main_training_function, world_size, world_size, save_every, total_epochs, batch_size
+        main_training_function, world_size, save_every, total_epochs, batch_size
     )
     ddp_trainer.run()
     print("Training complete!")
@@ -89,12 +85,10 @@ def testing():
 
 
 if __name__ == "__main__":
-    begin = time.time()
-    gpu_ids = [2, 7]
+    gpu_ids = [5]
     world_size = len(gpu_ids)
     save_every = 1
     total_epochs = 5
     batch_size = 64 * world_size
     run_training(world_size, save_every, total_epochs, batch_size, gpu_ids)
-    print(f"Total training time: {time.time() - begin}")
     testing()

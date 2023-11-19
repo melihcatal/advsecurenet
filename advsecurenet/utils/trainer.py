@@ -268,7 +268,8 @@ class Trainer:
 
         # for source, targets in self.config.train_loader:
         for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader)):
-            source, targets = source.to(self.device), targets.to(self.device)
+            source, targets = source.to(
+                self.device), targets.to(self.device)
             loss = self._run_batch(source, targets)
             total_loss += loss
 

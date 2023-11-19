@@ -2,11 +2,13 @@
 import os
 import numpy as np
 import torch
+import random
 from PIL import Image
 from torch.utils.data import random_split, Subset
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
 from cli.utils.helpers import to_bchw_format, get_device_from_cfg
+from torch.utils.data import DataLoader
 
 
 def load_and_prepare_data(config_data):
@@ -102,8 +104,9 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
         # return images, labels, num_classes
 
 
-def get_custom_data(path: str) -> list:
+def get_custom_data(path: str) -> tuple[torch.Tensor, torch.Tensor]:
     """
+    Returns the images and labels from the custom data directory.
     The expected directory structure is for each class to have its own directory, and the images for that class to be in that directory. I.e.
     custom_data_dir/
         │
@@ -122,6 +125,11 @@ def get_custom_data(path: str) -> list:
             ├── fish2.jpg
             ├── ...
 
+    Args:
+        path (str): The path to the custom data directory.
+
+    Returns:
+        tuple[torch.Tensor, torch.Tensor]: A tuple containing the images and labels.
     """
     images = []
     labels = []
@@ -179,3 +187,41 @@ def set_device_and_datasets(config_data):
     trained_on_dataset_type = DatasetType(config_data['trained_on'].upper())
 
     return device, dataset_type, trained_on_dataset_type
+
+
+def generate_random_target_images(all_images, clean_labels, max_attempts) -> tuple[torch.Tensor, torch.Tensor]:
+    target_images = []
+    target_labels = []
+
+    for label in clean_labels:
+        attempts, found_mismatch = 0, False
+        while attempts < max_attempts and not found_mismatch:
+            random_idx = random.randint(0, len(all_images) - 1)
+            if all_images[random_idx][1] != label:
+                target_images.append(all_images[random_idx][0])
+                target_labels.append(all_images[random_idx][1])
+                found_mismatch = True
+            attempts += 1
+
+        if not found_mismatch:
+            raise ValueError(
+                f"Failed to find a mismatch for label {label} after {max_attempts} attempts.")
+
+    return torch.stack(target_images), torch.tensor(target_labels)
+
+
+def get_specific_batch(dataloader: DataLoader, batch_id: int):
+    """
+    Retrieve a specific batch from a DataLoader by its index.
+
+    Args:
+    dataloader (DataLoader): The DataLoader object.
+    batch_id (int): The index of the batch to retrieve.
+
+    Returns:
+    A single batch from the DataLoader.
+    """
+    for i, batch in enumerate(dataloader):
+        if i == batch_id:
+            return batch
+    raise IndexError("Batch ID out of range.")

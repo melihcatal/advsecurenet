@@ -1,5 +1,6 @@
 import os
 import torch
+import random
 from torch import nn, optim
 from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
@@ -7,6 +8,7 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 from advsecurenet.utils.trainer import Trainer
+from cli.utils.data import get_specific_batch
 
 
 class AdversarialTraining(Trainer):
@@ -63,24 +65,46 @@ class AdversarialTraining(Trainer):
                               for model in self.config.models]
 
     # Helper function to generate adversarial examples for the given batch
-    def _generate_adversarial_batch(self, source, targets) -> tuple[torch.Tensor, torch.Tensor]:
-        adv_source = []
-        adv_targets = []
-        source = source.to(self.device)
-        targets = targets.to(self.device)
+
+    def _generate_adversarial_batch(self, source, targets, batch_idx) -> tuple[torch.Tensor, torch.Tensor]:
+        source, targets = self._move_to_device(source, targets)
+        adv_source, adv_targets = [], []
         for model, attack in zip(self.config.models, self.config.attacks):
             model.to(self.device)
-            adv_source.append(attack.attack(model, source, targets))
+            attack_result = self._perform_attack(
+                attack, model, source, targets, batch_idx)
+            adv_source.append(attack_result)
             adv_targets.append(targets)
-
         return torch.cat(adv_source, dim=0), torch.cat(adv_targets, dim=0)
 
+    def _move_to_device(self, source, targets):
+        return source.to(self.device), targets.to(self.device)
+
+    def _perform_attack(self, attack, model, source, targets, batch_idx):
+        if attack.name == "LOTS":
+            self._validate_lots_config()
+            batch = get_specific_batch(self.config.lots_data_loader, batch_idx)
+            target_imgs = batch[0].to(self.device)
+            target_labels = batch[1].to(self.device)
+            return attack.attack(model, source, target_imgs, target_labels)[0]
+        else:
+            return attack.attack(model, source, targets)
+
+    def _validate_lots_config(self):
+        if self.config.lots_data_loader is None:
+            raise ValueError(
+                "LOTS target images must be provided if LOTS attack is used.")
+
     def _run_epoch(self, epoch: int) -> None:
+        print("Adversarial training...")
         total_loss = 0.0
         for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader, desc=f"Epoch {epoch}/{self.config.epochs}", total=len(self.config.train_loader))):
             # generate adversarial examples
             adv_source, adv_targets = self._generate_adversarial_batch(
-                source=source, targets=targets)
+                source=source,
+                targets=targets,
+                batch_idx=batch_idx
+            )
 
             source = source.to(self.device)
             targets = targets.to(self.device)
