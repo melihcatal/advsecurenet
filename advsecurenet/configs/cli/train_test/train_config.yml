@@ -5,6 +5,9 @@ model_name: resnet18
 
 # Dataset Configuration
 dataset_name: cifar10
+num_classes: 10 # Number of classes in the dataset.
+train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
+test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.
 
 # Training Configuration
 epochs: 10
@@ -13,8 +16,16 @@ lr: 0.001
 optimizer: adam
 loss: cross_entropy
 
+# DataLoader Configurations
+num_workers_train: 4 # Number of workers for the train dataloader.
+num_workers_test: 4 # Number of workers for the test dataloader.
+shuffle_train: True # Whether to shuffle the train dataloader. If using ddp this should be false.
+shuffle_test: false # Whether to shuffle the test dataloader.
+drop_last_train: False # Whether to drop the last batch for the train dataloader.
+drop_last_test: False # Whether to drop the last batch for the test dataloader.
+
 # Device Configuration
-use_ddp: false # Whether to use multi-GPU training with DistributedDataParallel.
+use_ddp: False # Whether to use multi-GPU training with DistributedDataParallel.
 
 # Device Configuration SINGLE GPU ONLY
 # This configuration is only for single GPU training. For multi-GPU training, use the next configuration.
@@ -37,5 +48,8 @@ save_checkpoint_name: null
 checkpoint_interval: 1
 
 # Checkpoint Loading Configurations
-load_checkpoint: false
+load_checkpoint: False
 load_checkpoint_path: null
+
+# Other Configurations
+verbose: True # Whether to print the training progress.

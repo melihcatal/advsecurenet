@@ -57,11 +57,24 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
         Whether to print progress or not.
     adv_coeff : float
         The coefficient that will be used to combine the clean and adversarial examples.
+    use_ddp : bool
+        Whether to use DistributedDataParallel or not.
+    gpu_ids : Optional[List[int]]
+        A list of GPU IDs to use. If None, all available GPUs are used.
+    pin_memory : bool
+        Whether to pin memory or not.
+    lots_target_images : Optional[torch.Tensor]
+        A tensor containing the target images for LOTS attack. This is only used if LOTS attack is used.
+    lots_target_labels : Optional[torch.Tensor]
+        A tensor containing the target labels for LOTS attack. This is only used if LOTS attack is used.
     """
     model: BaseModel  # the target model
     models: List[BaseModel]
     attacks: List[AdversarialAttack]
     train_loader: DataLoader
+    lots_target_images: Optional[torch.Tensor] = None
+    lots_target_labels: Optional[torch.Tensor] = None
+    lots_data_loader: Optional[DataLoader] = None
     optimizer: Union[str, Optimizer] = "adam"
     criterion: Union[str, nn.Module] = "cross_entropy"
     epochs: int = 5

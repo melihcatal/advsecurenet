@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 import torch
 from dataclasses import dataclass
 from advsecurenet.shared.types.configs.attack_configs import AttackConfig
@@ -7,6 +7,7 @@ from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 @dataclass(kw_only=True)
 class CWAttackConfig(AttackConfig):
     targeted: bool = False
+    target_labels: Optional[list[int]] = None
     c_init: float = 0.1
     kappa: float = 0
     learning_rate: float = 0.01
