@@ -18,7 +18,8 @@ setup(
         "tqdm",
         "PyYAML",
         "opencv-python",
-        "ruamel.yaml"
+        "ruamel.yaml",
+        "matplotlib"
     ],
     entry_points={
         'console_scripts': [
