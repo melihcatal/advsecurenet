@@ -1,0 +1,55 @@
+# Description: Configuration file for training the model
+
+# Model Configuration
+model_name: resnet18
+
+# Dataset Configuration
+dataset_name: cifar10
+num_classes: 10 # Number of classes in the dataset.
+train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
+test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.
+
+# Training Configuration
+epochs: 10
+batch_size: 32
+lr: 0.001
+optimizer: adam
+loss: cross_entropy
+
+# DataLoader Configurations
+num_workers_train: 4 # Number of workers for the train dataloader.
+num_workers_test: 4 # Number of workers for the test dataloader.
+shuffle_train: True # Whether to shuffle the train dataloader. If using ddp this should be false.
+shuffle_test: false # Whether to shuffle the test dataloader.
+drop_last_train: False # Whether to drop the last batch for the train dataloader.
+drop_last_test: False # Whether to drop the last batch for the test dataloader.
+
+# Device Configuration
+use_ddp: False # Whether to use multi-GPU training with DistributedDataParallel.
+
+# Device Configuration SINGLE GPU ONLY
+# This configuration is only for single GPU training. For multi-GPU training, use the next configuration.
+device: CPU # Training device. Options: [CPU, CUDA, MPS] or specific GPU ID [cuda:0, cuda:1, ...]
+
+# Device Configuration MULTI GPU ONLY
+# This configuration is only for multi-GPU training. For single GPU training, use the previous configuration. Make sure to set use_ddp to True.
+gpu_ids: null # List of GPU IDs to use for training. If null, uses all available GPUs.
+pin_memory: True # Whether to pin memory for the dataloader.
+
+# Model Saving Configurations
+save: false
+save_path: null
+save_name: null
+
+# Checkpoint Saving Configurations
+save_checkpoint: false
+save_checkpoint_path: null
+save_checkpoint_name: null
+checkpoint_interval: 1
+
+# Checkpoint Loading Configurations
+load_checkpoint: False
+load_checkpoint_path: null
+
+# Other Configurations
+verbose: True # Whether to print the training progress.

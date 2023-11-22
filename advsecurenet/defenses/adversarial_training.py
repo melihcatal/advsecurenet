@@ -1,42 +1,36 @@
 import os
 import torch
+import random
+from typing import Union
 from torch import nn, optim
 from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.utils.model_utils import _save_checkpoint, _load_checkpoint_if_any, _get_loss_function, _initialize_optimizer, _setup_device, save_model
+from advsecurenet.utils.trainer import Trainer
+from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 
 
-class AdversarialTraining:
+class AdversarialTraining(Trainer):
     """
-    Adversarial Training class.
+    Adversarial Training class. This module implements the Adversarial Training defense.
+
+    Args:
+        config (AdversarialTrainingConfig): The configuration for the Adversarial Training defense.
+
     """
 
     def __init__(self, config: AdversarialTrainingConfig) -> None:
-        self.config = config
-
-    def adversarial_training(self) -> None:
-        # Check configuration validity
-        self._check_config(self.config)
-        device = _setup_device(self.config)
-        optimizer = _initialize_optimizer(self.config)
-        print(f"Adversarial Training: Using {device} for training")
-        self._adversarial_training(self.config, device, optimizer)
-
-    # Helper function to generate adversarial examples for the given batch
-
-    def _generate_adversarial_batch(self, models, attacks, data, target, device) -> tuple[torch.Tensor, torch.Tensor]:
-        adv_data = []
-        adv_target = []
-        data = data.to(device)
-        target = target.to(device)
-        for model, attack in zip(models, attacks):
-            model.to(device)
-            adv_data.append(attack.attack(model, data, target))
-            adv_target.append(target)
-        return torch.cat(adv_data, dim=0), torch.cat(adv_target, dim=0)
+        # first check the config
+        self._check_config(config)
+        self.config: AdversarialTrainingConfig = config
+        self.device = self._setup_device()
+        self.model = self._setup_model()
+        self.optimizer = self._setup_optimizer()
+        self.loss_fn = self._get_loss_function(self.config.criterion)
+        self.start_epoch = self._load_checkpoint_if_any()
+        self.adversarial_target_generator = AdversarialTargetGenerator()
 
     # Helper function to shuffle the combined clean and adversarial data
 
@@ -56,62 +50,135 @@ class AdversarialTraining:
         if not isinstance(config.train_loader, DataLoader):
             raise ValueError("train_dataloader must be a DataLoader!")
 
-    def _train_epoch(self, config: AdversarialTrainingConfig, device: torch.device, optimizer: optim.Optimizer, loss_function: nn.Module, epoch: int) -> float:
-        total_loss = 0.0
-        for batch_idx, (data, target) in enumerate(tqdm(config.train_loader, desc=f"Epoch {epoch}/{config.epochs}", total=len(config.train_loader))):
-            # generate adversarial examples
-            adv_data, adv_target = self._generate_adversarial_batch(
-                config.models, config.attacks, data, target, device)
+    def _combine_clean_and_adversarial_data(self, source: torch.Tensor, adv_source: torch.Tensor, targets: torch.Tensor, adv_targets: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        # Combine clean and adversarial examples
+        combined_data, combined_target = self._shuffle_data(
+            torch.cat([source, adv_source], dim=0),
+            torch.cat([targets, adv_targets], dim=0)
+        )
+        return combined_data, combined_target
 
-            data = data.to(device)
-            target = target.to(device)
-            adv_data = adv_data.to(device)
-            adv_target = adv_target.to(device)
-
-            # Combine clean and adversarial examples
-            combined_data, combined_target = self._shuffle_data(
-                torch.cat([data, adv_data], dim=0),
-                torch.cat([target, adv_target], dim=0)
-            )
-
-            # train model
-            optimizer.zero_grad()
-            outputs = config.model(combined_data)
-            loss = loss_function(outputs, combined_target)
-            loss.backward()
-            optimizer.step()
-
-            total_loss += loss.item()
-
-        return total_loss
-
-    def _adversarial_training(self, config: AdversarialTrainingConfig, device: torch.device, optimizer: optim.Optimizer) -> None:
-        # set each model to device
-        config.models = [model.to(device) for model in config.models]
-
-        config.model = config.model.to(device)
-
+    def _pre_training(self):
         # add target model to list of models if not already present
-        if config.model not in config.models:
-            config.models.append(config.model)
+        if self.config.model not in self.config.models:
+            self.config.models.append(self.config.model)
 
         # set each model to train mode
-        config.models = [model.train() for model in config.models]
+        self.config.models = [model.train() for model in self.config.models]
 
-        # initalize loss function
-        loss_function = _get_loss_function(config.criterion)
-        start_epoch = _load_checkpoint_if_any(config, device, optimizer)
+        # move each model to device
+        self.config.models = [model.to(self.device)
+                              for model in self.config.models]
 
-        # train model
-        for epoch in range(start_epoch, config.epochs + 1):
-            total_loss = self._train_epoch(
-                config, device, optimizer, loss_function, epoch)
-            average_loss = total_loss / len(config.train_loader)
-            if config.verbose:
-                print(f'Epoch {epoch} - Average Loss: {average_loss:.6f}')
+    # Helper function to generate adversarial examples for the given batch
 
-            # Save checkpoint if applicable
-            if config.save_checkpoint and epoch % config.checkpoint_interval == 0:
-                _save_checkpoint(config, epoch, optimizer=optimizer)
+    # def _generate_adversarial_batch(
+    #     self,
+    #     source,
+    #     targets,
+    #     batch_idx,
+    #     lots_source=None,
+    #     lots_targets=None
+    # ) -> tuple[torch.Tensor, torch.Tensor]:
 
-        print("Adversarial Training: Training complete!")
+    #     source, targets = self._move_to_device(source, targets)
+    #     adv_source, adv_targets = [], []
+
+    #     for model, attack in zip(self.config.models, self.config.attacks):
+    #         model.to(self.device)
+    #         attack_result = self._perform_attack(
+    #             attack, model, source, targets, batch_idx, lots_source, lots_targets)
+    #         adv_source.append(attack_result)
+    #         adv_targets.append(targets)
+    #     return torch.cat(adv_source, dim=0), torch.cat(adv_targets, dim=0)
+
+    def _generate_adversarial_batch(
+        self,
+        source,
+        targets,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """
+        Randomly selects one model and one attack from the list of models and attacks to generate adversarial examples for the given batch.
+        Args:
+            source: A batch of clean images
+            targets: A batch of clean labels
+            batch_idx: The index of the batch
+            lots_source: A batch of LOTS source images
+            lots_targets: A batch of LOTS target images
+        """
+
+        source, targets = self._move_to_device(source, targets)
+        adv_source, adv_targets = [], []
+
+        # Randomly select one model and one attack
+        random_model = random.choice(self.config.models)
+        random_attack = random.choice(self.config.attacks)
+
+        # Move the model to the device
+        random_model.to(self.device)
+
+        # Perform the attack
+        attack_result = self._perform_attack(
+            random_attack, random_model, source, targets
+        )
+
+        adv_source.append(attack_result)
+        adv_targets.append(targets)
+
+        return torch.cat(adv_source, dim=0), torch.cat(adv_targets, dim=0)
+
+    def _move_to_device(self, source, targets):
+        return source.to(self.device), targets.to(self.device)
+
+    def _perform_attack(self, attack, model, source, targets):
+        if attack.name == "LOTS":
+            paired = self.adversarial_target_generator.generate_target_images(
+                zip(source, targets))
+            original_images, original_labels, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
+                paired, source)
+            # Perform attack
+            adv_images, is_found = attack.attack(
+                model=model,
+                data=original_images,
+                target=target_images,
+                target_classes=target_labels,
+            )
+            return adv_images
+        else:
+            return attack.attack(model, source, targets)
+
+    def _run_epoch(self, epoch: int) -> None:
+
+        print(f"Running epoch {epoch}...")
+
+        total_loss = 0.0
+        for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader)):
+
+            # Move data to device
+            source = source.to(self.device)
+            targets = targets.to(self.device)
+
+            # Generate adversarial examples
+            adv_source, adv_targets = self._generate_adversarial_batch(
+                source=source,
+                targets=targets
+            )
+
+            # Move adversarial examples to device
+            adv_source = adv_source.to(self.device)
+            adv_targets = adv_targets.to(self.device)
+
+            # Combine clean and adversarial examples
+            combined_data, combined_targets = self._combine_clean_and_adversarial_data(
+                source=source,
+                adv_source=adv_source,
+                targets=targets,
+                adv_targets=adv_targets
+            )
+            loss = self._run_batch(combined_data, combined_targets)
+            total_loss += loss
+
+        # Compute average loss across all batches and all processes
+        total_loss /= len(self.config.train_loader)
+
+        print(f"Epoch {epoch}/{self.config.epochs} Loss: {total_loss}")

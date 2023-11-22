@@ -8,7 +8,7 @@ from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types.configs.train_config import TrainConfig
 from advsecurenet.shared.types.dataset import DatasetType
-from advsecurenet.utils.model_utils import train, save_model, load_model, download_weights, test as evaluate_model, _get_save_checkpoint_prefix
+from advsecurenet.utils.model_utils import save_model, load_model, download_weights
 
 
 # Fixture for model
@@ -33,21 +33,6 @@ def dataloader():
     return DataLoader(dataset, batch_size=10)
 
 
-# Unit test for train function
-def test_train(model, dataloader):
-    with patch('advsecurenet.utils.model_utils.tqdm', return_value=dataloader) as mock_tqdm:
-        train_config = TrainConfig(model=model, train_loader=dataloader)
-        train(train_config)
-
-# Unit test for test function
-
-
-def test_evaluate(model, dataloader):
-    with patch('advsecurenet.utils.model_utils.tqdm', return_value=dataloader) as mock_tqdm:
-        test_loss, accuracy = evaluate_model(model, dataloader)
-    assert test_loss is not None
-    assert accuracy is not None
-
 # Unit test for save_model and load_model function
 
 
@@ -70,33 +55,3 @@ def test_download_weights(mock_exists, mock_get):
 
 model_names = ["resnet18", "vgg16", "alexnet",
                "CustomMnistModel", "CustomCifar10Model"]
-
-
-@pytest.mark.parametrize("model_name", model_names)
-def test_save_checkpoint_prefix(model_name: str):
-    # Create a mock dataset object with the necessary class name attribute
-    mock_dataset_class = type('CIFAR10', (object,), {})
-    mock_dataset = MagicMock(spec=mock_dataset_class)
-
-    # Mock the dataset loading and dataloader creation
-    with patch('advsecurenet.datasets.dataset_factory.DatasetFactory.load_dataset', return_value=mock_dataset), \
-            patch('advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.get_dataloader') as mock_dataloader:
-
-        # Set the return value for the dataloader mock
-        mock_dataloader.return_value = MagicMock(dataset=mock_dataset)
-
-        # Create the model without mocking as it's not time-consuming
-        model = ModelFactory.get_model(model_name, num_classes=10)
-
-        # Proceed with the test using the mocked objects
-        train_data_loader = DataLoaderFactory.get_dataloader(
-            mock_dataset, batch_size=10, shuffle=True)
-
-        train_config = TrainConfig(
-            model=model,
-            train_loader=train_data_loader,
-        )
-
-        prefix = _get_save_checkpoint_prefix(train_config)
-        assert prefix == f"{model_name}_CIFAR10_checkpoint"
-

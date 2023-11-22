@@ -1,6 +1,10 @@
 import os
 import click
 import pkg_resources
+import torch
+from torch.utils.data.distributed import DistributedSampler
+from torch.utils.data import Dataset as TorchDataset
+from cli.types.training import TrainingCliConfigType
 from cli.utils.helpers import get_device_from_cfg
 from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.models.model_factory import ModelFactory
@@ -8,13 +12,21 @@ from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.configs import TrainConfig
 from advsecurenet.shared.types.configs import TestConfig
-from advsecurenet.utils.model_utils import train as util_train, test as util_test, save_model, load_model
+from advsecurenet.utils.model_utils import save_model, load_model
+from advsecurenet.utils.trainer import Trainer
+from advsecurenet.utils.tester import Tester
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
+from advsecurenet.utils.ddp_trainer import DDPTrainer
 
 
 def prepare_model(config_data, num_classes, device):
     """Loads the model and sets its weights."""
-    model = ModelFactory.get_model(
-        config_data['model_name'], num_classes=num_classes)
+    model = ModelFactory.create_model(
+        config_data['model_name'],
+        num_classes=num_classes,
+        pretrained=config_data['pretrained'],
+        weights=config_data['pretrained_weights'],  # TODO: Better name this
+    )
 
     # set weights path to weights directory if not specified
     if not config_data['model_weights']:
@@ -23,79 +35,92 @@ def prepare_model(config_data, num_classes, device):
         file_name = f"{config_data['model_name']}_{config_data['trained_on']}_weights.pth"
         config_data['model_weights'] = os.path.join(folder_path, file_name)
 
-    return load_model(model, config_data['model_weights'], device=device)
+    # If we are using a pretrained model, we don't need to load weights
+    if model and config_data['pretrained']:
+        return model
+
+    return load_model(
+        model,
+        config_data['model_weights'],
+        device=device,
+    )
 
 
-def cli_train(config_data):
+def cli_train(config_data: TrainingCliConfigType):
     # set save path to weights directory if not specified
-    if not config_data['save_path']:
-        config_data['save_path'] = pkg_resources.resource_filename(
+    if not config_data.save_path:
+        config_data.save_path = pkg_resources.resource_filename(
             "advsecurenet", "weights")
 
-    if not config_data['model_name'] or not config_data['dataset_name']:
+    if not config_data.model_name or not config_data.dataset_name:
         raise ValueError("Please provide both model name and dataset name!")
 
     try:
-        save_path_print = config_data['save_path'] if config_data['save_path'] else "weights directory"
+        save_path_print = config_data.save_path if config_data.save_path else "weights directory"
         device = get_device_from_cfg(config_data)
 
         # match the dataset name to the dataset type
-        dataset_name = config_data['dataset_name'].upper()
+        dataset_name = config_data.dataset_name.upper()
         if dataset_name not in DatasetType._value2member_map_:
             raise ValueError("Unsupported dataset name! Choose from: " +
                              ", ".join([e.value for e in DatasetType]))
 
         dataset_type = DatasetType(dataset_name)
 
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         train_data = dataset_obj.load_dataset(train=True)
         test_data = dataset_obj.load_dataset(train=False)
 
-        train_data_loader = DataLoaderFactory.get_dataloader(
-            train_data, batch_size=config_data['batch_size'], shuffle=True)
-        test_data_loader = DataLoaderFactory.get_dataloader(
-            test_data, batch_size=config_data['batch_size'], shuffle=False)
+        train_data_loader = DataLoaderFactory.create_dataloader(
+            train_data, batch_size=config_data.batch_size, shuffle=True)
+        test_data_loader = DataLoaderFactory.create_dataloader(
+            test_data, batch_size=config_data.batch_size, shuffle=False)
 
-        model = ModelFactory.get_model(
-            config_data['model_name'], num_classes=dataset_obj.num_classes)
+        model = ModelFactory.create_model(
+            config_data.model_name, num_classes=dataset_obj.num_classes)
         model.train()
 
         train_config = TrainConfig(
             model=model,
             train_loader=train_data_loader,
-            criterion=config_data['loss'],
-            optimizer=config_data['optimizer'],
-            epochs=config_data['epochs'],
-            learning_rate=config_data['lr'],
+            criterion=config_data.loss,
+            optimizer=config_data.optimizer,
+            epochs=config_data.epochs,
+            learning_rate=config_data.lr,
             device=device,
-            save_checkpoint=config_data['save_checkpoint'],
-            save_checkpoint_path=config_data['save_checkpoint_path'],
-            save_checkpoint_name=config_data['save_checkpoint_name'],
-            checkpoint_interval=config_data['checkpoint_interval'],
-            load_checkpoint=config_data['load_checkpoint'],
-            load_checkpoint_path=config_data['load_checkpoint_path']
+            save_checkpoint=config_data.save_checkpoint,
+            save_checkpoint_path=config_data.save_checkpoint_path,
+            save_checkpoint_name=config_data.save_checkpoint_name,
+            checkpoint_interval=config_data.checkpoint_interval,
+            load_checkpoint=config_data.load_checkpoint,
+            load_checkpoint_path=config_data.load_checkpoint_path,
+            use_ddp=config_data.use_ddp,
+            gpu_ids=config_data.gpu_ids,
+            pin_memory=config_data.pin_memory,
         )
+        if config_data.use_ddp:
+            _execute_ddp_training(train_config, dataset_name, train_data)
+            return
 
-        util_train(train_config)
+        trainer = Trainer(train_config)
 
-        save_name = config_data['save_name'] if config_data[
-            'save_name'] else f"{config_data['model_name']}_{dataset_name}_weights.pth"
+        trainer.train()
 
-        if config_data['save']:
+        save_name = config_data.save_name if config_data.save_name else f"{config_data.model_name}_{dataset_name}_weights.pth"
+
+        if config_data.save:
             click.echo(f"Saving model to {save_path_print}")
             save_model(model, filename=save_name,
-                       filepath=config_data['save_path'])
+                       filepath=config_data.save_path)
 
-        model.eval()
-        util_test(model, test_data_loader, device=device)
         click.echo(f"Model trained on {dataset_name}!")
 
     except FileExistsError as e:
         print(
-            f"Model {config_data['model_name']} trained on {dataset_name} already exists at {save_path_print}!")
+            f"Model {config_data.model_name} trained on {dataset_name} already exists at {save_path_print}!")
     except Exception as e:
         print(
-            f"Error training model {config_data['model_name']} on {dataset_name}! Details: {e}")
+            f"Error training model {config_data.model_name} on {dataset_name}! Details: {e}")
 
 
 def cli_test(config_data: TestConfig):
@@ -120,20 +145,21 @@ def cli_test(config_data: TestConfig):
 
         dataset_type = DatasetType(dataset_name)
 
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         test_data = dataset_obj.load_dataset(train=False)
 
-        test_data_loader = DataLoaderFactory.get_dataloader(
+        test_data_loader = DataLoaderFactory.create_dataloader(
             test_data, batch_size=config_data['batch_size'], shuffle=False)
 
-        model = ModelFactory.get_model(
+        model = ModelFactory.create_model(
             config_data['model_name'], num_classes=dataset_obj.num_classes)
 
         model = load_model(model, config_data['model_weights'], device=device)
 
         model.eval()
-        util_test(model, test_data_loader, device=device,
-                  criterion=config_data['loss'])
+        tester = Tester(model=model, test_loader=test_data_loader,
+                        device=device, criterion=config_data['loss'])
+        tester.test()
 
     except Exception as e:
         click.echo(

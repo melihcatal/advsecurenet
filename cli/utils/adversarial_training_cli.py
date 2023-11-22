@@ -1,10 +1,19 @@
 
 import os
 import click
+import torch
 import pkg_resources
+import random
+import pickle
+from tqdm import tqdm
+from collections import defaultdict
+from torchvision.datasets import ImageFolder
+from typing import Optional
+from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import Dataset as TorchDataset, DataLoader as TorchDataLoader
 from typing import Dict, cast, Any, Type
 from dataclasses import dataclass
+from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs.attack_config import AttackConfig
@@ -15,12 +24,17 @@ from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
 from advsecurenet.shared.types.configs import TestConfig
-from advsecurenet.utils.model_utils import train as util_train, test as util_test, save_model, load_model
+from advsecurenet.utils.model_utils import save_model, load_model
 from advsecurenet.shared.types.attacks import AttackType as AdversarialAttackType
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from cli.utils.config import build_config, load_configuration
-from cli.types.adversarial_training import ATCliConfigType, AttackConfigDict, AttackWithConfigDict
+from cli.types.adversarial_training import ATCliConfigType, AttackConfigDict, AttackWithConfigDict, ModelWithConfigDict
 from advsecurenet.shared.types.configs import attack_configs
+from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
+from torch.utils.data import DataLoader, Subset
+from cli.types.attacks.lots import LOTSCliConfigType, ATLOTSCliConfigType
+from torch.utils.data import TensorDataset
 
 
 class AdversarialTrainingCLI:
@@ -31,7 +45,47 @@ class AdversarialTrainingCLI:
     """
 
     def __init__(self, config_data: ATCliConfigType):
-        self.config_data = config_data
+        self.config_data: ATCliConfigType = config_data
+        self.config: AdversarialTrainingConfig
+        self.adversarial_target_generator = AdversarialTargetGenerator()
+
+    def train(self):
+        """
+        Public method to run adversarial training.
+        """
+        click.echo(click.style("Configuring adversarial training...",
+                               fg="green"))
+        dataset_name = self._validate_dataset_name()
+        target_model = self._create_target_model()
+        models = self._prepare_models()
+
+        train_data, test_data = self._load_datasets(dataset_name)
+
+        # use a subset of the train data if the number of samples is specified
+
+        # TODO: use get_subset_data
+        if self.config_data.num_samples_train:
+            # randomly sample from the train data
+            train_data = Subset(
+                train_data, random.sample(range(len(train_data)), self.config_data.num_samples_train))
+
+        if self.config_data.num_samples_test:
+            # randomly sample from the test data
+            test_data = Subset(
+                test_data, random.sample(range(len(test_data)), self.config_data.num_samples_test))
+
+        attacks = self._prepare_attacks()
+
+        train_data_loader = self._setup_data_loaders(train_data)
+
+        self.config = self._configure_adversarial_training(
+            target_model, models, attacks, train_data_loader)
+
+        if self.config.use_ddp:
+            self._execute_ddp_adversarial_training(train_data)
+        else:
+            self._execute_adversarial_training(
+                dataset_name, attacks)
 
     def _get_attack_config(self, attack_name: str) -> Type[AttackConfig]:
         """
@@ -62,31 +116,36 @@ class AdversarialTrainingCLI:
         else:
             raise ValueError("Unsupported attack name!")
 
-    def _get_attacks(self, config_attacks: list[AttackWithConfigDict]) -> list[AttackWithConfigDict]:
+    def _get_attacks(self) -> list[AttackWithConfigDict]:
         """
         Get the attack objects based on the attack names.
-
-        Args:
-            config_attacks (list[AttackWithConfigDict]): List of attacks with their configs.
 
         Returns:
             list[AttackWithConfigDict]: List of attack objects.
         """
         attacks = []
-        for attack_dict in config_attacks:
+        for attack_dict in self.config_data.attacks:
             for key, value in attack_dict.items():
                 attack_name = key
-                # This assumes that config file is the first element in the list
-                # TODO: Fix this
-                value = cast(list[AttackConfigDict], value)
-                attack_config_path = value[0].get('config')
+
+                value = cast(AttackConfigDict, value)
+                attack_config_path = value.get('config')
                 config_data = load_configuration(
                     config_type=ConfigType.ATTACK,
                     config_file=str(attack_config_path),
                 )
+
                 attack_type = AdversarialAttackType[attack_name.upper()]
                 attack_config_class = self._get_attack_config(attack_name)
                 attack_config = build_config(config_data, attack_config_class)
+
+                # if use_ddp is set to True, then set the distributed flag to True in case it is not already set
+                if self.config_data.use_ddp:
+                    attack_config.distributed_mode = True
+                else:
+                    # make sure the correct device setting is shared with the attack config
+                    attack_config.device = self.config_data.device
+
                 attack_class = attack_type.value
                 attack = attack_class(attack_config)
                 attacks.append(attack)
@@ -119,7 +178,7 @@ class AdversarialTrainingCLI:
             >>> self._extract_attack_names()
             ['fgsm', 'pgd']
         """
-        return [attack_name for attack_name in self.config_data.attacks]
+        return [str(attack_name) for attack_name in self.config_data.attacks]
 
     def _create_target_model(self) -> BaseModel:
         """
@@ -131,25 +190,59 @@ class AdversarialTrainingCLI:
         Raises:
             ValueError: If the model name is not supported.
         """
-        return ModelFactory.get_model(
+        return ModelFactory.create_model(
             self.config_data.model, num_classes=self.config_data.num_classes)
 
-    def _prepare_models(self):
+    def _prepare_models(self) -> list[BaseModel]:
         """
         Prepare the models that will be used to generate adversarial examples.
 
         Returns:
             list[BaseModel]: List of models.
         """
-        models = []
-        for model_name in self.config_data.models:
-            models.append(ModelFactory.get_model(
-                model_name, num_classes=self.config_data.num_classes))
+        if self.config_data.models is None:
+            return [self._create_target_model()]
 
-        target_model = self._create_target_model()
-        if target_model not in models:
-            models.append(target_model)
+        models = [self._create_model(model_config)
+                  for model_config in self.config_data.models]
+        self._add_target_model(models)
         return models
+
+    def _create_model(self, model_config: ModelWithConfigDict):
+        for model_name, configs in model_config.items():
+            return self._initialize_model(model_name, **configs)
+
+    def _initialize_model(self, model_name: str, **configs) -> BaseModel:
+        custom = configs.get('custom')
+        pretrained = configs.get('pretrained')
+        weights_path = configs.get('weights_path')
+        num_classes = self.config_data.num_classes
+
+        model = ModelFactory.create_model(
+            model_name, num_classes=num_classes, pretrained=(not custom and pretrained))
+
+        if custom and weights_path:
+            model = load_model(model, weights_path)
+
+        if custom and not weights_path:
+            raise ValueError(
+                "Custom model must have a weights path specified!")
+
+        return model
+
+    def _add_target_model(self, models: list[BaseModel]):
+        """
+        Add the target model to the list of models if it is not already present. Currently, this is done by checking if the model name is the same.
+
+        Args:
+            models (list[BaseModel]): List of models.
+        """
+        target_model = self._create_target_model()
+        # Assuming each model has a unique 'model_name' attribute
+        target_model_name = getattr(target_model, 'model_name', None)
+
+        if target_model_name and not any(model.model_name == target_model_name for model in models):
+            models.append(target_model)
 
     def _prepare_attacks(self) -> list[AttackWithConfigDict]:
         """
@@ -158,7 +251,7 @@ class AdversarialTrainingCLI:
         Returns:
             list[AttackWithConfigDict]: List of attacks with their configs.
         """
-        return self._get_attacks(self.config_data.attacks)
+        return self._get_attacks()
 
     def _load_datasets(self, dataset_name) -> tuple[TorchDataset, TorchDataset]:
         """
@@ -172,12 +265,17 @@ class AdversarialTrainingCLI:
         """
 
         dataset_type = DatasetType(dataset_name)
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
-        train_data = dataset_obj.load_dataset(train=True)
-        test_data = dataset_obj.load_dataset(train=False)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
+        train_data = dataset_obj.load_dataset(
+            train=True,
+            root=self.config_data.train_dataset_path)
+        test_data = dataset_obj.load_dataset(
+            train=False,
+            root=self.config_data.test_dataset_path)
+
         return train_data, test_data
 
-    def _setup_data_loaders(self, train_data: TorchDataset, test_data: TorchDataset) -> tuple[TorchDataLoader, TorchDataLoader]:
+    def _setup_data_loaders(self, train_data: TorchDataset, test_data: Optional[TorchDataset] = None) -> tuple[TorchDataLoader, Optional[TorchDataLoader]]:
         """
         Setup the data loaders.
 
@@ -188,11 +286,18 @@ class AdversarialTrainingCLI:
         Returns:
             tuple[TorchDataLoader, TorchDataLoader]: Tuple of train and test data loaders.
         """
-        train_data_loader = DataLoaderFactory.get_dataloader(
-            train_data, batch_size=self.config_data.batch_size, shuffle=True)
-        test_data_loader = DataLoaderFactory.get_dataloader(
-            test_data, batch_size=self.config_data.batch_size, shuffle=False)
-        return train_data_loader, test_data_loader
+        train_data_loader = DataLoaderFactory.create_dataloader(
+            train_data,
+            batch_size=self.config_data.batch_size,
+            shuffle=self.config_data.shuffle_train)
+        if test_data is not None:
+            test_data_loader = DataLoaderFactory.create_dataloader(
+                test_data,
+                batch_size=self.config_data.batch_size,
+                shuffle=self.config_data.shuffle_test)
+            return train_data_loader, test_data_loader
+
+        return train_data_loader
 
     def _configure_adversarial_training(self, target_model: BaseModel, models: list[BaseModel], attacks: list[AdversarialAttack], train_data_loader: TorchDataLoader) -> AdversarialTrainingConfig:
         """
@@ -224,7 +329,50 @@ class AdversarialTrainingCLI:
             optimizer=self.config_data.optimizer,
             criterion=self.config_data.criterion,
             device=self.config_data.device,
+            use_ddp=self.config_data.use_ddp,
+            gpu_ids=self.config_data.gpu_ids,
+            pin_memory=self.config_data.pin_memory,
         )
+
+    def _execute_ddp_adversarial_training(self, train_data: TorchDataset) -> None:
+        if self.config.gpu_ids is None:
+            self.config.gpu_ids = list(range(torch.cuda.device_count()))
+
+        world_size = len(self.config.gpu_ids)
+
+        os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(
+            str(x) for x in self.config.gpu_ids)
+
+        click.echo(
+            f"Running DDP adversarial training on {world_size} GPUs with the following IDs: {self.config.gpu_ids}")
+
+        ddp_trainer = DDPTrainingCoordinator(
+            self._ddp_training_fn,
+            world_size,
+            train_data,
+        )
+        ddp_trainer.run()
+
+    def _ddp_training_fn(self, rank: int, world_size: int, train_data):
+        """
+        This function is used to run adversarial training using DDP.
+
+        Args:
+            rank (int): The rank of the current process.
+            world_size (int): The number of processes to spawn.
+        """
+        train_data_loader = DataLoaderFactory.create_dataloader(
+            train_data,
+            batch_size=self.config_data.batch_size,
+            shuffle=self.config_data.shuffle_train,
+            pin_memory=self.config_data.pin_memory,
+            sampler=DistributedSampler(train_data))
+
+        self.config.train_loader = train_data_loader
+
+        ddp_trainer = DDPAdversarialTraining(
+            self.config, rank, world_size)
+        ddp_trainer.train()
 
     def _execute_adversarial_training(self, dataset_name: str, attacks: list[AdversarialAttack]) -> None:
         """
@@ -237,26 +385,11 @@ class AdversarialTrainingCLI:
         Raises:
             ValueError: If the dataset name is not supported.
         """
-        click.echo(
-            f"Starting adversarial training on {dataset_name} with attacks {self.config_data.attacks} on target model {self.config_data.model}!")
+        attack_names_to_print = [
+            attack.__class__.__name__ for attack in attacks]
+        click.echo(click.style(
+            f"Training on {dataset_name} with attacks {attack_names_to_print}...", fg="green"))
         adversarial_training = AdversarialTraining(self.config)
-        adversarial_training.adversarial_training()
-        click.echo(
-            f"Model trained on {dataset_name} with attacks {attacks}!")
-
-    def train(self):
-        """
-        Public method to run adversarial training.
-        """
-        dataset_name = self._validate_dataset_name()
-        target_model = self._create_target_model()
-        models = self._prepare_models()
-        attacks = self._prepare_attacks()
-
-        train_data, test_data = self._load_datasets(dataset_name)
-        train_data_loader, test_data_loader = self._setup_data_loaders(
-            train_data, test_data)
-
-        self.config = self._configure_adversarial_training(
-            target_model, models, attacks, train_data_loader)
-        self._execute_adversarial_training(dataset_name, attacks)
+        adversarial_training.train()
+        click.echo(click.style(
+            f"Finished training on {dataset_name} with attacks {attack_names_to_print}!", fg="blue"))

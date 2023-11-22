@@ -13,17 +13,27 @@ class AttackWithConfigDict(TypedDict):
     config: AttackConfigDict
 
 
+class ModelConfigDict(TypedDict):
+    is_custom: bool
+    pretrained: bool
+    weights_path: str
+
+
+class ModelWithConfigDict(TypedDict):
+    model: str
+    config: ModelConfigDict
+
+
 @dataclass
 class ATCliConfigType:
     """
-    This class is used to store the configuration of the adversarial training defense.
+    This class is used as a type hint for the Adversarial Training CLI configuration.
     """
     model: str
-    models: list[str]
+    models: list[ModelWithConfigDict]
     attacks: list[AttackWithConfigDict]
     dataset_type: str
     num_classes: int
-    dataset_path: str
     optimizer: str
     criterion: str
     epochs: int
@@ -36,7 +46,12 @@ class ATCliConfigType:
     scheduler: str
     scheduler_step_size: int
     scheduler_gamma: float
-    num_workers: int
+    num_workers_train: int
+    num_workers_test: int
+    shuffle_train: bool
+    shuffle_test: bool
+    drop_last_train: bool
+    drop_last_test: bool
     device: str
     save_model: bool
     save_model_path: str
@@ -47,3 +62,10 @@ class ATCliConfigType:
     checkpoint_interval: int
     load_checkpoint: bool
     load_checkpoint_path: str
+    use_ddp: bool
+    gpu_ids: list[int]
+    pin_memory: bool
+    train_dataset_path: str
+    test_dataset_path: str
+    num_samples_train: int
+    num_samples_test: int

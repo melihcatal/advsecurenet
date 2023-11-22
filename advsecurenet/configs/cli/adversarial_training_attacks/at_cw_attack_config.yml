@@ -1,0 +1,15 @@
+# Description: Configuration file for the CW attack to be used in adversarial training.
+
+targeted: False # Whether to perform a targeted attack. Defaults to False.
+target_labels: [] # Required if targeted is True. The target classes for the attack. Defaults to [].
+c_init: 0.1 # The initial value of c to use for the attack. Defaults to 0.1.
+kappa: 0 # The confidence value to use for the attack. Defaults to 0.
+learning_rate: 0.01 # The learning rate to use for the attack. Defaults to 0.01.
+max_iterations: 10 # The maximum number of iterations to use for the attack. Defaults to 10.
+abort_early: False # Whether to abort the attack early if the loss stops decreasing. Defaults to False.
+binary_search_steps: 10 # The number of binary search steps to use for the attack. Defaults to 10.
+clip_min: 0 # The minimum value for clipping pixel values. Defaults to 0.
+clip_max: 1 # The maximum value for clipping pixel values. Defaults to 1.
+c_lower: 0.000001 # The lower bound for c. Defaults to 1e-6.
+c_upper: 1 # The upper bound for c. Defaults to 1.
+patience: 5 # The number of iterations to wait before early stopping. Defaults to 5.

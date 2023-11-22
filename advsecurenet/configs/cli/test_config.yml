@@ -1,8 +1,0 @@
-# Description: Configuration file for testing the model
-
-model_name: resnet18
-dataset_name: cifar10
-model_weights: null
-batch_size: 32
-device: CPU
-loss : cross_entropy

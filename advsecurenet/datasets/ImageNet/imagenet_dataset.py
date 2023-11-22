@@ -1,9 +1,16 @@
 from torchvision import datasets
 from torch.utils.data import Dataset as TorchDataset
-from advsecurenet.datasets.base_dataset import BaseDataset
+from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
 from typing import Optional
 import pkg_resources
+
+
+class NamedImageFolder(datasets.ImageFolder):
+    def __init__(self, name, *args, **kwargs):
+        super(NamedImageFolder, self).__init__(*args, **kwargs)
+        self.dataset_name = name
+
 
 class ImageNetDataset(BaseDataset):
     """
@@ -31,7 +38,7 @@ class ImageNetDataset(BaseDataset):
                      root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = False,
-                     **kwargs) -> TorchDataset:
+                     **kwargs) -> DatasetWrapper:
         """
         Loads the ImageNet dataset.
 
@@ -42,15 +49,19 @@ class ImageNetDataset(BaseDataset):
             **kwargs: Arbitrary keyword arguments for the ImageNet dataset.
 
         Returns:
-            TorchDataset: The ImageNet dataset loaded into memory.
+            DatasetWrapper: The ImageNet dataset loaded into memory.
         """
-        
-        # If root is not given, use the default data directory 
+
+        # If root is not given, use the default data directory
         if root is None:
             root = pkg_resources.resource_filename("advsecurenet", "data")
 
         transform = self.get_transforms()
-        self._dataset = datasets.ImageFolder(
-            root=root, transform=transform, **kwargs)
+        imagenet_dataset = datasets.ImageFolder(
+            root=root,
+            transform=transform,
+            **kwargs)
+        self._dataset = DatasetWrapper(
+            dataset=imagenet_dataset, name=self.name)
         self.data_type = DataType.TRAIN if train else DataType.TEST
         return self._dataset

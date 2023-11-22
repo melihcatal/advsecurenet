@@ -1,6 +1,6 @@
 import torch
 from tqdm.auto import trange
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, cast
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.colors import red, yellow, reset
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
@@ -36,7 +36,7 @@ class LOTS(AdversarialAttack):
         self.learning_rate: float = config.learning_rate
         self.max_iterations: int = config.max_iterations
         self.verbose: bool = config.verbose
-        self.device: torch.device = config.device
+        super().__init__(config)
 
     @staticmethod
     def validate_config(config: LotsAttackConfig) -> None:
@@ -50,10 +50,15 @@ class LOTS(AdversarialAttack):
         if not isinstance(config, LotsAttackConfig):
             raise ValueError(
                 "Invalid config type provided. Expected LotsAttackConfig. But got: " + str(type(config)))
-
         # Validate mode type
+        if isinstance(config.mode, str):
+            try:
+                config.mode = LotsAttackMode[config.mode.upper()]
+            except KeyError:
+                pass  # Will be handled by the next check
+
         if not isinstance(config.mode, LotsAttackMode):
-            allowed_modes = ", ".join([mode.value for mode in LotsAttackMode])
+            allowed_modes = ", ".join(mode.value for mode in LotsAttackMode)
             raise ValueError(
                 f"Invalid mode type provided. Allowed modes are: {allowed_modes}")
 
@@ -71,7 +76,7 @@ class LOTS(AdversarialAttack):
             raise ValueError(
                 "Deep feature layer that you want to use for the attack must be provided.")
 
-    def attack(self, model: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: Optional[Union[torch.Tensor, int]] = None) -> Tuple[torch.Tensor, bool]:
+    def attack(self, model: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: Optional[Union[torch.Tensor, int]] = None, *args, **kwargs) -> Tuple[torch.Tensor, list[bool]]:
         """
         Generates adversarial examples using the LOTS attack. Based on the provided mode, either the iterative or single attack will be used. If the iterative attack is used, the attack will be run for the specified number of iterations. If the single attack is used, the attack will be run for a single iteration.
 
@@ -83,10 +88,12 @@ class LOTS(AdversarialAttack):
 
         Returns:
             torch.tensor: The adversarial example tensor.
+            bool: True if the attack was successful, False otherwise. This is specially used in LOTS attack.
         """
-        print(f"device is {self.device}")
-        data = data.clone().detach().to(self.device)
-        target = target.clone().detach().to(self.device)
+        data = data.clone().detach()
+        target = target.clone().detach()
+        data = self.device_manager.to_device(data)
+        target = self.device_manager.to_device(target)
 
         if self.mode == LotsAttackMode.ITERATIVE:
             return self._lots_iterative(model, data, target, target_classes)
@@ -96,25 +103,31 @@ class LOTS(AdversarialAttack):
         # if we reach here, the mode is invalid
         raise ValueError("Invalid mode provided.")
 
-    def _lots_iterative(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, bool]:
-
+    def _lots_iterative(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
         feature_extractor_model = create_feature_extractor(
             network, {self.deep_feature_layer: "deep_feature_layer"})
+
+        feature_extractor_model = self.device_manager.to_device(
+            feature_extractor_model)
+        data = self.device_manager.to_device(data)
+        target = self.device_manager.to_device(target)
+
+        feature_extractor_model.eval()
         target = feature_extractor_model.forward(target)["deep_feature_layer"]
 
         if target_classes is not None:
             if not torch.is_tensor(target_classes):
-                target_classes = torch.tensor(
-                    [target_classes] * data.size(0)).to(data.device)
+                target_classes = self.device_manager.to_device(torch.tensor(
+                    [target_classes] * data.size(0)))
         else:
-            target_classes = torch.tensor([-1] * data.size(0)).to(data.device)
+            target_classes = self.device_manager.to_device(
+                torch.tensor([-1] * data.size(0)))
 
         # Make data a Parameter so it can be updated by optimizer
         data = torch.nn.Parameter(data)
 
         # Create an optimizer for the data
         optimizer = torch.optim.Adam([data], lr=self.learning_rate)
-
         for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=1, disable=not self.verbose):
             optimizer.zero_grad()
 
@@ -124,13 +137,19 @@ class LOTS(AdversarialAttack):
 
             with torch.no_grad():
                 pred_classes = torch.argmax(logits, dim=-1)
+                pred_classes = self.device_manager.to_device(pred_classes)
+                target_classes = self.device_manager.to_device(target_classes)
                 success_indices = pred_classes == target_classes
                 if self.epsilon is not None:
                     distances = torch.norm(features - target, dim=1)
                     success_distances = distances < self.epsilon
-                    if success_indices.all() or success_distances.all():
-                        data = torch.clamp(data, 0, 1)
-                        return data.detach(), True
+                    successes = (success_indices | success_distances).tolist()
+                else:
+                    successes = success_indices.tolist()
+
+                if any(successes):
+                    data = torch.clamp(data, 0, 1)
+                    return data.detach(), successes
 
             loss = torch.nn.functional.mse_loss(
                 features, target, reduction="sum")
@@ -141,12 +160,17 @@ class LOTS(AdversarialAttack):
             # Clipping data to ensure it remains in [0, 1]
             data.data.clamp_(0, 1)
 
-        return data.detach(), False
+        return data.detach(), [False] * data.size(0)
 
-    def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, bool]:
-
+    def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
         feature_extractor_model = create_feature_extractor(
             network, {self.deep_feature_layer: "deep_feature_layer"})
+
+        feature_extractor_model = self.device_manager.to_device(
+            feature_extractor_model)
+        data = self.device_manager.to_device(data)
+        target = self.device_manager.to_device(target)
+        feature_extractor_model.eval()
         target = feature_extractor_model.forward(target)["deep_feature_layer"]
 
         # Convert data into a Parameter so it can be updated by optimizer
@@ -167,17 +191,22 @@ class LOTS(AdversarialAttack):
 
         if target_classes is not None:
             if not torch.is_tensor(target_classes):
-                target_classes = torch.tensor(
-                    [target_classes] * data.size(0)).to(data.device)
+                target_classes = self.device_manager.to_device(torch.tensor(
+                    [target_classes] * data.size(0)))
         else:
-            target_classes = torch.tensor([-1] * data.size(0)).to(data.device)
+            target_classes = self.device_manager.to_device(
+                torch.tensor([-1] * data.size(0)))
 
         pred_classes = torch.argmax(logits, dim=-1)
+        pred_classes = self.device_manager.to_device(pred_classes)
+        target_classes = self.device_manager.to_device(target_classes)
         success_indices = pred_classes == target_classes
 
         if self.epsilon is not None:
             distances = torch.norm(features - target, dim=1)
             success_distances = distances < self.epsilon
+            successes = (success_indices | success_distances).tolist()
+        else:
+            successes = success_indices.tolist()
 
-            is_sucess = success_indices.all() or success_distances.all()
-            return data.detach(), is_sucess
+        return data.detach(), successes

@@ -153,7 +153,7 @@ def get_config_file_name(config_class: Type[T]) -> str:
 
 def get_available_configs() -> list:
     """
-    Get a list of all available configuration files.
+    Get a list of all available configuration files, including those in subdirectories.
 
     Returns:
         list: A list of all available configuration files.
@@ -161,12 +161,18 @@ def get_available_configs() -> list:
     Examples:
         >>> from advsecurenet.utils.config_utils import get_available_configs
         >>> get_available_configs()
-        ['lots_attack_config.yml', 'cw_attack_config.yml']
+        ['lots_attack_config.yml', 'cw_attack_config.yml', ...]
 
     """
     cli_configs_dir = os.path.join(config_path, "cli")
-    # return all files in the cli directory that end with _config.yml
-    return [f for f in os.listdir(cli_configs_dir) if f.endswith("_config.yml")]
+    config_files = []
+    for root, dirs, files in os.walk(cli_configs_dir):
+        for file in files:
+            if file.endswith("_config.yml"):
+                # add the name of the file to the list
+                config_files.append(file)
+
+    return config_files
 
 
 def read_yml_file(yml_path: str) -> dict:
@@ -198,23 +204,15 @@ def get_default_config_yml(config_name: str, config_subdir: str = None):
     """
     if config_name is None:
         raise ValueError("config_name must be specified and not None!")
-
     file_paths = []
-
-    if config_subdir:
-        # If specific subdir is provided, search only in that
-        dirpath = os.path.join(config_path, config_subdir)
+    start_dir = config_path if config_subdir is None else os.path.join(
+        config_path, config_subdir)
+    for dirpath, _, files in os.walk(start_dir):
         file_paths.extend([os.path.join(dirpath, f)
-                          for f in os.listdir(dirpath) if f.endswith(config_name)])
-    else:
-        # Otherwise search in all subdirectories
-        for dirpath, _, files in os.walk(config_path):
-            file_paths.extend([os.path.join(dirpath, f)
-                              for f in files if f.endswith(config_name)])
+                           for f in files if f == config_name])
 
     if not file_paths:
         raise FileNotFoundError(f"Config file {config_name} not found!")
-
     return file_paths[0]
 
 

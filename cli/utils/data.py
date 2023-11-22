@@ -2,14 +2,28 @@
 import os
 import numpy as np
 import torch
+import random
+from typing import Optional
+from collections import defaultdict
 from PIL import Image
+from tqdm import tqdm
 from torch.utils.data import random_split, Subset
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
 from cli.utils.helpers import to_bchw_format, get_device_from_cfg
+from torch.utils.data import DataLoader
 
 
-def load_and_prepare_data(config_data):
+def load_and_prepare_data(config_data: dict) -> tuple[torch.utils.data.TensorDataset, int, torch.device]:
+    """
+    Loads and prepares data based on configuration.
+
+    Args:
+        config_data (dict): The configuration data.
+
+    Returns:
+        tuple[torch.utils.data.TensorDataset, int, torch.device]: A tuple containing the dataset, the number of unique classes in the dataset, and the device to use for the attack.
+    """
     device, dataset_type, trained_on_dataset_type = set_device_and_datasets(
         config_data)
     config_data['device'] = device
@@ -23,7 +37,7 @@ def load_and_prepare_data(config_data):
     # return images, labels, num_classes, device
 
 
-def get_data(config_data, dataset_type, trained_on_dataset_type):
+def get_data(config_data, dataset_type, trained_on_dataset_type) -> tuple[torch.utils.data.TensorDataset, int]:
     """
     Fetches and processes data based on configuration.
 
@@ -33,8 +47,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
         trained_on_dataset_type (DatasetType): The type of the dataset the model was trained on.
 
     Returns:
-        images (torch.Tensor): The image data.
-        labels (list): The labels corresponding to the image data.
+        data (torch.utils.data.TensorDataset): The dataset containing the images and labels.
         num_classes (int): The number of unique classes in the dataset.
     """
 
@@ -45,7 +58,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
     # Load data based on dataset type
     if dataset_type == DatasetType.CUSTOM:
         images, labels = get_custom_data(config_data['custom_data_dir'])
-        trained_on_data_obj = DatasetFactory.load_dataset(
+        trained_on_data_obj = DatasetFactory.create_dataset(
             trained_on_dataset_type)
         num_classes = trained_on_data_obj.num_classes
 
@@ -53,7 +66,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
         return data, num_classes
 
     else:
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         train_data = dataset_obj.load_dataset(train=True)
         test_data = dataset_obj.load_dataset(train=False)
         all_data = train_data + test_data
@@ -102,8 +115,9 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
         # return images, labels, num_classes
 
 
-def get_custom_data(path: str) -> list:
+def get_custom_data(path: str) -> tuple[torch.Tensor, torch.Tensor]:
     """
+    Returns the images and labels from the custom data directory.
     The expected directory structure is for each class to have its own directory, and the images for that class to be in that directory. I.e.
     custom_data_dir/
         │
@@ -122,6 +136,11 @@ def get_custom_data(path: str) -> list:
             ├── fish2.jpg
             ├── ...
 
+    Args:
+        path (str): The path to the custom data directory.
+
+    Returns:
+        tuple[torch.Tensor, torch.Tensor]: A tuple containing the images and labels.
     """
     images = []
     labels = []

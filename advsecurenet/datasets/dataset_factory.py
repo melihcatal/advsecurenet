@@ -13,7 +13,7 @@ DATASET_MAP = {
 
 class DatasetFactory:
     @staticmethod
-    def load_dataset(dataset_type: DatasetType, **kwargs) -> BaseDataset:
+    def create_dataset(dataset_type: DatasetType, **kwargs) -> BaseDataset:
         """
         Returns a dataset for the given dataset type.
 

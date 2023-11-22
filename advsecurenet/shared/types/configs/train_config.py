@@ -20,6 +20,10 @@ class TrainConfig:
     checkpoint_interval: int = 1
     load_checkpoint: bool = False
     load_checkpoint_path: Optional[str] = None
+    save_final_model: bool = False
+    use_ddp: bool = False
+    gpu_ids: Optional[List[int]] = None
+    pin_memory: bool = False
 
     device: torch.device = torch.device("cpu")
 

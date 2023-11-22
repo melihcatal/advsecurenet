@@ -1,0 +1,8 @@
+# Description: Configuration file for testing the model
+
+model_name: resnet18 # Name of the model to be tested
+dataset_name: cifar10 # Dataset on which the model will be tested
+model_weights: null # Path to model weights. If null, uses weights/{model_name}_{trained_on}_weights.pth. You can leave it empty if you have downloaded the weights to the default path
+batch_size: 32 # Batch size for attack execution
+device: CPU # Device for executing attacks. Options: [CPU, CUDA, MPS] or specific GPU ID [cuda:0, cuda:1, ...]
+loss: cross_entropy # The criterion used for training.

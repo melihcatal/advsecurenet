@@ -1,4 +1,5 @@
 import torch
+from typing import Union, Optional
 from torch import optim
 from tqdm.auto import trange
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
@@ -41,18 +42,19 @@ class CWAttack(AdversarialAttack):
         self.abort_early: bool = config.abort_early
         self.targeted: bool = config.targeted
         self.binary_search_steps: int = config.binary_search_steps
-        self.device: torch.device = config.device
         self.clip_min: float = config.clip_min
         self.clip_max: float = config.clip_max
         self.c_lower: float = config.c_lower
         self.c_upper: float = config.c_upper
         self.patience: int = config.patience
         self.verbose: bool = config.verbose
+        super().__init__(config)
 
     def attack(self,
                model: BaseModel,
                x: torch.Tensor,
                y: torch.Tensor,
+               *args, **kwargs
                ) -> torch.Tensor:
         """
         Performs the Carlini-Wagner L2 attack on the specified model and input.
@@ -65,24 +67,28 @@ class CWAttack(AdversarialAttack):
         Returns:
             torch.Tensor: Adversarial example.
         """
-
         batch_size = x.shape[0]
-        image = x.clone().detach().to(self.device)
-        label = y.clone().detach().to(self.device)
+        image = x.clone().detach()
+        label = y.clone().detach()
+        # image = self.device_manager.to_device(image)
+        # label = self.device_manager.to_device(label)
+        # model = self.device_manager.to_device(model)
+
         image = self._initialize_x(image)
 
         c_lower = torch.full((batch_size,), self.c_lower,
-                             device=self.device, dtype=torch.float32)
+                             device=self.device_manager.get_current_device(), dtype=torch.float32)
         c_upper = torch.full((batch_size,), self.c_upper,
-                             dtype=torch.float32, device=self.device)
+                             dtype=torch.float32, device=self.device_manager.get_current_device())
         self.c = torch.full((batch_size,), self.c_init,
-                            device=self.device, dtype=torch.float32)
+                            device=self.device_manager.get_current_device(), dtype=torch.float32)
 
         best_adv_images = image.clone()
         best_perturbations = torch.full(
-            (batch_size,), float("inf"), device=self.device)
+            (batch_size,), float("inf"), device=self.device_manager.get_current_device())
 
-        for _ in trange(self.binary_search_steps, desc="Binary Search Steps", disable=not self.verbose):
+        for _ in range(self.binary_search_steps):
+            # for _ in trange(self.binary_search_steps, desc="Binary Search Steps", disable=not self.verbose):
             adv_images = self._run_attack(model, image, label)
             successful_mask = self._is_successful(model, adv_images, label)
 
@@ -114,7 +120,8 @@ class CWAttack(AdversarialAttack):
     def _run_attack(self, model: BaseModel, image: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
 
         perturbation = torch.zeros_like(
-            image, requires_grad=True).to(self.device)
+            image, requires_grad=True)
+        # perturbation = self.device_manager.to_device(perturbation)
         optimizer = optim.Adam([perturbation], lr=self.learning_rate)
         patience_counter = 0
         min_loss = float('inf')
@@ -147,7 +154,8 @@ class CWAttack(AdversarialAttack):
 
     def _f(self, model: BaseModel, x: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
         outputs = model(x)
-        eye_matrix = torch.eye(len(outputs[0])).to(self.device)
+        eye_matrix = torch.eye(len(outputs[0]))
+        eye_matrix = self.device_manager.to_device(eye_matrix)
         one_hot_labels = eye_matrix[label]
         # maximum value of all classes except the target class
         i, _ = torch.max((1 - one_hot_labels) * outputs, dim=1)

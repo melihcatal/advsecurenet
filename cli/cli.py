@@ -1,28 +1,50 @@
 import os
 import warnings
 import click
+import pkg_resources
 from requests.exceptions import HTTPError
 from advsecurenet.models.standard_model import StandardModel
+from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
 from advsecurenet.shared.types.configs import attack_configs
 from advsecurenet.shared.types.configs import TrainConfig, TestConfig, ConfigType
 from advsecurenet.shared.types.model import ModelType
 from advsecurenet.shared.types.attacks import AttackType
-from advsecurenet.utils import download_weights as util_download_weights, get_available_configs, generate_default_config_yaml, get_default_config_yml
+from advsecurenet.utils.model_utils import download_weights as util_download_weights
+from advsecurenet.utils.config_utils import get_available_configs, generate_default_config_yaml, get_default_config_yml
 from cli.utils.attack import execute_attack
 from cli.utils.config import build_config, load_configuration
 from cli.utils.data import load_and_prepare_data
 from cli.utils.model import get_models as _get_models, prepare_model, cli_train, cli_test
-from cli.attacks.lots import execute_lots_attack
+from cli.attacks.lots import CLILOTSAttack
 from cli.utils.adversarial_training_cli import AdversarialTrainingCLI
 from cli.types.adversarial_training import ATCliConfigType
+from cli.types.training import TrainingCliConfigType
+from cli.utils.trainer import CLITrainer
 
 
 warnings.simplefilter(action='ignore', category=UserWarning)
 
 
+version = pkg_resources.require("advsecurenet")[0].version
+
+
+class IntListParamType(click.ParamType):
+    name = "intlist"
+
+    def convert(self, value, param, ctx):
+        try:
+            return [int(i) for i in value.split(',')]
+        except ValueError:
+            self.fail(f"{value} is not a valid list of integers", param, ctx)
+
+
+INT_LIST = IntListParamType()
+
+
 @click.group()
+@click.version_option(version)
 def main():
     pass
 
@@ -43,8 +65,17 @@ def defense():
     pass
 
 
+@click.group()
+def weights():
+    """
+    Command to model weights.
+    """
+    pass
+
+
 main.add_command(attack)
 main.add_command(defense)
+main.add_command(weights)
 
 if __name__ == "__main__":
     main()
@@ -69,6 +100,9 @@ if __name__ == "__main__":
 @click.option('--save-checkpoint-name', default=None, help='The name to save the model checkpoints as. If not specified, defaults to the {model_name}_{dataset_name}_checkpoint_{epoch}.pth.')
 @click.option('--load-checkpoint', type=click.BOOL, is_flag=True, default=None, help='Whether to load model checkpoints before training. Defaults to False.')
 @click.option('--load-checkpoint-path', default=None, help='The file path to load model checkpoint.')
+@click.option('--use-ddp', type=click.BOOL, is_flag=True, default=None, help='Whether to use DistributedDataParallel for training. Defaults to False.')
+@click.option('--gpu-ids', default=None, type=INT_LIST, help='Comma-separated list of GPU ids to use for training. Defaults to all available GPUs. E.g., 0,1,2,3')
+@click.option('--pin-memory', type=click.BOOL, is_flag=True, default=None, help='Whether to pin memory for training. Defaults to False.')
 def train(config: str, **kwargs):
     """Command to train a model.
 
@@ -85,6 +119,15 @@ def train(config: str, **kwargs):
         save_path (str, optional): The directory to save the model to. If not specified, defaults to the weights directory
         save_name (str, optional): The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.
         device (str, optional): The device to train on. Defaults to CPU
+        save_checkpoint (bool, optional): Whether to save model checkpoints during training. Defaults to False.
+        checkpoint_interval (int, optional): The interval at which to save model checkpoints. Defaults to 1.
+        save_checkpoint_path (str, optional): The directory to save model checkpoints to. If not specified, defaults to the checkpoints directory.
+        save_checkpoint_name (str, optional): The name to save the model checkpoints as. If not specified, defaults to the {model_name}_{dataset_name}_checkpoint_{epoch}.pth.
+        load_checkpoint (bool, optional): Whether to load model checkpoints before training. Defaults to False.
+        load_checkpoint_path (str, optional): The file path to load model checkpoint.
+        use_ddp (bool, optional): Whether to use DistributedDataParallel for training. Defaults to False.
+        gpu_ids (list[int], optional): The GPU ids to use for training. Defaults to all available GPUs.
+        pin_memory (bool, optional): Whether to pin memory for training. Defaults to False.
 
     Examples:
 
@@ -106,7 +149,9 @@ def train(config: str, **kwargs):
 
     config_data = load_configuration(
         config_type=ConfigType.TRAIN, config_file=config, **kwargs)
-    cli_train(config_data)
+    config_data = TrainingCliConfigType(**config_data)
+    trainer = CLITrainer(config_data)
+    trainer.train()
 
 
 @main.command()
@@ -151,11 +196,10 @@ def test(config: str, **kwargs):
 
     config_data: TestConfig = load_configuration(
         config_type=ConfigType.TEST, config_file=config, **kwargs)
-
     cli_test(config_data)
 
 
-@main.command()
+@weights.command()
 @click.option('-m', '--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
 def available_weights(model_name: str):
     """
@@ -290,6 +334,35 @@ def models(model_type):
 
 
 @main.command()
+@click.option('-m', '--model-name', default=None, help='Name of the model to inspect (e.g. "resnet18").')
+def model_layers(model_name):
+    """Command to list the layers of a model.
+
+    Args:
+
+        model_name (str): The name of the model (e.g. "resnet18").
+
+    Raises:
+        ValueError: If the model name is not provided.
+    """
+    if not model_name:
+        raise ValueError("Model name must be provided!")
+
+    model = ModelFactory.create_model(model_name, num_classes=3)
+    layer_names = model.get_layer_names()
+    click.echo(f"Layers for {model_name}:")
+    click.echo(f"{'Layer Name':<30}{'Layer Type':<30}")
+    for layer_name in layer_names:
+        layer_type = type(model.get_layer(layer_name)).__name__
+        click.echo(f"{layer_name:<30}{layer_type:<30}")
+
+    # send a warning to remind the user to add model prefix while using LOTS Attack
+    click.echo(click.style(
+        'ATTENTION: You might need to add model prefix while using LOTS Attack. I.e. model.fc1',
+        bold=True))
+
+
+@weights.command()
 @click.option('--model-name', default=None, help='Name of the model for which weights are to be downloaded (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset the model was trained on (e.g. "cifar10").')
 @click.option('--filename', default=None, help='The filename of the weights on the remote server. If provided, this will be used directly.')
@@ -327,9 +400,9 @@ def download_weights(model_name, dataset_name, filename, save_path):
 def common_attack_options(func):
     """Decorator to define common options for attack commands."""
     for option in reversed([
-        click.option('--config', type=click.Path(exists=True), default=None,
+        click.option('-c', '--config', type=click.Path(exists=True), default=None,
                      help='Path to the attack configuration yml file.'),
-        click.option('--model-name', type=click.STRING, default=None,
+        click.option('-m', '--model-name', type=click.STRING, default=None,
                      help='Name of the model to be attacked.'),
         click.option('--trained-on', type=click.STRING, default=None,
                      help='Dataset on which the model was trained.'),
@@ -386,16 +459,21 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
 
     config_data = load_configuration(
         config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
-
     if attack_type == AttackType.LOTS:
         click.echo(f"Executing {attack_name} attack...")
-        adversarial_images = execute_lots_attack(config_data)
+        attack = CLILOTSAttack(config_data)
+        adversarial_images = attack.execute_attack()
     else:
+        if attack_type == AttackType.CW and config_data['targeted']:
+            click.UsageError(
+                "Targeted CW attack through CLI not supported yet! Please set targeted to False or use API.")
         data, num_classes, device = load_and_prepare_data(config_data)
         attack_config = build_config(config_data, attack_config_class)
+        print(f"config data is {config_data}")
         model = prepare_model(config_data, num_classes, device)
 
         attack_class = attack_type.value  # Get the class from the Enum
+        print(f"config {attack_config}")
         attack = attack_class(attack_config)
         click.echo(f"Executing {attack_name} attack...")
         adversarial_images = execute_attack(
