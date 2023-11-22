@@ -25,12 +25,15 @@ class DeepFool(AdversarialAttack):
         self.num_classes: int = config.num_classes
         self.overshoot: float = config.overshoot
         self.max_iterations: int = config.max_iterations
-        self.device: torch.device = config.device
+        super().__init__(config)
 
     def attack(self,
                model: BaseModel,
                x: torch.tensor,  # (batch_size, channels, height, width)
-               y: torch.tensor) -> torch.tensor:
+               y: torch.tensor,
+               *args,
+               **kwargs
+               ) -> torch.tensor:
         """
         Generates adversarial examples using the DeepFool attack.
 
@@ -44,8 +47,10 @@ class DeepFool(AdversarialAttack):
         """
 
         model.eval()
-        x = x.to(self.device).detach()
-        y = y.to(self.device).detach()
+        x = x.detach()
+        y = y.detach()
+        x = self.device_manager.to_device(x)
+        y = self.device_manager.to_device(y)
 
         x_adv = x.clone()
         for iteration in range(self.max_iterations):
@@ -60,7 +65,7 @@ class DeepFool(AdversarialAttack):
 
             # Create a mask to invalidate the differences for the true class
             true_class_mask = torch.arange(
-                self.num_classes, device=self.device) != y[:, None]
+                self.num_classes, device=self.device_manager.get_current_device()) != y[:, None]
             differences = differences * true_class_mask.float()
 
             # Set the differences for the true class to a high value
@@ -78,7 +83,8 @@ class DeepFool(AdversarialAttack):
                 for c in range(gradient.shape[1]):  # iterate over channels
                     gradient_np = gradient[i][c].cpu().numpy()
                     gradient_np = cv2.GaussianBlur(gradient_np, (3, 3), 0)
-                    gradient[i][c] = torch.tensor(gradient_np).to(self.device)
+                    gradient[i][c] = self.device_manager.to_device(
+                        torch.tensor(gradient_np))
 
             # Adaptive Overshoot
             current_overshoot = self.overshoot * \

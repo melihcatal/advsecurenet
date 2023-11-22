@@ -72,7 +72,20 @@ def get_device_from_cfg(config) -> torch.device:
         config (any): The config object to use.
     """
     try:
-        device = torch.device(config.device)
+        # First, try attribute-style access
+        device_str = config.device
+    except AttributeError:
+        try:
+            # If attribute-style access fails, try dictionary-style access
+            device_str = config["device"]
+        except (KeyError, TypeError):
+            # If both attempts fail, default to 'cpu'
+            device_str = "cpu"
+
+    # Try to create a torch.device with the obtained string
+    try:
+        device = torch.device(device_str)
     except ValueError:
         device = torch.device("cpu")
+
     return device

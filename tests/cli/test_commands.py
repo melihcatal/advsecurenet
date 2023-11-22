@@ -85,7 +85,7 @@ class TestConfigDefaultCommand:
 
         # Mock the inner methods
         mock_default_config = {"key1": "value1", "key2": "value2"}
-        with patch("advsecurenet.utils.get_default_config_yml", return_value="/path/to/mock/config"), \
+        with patch("advsecurenet.utils.config_utils.get_default_config_yml", return_value="/path/to/mock/config"), \
                 patch("os.path.exists", return_value=True), \
                 patch("advsecurenet.utils.config_utils.read_yml_file", return_value=mock_default_config):
 
@@ -109,7 +109,7 @@ class TestConfigDefaultCommand:
         config_name = "nonexistent_config.yml"
 
         # Mock the generate_default_config_yaml function to raise FileNotFoundError
-        with patch("advsecurenet.utils.generate_default_config_yaml", side_effect=FileNotFoundError()):
+        with patch("advsecurenet.utils.config_utils.generate_default_config_yaml", side_effect=FileNotFoundError()):
             result = self.runner.invoke(
                 config_default, ["--config-name", config_name])
 

@@ -15,7 +15,7 @@ def execute_attack(model: BaseModel,
                    verbose: bool = False
                    ) -> list[torch.Tensor]:
     try:
-        data_loader = DataLoaderFactory.get_dataloader(
+        data_loader = DataLoaderFactory.create_dataloader(
             data, batch_size=batch_size)
 
         model.eval()

@@ -1,0 +1,37 @@
+# Description: Configuration file for the CW attack
+
+# Model Configuration
+model_name: CustomMnistModel # Name of the model to be attacked
+trained_on: mnist # Dataset on which the model was trained.
+pretrained: False # Whether the model is pretrained. Defaults to False. This is only applicable if the model is a torchvision model
+pretrained_weights: null # Weights for the pretrained models. If null uses the default weights. This is only applicable if the model is a torchvision model
+model_weights: null # Path to model weights. If null, uses weights/{model_name}_{trained_on}_weights.pth. You can leave it empty if you have downloaded the weights to the default path
+device: CPU # Device for executing attacks. Options: [CPU, CUDA, MPS]
+
+# Attack Dataset Configuration
+dataset_name: mnist # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
+custom_data_dir: null # Required if dataset_name is 'custom': path to custom dataset. Leave it empty if the dataset_name is not custom
+dataset_part: random # Required if dataset_name isn't 'custom'. Which part of dataset to use for attack. Options: [train, test, all, random]. Leave it empty if the dataset_name is custom
+random_samples: 10 # Required if dataset_part is 'random'. Number of random samples for attack. Leave it empty if the dataset_part isn't random
+
+# Attack Execution Configuration
+batch_size: 32 # Batch size for attack execution
+verbose: True # Whether to print progress of the attack. Defaults to True.
+save_result_images: True # Whether to save the result images. Defaults to True.
+result_images_dir: null # The path to the directory where the result images will be saved. If null, uses results/{attack_name}/{model_name}_{trained_on}_{dataset_name}_{dataset_part}_result_images.
+result_images_prefix: null # The prefix to use for the result images. If null, uses {attack_name}_{model_name}_{trained_on}_{dataset_name}_{dataset_part}.
+
+# Attack Specific Configuration
+targeted: False # Whether to perform a targeted attack. Defaults to False.
+target_labels: [] # Required if targeted is True. The target classes for the attack. Defaults to [].
+c_init: 0.1 # The initial value of c to use for the attack. Defaults to 0.1.
+kappa: 0 # The confidence value to use for the attack. Defaults to 0.
+learning_rate: 0.01 # The learning rate to use for the attack. Defaults to 0.01.
+max_iterations: 10 # The maximum number of iterations to use for the attack. Defaults to 10.
+abort_early: False # Whether to abort the attack early if the loss stops decreasing. Defaults to False.
+binary_search_steps: 10 # The number of binary search steps to use for the attack. Defaults to 10.
+clip_min: 0 # The minimum value for clipping pixel values. Defaults to 0.
+clip_max: 1 # The maximum value for clipping pixel values. Defaults to 1.
+c_lower: 0.000001 # The lower bound for c. Defaults to 1e-6.
+c_upper: 1 # The upper bound for c. Defaults to 1.
+patience: 5 # The number of iterations to wait before early stopping. Defaults to 5.

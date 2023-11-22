@@ -23,9 +23,9 @@ class MockDataset(BaseDataset, Dataset):
         return self
 
 
-def test_get_dataloader_defaults():
+def test_create_dataloader_defaults():
     dataset_instance = MockDataset()
-    dataloader = DataLoaderFactory.get_dataloader(dataset_instance)
+    dataloader = DataLoaderFactory.create_dataloader(dataset_instance)
 
     assert isinstance(dataloader, DataLoader)
     assert len(dataloader.dataset) == 100
@@ -34,24 +34,24 @@ def test_get_dataloader_defaults():
     assert dataloader.num_workers == 4
 
 
-def test_get_dataloader_with_shuffle():
+def test_create_dataloader_with_shuffle():
     dataset_instance = MockDataset()
-    dataloader = DataLoaderFactory.get_dataloader(
+    dataloader = DataLoaderFactory.create_dataloader(
         dataset_instance, shuffle=True)
 
     assert isinstance(dataloader.sampler, torch.utils.data.RandomSampler)
 
 
-def test_get_dataloader_with_custom_batch_size():
+def test_create_dataloader_with_custom_batch_size():
     dataset_instance = MockDataset()
-    dataloader = DataLoaderFactory.get_dataloader(
+    dataloader = DataLoaderFactory.create_dataloader(
         dataset_instance, batch_size=16)
 
     assert dataloader.batch_size == 16
 
 
-def test_get_dataloader_with_invalid_dataset_type():
+def test_create_dataloader_with_invalid_dataset_type():
     with pytest.raises(ValueError) as e:
-        dataloader = DataLoaderFactory.get_dataloader("invalid_dataset")
+        dataloader = DataLoaderFactory.create_dataloader("invalid_dataset")
 
     assert str(e.value) == "Invalid dataset type provided. Expected TorchDataset."

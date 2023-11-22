@@ -14,7 +14,7 @@ warnings.simplefilter("always", category=ImportWarning)
 @pytest.fixture
 def setup():
     # Define the model
-    model = ModelFactory.get_model(
+    model = ModelFactory.create_model(
         "resnet18", pretrained=True, num_classes=1000)
     model.eval()
 

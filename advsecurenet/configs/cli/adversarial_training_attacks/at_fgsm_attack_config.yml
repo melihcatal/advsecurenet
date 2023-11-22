@@ -1,0 +1,3 @@
+# Description: Configuration file for the FGSM attack to be used in adversarial training.
+
+epsilon: 0.3 # The epsilon value to be used for the FGSM attack. The higher the value, the more the perturbation

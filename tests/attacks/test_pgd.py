@@ -41,7 +41,7 @@ def test_initialization(pgd_attack):
 
 
 def test_device_configuration(pgd_attack):
-    assert pgd_attack.device == torch.device("cpu")
+    assert pgd_attack.device == "cpu"
 
 
 def test_attack_outcome(pgd_attack, simple_model, sample_image, sample_label):

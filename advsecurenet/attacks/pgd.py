@@ -1,5 +1,6 @@
 import torch
 from tqdm.auto import trange
+from tqdm import tqdm
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.colors import red, yellow, reset
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
@@ -29,9 +30,9 @@ class PGD(AdversarialAttack):
         self.epsilon: float = config.epsilon
         self.alpha: float = config.alpha
         self.num_iter: int = config.num_iter
-        self.device: torch.device = config.device
+        super().__init__(config)
 
-    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool = False) -> torch.Tensor:
+    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool = False, *args, **kwargs) -> torch.Tensor:
         """
         Performs the PGD attack on the specified model and input.
 
@@ -49,7 +50,8 @@ class PGD(AdversarialAttack):
         delta = torch.zeros_like(x).uniform_(-self.epsilon, self.epsilon)
         delta = torch.clamp(delta, min=-self.epsilon, max=self.epsilon)
 
-        for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False):
+        # for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=True):
+        for _ in range(self.num_iter):
             delta = self._pgd_step(model, x, y, targeted, delta)
 
         adv_x = torch.clamp(x + delta, 0, 1)

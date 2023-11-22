@@ -1,0 +1,34 @@
+# Description: Configuration file for the LOTS attack.
+
+# Model Configuration
+model_name: CustomMnistModel # Name of the model to be attacked
+trained_on: mnist # Dataset on which the model was trained.
+pretrained: False # Whether the model is pretrained. Defaults to False. This is only applicable if the model is a torchvision model
+pretrained_weights: null # Weights for the pretrained models. If null uses the default weights. This is only applicable if the model is a torchvision model
+model_weights: null # Path to model weights. If null, uses weights/{model_name}_{trained_on}_weights.pth. You can leave it empty if you have downloaded the weights to the default path
+device: CPU # Device for executing attacks. Options: [CPU, CUDA, MPS]
+
+# Attack Dataset Configuration
+dataset_name: mnist # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
+custom_data_dir: null # Required if dataset_name is 'custom': path to custom dataset. Leave it empty if the dataset_name is not custom
+dataset_part: random # Required if dataset_name isn't 'custom'. Which part of dataset to use for attack. Options: [train, test, all, random]. Leave it empty if the dataset_name is custom
+random_samples: 10 # Required if dataset_part is 'random'. Number of random samples for attack. Leave it empty if the dataset_part isn't random
+
+# Attack Execution Configuration
+batch_size: 32 # Batch size for attack execution
+verbose: True # Whether to print progress of the attack. Defaults to True.
+save_result_images: True # Whether to save the result images. Defaults to True.
+result_images_dir: null # The path to the directory where the result images will be saved. If null, uses results/{attack_name}/{model_name}_{trained_on}_{dataset_name}_{dataset_part}_result_images.
+result_images_prefix: null # The prefix to use for the result images. If null, uses {attack_name}_{model_name}_{trained_on}_{dataset_name}_{dataset_part}.
+
+# Attack Specific Configuration
+deep_feature_layer: null # [REQUIRED] The name of the layer to use for the attack. You can inspect the model to find the layers.
+mode: iterative # The mode to use for the attack. Default is iterative. Options are [iterative, single]
+epsilon: 0.1 # The epsilon value to use for the attack. Defaults to 0.1.
+learning_rate: 0.004 # The learning rate to use for the attack. Defaults to 1./255.
+max_iterations: 1000 # The maximum number of iterations to use for the attack. Defaults to 1000. This is only valid if the attack mode is iterative.
+target_labels: [] # Optional. If provided, the attack stops when the target class is reached. Defaults to [].
+auto_generate_target_images: true # Whether to generate target images and labels automatically. Defaults to True. If True, based on the # of samples the attack will find target images.
+maximum_generation_attempts: 1000 # The maximum number of attempts to generate target images. Defaults to 100. This is only valid if auto_generate_target_images is True.
+target_images_dir: null # Required if generate_target_images_auto is False. The path to the target images. Defaults to null.
+

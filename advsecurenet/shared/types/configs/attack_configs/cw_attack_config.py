@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 import torch
 from dataclasses import dataclass
 from advsecurenet.shared.types.configs.attack_configs import AttackConfig

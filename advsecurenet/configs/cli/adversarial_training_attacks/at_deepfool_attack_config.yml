@@ -1,0 +1,6 @@
+# Description: Configuration file for DeepFool attack to be used in adversarial training.
+
+# Attack Specific Configuration
+num_classes: 10                     # Number of classes in the dataset . Options: [cifar10: 10, mnist: 10]
+overshoot: 0.02                     # Overshoot parameter for DeepFool attack. Defaults to 0.02.
+max_iterations: 50                  # The maximum number of iterations to use for the attack. Defaults to 50.

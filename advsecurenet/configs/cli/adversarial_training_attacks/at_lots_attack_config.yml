@@ -1,0 +1,12 @@
+# Description: Configuration file for the LOTS attack to be used in adversarial training.
+
+# --- Attack Configurations ---
+deep_feature_layer: model.fc # [REQUIRED] The name of the layer to use for the attack. You can inspect the model to find the layers.
+mode: iterative # The mode to use for the attack. Default is iterative. Options are [iterative, single]
+epsilon: 0.1 # The epsilon value to use for the attack. Defaults to 0.1.
+learning_rate: 0.004 # The learning rate to use for the attack. Defaults to 1./255.
+max_iterations: 1000 # The maximum number of iterations to use for the attack. Defaults to 1000. This is only valid if the attack mode is iterative.
+target_labels: [] # Optional. If provided, the attack stops when the target class is reached. Defaults to [].
+auto_generate_target_images: true # Whether to generate target images and labels automatically. Defaults to True. If True, based on the # of samples the attack will find target images.
+maximum_generation_attempts: 1000 # The maximum number of attempts to generate target images. Defaults to 100. This is only valid if auto_generate_target_images is True.
+target_images_dir: # Required if generate_target_images_auto is False. The path to the target images. Defaults to null.

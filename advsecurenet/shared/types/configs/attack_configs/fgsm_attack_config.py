@@ -7,4 +7,3 @@ from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 @dataclass(kw_only=True)
 class FgsmAttackConfig(AttackConfig):
     epsilon: float = 0.3
-    device: Union[str, torch.device]
