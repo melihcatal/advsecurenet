@@ -45,7 +45,6 @@ class DDPTrainer(Trainer):
         Returns:
             torch.device: The device.
         """
-        print(f"Setting up device for rank {self.rank}")
         torch.cuda.set_device(self.rank)
         return torch.device(f"cuda:{self.rank}")
 
@@ -56,7 +55,6 @@ class DDPTrainer(Trainer):
         Returns:
             DistributedDataParallel: The model.
         """
-        print(f"Setting up model for rank {self.rank}")
         model = self.config.model.to(self.device)
         return DDP(model, device_ids=[self.rank])
 
@@ -90,7 +88,7 @@ class DDPTrainer(Trainer):
         if self.config.save_checkpoint_name:
             return self.config.save_checkpoint_name
         else:
-            return f"{self.config.model.model_variant}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
+            return f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
 
     def _should_save_checkpoint(self, epoch: int) -> bool:
         """
@@ -132,8 +130,8 @@ class DDPTrainer(Trainer):
             loss = self._run_batch(source, targets)
             total_loss += loss
 
-        total_loss /= len(self.config.train_loader)
+        # Compute average loss across all batches and all processes
+        total_loss /= len(self.config.train_loader) * self.world_size
 
         if self.rank == 0:
-            # Only print in the master process
-            print(f"Epoch {epoch} loss: {total_loss}")
+            print(f"Average loss: {total_loss}")

@@ -184,7 +184,7 @@ class Trainer:
         if self.config.save_checkpoint_name:
             return self.config.save_checkpoint_name
         else:
-            return f"{self.config.model.model_variant}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
+            return f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
 
     def _save_checkpoint(self, epoch: int, optimizer: optim.Optimizer) -> None:
         """
@@ -232,12 +232,12 @@ class Trainer:
         """
         Saves the final model to the current directory with the name of the model variant and the dataset name.
         """
-        file_name = f"{self.config.model.model_variant}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
+        file_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
         # if the same file exists, add a index to the file name
         index = 0
         while os.path.isfile(file_name):
             index += 1
-            file_name = f"{self.config.model.model_variant}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
+            file_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
 
         torch.save(self._get_model_state_dict(), file_name)
         print(f"=> saved final model '{file_name}'")
@@ -289,7 +289,6 @@ class Trainer:
         """
         Public method for training the model.
         """
-        print("Training started...")
         self._pre_training()
         for epoch in range(self.start_epoch, self.config.epochs + 1):
             self._run_epoch(epoch)

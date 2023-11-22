@@ -11,7 +11,7 @@ class StandardModel(BaseModel):
     modifying the model after loading.
 
     Args: 
-        model_variant: str
+        model_name: str
             The name of the model to load. For example, 'resnet18'.
         num_classes: int
             The number of classes in the dataset.
@@ -23,12 +23,12 @@ class StandardModel(BaseModel):
     """
 
     def __init__(self,
-                 model_variant: str,
+                 model_name: str,
                  num_classes: int,
                  pretrained: bool = False,
                  weights: str = "IMAGENET1K_V1",
                  **kwargs):
-        self.model_variant = model_variant
+        self.model_name = model_name
         self.pretrained = pretrained
         self.weights = weights
         self.num_classes = num_classes
@@ -39,16 +39,16 @@ class StandardModel(BaseModel):
 
     def load_model(self) -> None:
         """
-        Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_variant attribute and sets the model attribute.
+        Load the model. This method is called by the BaseModel constructor. It loads the model from torchvision.models based on the model_name attribute and sets the model attribute.
 
         Raises:
-            ValueError: If the model_variant is not supported by torchvision.
+            ValueError: If the model_name is not supported by torchvision.
 
         """
-        if not hasattr(models, self.model_variant):
-            raise ValueError(f"Unsupported model type: {self.model_variant}")
+        if not hasattr(models, self.model_name):
+            raise ValueError(f"Unsupported model type: {self.model_name}")
 
-        model_fn = getattr(models, self.model_variant)
+        model_fn = getattr(models, self.model_name)
         if self.pretrained:
             self.model = model_fn(weights=self.weights)
             if self.num_classes != 1000:  # ImageNet has 1000 classes, pretrained models are trained on ImageNet

@@ -348,7 +348,7 @@ def model_layers(model_name):
     if not model_name:
         raise ValueError("Model name must be provided!")
 
-    model = ModelFactory.get_model(model_name, num_classes=3)
+    model = ModelFactory.create_model(model_name, num_classes=3)
     layer_names = model.get_layer_names()
     click.echo(f"Layers for {model_name}:")
     click.echo(f"{'Layer Name':<30}{'Layer Type':<30}")
@@ -358,7 +358,7 @@ def model_layers(model_name):
 
     # send a warning to remind the user to add model prefix while using LOTS Attack
     click.echo(click.style(
-        'ATTENTION. You might need to add model prefix while using LOTS Attack. I.e. model.fc1',
+        'ATTENTION: You might need to add model prefix while using LOTS Attack. I.e. model.fc1',
         bold=True))
 
 
@@ -459,14 +459,17 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
 
     config_data = load_configuration(
         config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
-
     if attack_type == AttackType.LOTS:
         click.echo(f"Executing {attack_name} attack...")
         attack = CLILOTSAttack(config_data)
         adversarial_images = attack.execute_attack()
     else:
+        if attack_type == AttackType.CW and config_data['targeted']:
+            click.UsageError(
+                "Targeted CW attack through CLI not supported yet! Please set targeted to False or use API.")
         data, num_classes, device = load_and_prepare_data(config_data)
         attack_config = build_config(config_data, attack_config_class)
+        print(f"config data is {config_data}")
         model = prepare_model(config_data, num_classes, device)
 
         attack_class = attack_type.value  # Get the class from the Enum

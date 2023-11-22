@@ -48,7 +48,6 @@ class CWAttack(AdversarialAttack):
         self.c_upper: float = config.c_upper
         self.patience: int = config.patience
         self.verbose: bool = config.verbose
-        self.target_labels: Optional[list[int]] = config.target_labels
         super().__init__(config)
 
     def attack(self,
@@ -70,17 +69,10 @@ class CWAttack(AdversarialAttack):
         """
         batch_size = x.shape[0]
         image = x.clone().detach()
-        if self.targeted:
-            # if targeted, make y the target label
-            if self.target_labels is None:
-                raise ValueError(
-                    "Target labels must be provided when targeted is True.")
-            y = torch.tensor(self.target_labels * batch_size)
-
         label = y.clone().detach()
-
-        image = self.device_manager.to_device(image)
-        label = self.device_manager.to_device(label)
+        # image = self.device_manager.to_device(image)
+        # label = self.device_manager.to_device(label)
+        # model = self.device_manager.to_device(model)
 
         image = self._initialize_x(image)
 
@@ -95,7 +87,8 @@ class CWAttack(AdversarialAttack):
         best_perturbations = torch.full(
             (batch_size,), float("inf"), device=self.device_manager.get_current_device())
 
-        for _ in trange(self.binary_search_steps, desc="Binary Search Steps", disable=not self.verbose):
+        for _ in range(self.binary_search_steps):
+            # for _ in trange(self.binary_search_steps, desc="Binary Search Steps", disable=not self.verbose):
             adv_images = self._run_attack(model, image, label)
             successful_mask = self._is_successful(model, adv_images, label)
 
@@ -128,7 +121,7 @@ class CWAttack(AdversarialAttack):
 
         perturbation = torch.zeros_like(
             image, requires_grad=True)
-        perturbation = self.device_manager.to_device(perturbation)
+        # perturbation = self.device_manager.to_device(perturbation)
         optimizer = optim.Adam([perturbation], lr=self.learning_rate)
         patience_counter = 0
         min_loss = float('inf')

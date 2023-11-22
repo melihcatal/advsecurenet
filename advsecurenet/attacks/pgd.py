@@ -1,5 +1,6 @@
 import torch
 from tqdm.auto import trange
+from tqdm import tqdm
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.colors import red, yellow, reset
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
@@ -49,7 +50,8 @@ class PGD(AdversarialAttack):
         delta = torch.zeros_like(x).uniform_(-self.epsilon, self.epsilon)
         delta = torch.clamp(delta, min=-self.epsilon, max=self.epsilon)
 
-        for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False):
+        # for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=True):
+        for _ in range(self.num_iter):
             delta = self._pgd_step(model, x, y, targeted, delta)
 
         adv_x = torch.clamp(x + delta, 0, 1)

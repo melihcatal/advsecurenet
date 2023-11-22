@@ -14,7 +14,7 @@ class DataLoaderFactory:
         None
     """
     @staticmethod
-    def get_dataloader(dataset: TorchDataset, batch_size: int = 32, num_workers: int = 4, shuffle: bool = False, **kwargs) -> TorchDataLoader:
+    def create_dataloader(dataset: TorchDataset, batch_size: int = 32, num_workers: int = 4, shuffle: bool = False, **kwargs) -> TorchDataLoader:
         """
         A static method that creates a DataLoader for the given dataset with the given parameters.
 

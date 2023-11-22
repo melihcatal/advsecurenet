@@ -1,7 +1,7 @@
 from typing import Optional
 from torchvision import datasets
 from torch.utils.data import Dataset as TorchDataset
-from advsecurenet.datasets.base_dataset import BaseDataset
+from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
 import pkg_resources
 
@@ -32,7 +32,7 @@ class CIFAR10Dataset(BaseDataset):
                      root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
-                     **kwargs) -> TorchDataset:
+                     **kwargs) -> DatasetWrapper:
         """
         Loads the CIFAR-10 dataset.
 
@@ -43,15 +43,21 @@ class CIFAR10Dataset(BaseDataset):
             **kwargs: Arbitrary keyword arguments for the CIFAR-10 dataset.
 
         Returns:
-            TorchDataset: The CIFAR-10 dataset loaded into memory.
+            DatasetWrapper: The CIFAR-10 dataset loaded into memory.
         """
-        
-        # If root is not given, use the default data directory 
+
+        # If root is not given, use the default data directory
         if root is None:
             root = pkg_resources.resource_filename("advsecurenet", "data")
 
         transform = self.get_transforms()
-        self._dataset = datasets.CIFAR10(
-            root=root, train=train, transform=transform, download=download, **kwargs)
+        cifar10_dataset = datasets.CIFAR10(
+            root=root,
+            train=train,
+            transform=transform,
+            download=download, **kwargs)
+        self._dataset = DatasetWrapper(
+            dataset=cifar10_dataset,
+            name=self.name)
         self.data_type = DataType.TRAIN if train else DataType.TEST
         return self._dataset

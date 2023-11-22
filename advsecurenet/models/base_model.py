@@ -79,7 +79,7 @@ class BaseModel(ABC, nn.Module):
         Retrieve a specific layer module based on its name.
 
         Examples:
-            >>> model = StandardModel(model_variant='resnet18', num_classes=10)
+            >>> model = StandardModel(model_name='resnet18', num_classes=10)
             >>> model.get_layer('layer1.0.conv1')
         """
         if self.model is None:
@@ -91,7 +91,7 @@ class BaseModel(ABC, nn.Module):
         Replace a specific layer module based on its name with a new module.
 
         Examples:
-            >>> model = StandardModel(model_variant='resnet18', num_classes=10)
+            >>> model = StandardModel(model_name='resnet18', num_classes=10)
             >>> model.set_layer('layer1.0.conv1', nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False))
         """
         if self.model is None:

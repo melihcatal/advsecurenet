@@ -1,6 +1,6 @@
 import torch
 from tqdm.auto import trange
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, cast
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.colors import red, yellow, reset
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
@@ -47,13 +47,10 @@ class LOTS(AdversarialAttack):
         :raises ValueError: If any of the configuration settings are invalid.
         """
         # Validate config type
-        print(f"config: {config}")
         if not isinstance(config, LotsAttackConfig):
             raise ValueError(
                 "Invalid config type provided. Expected LotsAttackConfig. But got: " + str(type(config)))
-        print("mode =>", config.mode)
         # Validate mode type
-
         if isinstance(config.mode, str):
             try:
                 config.mode = LotsAttackMode[config.mode.upper()]
@@ -79,7 +76,7 @@ class LOTS(AdversarialAttack):
             raise ValueError(
                 "Deep feature layer that you want to use for the attack must be provided.")
 
-    def attack(self, model: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: Optional[Union[torch.Tensor, int]] = None, *args, **kwargs) -> Tuple[torch.Tensor, bool]:
+    def attack(self, model: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: Optional[Union[torch.Tensor, int]] = None, *args, **kwargs) -> Tuple[torch.Tensor, list[bool]]:
         """
         Generates adversarial examples using the LOTS attack. Based on the provided mode, either the iterative or single attack will be used. If the iterative attack is used, the attack will be run for the specified number of iterations. If the single attack is used, the attack will be run for a single iteration.
 
@@ -106,9 +103,16 @@ class LOTS(AdversarialAttack):
         # if we reach here, the mode is invalid
         raise ValueError("Invalid mode provided.")
 
-    def _lots_iterative(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, bool]:
+    def _lots_iterative(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
         feature_extractor_model = create_feature_extractor(
             network, {self.deep_feature_layer: "deep_feature_layer"})
+
+        feature_extractor_model = self.device_manager.to_device(
+            feature_extractor_model)
+        data = self.device_manager.to_device(data)
+        target = self.device_manager.to_device(target)
+
+        feature_extractor_model.eval()
         target = feature_extractor_model.forward(target)["deep_feature_layer"]
 
         if target_classes is not None:
@@ -133,13 +137,19 @@ class LOTS(AdversarialAttack):
 
             with torch.no_grad():
                 pred_classes = torch.argmax(logits, dim=-1)
+                pred_classes = self.device_manager.to_device(pred_classes)
+                target_classes = self.device_manager.to_device(target_classes)
                 success_indices = pred_classes == target_classes
                 if self.epsilon is not None:
                     distances = torch.norm(features - target, dim=1)
                     success_distances = distances < self.epsilon
-                    if success_indices.all() or success_distances.all():
-                        data = torch.clamp(data, 0, 1)
-                        return data.detach(), True
+                    successes = (success_indices | success_distances).tolist()
+                else:
+                    successes = success_indices.tolist()
+
+                if any(successes):
+                    data = torch.clamp(data, 0, 1)
+                    return data.detach(), successes
 
             loss = torch.nn.functional.mse_loss(
                 features, target, reduction="sum")
@@ -150,11 +160,17 @@ class LOTS(AdversarialAttack):
             # Clipping data to ensure it remains in [0, 1]
             data.data.clamp_(0, 1)
 
-        return data.detach(), False
+        return data.detach(), [False] * data.size(0)
 
-    def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, bool]:
+    def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
         feature_extractor_model = create_feature_extractor(
             network, {self.deep_feature_layer: "deep_feature_layer"})
+
+        feature_extractor_model = self.device_manager.to_device(
+            feature_extractor_model)
+        data = self.device_manager.to_device(data)
+        target = self.device_manager.to_device(target)
+        feature_extractor_model.eval()
         target = feature_extractor_model.forward(target)["deep_feature_layer"]
 
         # Convert data into a Parameter so it can be updated by optimizer
@@ -184,13 +200,13 @@ class LOTS(AdversarialAttack):
         pred_classes = torch.argmax(logits, dim=-1)
         pred_classes = self.device_manager.to_device(pred_classes)
         target_classes = self.device_manager.to_device(target_classes)
-        print(
-            f"pred class device {pred_classes.device} target class device {target_classes.device}")
         success_indices = pred_classes == target_classes
 
         if self.epsilon is not None:
             distances = torch.norm(features - target, dim=1)
             success_distances = distances < self.epsilon
+            successes = (success_indices | success_distances).tolist()
+        else:
+            successes = success_indices.tolist()
 
-            is_sucess = success_indices.all() or success_distances.all()
-            return data.detach(), is_sucess
+        return data.detach(), successes

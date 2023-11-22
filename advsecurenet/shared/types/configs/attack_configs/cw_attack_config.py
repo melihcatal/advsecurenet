@@ -7,7 +7,6 @@ from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 @dataclass(kw_only=True)
 class CWAttackConfig(AttackConfig):
     targeted: bool = False
-    target_labels: Optional[list[int]] = None
     c_init: float = 0.1
     kappa: float = 0
     learning_rate: float = 0.01

@@ -3,7 +3,10 @@ import os
 import numpy as np
 import torch
 import random
+from typing import Optional
+from collections import defaultdict
 from PIL import Image
+from tqdm import tqdm
 from torch.utils.data import random_split, Subset
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
@@ -11,7 +14,16 @@ from cli.utils.helpers import to_bchw_format, get_device_from_cfg
 from torch.utils.data import DataLoader
 
 
-def load_and_prepare_data(config_data):
+def load_and_prepare_data(config_data: dict) -> tuple[torch.utils.data.TensorDataset, int, torch.device]:
+    """
+    Loads and prepares data based on configuration.
+
+    Args:
+        config_data (dict): The configuration data.
+
+    Returns:
+        tuple[torch.utils.data.TensorDataset, int, torch.device]: A tuple containing the dataset, the number of unique classes in the dataset, and the device to use for the attack.
+    """
     device, dataset_type, trained_on_dataset_type = set_device_and_datasets(
         config_data)
     config_data['device'] = device
@@ -25,7 +37,7 @@ def load_and_prepare_data(config_data):
     # return images, labels, num_classes, device
 
 
-def get_data(config_data, dataset_type, trained_on_dataset_type):
+def get_data(config_data, dataset_type, trained_on_dataset_type) -> tuple[torch.utils.data.TensorDataset, int]:
     """
     Fetches and processes data based on configuration.
 
@@ -35,8 +47,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
         trained_on_dataset_type (DatasetType): The type of the dataset the model was trained on.
 
     Returns:
-        images (torch.Tensor): The image data.
-        labels (list): The labels corresponding to the image data.
+        data (torch.utils.data.TensorDataset): The dataset containing the images and labels.
         num_classes (int): The number of unique classes in the dataset.
     """
 
@@ -47,7 +58,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
     # Load data based on dataset type
     if dataset_type == DatasetType.CUSTOM:
         images, labels = get_custom_data(config_data['custom_data_dir'])
-        trained_on_data_obj = DatasetFactory.load_dataset(
+        trained_on_data_obj = DatasetFactory.create_dataset(
             trained_on_dataset_type)
         num_classes = trained_on_data_obj.num_classes
 
@@ -55,7 +66,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type):
         return data, num_classes
 
     else:
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         train_data = dataset_obj.load_dataset(train=True)
         test_data = dataset_obj.load_dataset(train=False)
         all_data = train_data + test_data
@@ -187,41 +198,3 @@ def set_device_and_datasets(config_data):
     trained_on_dataset_type = DatasetType(config_data['trained_on'].upper())
 
     return device, dataset_type, trained_on_dataset_type
-
-
-def generate_random_target_images(all_images, clean_labels, max_attempts) -> tuple[torch.Tensor, torch.Tensor]:
-    target_images = []
-    target_labels = []
-
-    for label in clean_labels:
-        attempts, found_mismatch = 0, False
-        while attempts < max_attempts and not found_mismatch:
-            random_idx = random.randint(0, len(all_images) - 1)
-            if all_images[random_idx][1] != label:
-                target_images.append(all_images[random_idx][0])
-                target_labels.append(all_images[random_idx][1])
-                found_mismatch = True
-            attempts += 1
-
-        if not found_mismatch:
-            raise ValueError(
-                f"Failed to find a mismatch for label {label} after {max_attempts} attempts.")
-
-    return torch.stack(target_images), torch.tensor(target_labels)
-
-
-def get_specific_batch(dataloader: DataLoader, batch_id: int):
-    """
-    Retrieve a specific batch from a DataLoader by its index.
-
-    Args:
-    dataloader (DataLoader): The DataLoader object.
-    batch_id (int): The index of the batch to retrieve.
-
-    Returns:
-    A single batch from the DataLoader.
-    """
-    for i, batch in enumerate(dataloader):
-        if i == batch_id:
-            return batch
-    raise IndexError("Batch ID out of range.")

@@ -26,18 +26,18 @@ def test_infer_model_type_unsupported():
 
 
 def test_get_model_standard():
-    model = ModelFactory.get_model('resnet18', num_classes=10)
+    model = ModelFactory.create_model('resnet18', num_classes=10)
     assert model is not None
 
 
 def test_get_model_custom():
-    model = ModelFactory.get_model('CustomMnistModel', num_classes=10)
+    model = ModelFactory.create_model('CustomMnistModel', num_classes=10)
     assert model is not None
 
 
 def test_get_model_unsupported():
     with pytest.raises(ValueError):
-        ModelFactory.get_model('unsupported_model', num_classes=10)
+        ModelFactory.create_model('unsupported_model', num_classes=10)
 
 
 def test_available_models():
@@ -85,49 +85,49 @@ def test_standard_model_weights():
 
 
 def test_standard_model_modify_model_resnet():
-    model = StandardModel(model_variant="resnet18",
+    model = StandardModel(model_name="resnet18",
                           num_classes=10, pretrained=False)
     assert model.model.conv1.in_channels == 3
     assert model.model.fc.out_features == 10
 
 
 def test_standard_model_modify_model_vgg16():
-    model = StandardModel(model_variant="vgg16",
+    model = StandardModel(model_name="vgg16",
                           num_classes=10, pretrained=False)
     assert model.model.features[0].in_channels == 3
     assert model.model.classifier[6].out_features == 10
 
 
 def test_standard_model_modify_model_pretrained():
-    model = StandardModel(model_variant="resnet18",
+    model = StandardModel(model_name="resnet18",
                           num_classes=10, pretrained=True)
     assert model.model.conv1.in_channels == 3
     assert model.model.fc.out_features == 10
 
 
 def test_standard_model_modify_model_pretrained_weights():
-    model = StandardModel(model_variant="resnet18", num_classes=10,
+    model = StandardModel(model_name="resnet18", num_classes=10,
                           pretrained=True, weights="IMAGENET1K_V1")
     assert model.model.conv1.in_channels == 3
     assert model.model.fc.out_features == 10
 
 
 def test_get_layer_names():
-    model = StandardModel(model_variant="resnet18", num_classes=10)
+    model = StandardModel(model_name="resnet18", num_classes=10)
     layer_names = model.get_layer_names()
     assert len(layer_names) > 0
 
 
-@pytest.mark.parametrize("model_variant", model_variants)
-def test_get_layer(model_variant):
-    model = StandardModel(model_variant=model_variant, num_classes=10)
+@pytest.mark.parametrize("model_name", model_variants)
+def test_get_layer(model_name):
+    model = StandardModel(model_name=model_name, num_classes=10)
     target_layer = model.get_layer_names()[0]
     layer = model.get_layer(target_layer)
     assert layer is not None
 
 
 def test_set_layer():
-    model = StandardModel(model_variant="resnet18", num_classes=10)
+    model = StandardModel(model_name="resnet18", num_classes=10)
     old_layer = model.get_layer("conv1")
     assert old_layer is not None
     assert old_layer.in_channels == 3

@@ -6,6 +6,18 @@ from advsecurenet.shared.types.dataset import DataType
 from typing import Optional
 
 
+class DatasetWrapper(TorchDataset):
+    def __init__(self, dataset, name):
+        self.dataset = dataset
+        self.name = name
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        return self.dataset[idx]
+
+
 class BaseDataset(TorchDataset, ABC):
     """
     A base class for PyTorch datasets.
@@ -22,7 +34,7 @@ class BaseDataset(TorchDataset, ABC):
     """
 
     def __init__(self):
-        self._dataset: TorchDataset = None
+        self._dataset: DatasetWrapper
         self.mean: List[float] = []
         self.std: List[float] = []
         self.input_size: Tuple[int, int] = ()
@@ -77,7 +89,7 @@ class BaseDataset(TorchDataset, ABC):
                      root: Optional[str] = None,
                      train: Optional[bool] = True,
                      download: Optional[bool] = True,
-                     **kwargs) -> TorchDataset[any]:
+                     **kwargs) -> DatasetWrapper:
         """
         Loads the dataset.
 

@@ -21,8 +21,12 @@ from advsecurenet.utils.ddp_trainer import DDPTrainer
 
 def prepare_model(config_data, num_classes, device):
     """Loads the model and sets its weights."""
-    model = ModelFactory.get_model(
-        config_data['model_name'], num_classes=num_classes)
+    model = ModelFactory.create_model(
+        config_data['model_name'],
+        num_classes=num_classes,
+        pretrained=config_data['pretrained'],
+        weights=config_data['pretrained_weights'],  # TODO: Better name this
+    )
 
     # set weights path to weights directory if not specified
     if not config_data['model_weights']:
@@ -31,7 +35,15 @@ def prepare_model(config_data, num_classes, device):
         file_name = f"{config_data['model_name']}_{config_data['trained_on']}_weights.pth"
         config_data['model_weights'] = os.path.join(folder_path, file_name)
 
-    return load_model(model, config_data['model_weights'], device=device)
+    # If we are using a pretrained model, we don't need to load weights
+    if model and config_data['pretrained']:
+        return model
+
+    return load_model(
+        model,
+        config_data['model_weights'],
+        device=device,
+    )
 
 
 def cli_train(config_data: TrainingCliConfigType):
@@ -55,16 +67,16 @@ def cli_train(config_data: TrainingCliConfigType):
 
         dataset_type = DatasetType(dataset_name)
 
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         train_data = dataset_obj.load_dataset(train=True)
         test_data = dataset_obj.load_dataset(train=False)
 
-        train_data_loader = DataLoaderFactory.get_dataloader(
+        train_data_loader = DataLoaderFactory.create_dataloader(
             train_data, batch_size=config_data.batch_size, shuffle=True)
-        test_data_loader = DataLoaderFactory.get_dataloader(
+        test_data_loader = DataLoaderFactory.create_dataloader(
             test_data, batch_size=config_data.batch_size, shuffle=False)
 
-        model = ModelFactory.get_model(
+        model = ModelFactory.create_model(
             config_data.model_name, num_classes=dataset_obj.num_classes)
         model.train()
 
@@ -133,13 +145,13 @@ def cli_test(config_data: TestConfig):
 
         dataset_type = DatasetType(dataset_name)
 
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         test_data = dataset_obj.load_dataset(train=False)
 
-        test_data_loader = DataLoaderFactory.get_dataloader(
+        test_data_loader = DataLoaderFactory.create_dataloader(
             test_data, batch_size=config_data['batch_size'], shuffle=False)
 
-        model = ModelFactory.get_model(
+        model = ModelFactory.create_model(
             config_data['model_name'], num_classes=dataset_obj.num_classes)
 
         model = load_model(model, config_data['model_weights'], device=device)

@@ -5,10 +5,11 @@ from tqdm import tqdm
 from advsecurenet.attacks.lots import LOTS
 from advsecurenet.dataloader.data_loader_factory import DataLoaderFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
+from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 from advsecurenet.shared.types.configs import attack_configs
 from cli.utils.config import build_config
 
-from cli.utils.data import get_custom_data, load_and_prepare_data, generate_random_target_images
+from cli.utils.data import get_custom_data, load_and_prepare_data
 from cli.utils.model import prepare_model
 
 
@@ -16,22 +17,25 @@ class CLILOTSAttack:
     def __init__(self, config_data):
         self.config_data = config_data
         self._validate_config()
+        self.adversarial_target_generator = AdversarialTargetGenerator()
 
     def execute_attack(self):
         print("Generating adversarial samples using LOTS attack...")
-        data, num_classes, device = load_and_prepare_data(self.config_data)
-        labels = data.tensors[1]
+        dataset, num_classes, device = load_and_prepare_data(self.config_data)
+        images = dataset.tensors[0]
+        labels = dataset.tensors[1]
 
-        # Generate dataset
-        dataset_obj = DatasetFactory.load_dataset(
-            self.config_data['dataset_type'])
-        train_data = dataset_obj.load_dataset(train=True)
-        test_data = dataset_obj.load_dataset(train=False)
-        all_data = train_data + test_data
+        # # Generate dataset
+        # dataset_obj = DatasetFactory.create_dataset(
+        #     self.config_data['dataset_type'])
+
+        # train_data = dataset_obj.load_dataset(train=True)
+        # test_data = dataset_obj.load_dataset(train=False)
+        # all_data = train_data + test_data
 
         # Generate target images
         target_images, target_labels = self._generate_target_images(
-            data=all_data,
+            data=images,
             labels=labels
         )
 
@@ -42,7 +46,7 @@ class CLILOTSAttack:
         model = prepare_model(self.config_data, num_classes, device)
         attack = LOTS(attack_config)
 
-        return self._perform_attack(attack, model, data, device, target_images, target_labels)
+        return self._perform_attack(attack, model, dataset, device, target_images, target_labels)
 
     def _validate_config(self):
         if not self.config_data['deep_feature_layer']:
@@ -58,8 +62,14 @@ class CLILOTSAttack:
                 return get_custom_data(self.config_data['target_images_dir'])
             except Exception as e:
                 raise ValueError(f"Error loading target images! Details: {e}")
+
         elif self.config_data['auto_generate_target_images']:
-            return generate_random_target_images(data, labels, self.config_data['maximum_generation_attempts'])
+            paired = self.adversarial_target_generator.generate_target_images(
+                zip(data, labels))
+
+            original_images, original_labels, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
+                paired, data, "cuda:2")
+            return target_images, target_labels
         raise ValueError("Target image generation configuration not provided!")
 
     def _adjust_mode(self):
@@ -67,7 +77,7 @@ class CLILOTSAttack:
         self.config_data["mode"] = attack_configs.LotsAttackMode[mode_string.upper()]
 
     def _perform_attack(self, attack, model, data, device, target_images, target_labels):
-        data_loader = DataLoaderFactory.get_dataloader(
+        data_loader = DataLoaderFactory.create_dataloader(
             data, batch_size=self.config_data['batch_size'], shuffle=False)
 
         adversarial_images, successful_attacks, total_samples = [], 0, 0

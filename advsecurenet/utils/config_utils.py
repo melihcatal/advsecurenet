@@ -207,14 +207,12 @@ def get_default_config_yml(config_name: str, config_subdir: str = None):
     file_paths = []
     start_dir = config_path if config_subdir is None else os.path.join(
         config_path, config_subdir)
-
     for dirpath, _, files in os.walk(start_dir):
         file_paths.extend([os.path.join(dirpath, f)
-                           for f in files if f.endswith(config_name)])
+                           for f in files if f == config_name])
 
     if not file_paths:
         raise FileNotFoundError(f"Config file {config_name} not found!")
-
     return file_paths[0]
 
 

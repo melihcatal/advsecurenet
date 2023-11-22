@@ -8,6 +8,7 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.defenses import AdversarialTraining
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
+from advsecurenet.shared.types.configs.attack_configs.fgsm_attack_config import FgsmAttackConfig
 
 
 class DummyModel(BaseModel):
@@ -97,7 +98,7 @@ def test_train_dataloader_is_not_dataloader(setup):
     config = AdversarialTrainingConfig(
         model=DummyModel(),
         models=[DummyModel()],
-        attacks=[DummyAttack()],
+        attacks=[DummyAttack(FgsmAttackConfig())],
         train_loader="NotADataLoader",
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
@@ -111,7 +112,7 @@ def test_adversarial_training_runs_successfully(setup):
     config = AdversarialTrainingConfig(
         model=DummyModel(),
         models=[DummyModel()],
-        attacks=[DummyAttack()],
+        attacks=[DummyAttack(FgsmAttackConfig())],
         train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=setup['criterion']
@@ -125,7 +126,7 @@ def test_adversarial_training_runs_successfully_with_bce_loss(setup):
     config = AdversarialTrainingConfig(
         model=DummyModel(),
         models=[DummyModel()],
-        attacks=[DummyAttack()],
+        attacks=[DummyAttack(FgsmAttackConfig())],
         train_loader=setup['data_loader'],
         optimizer=setup['optimizer'],
         criterion=BCEWithLogitsLoss()

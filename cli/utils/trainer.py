@@ -94,7 +94,7 @@ class CLITrainer:
         """
 
         dataset_type = DatasetType(dataset_name)
-        dataset_obj = DatasetFactory.load_dataset(dataset_type)
+        dataset_obj = DatasetFactory.create_dataset(dataset_type)
         train_data = dataset_obj.load_dataset(
             train=True, root=self.config_data.train_dataset_path)
         test_data = dataset_obj.load_dataset(
@@ -105,7 +105,7 @@ class CLITrainer:
         """
         Initialize the dataloader for single process training.
         """
-        train_data_loader = DataLoaderFactory.get_dataloader(
+        train_data_loader = DataLoaderFactory.create_dataloader(
             train_data,
             batch_size=self.config_data.batch_size,
             shuffle=self.config_data.shuffle_train,
@@ -113,7 +113,7 @@ class CLITrainer:
             drop_last=self.config_data.drop_last_train,
             pin_memory=self.config_data.pin_memory)
 
-        test_data_loader = DataLoaderFactory.get_dataloader(
+        test_data_loader = DataLoaderFactory.create_dataloader(
             test_data,
             batch_size=self.config_data.batch_size,
             shuffle=self.config_data.shuffle_test,
@@ -124,7 +124,7 @@ class CLITrainer:
         return train_data_loader, test_data_loader
 
     def _initialize_model(self) -> BaseModel:
-        return ModelFactory.get_model(self.config_data.model_name, num_classes=self.config_data.num_classes)
+        return ModelFactory.create_model(self.config_data.model_name, num_classes=self.config_data.num_classes)
 
     def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader, dataset_obj: BaseDataset) -> TrainConfig:
         """
@@ -176,7 +176,7 @@ class CLITrainer:
         """
 
         # Need to override the train loader for
-        train_data_loader = DataLoaderFactory.get_dataloader(
+        train_data_loader = DataLoaderFactory.create_dataloader(
             train_data, batch_size=self.config_data.batch_size,
             shuffle=self.config_data.shuffle_train,
             pin_memory=self.config_data.pin_memory,

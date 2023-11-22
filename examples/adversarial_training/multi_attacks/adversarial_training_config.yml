@@ -7,6 +7,8 @@ models:
 attacks: # List of attacks used for generating adversarial examples.
   - fgsm: # Name of the attack.
       config: ./at_fgsm_attack_config.yml # Path to the attack configuration file.
+  - pgd:
+      config: ./at_pgd_attack_config.yml
 
 # --- Dataset Configurations ---
 dataset_type: cifar10 # The dataset on which the model will be trained.
