@@ -1,0 +1,5 @@
+# Description: Configuration file for the PGD attack to be used in adversarial training.
+
+epsilon: 0.3 # The epsilon value to be used for the PGD attack. The higher the value, the more the perturbation
+alpha: 0.008 # The alpha value to be used for the PGD attack. The higher the value, the more the perturbation
+num_iter: 40 # The number of iterations to be used for the PGD attack. The higher the value, the more the perturbation

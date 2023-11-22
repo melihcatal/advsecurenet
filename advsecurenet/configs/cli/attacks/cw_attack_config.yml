@@ -2,7 +2,9 @@
 
 # Model Configuration
 model_name: CustomMnistModel # Name of the model to be attacked
-trained_on: mnist # Dataset on which the model was trained
+trained_on: mnist # Dataset on which the model was trained.
+pretrained: False # Whether the model is pretrained. Defaults to False. This is only applicable if the model is a torchvision model
+pretrained_weights: null # Weights for the pretrained models. If null uses the default weights. This is only applicable if the model is a torchvision model
 model_weights: null # Path to model weights. If null, uses weights/{model_name}_{trained_on}_weights.pth. You can leave it empty if you have downloaded the weights to the default path
 device: CPU # Device for executing attacks. Options: [CPU, CUDA, MPS]
 
