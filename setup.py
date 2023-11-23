@@ -19,7 +19,8 @@ setup(
         "PyYAML",
         "opencv-python",
         "ruamel.yaml",
-        "matplotlib"
+        "matplotlib",
+        "scikit-image"
     ],
     entry_points={
         'console_scripts': [
