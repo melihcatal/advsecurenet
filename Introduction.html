@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AdvSecureNet &mdash; advsecurenet  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -47,9 +49,10 @@
 <li><a class="reference internal" href="#usage">Usage</a><ul>
 <li><a class="reference internal" href="#command-line-tool">Command Line Tool</a></li>
 <li><a class="reference internal" href="#python-package">Python Package</a></li>
-<li><a class="reference internal" href="#further-examples">Further Examples</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
 </ul>
 </div>
         </div>
@@ -88,19 +91,36 @@
 </section>
 <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
-<p>TODO: Add usage instructions</p>
+<p>The library can be used as a command line tool or as an importable Python package.</p>
 <section id="command-line-tool">
 <h2>Command Line Tool<a class="headerlink" href="#command-line-tool" title="Link to this heading"></a></h2>
-<p>TODO: Add command line tool usage instructions</p>
+<p><cite>advsecurenet</cite> command can be used to interact with the library. You can use <cite>advsecurenet –help</cite> to see the available commands and options. Available commands are:</p>
+<ul class="simple">
+<li><p><cite>attack</cite> Command to execute attacks.</p></li>
+<li><p><cite>config-default</cite> Generate a default configuration file based on the name…</p></li>
+<li><p><cite>configs</cite> Return the list of available configuration files.</p></li>
+<li><p><cite>defense</cite> Command to execute defenses.</p></li>
+<li><p><cite>model-layers</cite> Command to list the layers of a model.</p></li>
+<li><p><cite>models</cite> Command to list available models.</p></li>
+<li><p><cite>test</cite> Command to evaluate a model.</p></li>
+<li><p><cite>train</cite> Command to train a model.</p></li>
+<li><p><cite>weights</cite> Command to model weights.</p></li>
+</ul>
+<p>You can use <cite>advsecurenet &lt;command&gt; –help</cite> to see the available options for a command. For example, you can use <cite>advsecurenet attack –help</cite> to see the available options for the <cite>attack</cite> command. The CLI supports both config yml files and arguments.</p>
 </section>
 <section id="python-package">
 <h2>Python Package<a class="headerlink" href="#python-package" title="Link to this heading"></a></h2>
-<p>TODO: Add python package usage instructions</p>
+<p>You can import the library as a Python package. You can use the <cite>advsecurenet</cite> module to access the library. You can find the available modules and classes in this documentation.</p>
 </section>
-<section id="further-examples">
-<h2>Further Examples<a class="headerlink" href="#further-examples" title="Link to this heading"></a></h2>
-<p>TODO: Add further examples</p>
 </section>
+<section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
+<p>You can find various examples in the examples directory. The examples show different use cases of the library and how to use the library as a Python package/CLI tool.</p>
+</section>
+<section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h1>
+<p>The high-level architecture of the library is shown in the figure below.</p>
+<a class="reference internal image-reference" href="https://drive.switch.ch/index.php/s/7dkGCqtlf4uWoai/download"><img alt="advsecurenet" class="align-center" src="https://drive.switch.ch/index.php/s/7dkGCqtlf4uWoai/download" style="width: 400px;" /></a>
 </section>
 
 
