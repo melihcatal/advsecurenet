@@ -1,11 +1,14 @@
-import torch
-from tqdm.auto import trange
 from typing import Optional, Tuple, Union, cast
-from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.colors import red, yellow, reset
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+
+import torch
 from torchvision.models.feature_extraction import create_feature_extractor
-from advsecurenet.shared.types.configs.attack_configs import LotsAttackConfig, LotsAttackMode
+from tqdm.auto import trange
+
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.colors import red, reset, yellow
+from advsecurenet.shared.types.configs.attack_configs import (LotsAttackConfig,
+                                                              LotsAttackMode)
 
 
 class LOTS(AdversarialAttack):
@@ -126,6 +129,9 @@ class LOTS(AdversarialAttack):
         # Make data a Parameter so it can be updated by optimizer
         data = torch.nn.Parameter(data)
 
+        successes = torch.zeros(
+            data.size(0), dtype=torch.bool, device=data.device)
+
         # Create an optimizer for the data
         optimizer = torch.optim.Adam([data], lr=self.learning_rate)
         for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=1, disable=not self.verbose):
@@ -140,16 +146,25 @@ class LOTS(AdversarialAttack):
                 pred_classes = self.device_manager.to_device(pred_classes)
                 target_classes = self.device_manager.to_device(target_classes)
                 success_indices = pred_classes == target_classes
+                # if self.epsilon is not None:
+                #     distances = torch.norm(features - target, dim=1)
+                #     success_distances = distances < self.epsilon
+                #     successes = (success_indices | success_distances).tolist()
+                #     # update t
+                # else:
+                #     successes = success_indices.tolist()
                 if self.epsilon is not None:
                     distances = torch.norm(features - target, dim=1)
                     success_distances = distances < self.epsilon
-                    successes = (success_indices | success_distances).tolist()
+                    successes |= (success_indices | success_distances)
                 else:
-                    successes = success_indices.tolist()
+                    successes |= success_indices
 
-                if any(successes):
+                # Early stopping if all samples are successful
+                if all(successes):
                     data = torch.clamp(data, 0, 1)
-                    return data.detach(), successes
+                    return data.detach(), successes.tolist()
+                    # return data.detach(), successes
 
             loss = torch.nn.functional.mse_loss(
                 features, target, reduction="sum")
@@ -160,7 +175,8 @@ class LOTS(AdversarialAttack):
             # Clipping data to ensure it remains in [0, 1]
             data.data.clamp_(0, 1)
 
-        return data.detach(), [False] * data.size(0)
+        return data.detach(), successes.tolist()
+        # return data.detach(), [False] * data.size(0)
 
     def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
         feature_extractor_model = create_feature_extractor(

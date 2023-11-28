@@ -1,9 +1,10 @@
-import yaml
-import re
-import pkg_resources
 import os
+import re
 from dataclasses import asdict
 from typing import Type, TypeVar
+
+import pkg_resources
+import yaml
 from ruamel.yaml import YAML
 
 T = TypeVar('T')

@@ -1,15 +1,16 @@
-import os
-import torch
 import random
-from typing import Union
-from torch import nn, optim
-from tqdm.auto import tqdm
+
+import torch
 from torch.utils.data import DataLoader
-from advsecurenet.models.base_model import BaseModel
+from tqdm.auto import tqdm
+
 from advsecurenet.attacks import AdversarialAttack
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
+from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
+    AdversarialTrainingConfig
+from advsecurenet.utils.adversarial_target_generator import \
+    AdversarialTargetGenerator
 from advsecurenet.utils.trainer import Trainer
-from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 
 
 class AdversarialTraining(Trainer):
@@ -70,28 +71,6 @@ class AdversarialTraining(Trainer):
         self.config.models = [model.to(self.device)
                               for model in self.config.models]
 
-    # Helper function to generate adversarial examples for the given batch
-
-    # def _generate_adversarial_batch(
-    #     self,
-    #     source,
-    #     targets,
-    #     batch_idx,
-    #     lots_source=None,
-    #     lots_targets=None
-    # ) -> tuple[torch.Tensor, torch.Tensor]:
-
-    #     source, targets = self._move_to_device(source, targets)
-    #     adv_source, adv_targets = [], []
-
-    #     for model, attack in zip(self.config.models, self.config.attacks):
-    #         model.to(self.device)
-    #         attack_result = self._perform_attack(
-    #             attack, model, source, targets, batch_idx, lots_source, lots_targets)
-    #         adv_source.append(attack_result)
-    #         adv_targets.append(targets)
-    #     return torch.cat(adv_source, dim=0), torch.cat(adv_targets, dim=0)
-
     def _generate_adversarial_batch(
         self,
         source,
@@ -117,6 +96,9 @@ class AdversarialTraining(Trainer):
         # Move the model to the device
         random_model.to(self.device)
 
+        # Set the model to eval mode
+        random_model.eval()
+
         # Perform the attack
         attack_result = self._perform_attack(
             random_attack, random_model, source, targets
@@ -134,10 +116,10 @@ class AdversarialTraining(Trainer):
         if attack.name == "LOTS":
             paired = self.adversarial_target_generator.generate_target_images(
                 zip(source, targets))
-            original_images, original_labels, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
+            original_images, _, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
                 paired, source)
             # Perform attack
-            adv_images, is_found = attack.attack(
+            adv_images, _ = attack.attack(
                 model=model,
                 data=original_images,
                 target=target_images,

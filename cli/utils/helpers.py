@@ -1,8 +1,9 @@
 """
 This helpers module contans more general helper functions that are not specific to a command type.
 """
-import torch
 import os
+
+import torch
 from torchvision.transforms import ToPILImage
 
 
@@ -57,11 +58,10 @@ def to_bchw_format(tensor):
     if len(tensor.shape) == 4 and (tensor.shape[1] == 3 or tensor.shape[1] == 1):
         return tensor
     # Check if the tensor is in BHWC format (either RGB or grayscale) and convert to BCHW
-    elif len(tensor.shape) == 4 and (tensor.shape[3] == 3 or tensor.shape[3] == 1):
+    if len(tensor.shape) == 4 and (tensor.shape[3] == 3 or tensor.shape[3] == 1):
         return tensor.permute(0, 3, 1, 2)
-    else:
-        raise ValueError(
-            "Tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images")
+    raise ValueError(
+        "Tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images")
 
 
 def get_device_from_cfg(config) -> torch.device:
@@ -85,7 +85,7 @@ def get_device_from_cfg(config) -> torch.device:
     # Try to create a torch.device with the obtained string
     try:
         device = torch.device(device_str)
-    except ValueError:
+    except Exception:
         device = torch.device("cpu")
 
     return device

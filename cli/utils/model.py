@@ -1,22 +1,18 @@
 import os
+
 import click
 import pkg_resources
-import torch
-from torch.utils.data.distributed import DistributedSampler
-from torch.utils.data import Dataset as TorchDataset
+
+from advsecurenet.dataloader import DataLoaderFactory
+from advsecurenet.datasets.dataset_factory import DatasetFactory
+from advsecurenet.models.model_factory import ModelFactory
+from advsecurenet.shared.types.configs import TestConfig, TrainConfig
+from advsecurenet.shared.types.dataset import DatasetType
+from advsecurenet.utils.model_utils import load_model, save_model
+from advsecurenet.utils.tester import Tester
+from advsecurenet.utils.trainer import Trainer
 from cli.types.training import TrainingCliConfigType
 from cli.utils.helpers import get_device_from_cfg
-from advsecurenet.shared.types.dataset import DatasetType
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.datasets.dataset_factory import DatasetFactory
-from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.shared.types.configs import TrainConfig
-from advsecurenet.shared.types.configs import TestConfig
-from advsecurenet.utils.model_utils import save_model, load_model
-from advsecurenet.utils.trainer import Trainer
-from advsecurenet.utils.tester import Tester
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.ddp_trainer import DDPTrainer
 
 
 def prepare_model(config_data, num_classes, device):
@@ -25,7 +21,7 @@ def prepare_model(config_data, num_classes, device):
         config_data['model_name'],
         num_classes=num_classes,
         pretrained=config_data['pretrained'],
-        weights=config_data['pretrained_weights'],  # TODO: Better name this
+        weights=config_data['pretrained_weights'],
     )
 
     # set weights path to weights directory if not specified

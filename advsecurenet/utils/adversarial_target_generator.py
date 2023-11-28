@@ -1,21 +1,16 @@
-import os
 import pickle
-import torch
 import random
-import numpy as np
-import json
-import requests
-import pkg_resources
-import matplotlib.pyplot as plt
-import torchvision.transforms as transforms
-from typing import Optional, Union
-from PIL import Image
 from collections import defaultdict
-from torchvision import datasets as TorchDatasets
+from typing import Optional, Union
+
+import matplotlib.pyplot as plt
+import pkg_resources
+import requests
+import torch
+import torchvision.transforms as transforms
+from PIL import Image
 from torchvision.datasets import VisionDataset as TorchDataset
-from advsecurenet.datasets.dataset_factory import DatasetFactory
-from advsecurenet.shared.types.dataset import DatasetType
-from advsecurenet.dataloader import DataLoaderFactory
+
 from advsecurenet.datasets.base_dataset import DatasetWrapper
 
 

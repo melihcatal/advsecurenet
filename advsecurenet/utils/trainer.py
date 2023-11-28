@@ -1,18 +1,15 @@
 
+import os
+from typing import Union, cast
+
 import torch
 import torch.optim as optim
-import os
-import pkg_resources
-import requests
-from typing import Optional, cast, Any, Union, cast
 from torch import nn
 from tqdm import tqdm
-import torch.multiprocessing as mp
-from torch.nn.parallel import DistributedDataParallel as DDP
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.shared.types.configs.train_config import TrainConfig
+
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
+from advsecurenet.shared.types.configs.train_config import TrainConfig
 
 
 class Trainer:
@@ -253,6 +250,8 @@ class Trainer:
         Returns:
             float: The loss.
         """
+        # Set the model to train mode
+        self.model.train()
         self.optimizer.zero_grad()
         output = self.model(source)
         loss = self.loss_fn(output, targets)
