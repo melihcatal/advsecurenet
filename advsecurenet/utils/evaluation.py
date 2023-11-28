@@ -1,7 +1,9 @@
 import os
 import csv
 import torch
+import copy
 import numpy as np
+from torch.utils.data import DataLoader
 from typing import Optional
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
@@ -17,16 +19,13 @@ class AdversarialAttackEvaluator:
         model (BaseModel): The model to evaluate the attacks on.
     """
 
-    def __init__(self, model: BaseModel) -> None:
-        self.model = model
-
     def full_evaluation(self,
+                        model: BaseModel,
                         original_images: torch.Tensor,
                         true_labels: torch.Tensor,
                         adversarial_images: torch.Tensor,
                         is_targeted: bool = False,
                         target_labels: Optional[torch.Tensor] = None,
-                        source_model: Optional[BaseModel] = None,
                         target_model: Optional[BaseModel] = None,
                         experiment_info: Optional[dict] = None,
                         csv_path: Optional[str] = None,
@@ -57,18 +56,16 @@ class AdversarialAttackEvaluator:
         if is_targeted and target_labels is None:
             raise ValueError(
                 "Target labels must be provided for targeted attacks.")
-        if source_model is None:
-            source_model = self.model
         if target_model is None:
-            target_model = self.model
+            target_model = copy.deepcopy(model)
         if experiment_info is None:
             experiment_info = {}
         if file_name is None:
             file_name = "evaluation_results.csv"
 
         # Calculate the attack success rate
-        attack_success_rate = self.evaluate_attack(
-            original_images, true_labels, adversarial_images, is_targeted, target_labels, source_model)
+        attack_success_rate = self.evaluate_attack(model,
+                                                   original_images, true_labels, adversarial_images, is_targeted, target_labels)
 
         # Calculate the L0, L2, and L∞ distances
         l0_distance, l2_distance, l_inf_distance = self.calculate_perturbation_distances(
@@ -83,8 +80,8 @@ class AdversarialAttackEvaluator:
             attack_success_rate, l_inf_distance)
 
         # Calculate the robustness gap
-        robustness_gap = self.calculate_robustness_gap(
-            original_images, true_labels, adversarial_images)
+        robustness_gap = self.calculate_robustness_gap(model,
+                                                       original_images, true_labels, adversarial_images)
 
         # Calculate the SSIM and PSNR
         ssim_score, psnr_score = self.calculate_similarity_scores(
@@ -92,7 +89,7 @@ class AdversarialAttackEvaluator:
 
         # Calculate the transferability rate
         transferability_rate = self.calculate_transferability_rate(
-            source_model, target_model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
+            model, target_model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
 
         # Create a dictionary of the results
         evaluation_results = {
@@ -117,12 +114,13 @@ class AdversarialAttackEvaluator:
         return evaluation_results
 
     def evaluate_attack(self,
+                        model: BaseModel,
                         original_images: torch.Tensor,
                         true_labels: torch.Tensor,
                         adversarial_images: torch.Tensor,
                         is_targeted: bool = False,
                         target_labels: Optional[torch.Tensor] = None,
-                        model: Optional[BaseModel] = None) -> float:
+                        ) -> float:
         """
         Evaluates the attack success rate of the adversarial examples. The attack success rate is the percentage of adversarial examples that are misclassified by the model. 
         If the attack is targeted, the attack success rate is the percentage of adversarial examples that are classified as the target class.
@@ -140,8 +138,6 @@ class AdversarialAttackEvaluator:
         if is_targeted and target_labels is None:
             raise ValueError(
                 "Target labels must be provided for targeted attacks.")
-        if model is None:
-            model = self.model
         model.eval()  # Set the model to evaluation mode
         adv_predictions = model(adversarial_images)
         adv_labels = torch.argmax(adv_predictions, dim=1)
@@ -149,7 +145,8 @@ class AdversarialAttackEvaluator:
             successful_attacks = torch.sum(adv_labels == target_labels)
         else:
             successful_attacks = torch.sum(adv_labels != true_labels)
-        attack_success_rate = successful_attacks.item() / len(true_labels) * 100
+
+        attack_success_rate = successful_attacks.item() / len(true_labels)
 
         return attack_success_rate
 
@@ -238,7 +235,7 @@ class AdversarialAttackEvaluator:
 
         return attack_success_rate / perturbation_distance
 
-    def calculate_robustness_gap(self, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor) -> float:
+    def calculate_robustness_gap(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor) -> float:
         """
         Calculates the robustness gap for the adversarial examples. The robustness gap is the difference between the accuracy of the model on the original images and the accuracy of the model on the adversarial images.
         The larger the robustness gap, the more effective the attack.
@@ -251,9 +248,11 @@ class AdversarialAttackEvaluator:
         Returns:
             float: The mean robustness gap for the adversarial examples.
         """
-        clean_accuracy = self._calculate_accuracy(original_images, true_labels)
+        clean_accuracy = self._calculate_accuracy(
+            model, original_images, true_labels)
+        # TODO: Better naming here
         adversarial_accuracy = self._calculate_accuracy(
-            adversarial_images, true_labels)
+            model, adversarial_images, true_labels)
         return clean_accuracy - adversarial_accuracy
 
     def calculate_ssim(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> float:
@@ -271,7 +270,6 @@ class AdversarialAttackEvaluator:
         # Convert tensors to numpy arrays and ensure they are float32
         original_images_np = original_images.cpu().detach().numpy().astype(np.float32)
         adversarial_images_np = adversarial_images.cpu().detach().numpy().astype(np.float32)
-        print(original_images_np.shape)
         data_range = original_images_np.max() - original_images_np.min()
         ssim_score = ssim(original_images_np,
                           adversarial_images_np,
@@ -426,12 +424,12 @@ class AdversarialAttackEvaluator:
                       for value in evaluation_results.values()]
             writer.writerow(values)
 
-    def _calculate_accuracy(self, images: torch.Tensor, labels: torch.Tensor) -> float:
+    def _calculate_accuracy(self, model: BaseModel, images: torch.Tensor, labels: torch.Tensor) -> float:
         """
         Calculates the accuracy of the model on the given images.
         """
-        self.model.eval()
-        predictions = self.model(images)
+        model.eval()
+        predictions = model(images)
         predicted_labels = torch.argmax(predictions, dim=1)
         correct_predictions = torch.sum(predicted_labels == labels)
         accuracy = correct_predictions.item() / len(labels)

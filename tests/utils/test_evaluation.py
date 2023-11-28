@@ -16,15 +16,10 @@ def dummy_model():
 
 @pytest.fixture
 def evaluator(dummy_model):
-    return AdversarialAttackEvaluator(dummy_model)
+    return AdversarialAttackEvaluator()
 
 
-def test_initialization(dummy_model):
-    evaluator = AdversarialAttackEvaluator(dummy_model)
-    assert evaluator.model == dummy_model
-
-
-def test_full_evaluation(evaluator):
+def test_full_evaluation(dummy_model, evaluator):
     # Set up dummy data
     original_images = torch.rand((10, 1, 28, 28))
     true_labels = torch.randint(0, 10, (10,))
@@ -33,12 +28,12 @@ def test_full_evaluation(evaluator):
 
     # Test non-targeted attack
     results = evaluator.full_evaluation(
-        original_images, true_labels, adversarial_images)
+        dummy_model, original_images, true_labels, adversarial_images)
     assert isinstance(results, dict)
 
     # Test targeted attack
-    results = evaluator.full_evaluation(
-        original_images, true_labels, adversarial_images, is_targeted=True, target_labels=target_labels)
+    results = evaluator.full_evaluation(dummy_model,
+                                        original_images, true_labels, adversarial_images, is_targeted=True, target_labels=target_labels)
     assert isinstance(results, dict)
 
 

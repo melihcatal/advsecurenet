@@ -253,6 +253,8 @@ class Trainer:
         Returns:
             float: The loss.
         """
+        # Set the model to train mode
+        self.model.train()
         self.optimizer.zero_grad()
         output = self.model(source)
         loss = self.loss_fn(output, targets)

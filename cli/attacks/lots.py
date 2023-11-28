@@ -25,14 +25,6 @@ class CLILOTSAttack:
         images = dataset.tensors[0]
         labels = dataset.tensors[1]
 
-        # # Generate dataset
-        # dataset_obj = DatasetFactory.create_dataset(
-        #     self.config_data['dataset_type'])
-
-        # train_data = dataset_obj.load_dataset(train=True)
-        # test_data = dataset_obj.load_dataset(train=False)
-        # all_data = train_data + test_data
-
         # Generate target images
         target_images, target_labels = self._generate_target_images(
             data=images,

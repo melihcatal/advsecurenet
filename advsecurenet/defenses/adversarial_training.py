@@ -70,28 +70,6 @@ class AdversarialTraining(Trainer):
         self.config.models = [model.to(self.device)
                               for model in self.config.models]
 
-    # Helper function to generate adversarial examples for the given batch
-
-    # def _generate_adversarial_batch(
-    #     self,
-    #     source,
-    #     targets,
-    #     batch_idx,
-    #     lots_source=None,
-    #     lots_targets=None
-    # ) -> tuple[torch.Tensor, torch.Tensor]:
-
-    #     source, targets = self._move_to_device(source, targets)
-    #     adv_source, adv_targets = [], []
-
-    #     for model, attack in zip(self.config.models, self.config.attacks):
-    #         model.to(self.device)
-    #         attack_result = self._perform_attack(
-    #             attack, model, source, targets, batch_idx, lots_source, lots_targets)
-    #         adv_source.append(attack_result)
-    #         adv_targets.append(targets)
-    #     return torch.cat(adv_source, dim=0), torch.cat(adv_targets, dim=0)
-
     def _generate_adversarial_batch(
         self,
         source,
@@ -116,6 +94,9 @@ class AdversarialTraining(Trainer):
 
         # Move the model to the device
         random_model.to(self.device)
+
+        # Set the model to eval mode
+        random_model.eval()
 
         # Perform the attack
         attack_result = self._perform_attack(

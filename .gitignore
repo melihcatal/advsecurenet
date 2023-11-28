@@ -39,3 +39,6 @@ examples/*/**_config.yml
 
 # model weights
 *.pth
+
+# results
+examples/*/**.csv
