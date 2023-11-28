@@ -1,11 +1,14 @@
-import torch
-from tqdm.auto import trange
 from typing import Optional, Tuple, Union, cast
-from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.colors import red, yellow, reset
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+
+import torch
 from torchvision.models.feature_extraction import create_feature_extractor
-from advsecurenet.shared.types.configs.attack_configs import LotsAttackConfig, LotsAttackMode
+from tqdm.auto import trange
+
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.colors import red, reset, yellow
+from advsecurenet.shared.types.configs.attack_configs import (LotsAttackConfig,
+                                                              LotsAttackMode)
 
 
 class LOTS(AdversarialAttack):

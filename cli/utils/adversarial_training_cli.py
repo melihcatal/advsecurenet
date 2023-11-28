@@ -1,18 +1,12 @@
 
 import os
+import random
 import click
 import torch
-import pkg_resources
-import random
-import pickle
-from tqdm import tqdm
-from collections import defaultdict
-from torchvision.datasets import ImageFolder
-from typing import Optional
+from typing import cast, Type, Optional
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import Dataset as TorchDataset, DataLoader as TorchDataLoader
-from typing import Dict, cast, Any, Type
-from dataclasses import dataclass
+from torch.utils.data import Subset
 from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
@@ -23,18 +17,14 @@ from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.shared.types.configs import TestConfig
-from advsecurenet.utils.model_utils import save_model, load_model
+from advsecurenet.utils.model_utils import load_model
 from advsecurenet.shared.types.attacks import AttackType as AdversarialAttackType
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
-from cli.utils.config import build_config, load_configuration
-from cli.types.adversarial_training import ATCliConfigType, AttackConfigDict, AttackWithConfigDict, ModelWithConfigDict
 from advsecurenet.shared.types.configs import attack_configs
 from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
 from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from torch.utils.data import DataLoader, Subset
-from cli.types.attacks.lots import LOTSCliConfigType, ATLOTSCliConfigType
-from torch.utils.data import TensorDataset
+from cli.utils.config import build_config, load_configuration
+from cli.types.adversarial_training import ATCliConfigType, AttackConfigDict, AttackWithConfigDict, ModelWithConfigDict
 
 
 class AdversarialTrainingCLI:

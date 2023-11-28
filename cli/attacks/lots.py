@@ -1,19 +1,25 @@
-import random
 import click
 import torch
 from tqdm import tqdm
+
 from advsecurenet.attacks.lots import LOTS
 from advsecurenet.dataloader.data_loader_factory import DataLoaderFactory
-from advsecurenet.datasets.dataset_factory import DatasetFactory
-from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 from advsecurenet.shared.types.configs import attack_configs
+from advsecurenet.utils.adversarial_target_generator import \
+    AdversarialTargetGenerator
 from cli.utils.config import build_config
-
 from cli.utils.data import get_custom_data, load_and_prepare_data
 from cli.utils.model import prepare_model
 
 
 class CLILOTSAttack:
+    """CLI wrapper for LOTS attack.
+
+    Args:
+        config_data (dict): The configuration data.
+
+    """
+
     def __init__(self, config_data):
         self.config_data = config_data
         self._validate_config()

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import pytest
+from yaml.scanner import ScannerError
 from cli.utils.config import build_config, read_config_file, load_configuration, attack_config_check
 from advsecurenet.shared.types.configs.configs import ConfigType
 
@@ -40,7 +41,7 @@ def test_read_config_file(tmp_path):
 
     bad_yaml = d / "bad_config.yml"
     bad_yaml.write_text("field1: test\nfield2=4\n")
-    with pytest.raises(ValueError):
+    with pytest.raises(ScannerError):
         read_config_file(bad_yaml)
 
 
@@ -63,9 +64,9 @@ def test_attack_config_check():
         'custom_data_dir': None
     }
     with pytest.raises(ValueError, match="Please provide a valid path for custom-data-dir when using the custom dataset."):
-        attack_config_check(config_data, overrides)
+        attack_config_check(overrides)
 
     overrides['dataset_name'] = 'not_custom'
     overrides['custom_data_dir'] = 'test'
     with pytest.raises(ValueError, match="Please set dataset-name to 'custom' when specifying custom-data-dir."):
-        attack_config_check(config_data, overrides)
+        attack_config_check(overrides)

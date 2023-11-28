@@ -1,7 +1,6 @@
 import torch
-from typing import Union, Optional
 from torch import optim
-from tqdm.auto import trange
+
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig

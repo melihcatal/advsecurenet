@@ -1,15 +1,16 @@
-import os
-import torch
 import random
-from typing import Union
-from torch import nn, optim
-from tqdm.auto import tqdm
+
+import torch
 from torch.utils.data import DataLoader
-from advsecurenet.models.base_model import BaseModel
+from tqdm.auto import tqdm
+
 from advsecurenet.attacks import AdversarialAttack
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
+from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
+    AdversarialTrainingConfig
+from advsecurenet.utils.adversarial_target_generator import \
+    AdversarialTargetGenerator
 from advsecurenet.utils.trainer import Trainer
-from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 
 
 class AdversarialTraining(Trainer):
@@ -115,10 +116,10 @@ class AdversarialTraining(Trainer):
         if attack.name == "LOTS":
             paired = self.adversarial_target_generator.generate_target_images(
                 zip(source, targets))
-            original_images, original_labels, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
+            original_images, _, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
                 paired, source)
             # Perform attack
-            adv_images, is_found = attack.attack(
+            adv_images, _ = attack.attack(
                 model=model,
                 data=original_images,
                 target=target_images,

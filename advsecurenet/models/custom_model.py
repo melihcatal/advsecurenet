@@ -1,7 +1,7 @@
-from advsecurenet.models.base_model import BaseModel
 import importlib
 import os
-import torch.nn as nn
+
+from advsecurenet.models.base_model import BaseModel
 
 
 class CustomModel(BaseModel):

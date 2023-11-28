@@ -1,28 +1,34 @@
 import os
 import warnings
+
 import click
 import pkg_resources
 from requests.exceptions import HTTPError
-from advsecurenet.models.standard_model import StandardModel
+
 from advsecurenet.models.model_factory import ModelFactory
+from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
-from advsecurenet.shared.types.configs import attack_configs
-from advsecurenet.shared.types.configs import TrainConfig, TestConfig, ConfigType
-from advsecurenet.shared.types.model import ModelType
 from advsecurenet.shared.types.attacks import AttackType
-from advsecurenet.utils.model_utils import download_weights as util_download_weights
-from advsecurenet.utils.config_utils import get_available_configs, generate_default_config_yaml, get_default_config_yml
+from advsecurenet.shared.types.configs import (ConfigType, TestConfig,
+                                               attack_configs)
+from advsecurenet.shared.types.model import ModelType
+from advsecurenet.utils.config_utils import (generate_default_config_yaml,
+                                             get_available_configs,
+                                             get_default_config_yml)
+from advsecurenet.utils.model_utils import \
+    download_weights as util_download_weights
+from cli.attacks.lots import CLILOTSAttack
+from cli.types.adversarial_training import ATCliConfigType
+from cli.types.training import TrainingCliConfigType
+from cli.utils.adversarial_training_cli import AdversarialTrainingCLI
 from cli.utils.attack import execute_attack
 from cli.utils.config import build_config, load_configuration
 from cli.utils.data import load_and_prepare_data
-from cli.utils.model import get_models as _get_models, prepare_model, cli_train, cli_test
-from cli.attacks.lots import CLILOTSAttack
-from cli.utils.adversarial_training_cli import AdversarialTrainingCLI
-from cli.types.adversarial_training import ATCliConfigType
-from cli.types.training import TrainingCliConfigType
+from cli.utils.model import cli_test
+from cli.utils.model import get_models as _get_models
+from cli.utils.model import prepare_model
 from cli.utils.trainer import CLITrainer
-
 
 warnings.simplefilter(action='ignore', category=UserWarning)
 

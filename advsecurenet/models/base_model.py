@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, List, Optional
-import torch.nn as nn
+from typing import List, Optional, Tuple
+
 import torch
+import torch.nn as nn
 
 
 class BaseModel(ABC, nn.Module):

@@ -1,19 +1,10 @@
-import torch
-import torch.optim as optim
 import os
+import torch
 import pkg_resources
 import requests
-from typing import Optional, cast, Any, Union, cast
 from torch import nn
 from tqdm import tqdm
-import torch.multiprocessing as mp
-from torch.utils.data.distributed import DistributedSampler
-from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.distributed import init_process_group, destroy_process_group
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.shared.types.configs.train_config import TrainConfig
-from advsecurenet.shared.loss import Loss
-from advsecurenet.shared.optimizer import Optimizer
+from typing import Optional
 
 
 def save_model(model: nn.Module,

@@ -1,6 +1,8 @@
-import torch
-from typing import Union, Optional
 from abc import ABC, abstractmethod
+from typing import Optional
+
+import torch
+
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 from advsecurenet.utils.device_manager import DeviceManager
