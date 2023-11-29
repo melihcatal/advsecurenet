@@ -1,10 +1,18 @@
 from enum import EnumMeta
+from typing import Optional
+
+import torch
+
 from advsecurenet.models import *
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.model import ModelType
+from advsecurenet.utils.reproducibility_utils import set_seed
 
 
 class ModelFactory:
+    """
+    This class is a factory class for creating models. It provides a single interface for creating models. It supports both standard models and custom models.
+    """
 
     @staticmethod
     def infer_model_type(model_name: str) -> ModelType:
@@ -34,7 +42,7 @@ class ModelFactory:
             raise ValueError("Unsupported model")
 
     @staticmethod
-    def create_model(model_name: str, num_classes: int, num_input_channels: int = 3, pretrained: bool = False, weights: str = None, **kwargs) -> BaseModel:
+    def create_model(model_name: str, num_classes: int, num_input_channels: int = 3, pretrained: bool = False, weights: Optional[str] = None, random_seed: Optional[int] = None, **kwargs) -> BaseModel:
         """
         This function returns a model based on the model_name. If the model_name is a standard model, it will be loaded from torchvision.models. If the model_name is a custom model, it will be loaded from advsecurenet.models.CustomModels.
 
@@ -50,6 +58,8 @@ class ModelFactory:
             Whether to load pretrained weights or not. Default is False. This is only applicable for standard models.
         weights: str
             The weights for the pretrained standard model. Default is IMAGENET1K_V1. This is only applicable for standard models.
+        random_seed: int
+            The random seed to use for the model. Default is None. If provided, the model will be initialized with the given random seed. This helps in reproducibility.
         **kwargs
             Additional keyword arguments that will be passed to the model.
 
@@ -57,6 +67,8 @@ class ModelFactory:
         ------
         ValueError
             If the model_name is not supported by torchvision or is not a custom model.
+        ValueError
+            If the model_name is a standard model and pretrained is True and random_seed is not None.
         ValueError
             If the model_name is a custom model and weights is not None.
 
@@ -73,6 +85,13 @@ class ModelFactory:
             if inferred_type == ModelType.CUSTOM and (weights is not None or pretrained):
                 raise ValueError(
                     "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
+
+            if inferred_type == ModelType.STANDARD and pretrained and random_seed is not None:
+                raise ValueError(
+                    "Pretrained standard models do not support random seed. They already have a fixed set of weights :)")
+
+            if random_seed is not None:
+                set_seed(random_seed)
 
             if inferred_type == ModelType.STANDARD:
                 return StandardModel(model_name=model_name, num_classes=num_classes, num_input_channels=num_input_channels, pretrained=pretrained, weights=weights, **kwargs)
