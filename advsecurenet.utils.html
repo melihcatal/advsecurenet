@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>advsecurenet.utils package &mdash; advsecurenet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Command Line Interface" href="cli.html" />
+    <link rel="prev" title="advsecurenet.shared.types.configs.defense_configs package" href="advsecurenet.shared.types.configs.defense_configs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            advsecurenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">AdvSecureNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#examples">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#architecture">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#license">License</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">Python Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="advsecurenet.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.configs.html">advsecurenet.configs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">advsecurenet.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.adversarial_target_generator">advsecurenet.utils.adversarial_target_generator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.config_loader">advsecurenet.utils.config_loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.config_utils">advsecurenet.utils.config_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.data">advsecurenet.utils.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.data_splitter">advsecurenet.utils.data_splitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.ddp_trainer">advsecurenet.utils.ddp_trainer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.ddp_training_coordinator">advsecurenet.utils.ddp_training_coordinator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.device_manager">advsecurenet.utils.device_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.evaluation">advsecurenet.utils.evaluation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.model_utils">advsecurenet.utils.model_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.network">advsecurenet.utils.network module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.tester">advsecurenet.utils.tester module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils.trainer">advsecurenet.utils.trainer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">advsecurenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="advsecurenet.html">Python Package</a></li>
+      <li class="breadcrumb-item active">advsecurenet.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/advsecurenet.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="advsecurenet-utils-package">
+<h1>advsecurenet.utils package<a class="headerlink" href="#advsecurenet-utils-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-advsecurenet.utils.adversarial_target_generator">
+<span id="advsecurenet-utils-adversarial-target-generator-module"></span><h2>advsecurenet.utils.adversarial_target_generator module<a class="headerlink" href="#module-advsecurenet.utils.adversarial_target_generator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.adversarial_target_generator.</span></span><span class="sig-name descname"><span class="pre">AdversarialTargetGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maps_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This module is responsible for generating target images. This is specially useful for targeted attacks and when the client doesn’t provide a target image.
+The example can be found in <cite>examples/attacks/targeted_attacks.ipynb</cite>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator.extract_images_and_labels">
+<span class="sig-name descname"><span class="pre">extract_images_and_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paired</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator.extract_images_and_labels" title="Link to this definition"></a></dt>
+<dd><p>Extracts and stacks original and target images and labels from paired data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paired</strong> (<em>list</em>) – A list of dictionaries, each containing ‘original_image’, ‘original_label’,
+‘target_image’, and ‘target_label’.</p></li>
+<li><p><strong>images</strong> (<em>Tensor</em>) – A dataset of images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Tensors for original images, original labels,</dt><dd><p>target images, and target labels.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Tensor, Tensor, Tensor, Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator.generate_target_images">
+<span class="sig-name descname"><span class="pre">generate_target_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator.generate_target_images" title="Link to this definition"></a></dt>
+<dd><p>Generates target images for the given train_data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_data</strong> (<em>torch.utils.data.Dataset</em>) – The training data.</p></li>
+<li><p><strong>targets</strong> (<em>list</em><em>, </em><em>optional</em>) – The list of target labels. Defaults to None.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, overwrites the existing indices map. Defaults to False.</p></li>
+<li><p><strong>show_images</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, shows the generated target images. Defaults to False.</p></li>
+<li><p><strong>save_images</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, saves the generated target images. Defaults to False.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to save the generated target images. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The list of target images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.config_loader">
+<span id="advsecurenet-utils-config-loader-module"></span><h2>advsecurenet.utils.config_loader module<a class="headerlink" href="#module-advsecurenet.utils.config_loader" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_loader.load_config_from_yaml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_loader.</span></span><span class="sig-name descname"><span class="pre">load_config_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_loader.load_config_from_yaml" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.config_utils">
+<span id="advsecurenet-utils-config-utils-module"></span><h2>advsecurenet.utils.config_utils module<a class="headerlink" href="#module-advsecurenet.utils.config_utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.generate_default_config_yaml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">generate_default_config_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.generate_default_config_yaml" title="Link to this definition"></a></dt>
+<dd><p>Generate a default configuration YAML based on the name of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_name</strong> (<em>str</em>) – The name of the configuration yml file (e.g., “cw_attack_config.yml”).</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path where the YAML file should be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The default configuration YAML as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.get_available_configs">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">get_available_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.get_available_configs" title="Link to this definition"></a></dt>
+<dd><p>Get a list of all available configuration files, including those in subdirectories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all available configuration files.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.utils.config_utils</span> <span class="kn">import</span> <span class="n">get_available_configs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_available_configs</span><span class="p">()</span>
+<span class="go">[&#39;lots_attack_config.yml&#39;, &#39;cw_attack_config.yml&#39;, ...]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.get_config_file_name">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">get_config_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.get_config_file_name" title="Link to this definition"></a></dt>
+<dd><p>Split the class name into words it’s a camel case string like “LotsAttackConfig”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_class</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The dataclass type to get the config file name for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The config file name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.shared.types.configs</span> <span class="kn">import</span> <span class="n">LotsAttackConfig</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.utils.config_utils</span> <span class="kn">import</span> <span class="n">get_config_file_name</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_config_file_name</span><span class="p">(</span><span class="n">LotsAttackConfig</span><span class="p">)</span>
+<span class="go">&#39;lots_attack_config.yml&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.get_default_config_yml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">get_default_config_yml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.config_utils.get_default_config_yml" title="Link to this definition"></a></dt>
+<dd><p>Get the default configuration YAML based on the name of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_name</strong> (<em>str</em>) – The name of the configuration (e.g., “cw_attack”).</p></li>
+<li><p><strong>config_subdir</strong> (<em>str</em><em>, </em><em>optional</em>) – The sub-directory to search in. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The path to the configuration YAML file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.load_config_from_yaml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">load_config_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.load_config_from_yaml" title="Link to this definition"></a></dt>
+<dd><p>Load a YAML file into a dataclass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>yaml_path</strong> (<em>str</em>) – The path to the YAML file.</p></li>
+<li><p><strong>config_class</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The dataclass type to load the YAML into.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataclass with the YAML data loaded into it.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>T</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.utils.config_loader</span> <span class="kn">import</span> <span class="n">load_config_from_yaml</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@dataclass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">b</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">c</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># config.yml</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># a: 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># b: test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># c: [1, 2, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">load_config_from_yaml</span><span class="p">(</span><span class="s2">&quot;config.yaml&quot;</span><span class="p">,</span> <span class="n">Config</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="go">Config(a=1, b=&#39;test&#39;, c=[1, 2, 3])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.load_default_config">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">load_default_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.load_default_config" title="Link to this definition"></a></dt>
+<dd><p>Load the default configuration for a dataclass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_class</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The dataclass type to load the default configuration for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataclass with the default configuration loaded into it.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.override_with_cli_args">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">override_with_cli_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cli_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.config_utils.override_with_cli_args" title="Link to this definition"></a></dt>
+<dd><p>Override values in config_data with those from cli_args if provided.</p>
+<p>Args:
+- config_data (dict): Dictionary of configuration from a file or default values.
+- <a href="#id1"><span class="problematic" id="id2">**</span></a>cli_args: Arguments provided from the CLI.</p>
+<p>Returns:
+- Dictionary with overridden values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.read_yml_file">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">read_yml_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.read_yml_file" title="Link to this definition"></a></dt>
+<dd><p>Read a YAML file and return it as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yml_path</strong> (<em>str</em>) – The path to the YAML file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The YAML file as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.config_utils.save_config_to_yaml">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.config_utils.</span></span><span class="sig-name descname"><span class="pre">save_config_to_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.config_utils.save_config_to_yaml" title="Link to this definition"></a></dt>
+<dd><p>Save a dataclass to a YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>T</em>) – The dataclass to save.</p></li>
+<li><p><strong>yaml_path</strong> (<em>str</em>) – The path to the YAML file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.data">
+<span id="advsecurenet-utils-data-module"></span><h2>advsecurenet.utils.data module<a class="headerlink" href="#module-advsecurenet.utils.data" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.data.get_subset_data">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.data.</span></span><span class="sig-name descname"><span class="pre">get_subset_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dataset</span></span></span><a class="headerlink" href="#advsecurenet.utils.data.get_subset_data" title="Link to this definition"></a></dt>
+<dd><p>Returns a subset of the given dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.utils.data.Dataset</em>) – The dataset to get the subset from.</p></li>
+<li><p><strong>num_samples</strong> (<em>int</em>) – The number of samples to get from the dataset.</p></li>
+<li><p><strong>random_seed</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – The random seed to use for generating the subset. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The subset of the dataset.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.utils.data.Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.data_splitter">
+<span id="advsecurenet-utils-data-splitter-module"></span><h2>advsecurenet.utils.data_splitter module<a class="headerlink" href="#module-advsecurenet.utils.data_splitter" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.data_splitter.split_data">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.data_splitter.</span></span><span class="sig-name descname"><span class="pre">split_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.data_splitter.split_data" title="Link to this definition"></a></dt>
+<dd><p>Splits data into train, validation and test sets with the given ratios.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em>) – List of features.</p></li>
+<li><p><strong>y</strong> (<em>list</em>) – List of targets.</p></li>
+<li><p><strong>test_size</strong> (<em>float</em>) – Ratio of test samples.</p></li>
+<li><p><strong>val_size</strong> (<em>float</em>) – Ratio of validation samples.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em>) – Random seed for reproducibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of training features.
+X_val (list): List of validation features.
+X_test (list): List of test features.
+y_train (list): List of training targets.
+y_val (list): List of validation targets.
+y_test (list): List of test targets.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>X_train (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.ddp_trainer">
+<span id="advsecurenet-utils-ddp-trainer-module"></span><h2>advsecurenet.utils.ddp_trainer module<a class="headerlink" href="#module-advsecurenet.utils.ddp_trainer" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.ddp_trainer.DDPTrainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.ddp_trainer.</span></span><span class="sig-name descname"><span class="pre">DDPTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.train_config.TrainConfig" title="advsecurenet.shared.types.configs.train_config.TrainConfig"><span class="pre">TrainConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.ddp_trainer.DDPTrainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#advsecurenet.utils.trainer.Trainer" title="advsecurenet.utils.trainer.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trainer</span></code></a></p>
+<p>DDPTrainer module is specialized module for training a model using DistributedDataParallel in a multi-GPU setting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.train_config.TrainConfig" title="advsecurenet.shared.types.configs.train_config.TrainConfig"><em>TrainConfig</em></a>) – The train config.</p></li>
+<li><p><strong>rank</strong> (<em>int</em>) – The rank of the current process.</p></li>
+<li><p><strong>world_size</strong> (<em>int</em>) – The total number of processes.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span> <span class="o">=</span> <span class="n">DDPTrainer</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.ddp_training_coordinator">
+<span id="advsecurenet-utils-ddp-training-coordinator-module"></span><h2>advsecurenet.utils.ddp_training_coordinator module<a class="headerlink" href="#module-advsecurenet.utils.ddp_training_coordinator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.ddp_training_coordinator.</span></span><span class="sig-name descname"><span class="pre">DDPTrainingCoordinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The generic DDP DDPTrainer class. This class is used to train a model using DistributedDataParallel.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.ddp_setup">
+<span class="sig-name descname"><span class="pre">ddp_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rank</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.ddp_setup" title="Link to this definition"></a></dt>
+<dd><p>DDP setup function. This function is called by each process to setup the DDP environment.
+Sets the master address and port and initializes the process group.
+Automatically finds a free port on the machine and uses it as the master port.</p>
+<p>The default backend is nccl.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.run" title="Link to this definition"></a></dt>
+<dd><p>Spawn the processes for DDP training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.run_process">
+<span class="sig-name descname"><span class="pre">run_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rank</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.run_process" title="Link to this definition"></a></dt>
+<dd><p>Setup DDP and call the training function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.device_manager">
+<span id="advsecurenet-utils-device-manager-module"></span><h2>advsecurenet.utils.device_manager module<a class="headerlink" href="#module-advsecurenet.utils.device_manager" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.device_manager.DeviceManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.device_manager.</span></span><span class="sig-name descname"><span class="pre">DeviceManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributed_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.device_manager.DeviceManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Device manager module for handling device placement in both single and distributed modes. In single mode, the device manager will place the tensors on the specified device. In distributed mode, the device manager will assume that the tensors are already placed correctly.
+This centralizes the device placement logic and makes it easier to switch between single and distributed modes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.device_manager.DeviceManager.get_current_device">
+<span class="sig-name descname"><span class="pre">get_current_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.device_manager.DeviceManager.get_current_device" title="Link to this definition"></a></dt>
+<dd><p>Returns the current device. In distributed mode, it returns the device of the current process.
+In single mode, it returns the initialized device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.device_manager.DeviceManager.to_device">
+<span class="sig-name descname"><span class="pre">to_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.device_manager.DeviceManager.to_device" title="Link to this definition"></a></dt>
+<dd><p>Places the provided tensors on the correct device based on the current mode.
+In distributed mode, it places tensors on the device of the current process.
+In single mode, it places tensors on the initialized device.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.evaluation">
+<span id="advsecurenet-utils-evaluation-module"></span><h2>advsecurenet.utils.evaluation module<a class="headerlink" href="#module-advsecurenet.utils.evaluation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.evaluation.</span></span><span class="sig-name descname"><span class="pre">AdversarialAttackEvaluator</span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Evaluates the effectiveness of adversarial attacks on a given model using various metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><em>BaseModel</em></a>) – The model to evaluate the attacks on.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l0_distance">
+<span class="sig-name descname"><span class="pre">calculate_l0_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l0_distance" title="Link to this definition"></a></dt>
+<dd><p>Calculates the L0 distance between the original and adversarial images. L0 distance is the count of pixels that are different between the two images (i.e. the number of pixels that have been changed in the adversarial image compared to the original image).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean L0 distance between the original and adversarial images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l2_distance">
+<span class="sig-name descname"><span class="pre">calculate_l2_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l2_distance" title="Link to this definition"></a></dt>
+<dd><p>Calculates the L2 distance between the original and adversarial images. L2 distance is the Euclidean distance between the two images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean L2 distance between the original and adversarial images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l_inf_distance">
+<span class="sig-name descname"><span class="pre">calculate_l_inf_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l_inf_distance" title="Link to this definition"></a></dt>
+<dd><p>Calculates the L∞ distance between the original and adversarial images. L∞ distance is the maximum absolute difference between the two images in any pixel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean L∞ distance between the original and adversarial images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_distances">
+<span class="sig-name descname"><span class="pre">calculate_perturbation_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_distances" title="Link to this definition"></a></dt>
+<dd><p>Calculates the L0, L2, and L∞ distances between the original and adversarial images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean L0, L2, and L∞ distances between the original and adversarial images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_effectiveness_score">
+<span class="sig-name descname"><span class="pre">calculate_perturbation_effectiveness_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_success_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_effectiveness_score" title="Link to this definition"></a></dt>
+<dd><p>Calculates the perturbation effectiveness score for the attack. The effectiveness score is the attack success rate divided by the perturbation distance. The higher the score, the more effective the attack.
+The purpose of this metric is to distinguish between attacks that have a high success rate but require a large perturbation magnitude,
+and attacks that have a lower success rate but require a smaller perturbation magnitude.
+:param attack_success_rate: The attack success rate.
+:type attack_success_rate: float
+:param perturbation_distance: The perturbation distance.
+:type perturbation_distance: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The effectiveness score.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_psnr">
+<span class="sig-name descname"><span class="pre">calculate_psnr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_psnr" title="Link to this definition"></a></dt>
+<dd><p>Calculates the mean peak signal-to-noise ratio (PSNR) between the original and adversarial images. PSNR is a metric that measures the similarity between two images.
+The higher the PSNR, the more similar the images are and the lower the distortion between them. A high PSNR could indicate that the perturbations introduced are
+subtle but may not necessarily reflect the perceptual similarity between the images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images. Expected shape is (batch_size, channels, height, width).</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean PSNR between the original and adversarial images. [0, inf) range. Higher values (e.g. 30 dB or more) indicate better quality. Infinite if the images are identical.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_robustness_gap">
+<span class="sig-name descname"><span class="pre">calculate_robustness_gap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_robustness_gap" title="Link to this definition"></a></dt>
+<dd><p>Calculates the robustness gap for the adversarial examples. The robustness gap is the difference between the accuracy of the model on the original images and the accuracy of the model on the adversarial images.
+The larger the robustness gap, the more effective the attack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>true_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean robustness gap for the adversarial examples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_similarity_scores">
+<span class="sig-name descname"><span class="pre">calculate_similarity_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_similarity_scores" title="Link to this definition"></a></dt>
+<dd><p>Calculates the SSIM and PSNR between the original and adversarial images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images. Expected shape is (batch_size, channels, height, width).</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean SSIM and PSNR between the original and adversarial images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_ssim">
+<span class="sig-name descname"><span class="pre">calculate_ssim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_ssim" title="Link to this definition"></a></dt>
+<dd><p>Calculates the mean structural similarity index (SSIM) between the original and adversarial images. SSIM is a metric that measures the similarity between two images.
+The higher the SSIM, the more similar the images are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images. Expected shape is (batch_size, channels, height, width).</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean SSIM between the original and adversarial images. [-1, 1] range. 1 means the images are identical.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_transferability_rate">
+<span class="sig-name descname"><span class="pre">calculate_transferability_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_transferability_rate" title="Link to this definition"></a></dt>
+<dd><p>Calculates the attack transferability rate. This rate is the percentage of adversarial examples that are successful on the target model among those that were successful on the source model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_model</strong> – The model used to generate adversarial examples.</p></li>
+<li><p><strong>target_model</strong> – A different model to test the transferability of adversarial examples.</p></li>
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>true_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images generated from the source model.</p></li>
+<li><p><strong>is_targeted</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the attack is targeted.</p></li>
+<li><p><strong>target_labels</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – The target labels for the adversarial images if the attack is targeted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The attack transferability rate.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.evaluate_attack">
+<span class="sig-name descname"><span class="pre">evaluate_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.evaluate_attack" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the attack success rate of the adversarial examples. The attack success rate is the percentage of adversarial examples that are misclassified by the model.
+If the attack is targeted, the attack success rate is the percentage of adversarial examples that are classified as the target class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>true_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+<li><p><strong>is_targeted</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the attack is targeted. Defaults to False.</p></li>
+<li><p><strong>target_labels</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – The target labels for the adversarial images. Required if the attack is targeted. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the attack is targeted but target labels are not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.full_evaluation">
+<span class="sig-name descname"><span class="pre">full_evaluation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_csv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.full_evaluation" title="Link to this definition"></a></dt>
+<dd><p>Performs a full evaluation of the adversarial examples using various metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>true_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+<li><p><strong>is_targeted</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the attack is targeted. Defaults to False.</p></li>
+<li><p><strong>target_labels</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – The target labels for the adversarial images if the attack is targeted. Defaults to None.</p></li>
+<li><p><strong>source_model</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><em>BaseModel</em></a><em>]</em><em>, </em><em>optional</em>) – The model used to generate adversarial examples. Defaults to None.</p></li>
+<li><p><strong>target_model</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><em>BaseModel</em></a><em>]</em><em>, </em><em>optional</em>) – A different model to test the transferability of adversarial examples. Defaults to None.</p></li>
+<li><p><strong>experiment_info</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em><em>, </em><em>optional</em>) – The experiment info. Defaults to None.</p></li>
+<li><p><strong>csv_path</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The path where the CSV file will be saved. Defaults to None.</p></li>
+<li><p><strong>file_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the CSV file to save the results to. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the attack is targeted but target labels are not provided.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The evaluation results.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.save_results_to_csv">
+<span class="sig-name descname"><span class="pre">save_results_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluation_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.save_results_to_csv" title="Link to this definition"></a></dt>
+<dd><p>Saves the evaluation results to a CSV file in a structured format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluation_results</strong> (<em>dict</em>) – The evaluation results.</p></li>
+<li><p><strong>experiment_info</strong> (<em>dict</em><em>, </em><em>optional</em>) – The experiment info.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – The path where the file will be saved.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the CSV file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.model_utils">
+<span id="advsecurenet-utils-model-utils-module"></span><h2>advsecurenet.utils.model_utils module<a class="headerlink" href="#module-advsecurenet.utils.model_utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.model_utils.download_weights">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">download_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.download_weights" title="Link to this definition"></a></dt>
+<dd><p>Downloads model weights from a remote source based on the model and dataset names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_name</strong> (<em>str</em>) – The name of the model (e.g. “resnet50”).</p></li>
+<li><p><strong>dataset_name</strong> (<em>str</em>) – The name of the dataset the model was trained on (e.g. “cifar10”).</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The filename of the weights on the remote server. If provided, this will be used directly.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The directory to save the weights to. Defaults to weights directory.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">download_weights</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;resnet50&quot;</span><span class="p">,</span> <span class="n">dataset_name</span><span class="o">=</span><span class="s2">&quot;cifar10&quot;</span><span class="p">)</span>
+<span class="go">Downloaded weights to /home/user/advsecurenet/weights/resnet50_cifar10.pth</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">download_weights</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;resnet50_cifar10.pth&quot;</span><span class="p">)</span>
+<span class="go">Downloaded weights to /home/user/advsecurenet/weights/resnet50_cifar10.pth</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.model_utils.load_model">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.load_model" title="Link to this definition"></a></dt>
+<dd><p>Loads the model weights from the given filepath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – The model to load the weights into.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to load the model weights from.</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath to load the model weights from. Defaults to weights directory.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to load the model weights to. Defaults to CPU.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.model_utils.save_model">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.model_utils.</span></span><span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.model_utils.save_model" title="Link to this definition"></a></dt>
+<dd><p>Saves the model weights to the given filepath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – The model to save.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to save the model weights to.</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>optional</em>) – The filepath to save the model weights to. Defaults to weights directory.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.network">
+<span id="advsecurenet-utils-network-module"></span><h2>advsecurenet.utils.network module<a class="headerlink" href="#module-advsecurenet.utils.network" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="advsecurenet.utils.network.find_free_port">
+<span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.network.</span></span><span class="sig-name descname"><span class="pre">find_free_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.network.find_free_port" title="Link to this definition"></a></dt>
+<dd><p>Find a free port on the machine.</p>
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.tester">
+<span id="advsecurenet-utils-tester-module"></span><h2>advsecurenet.utils.tester module<a class="headerlink" href="#module-advsecurenet.utils.tester" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.tester.Tester">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.tester.</span></span><span class="sig-name descname"><span class="pre">Tester</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Module</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">CrossEntropyLoss()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">device</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.tester.Tester" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tester class for testing a model on a given test_loader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_loader</strong> (<em>DataLoader</em>) – The test loader.</p></li>
+<li><p><strong>criterion</strong> (<em>str</em><em> or </em><em>nn.Module</em><em>, </em><em>optional</em>) – The loss function. Defaults to nn.CrossEntropyLoss().</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to test on. Defaults to CPU.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.tester.Tester.test">
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.utils.tester.Tester.test" title="Link to this definition"></a></dt>
+<dd><p>Tests the model on the given test_loader. Prints the average loss and accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – The model to test.</p></li>
+<li><p><strong>test_loader</strong> (<em>torch.utils.data.DataLoader</em>) – The test loader.</p></li>
+<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – The loss function. Defaults to nn.CrossEntropyLoss().</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – The device to test on. Defaults to CPU.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the average loss and accuracy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils.trainer">
+<span id="advsecurenet-utils-trainer-module"></span><h2>advsecurenet.utils.trainer module<a class="headerlink" href="#module-advsecurenet.utils.trainer" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.utils.trainer.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.trainer.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.train_config.TrainConfig" title="advsecurenet.shared.types.configs.train_config.TrainConfig"><span class="pre">TrainConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.trainer.Trainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base trainer module for training a model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.utils.trainer.Trainer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.trainer.Trainer.train" title="Link to this definition"></a></dt>
+<dd><p>Public method for training the model.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.utils" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="advsecurenet.shared.types.configs.defense_configs.html" class="btn btn-neutral float-left" title="advsecurenet.shared.types.configs.defense_configs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="Command Line Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

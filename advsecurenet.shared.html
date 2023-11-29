@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>advsecurenet.shared package &mdash; advsecurenet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="advsecurenet.shared.types package" href="advsecurenet.shared.types.html" />
+    <link rel="prev" title="advsecurenet.models.CustomModels package" href="advsecurenet.models.CustomModels.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            advsecurenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">AdvSecureNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#examples">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#architecture">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html#license">License</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">Python Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="advsecurenet.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.configs.html">advsecurenet.configs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">advsecurenet.shared package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.shared.colors">advsecurenet.shared.colors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.shared.loss">advsecurenet.shared.loss module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.shared.optimizer">advsecurenet.shared.optimizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.shared">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">advsecurenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="advsecurenet.html">Python Package</a></li>
+      <li class="breadcrumb-item active">advsecurenet.shared package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/advsecurenet.shared.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="advsecurenet-shared-package">
+<h1>advsecurenet.shared package<a class="headerlink" href="#advsecurenet-shared-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advsecurenet.shared.types.html">advsecurenet.shared.types package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.types.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.types.configs.html">advsecurenet.shared.types.configs package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.configs.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.configs.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.configs.html#module-advsecurenet.shared.types.configs.configs">advsecurenet.shared.types.configs.configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.configs.html#module-advsecurenet.shared.types.configs.test_config">advsecurenet.shared.types.configs.test_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.configs.html#module-advsecurenet.shared.types.configs.train_config">advsecurenet.shared.types.configs.train_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.configs.html#module-advsecurenet.shared.types.configs">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.types.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.types.html#module-advsecurenet.shared.types.attacks">advsecurenet.shared.types.attacks module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType"><code class="docutils literal notranslate"><span class="pre">AttackType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType.CW"><code class="docutils literal notranslate"><span class="pre">AttackType.CW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType.DEEPFOOL"><code class="docutils literal notranslate"><span class="pre">AttackType.DEEPFOOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType.FGSM"><code class="docutils literal notranslate"><span class="pre">AttackType.FGSM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType.LOTS"><code class="docutils literal notranslate"><span class="pre">AttackType.LOTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType.PGD"><code class="docutils literal notranslate"><span class="pre">AttackType.PGD</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.types.html#module-advsecurenet.shared.types.dataset">advsecurenet.shared.types.dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DataType"><code class="docutils literal notranslate"><span class="pre">DataType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DataType.TEST"><code class="docutils literal notranslate"><span class="pre">DataType.TEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DataType.TRAIN"><code class="docutils literal notranslate"><span class="pre">DataType.TRAIN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType"><code class="docutils literal notranslate"><span class="pre">DatasetType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType.CIFAR10"><code class="docutils literal notranslate"><span class="pre">DatasetType.CIFAR10</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType.CUSTOM"><code class="docutils literal notranslate"><span class="pre">DatasetType.CUSTOM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType.IMAGENET"><code class="docutils literal notranslate"><span class="pre">DatasetType.IMAGENET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType.MNIST"><code class="docutils literal notranslate"><span class="pre">DatasetType.MNIST</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.types.html#module-advsecurenet.shared.types.model">advsecurenet.shared.types.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.model.ModelType"><code class="docutils literal notranslate"><span class="pre">ModelType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.model.ModelType.CUSTOM"><code class="docutils literal notranslate"><span class="pre">ModelType.CUSTOM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.model.ModelType.STANDARD"><code class="docutils literal notranslate"><span class="pre">ModelType.STANDARD</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.types.html#module-advsecurenet.shared.types">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-advsecurenet.shared.colors">
+<span id="advsecurenet-shared-colors-module"></span><h2>advsecurenet.shared.colors module<a class="headerlink" href="#module-advsecurenet.shared.colors" title="Link to this heading"></a></h2>
+</section>
+<section id="module-advsecurenet.shared.loss">
+<span id="advsecurenet-shared-loss-module"></span><h2>advsecurenet.shared.loss module<a class="headerlink" href="#module-advsecurenet.shared.loss" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.shared.loss.</span></span><span class="sig-name descname"><span class="pre">Loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.shared.loss.Loss" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.BCE_LOSS">
+<span class="sig-name descname"><span class="pre">BCE_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.BCELoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.BCE_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.BCE_WITH_LOGITS_LOSS">
+<span class="sig-name descname"><span class="pre">BCE_WITH_LOGITS_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.BCEWithLogitsLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.BCE_WITH_LOGITS_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.COSINE_EMBEDDING_LOSS">
+<span class="sig-name descname"><span class="pre">COSINE_EMBEDDING_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.CosineEmbeddingLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.COSINE_EMBEDDING_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.CROSS_ENTROPY">
+<span class="sig-name descname"><span class="pre">CROSS_ENTROPY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.CrossEntropyLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.CROSS_ENTROPY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.HINGE_EMBEDDING_LOSS">
+<span class="sig-name descname"><span class="pre">HINGE_EMBEDDING_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.HingeEmbeddingLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.HINGE_EMBEDDING_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.KLDIV_LOSS">
+<span class="sig-name descname"><span class="pre">KLDIV_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.KLDivLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.KLDIV_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.L1_LOSS">
+<span class="sig-name descname"><span class="pre">L1_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.L1Loss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.L1_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.MARGIN_RANKING_LOSS">
+<span class="sig-name descname"><span class="pre">MARGIN_RANKING_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.MarginRankingLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.MARGIN_RANKING_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.MSELoss">
+<span class="sig-name descname"><span class="pre">MSELoss</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.MSELoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.MSELoss" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.MULTI_LABEL_MARGIN_LOSS">
+<span class="sig-name descname"><span class="pre">MULTI_LABEL_MARGIN_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.MultiLabelMarginLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.MULTI_LABEL_MARGIN_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.MULTI_MARGIN_LOSS">
+<span class="sig-name descname"><span class="pre">MULTI_MARGIN_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.MultiMarginLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.MULTI_MARGIN_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.NLL_LOSS">
+<span class="sig-name descname"><span class="pre">NLL_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.NLLLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.NLL_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.NLL_LOSS2D">
+<span class="sig-name descname"><span class="pre">NLL_LOSS2D</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.NLLLoss2d'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.NLL_LOSS2D" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.POISSON_NLL_LOSS">
+<span class="sig-name descname"><span class="pre">POISSON_NLL_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.PoissonNLLLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.POISSON_NLL_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.SMOOTH_L1_LOSS">
+<span class="sig-name descname"><span class="pre">SMOOTH_L1_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.SmoothL1Loss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.SMOOTH_L1_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.SOFT_MARGIN_LOSS">
+<span class="sig-name descname"><span class="pre">SOFT_MARGIN_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.SoftMarginLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.SOFT_MARGIN_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.loss.Loss.TRIPLET_MARGIN_LOSS">
+<span class="sig-name descname"><span class="pre">TRIPLET_MARGIN_LOSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.nn.modules.loss.TripletMarginLoss'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.loss.Loss.TRIPLET_MARGIN_LOSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.shared.optimizer">
+<span id="advsecurenet-shared-optimizer-module"></span><h2>advsecurenet.shared.optimizer module<a class="headerlink" href="#module-advsecurenet.shared.optimizer" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.shared.optimizer.</span></span><span class="sig-name descname"><span class="pre">Optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.ADAGRAD">
+<span class="sig-name descname"><span class="pre">ADAGRAD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.adagrad.Adagrad'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.ADAGRAD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.ADAM">
+<span class="sig-name descname"><span class="pre">ADAM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.adam.Adam'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.ADAM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.ADAMAX">
+<span class="sig-name descname"><span class="pre">ADAMAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.adamax.Adamax'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.ADAMAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.ADAMW">
+<span class="sig-name descname"><span class="pre">ADAMW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.adamw.AdamW'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.ADAMW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.ASGD">
+<span class="sig-name descname"><span class="pre">ASGD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.asgd.ASGD'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.ASGD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.LBFGS">
+<span class="sig-name descname"><span class="pre">LBFGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.lbfgs.LBFGS'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.LBFGS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.RMS_PROP">
+<span class="sig-name descname"><span class="pre">RMS_PROP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.rmsprop.RMSprop'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.RMS_PROP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.R_PROP">
+<span class="sig-name descname"><span class="pre">R_PROP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.rprop.Rprop'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.R_PROP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="advsecurenet.shared.optimizer.Optimizer.SGD">
+<span class="sig-name descname"><span class="pre">SGD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;class</span> <span class="pre">'torch.optim.sgd.SGD'&gt;</span></em><a class="headerlink" href="#advsecurenet.shared.optimizer.Optimizer.SGD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-advsecurenet.shared">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.shared" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="advsecurenet.models.CustomModels.html" class="btn btn-neutral float-left" title="advsecurenet.models.CustomModels package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advsecurenet.shared.types.html" class="btn btn-neutral float-right" title="advsecurenet.shared.types package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

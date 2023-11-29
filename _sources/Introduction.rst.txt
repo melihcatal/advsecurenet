@@ -13,7 +13,19 @@ The library provides a set of tools to generate adversarial examples and to eval
 Installation
 ============
 
-TODO: Add installation instructions
+The library can be installed using `pip <https://pip.pypa.io/en/stable/>`_. You can install the library using the following command:
+
+.. code-block:: bash
+
+    pip install advsecurenet
+
+You can also install the library from the source code. You can clone the repository and install the library using the following commands:
+
+.. code-block:: bash
+
+    git clone
+    cd advsecurenet
+    pip install -e .
 
 Usage
 ========= 
@@ -58,3 +70,8 @@ The high-level architecture of the library is shown in the figure below.
    :width: 400
    :alt: advsecurenet
    :align: center
+
+
+License
+=======
+The library is licensed under the  `MIT License <https://opensource.org/licenses/MIT>`_. You can find the license file in the repository.
