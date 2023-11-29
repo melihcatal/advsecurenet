@@ -6,8 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-import sys
 import os
+import sys
+
 project = 'advsecurenet'
 copyright = '2023, Melih Catal'
 author = 'Melih Catal'
@@ -28,6 +29,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 source_suffix = ['.rst']
 
+autodoc_default_options = {
+    'ignore-module-all': True
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

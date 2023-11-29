@@ -1,4 +1,4 @@
-advsecurenet package
+Python Package
 ====================
 
 Subpackages
@@ -12,16 +12,7 @@ Subpackages
    advsecurenet.dataloader
    advsecurenet.datasets
    advsecurenet.defenses
-   advsecurenet.evaluations
    advsecurenet.models
-   advsecurenet.resources
    advsecurenet.shared
    advsecurenet.utils
 
-Module contents
----------------
-
-.. automodule:: advsecurenet
-   :members:
-   :undoc-members:
-   :show-inheritance:

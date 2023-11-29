@@ -1,14 +1,15 @@
-import torch
 from dataclasses import dataclass, field
-from typing import List, Union, Optional, Dict, TypedDict
-from torch.optim import Optimizer
+from typing import Dict, List, Optional, TypedDict, Union
+
+import torch
 from torch import nn
+from torch.optim import Optimizer
 from torch.utils.data import DataLoader
-from advsecurenet.models.base_model import BaseModel
+
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.defense_configs import DefenseConfig
 from advsecurenet.shared.types.configs.train_config import TrainConfig
-
 
 # class AttackConfigDict(TypedDict):
 #     config: Dict[str, str]
@@ -25,44 +26,27 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
     This class is used to store the configuration of the adversarial training defense.
 
     Args:
-    target_model : BaseModel
-        The model that will be trained.
-    models : List[BaseModel]
-        A list of models that will be used to generate adversarial examples.
-    attacks : List[AdversarialAttack]
-        A list of attacks that will be used to generate adversarial examples along with their configurations.
-    train_dataloader : DataLoader
-        A dataloader that will be used to train the model.
-    optimizer : Optimizer
-        This is an optimizer such as torch.optim.Adam().
-    criterion : nn.Module
-        This is a loss function such as nn.CrossEntropyLoss().
-    epochs : int
-        The number of epochs to train the model.
-    learning_rate : float
-        The learning rate for the optimizer.
-    device : torch.device
-        The device that will be used to train the model.
-    save_checkpoint : bool
-        Whether to save model checkpoints.
-    checkpoint_path : Optional[str]
-        Path where checkpoints will be saved.
-    checkpoint_interval : int
-        Interval between saving checkpoints.
-    load_checkpoint : bool
-        Whether to load a model checkpoint.
-    load_checkpoint_path : Optional[str]
-        Path from where the checkpoint will be loaded.
-    verbose : bool
-        Whether to print progress or not.
-    adv_coeff : float
-        The coefficient that will be used to combine the clean and adversarial examples.
-    use_ddp : bool
-        Whether to use DistributedDataParallel or not.
-    gpu_ids : Optional[List[int]]
-        A list of GPU IDs to use. If None, all available GPUs are used.
-    pin_memory : bool
-        Whether to pin memory or not.
+        model (BaseModel): The target model.
+        models (List[BaseModel]): The list of models to be trained.
+        attacks (List[AdversarialAttack]): The list of attacks to be used.
+        train_loader (DataLoader): The training data loader.
+        optimizer (Union[str, Optimizer], optional): The optimizer to be used. Defaults to "adam".
+        criterion (Union[str, nn.Module], optional): The loss function to be used. Defaults to "cross_entropy".
+        epochs (int, optional): The number of epochs to be used. Defaults to 5.
+        learning_rate (float, optional): The learning rate to be used. Defaults to 0.001.
+        save_checkpoint (bool, optional): Whether to save the checkpoints. Defaults to False.
+        save_checkpoint_path (Optional[str], optional): The path to save the checkpoints. Defaults to None.
+        save_checkpoint_name (Optional[str], optional): The name of the checkpoint to be saved. Defaults to None.
+        checkpoint_interval (int, optional): The interval between checkpoints. Defaults to 1.
+        load_checkpoint (bool, optional): Whether to load the checkpoints. Defaults to False.
+        load_checkpoint_path (Optional[str], optional): The path to load the checkpoints. Defaults to None.
+        verbose (bool, optional): Whether to print the logs. Defaults to True.
+        adv_coeff (float, optional): The coefficient for the adversarial loss. Defaults to 0.5.
+        device (torch.device, optional): The device to be used. Defaults to torch.device("cpu").
+        use_ddp (bool, optional): Whether to use DistributedDataParallel. Defaults to False.
+        gpu_ids (Optional[List[int]], optional): The list of GPU IDs to be used. Defaults to None.
+        pin_memory (bool, optional): Whether to pin memory. Defaults to False.
+
     """
     model: BaseModel  # the target model
     models: List[BaseModel]

@@ -7,16 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   advsecurenet.shared.types.AttackConfigs
-   advsecurenet.shared.types.DefenseConfigs
+   advsecurenet.shared.types.configs
 
 Submodules
 ----------
 
-advsecurenet.shared.types.Image module
---------------------------------------
+advsecurenet.shared.types.attacks module
+----------------------------------------
 
-.. automodule:: advsecurenet.shared.types.Image
+.. automodule:: advsecurenet.shared.types.attacks
    :members:
    :undoc-members:
    :show-inheritance:
@@ -25,14 +24,6 @@ advsecurenet.shared.types.dataset module
 ----------------------------------------
 
 .. automodule:: advsecurenet.shared.types.dataset
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.shared.types.device module
----------------------------------------
-
-.. automodule:: advsecurenet.shared.types.device
    :members:
    :undoc-members:
    :show-inheritance:

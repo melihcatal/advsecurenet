@@ -12,6 +12,14 @@ advsecurenet.defenses.adversarial\_training module
    :undoc-members:
    :show-inheritance:
 
+advsecurenet.defenses.ddp\_adversarial\_training module
+-------------------------------------------------------
+
+.. automodule:: advsecurenet.defenses.ddp_adversarial_training
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
