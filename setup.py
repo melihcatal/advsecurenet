@@ -1,9 +1,16 @@
-from setuptools import setup, find_packages
+import os
+
+from setuptools import find_packages, setup
+
+with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
-    name="AdvSecureNet",
+    name="advsecurenet",
     version="0.1",
-    description="Adversarial Secure Networks",
+    description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author="Melih Catal",
     author_email="melih.catal@uzh.ch",
     url="https://github.com/melihcatal/advsecurenet",
