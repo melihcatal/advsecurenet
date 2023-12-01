@@ -2,6 +2,7 @@
 
 [![Unit Tests and Style Checks](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml)
 [![Build and Deploy Sphinx Documentation](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml)
+[![Upload Python Package](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml)
 
 <p align="center">
   <img src="https://drive.switch.ch/index.php/s/DAaKZEh9OeuvTEQ/download" alt="AdvSecureNet" width="400" />
