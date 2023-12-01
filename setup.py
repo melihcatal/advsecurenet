@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8'
 
 setup(
     name="advsecurenet",
-    version="0.1",
+    version="0.1.1",
     description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -17,6 +17,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={'': ['*.yml']},
+    python_requires='>=3.10',
     install_requires=[
         "click",
         "torch",
