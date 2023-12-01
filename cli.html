@@ -291,33 +291,16 @@
 </section>
 <section id="module-cli.cli">
 <span id="cli-cli-module"></span><h2>cli.cli module<a class="headerlink" href="#module-cli.cli" title="Link to this heading"></a></h2>
+<p>Command line interface for AdvSecureNet.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cli.cli.IntListParamType">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cli.cli.</span></span><span class="sig-name descname"><span class="pre">IntListParamType</span></span><a class="headerlink" href="#cli.cli.IntListParamType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ParamType</span></code></p>
+<p>Custom parameter type for a list of integers using the click library.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cli.cli.IntListParamType.convert">
 <span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cli.cli.IntListParamType.convert" title="Link to this definition"></a></dt>
-<dd><p>Convert the value to the correct type. This is not called if
-the value is <code class="docutils literal notranslate"><span class="pre">None</span></code> (the missing value).</p>
-<p>This must accept string values from the command line, as well as
-values that are already the correct type. It may also convert
-other compatible types.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">param</span></code> and <code class="docutils literal notranslate"><span class="pre">ctx</span></code> arguments may be <code class="docutils literal notranslate"><span class="pre">None</span></code> in certain
-situations, such as when converting prompt input.</p>
-<p>If the value cannot be converted, call <code class="xref py py-meth docutils literal notranslate"><span class="pre">fail()</span></code> with a
-descriptive message.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – The value to convert.</p></li>
-<li><p><strong>param</strong> – The parameter that is using this type to convert
-its value. May be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>ctx</strong> – The current context that arrived at this value. May
-be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Convert the value to a list of integers.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -336,7 +319,7 @@ be <code class="docutils literal notranslate"><span class="pre">None</span></cod
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cli.cli.execute_general_attack">
-<span class="sig-prename descclassname"><span class="pre">cli.cli.</span></span><span class="sig-name descname"><span class="pre">execute_general_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType" title="advsecurenet.shared.types.attacks.AttackType"><span class="pre">AttackType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.attack_configs.html#advsecurenet.shared.types.configs.attack_configs.attack_config.AttackConfig" title="advsecurenet.shared.types.configs.attack_configs.attack_config.AttackConfig"><span class="pre">AttackConfig</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cli.cli.execute_general_attack" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">cli.cli.</span></span><span class="sig-name descname"><span class="pre">execute_general_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attack_config_class</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cli.cli.execute_general_attack" title="Link to this definition"></a></dt>
 <dd><p>The general function to execute an attack based on the attack type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
