@@ -1,45 +1,19 @@
-import os
-import warnings
-
+"""
+Command line interface for AdvSecureNet.
+"""
 import click
-import pkg_resources
-from requests.exceptions import HTTPError
-
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.models.standard_model import StandardModel
-from advsecurenet.shared.loss import Loss
-from advsecurenet.shared.optimizer import Optimizer
-from advsecurenet.shared.types.attacks import AttackType
-from advsecurenet.shared.types.configs import (ConfigType, TestConfig,
-                                               attack_configs)
-from advsecurenet.shared.types.model import ModelType
-from advsecurenet.utils.config_utils import (generate_default_config_yaml,
-                                             get_available_configs,
-                                             get_default_config_yml)
-from advsecurenet.utils.model_utils import \
-    download_weights as util_download_weights
-from cli.attacks.lots import CLILOTSAttack
-from cli.types.adversarial_training import ATCliConfigType
-from cli.types.training import TrainingCliConfigType
-from cli.utils.adversarial_training_cli import AdversarialTrainingCLI
-from cli.utils.attack import execute_attack
-from cli.utils.config import build_config, load_configuration
-from cli.utils.data import load_and_prepare_data
-from cli.utils.model import cli_test
-from cli.utils.model import get_models as _get_models
-from cli.utils.model import prepare_model
-from cli.utils.trainer import CLITrainer
-
-warnings.simplefilter(action='ignore', category=UserWarning)
-
-
-version = pkg_resources.require("advsecurenet")[0].version
 
 
 class IntListParamType(click.ParamType):
+    """
+    Custom parameter type for a list of integers using the click library.
+    """
     name = "intlist"
 
     def convert(self, value, param, ctx):
+        """
+        Convert the value to a list of integers.
+        """
         try:
             return [int(i) for i in value.split(',')]
         except ValueError:
@@ -50,7 +24,7 @@ INT_LIST = IntListParamType()
 
 
 @click.group()
-@click.version_option(version)
+@click.version_option(version='0.1.1')
 def main():
     pass
 
@@ -94,8 +68,10 @@ if __name__ == "__main__":
 @click.option('-e', '--epochs', default=None, type=click.INT, help='Number of epochs to train for. Defaults to 1.')
 @click.option('-b', '--batch-size', default=None, type=click.INT, help='Batch size for training.')
 @click.option('--lr', default=None, type=click.FLOAT, help='Learning rate for training.')
-@click.option('--optimizer', default=None, help='Optimizer to use for training. Available options: ' + ', '.join([e.name for e in Optimizer]))
-@click.option('--loss', default=None, help='Loss function to use for training. Available options: ' + ', '.join([e.name for e in Loss]))
+@click.option('--optimizer', default=None, help='Optimizer to use for training.')
+@click.option('--loss', default=None, help='Loss function to use for training.')
+# @click.option('--optimizer', default=None, help='Optimizer to use for training. Available options: ' + ', '.join([e.name for e in Optimizer]))
+# @click.option('--loss', default=None, help='Loss function to use for training. Available options: ' + ', '.join([e.name for e in Loss]))
 @click.option('-s', '--save', type=click.BOOL, is_flag=True, default=None, help='Whether to save the model after training. Defaults to False.')
 @click.option('--save-path', default=None, help='The directory to save the model to. If not specified, defaults to the weights directory.')
 @click.option('--save-name', default=None, help='The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.')
@@ -148,16 +124,9 @@ def train(config: str, **kwargs):
         If a configuration file is provided, the CLI arguments will override the configuration file. The CLI arguments have priority.
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
-    if not config:
-        click.echo(
-            "No configuration file provided for training! Using default configuration...")
-        config = get_default_config_yml("train_config.yml", "cli")
+    from cli.logic.train import cli_train
 
-    config_data = load_configuration(
-        config_type=ConfigType.TRAIN, config_file=config, **kwargs)
-    config_data = TrainingCliConfigType(**config_data)
-    trainer = CLITrainer(config_data)
-    trainer.train()
+    cli_train(config, **kwargs)
 
 
 @main.command()
@@ -167,7 +136,8 @@ def train(config: str, **kwargs):
 @click.option('--model-weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
 @click.option('--device', default=None, help='The device to evaluate on. Defaults to CPU')
 @click.option('--batch-size', default=None, help='Batch size for evaluation.')
-@click.option('--loss', default=None, help='Loss function to use for evaluation. Available options: ' + ', '.join([e.name for e in Loss]))
+# @click.option('--loss', default=None, help='Loss function to use for evaluation. Available options: ' + ', '.join([e.name for e in Loss]))
+@click.option('--loss', default=None, help='Loss function to use for evaluation.')
 def test(config: str, **kwargs):
     """
     Command to evaluate a model.
@@ -195,14 +165,9 @@ def test(config: str, **kwargs):
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
 
     """
-    if not config:
-        click.echo(
-            "No configuration file provided for evaluation! Using default configuration...")
-        config = get_default_config_yml("test_config.yml", "cli")
+    from cli.logic.test import cli_test
 
-    config_data: TestConfig = load_configuration(
-        config_type=ConfigType.TEST, config_file=config, **kwargs)
-    cli_test(config_data)
+    cli_test(config, **kwargs)
 
 
 @weights.command()
@@ -222,14 +187,9 @@ def available_weights(model_name: str):
             IMAGENET1K_V1
 
     """
-    if not model_name:
-        raise click.ClickException(
-            "Model name must be provided! You can use the 'models' command to list available models.")
+    from cli.logic.model import cli_available_weights
 
-    weights = StandardModel.available_weights(model_name)
-    click.echo(f"Available weights for {model_name}:")
-    for weight in weights:
-        click.echo(f"\t{weight.name}")
+    cli_available_weights(model_name)
 
 
 @main.command()
@@ -244,17 +204,9 @@ def configs():
         >>> advsecurenet configs
 
     """
-    config_list = get_available_configs()
-    if len(config_list) == 0:
-        click.echo("No configuration file found!")
-        click.ClickException("No configuration file found!")
-        return
+    from cli.logic.config import cli_configs
 
-    click.echo("Available configuration files: \n")
-    for i, config in enumerate(config_list):
-        click.echo(f"{i+1}. {config}")
-    # add space
-    click.echo("")
+    cli_configs()
 
 
 @main.command()
@@ -285,40 +237,17 @@ def config_default(config_name: str, save: bool, print_output: bool, output_path
         You can provide a full path including the filename to the output path. If the directory does not exist, it will be created. If the file already exists, it will be overwritten.
         You can provide the relative path to the output path. Make sure it ends with a slash (e.g., ./myconfigs/).
     """
+    from cli.logic.config import cli_config_default
 
-    if config_name is None:
-        raise ValueError("config-name must be specified and not None!")
-
-    if output_path is None:
-        output_path = os.getcwd()
-
-    try:
-        default_config = generate_default_config_yaml(
-            config_name, output_path, save=save, config_subdir="cli")
-
-        if print_output:
-            click.echo("*"*50)
-            click.echo(f"Default configuration file for {config_name}:\n")
-            formatted_config = '\n'.join(
-                [f"{key}: {value}" for key, value in default_config.items()])
-            click.echo(formatted_config)
-            click.echo("*"*50)
-        if save:
-            click.echo(f"Generated default configuration file {config_name}!")
-    except FileNotFoundError as e:
-        click.echo(
-            f"Configuration file {config_name} not found! You can use the 'configs' command to list available configuration files.")
-    except Exception as e:
-        click.echo(
-            f"Error generating default configuration file {config_name}!", e)
+    cli_config_default(config_name, save, print_output, output_path)
 
 
 @main.command()
 @click.option('-m', '--model-type',
-              type=click.Choice([e.value for e in ModelType] + ['all']),
+              # type=click.Choice([e.value for e in ModelType] + ['all']),
               default='all',
               help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.")
-def models(model_type):
+def models(model_type: str):
     """Command to list available models.
 
     Args:
@@ -328,20 +257,14 @@ def models(model_type):
     Raises:
         ValueError: If the model_type is not supported.
     """
-    model_list = _get_models(model_type)
+    from cli.logic.model import cli_models
 
-    click.echo("Available models:\n")
-    # show numbers too
-    for i, model in enumerate(model_list):
-        click.echo(f"{i+1}. {model}")
-
-    # add space
-    click.echo("")
+    cli_models(model_type)
 
 
 @main.command()
 @click.option('-m', '--model-name', default=None, help='Name of the model to inspect (e.g. "resnet18").')
-def model_layers(model_name):
+def model_layers(model_name: str):
     """Command to list the layers of a model.
 
     Args:
@@ -351,21 +274,9 @@ def model_layers(model_name):
     Raises:
         ValueError: If the model name is not provided.
     """
-    if not model_name:
-        raise ValueError("Model name must be provided!")
+    from cli.logic.model import cli_model_layers
 
-    model = ModelFactory.create_model(model_name, num_classes=3)
-    layer_names = model.get_layer_names()
-    click.echo(f"Layers for {model_name}:")
-    click.echo(f"{'Layer Name':<30}{'Layer Type':<30}")
-    for layer_name in layer_names:
-        layer_type = type(model.get_layer(layer_name)).__name__
-        click.echo(f"{layer_name:<30}{layer_type:<30}")
-
-    # send a warning to remind the user to add model prefix while using LOTS Attack
-    click.echo(click.style(
-        'ATTENTION: You might need to add model prefix while using LOTS Attack. I.e. model.fc1',
-        bold=True))
+    cli_model_layers(model_name)
 
 
 @weights.command()
@@ -382,22 +293,9 @@ def download_weights(model_name, dataset_name, filename, save_path):
         filename (str, optional): The filename of the weights on the remote server. If provided, this will be used directly.
         save_path (str, optional): The directory to save the weights to. Defaults to weights directory.
     """
-    if not model_name or not dataset_name:
-        raise ValueError("Please provide both model name and dataset name!")
-    try:
-        save_path_print = save_path if save_path else "weights directory"
-        util_download_weights(model_name, dataset_name, filename, save_path)
-        click.echo(
-            f"Downloaded weights to {save_path_print}. You can now use them for training or evaluation!")
-    except FileExistsError as e:
-        print(
-            f"Model weights for {model_name} trained on {dataset_name} already exist at {save_path_print}!")
-    except HTTPError as e:
-        print(
-            f"Model weights for {model_name} trained on {dataset_name} not found on remote server!")
-    except Exception as e:
-        print(
-            f"Error downloading model weights for {model_name} trained on {dataset_name}!")
+    from cli.logic.model import cli_download_weights
+
+    cli_download_weights(model_name, dataset_name, filename, save_path)
 
 
 ################################# ATTACKS #####################################
@@ -439,7 +337,7 @@ def common_attack_options(func):
     return func
 
 
-def execute_general_attack(attack_type: AttackType, config_file: str, attack_config_class: attack_configs.AttackConfig, **kwargs):
+def execute_general_attack(attack_type, config_file: str, attack_config_class, **kwargs):
     """
     The general function to execute an attack based on the attack type.
 
@@ -454,38 +352,9 @@ def execute_general_attack(attack_type: AttackType, config_file: str, attack_con
     Raises:
         ValueError: If the attack type is not supported.
     """
+    from cli.logic.attack import cli_execute_general_attack
 
-    # if the config file is not provided, use the default config file
-    attack_name = attack_type.name.lower()
-    if not config_file:
-        click.echo(
-            f"No configuration file provided for {attack_name} attack! Using default configuration...")
-        file_name = f'{attack_name}_attack_config.yml'
-        config_file = get_default_config_yml(file_name, "cli")
-
-    config_data = load_configuration(
-        config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
-    if attack_type == AttackType.LOTS:
-        click.echo(f"Executing {attack_name} attack...")
-        attack = CLILOTSAttack(config_data)
-        adversarial_images = attack.execute_attack()
-    else:
-        if attack_type == AttackType.CW and config_data['targeted']:
-            click.UsageError(
-                "Targeted CW attack through CLI not supported yet! Please set targeted to False or use API.")
-        data, num_classes, device = load_and_prepare_data(config_data)
-        attack_config = build_config(config_data, attack_config_class)
-        print(f"config data is {config_data}")
-        model = prepare_model(config_data, num_classes, device)
-
-        attack_class = attack_type.value  # Get the class from the Enum
-        print(f"config {attack_config}")
-        attack = attack_class(attack_config)
-        click.echo(f"Executing {attack_name} attack...")
-        adversarial_images = execute_attack(
-            model=model, data=data, batch_size=config_data['batch_size'], attack=attack, device=device, verbose=config_data['verbose'])
-
-    return adversarial_images
+    return cli_execute_general_attack(attack_type, config_file, attack_config_class, **kwargs)
 
 
 @attack.command()
@@ -527,7 +396,9 @@ def deepfool(config, **kwargs):
             If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
-    return execute_general_attack(AttackType.DEEPFOOL, config, attack_configs.DeepFoolAttackConfig, **kwargs)
+    from cli.logic.attack import cli_attack
+
+    cli_attack("DEEPFOOL", config, **kwargs)
 
 
 @attack.command()
@@ -588,7 +459,9 @@ def cw(config, **kwargs):
             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
 
     """
-    return execute_general_attack(AttackType.CW, config, attack_configs.CWAttackConfig, **kwargs)
+    from cli.logic.attack import cli_attack
+
+    cli_attack("CW", config, **kwargs)
 
 
 @attack.command()
@@ -629,7 +502,9 @@ def pgd(config, **kwargs):
                 If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
                 Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.  
     """
-    return execute_general_attack(AttackType.PGD, config, attack_configs.PgdAttackConfig, **kwargs)
+    from cli.logic.attack import cli_attack
+
+    cli_attack("PGD", config, **kwargs)
 
 
 @attack.command()
@@ -668,7 +543,9 @@ def fgsm(config, **kwargs):
                     Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
 
     """
-    return execute_general_attack(AttackType.FGSM, config, attack_configs.FgsmAttackConfig, **kwargs)
+    from cli.logic.attack import cli_attack
+
+    cli_attack("FGSM", config, **kwargs)
 
 
 @attack.command()
@@ -721,7 +598,9 @@ def lots(config, **kwargs):
                             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.   
 
     """
-    return execute_general_attack(AttackType.LOTS, config, attack_configs.LotsAttackConfig, **kwargs)
+    from cli.logic.attack import cli_attack
+
+    cli_attack("LOTS", config, **kwargs)
 
 ################################# DEFENSES #####################################
 
@@ -742,12 +621,6 @@ def adversarial_training(config, **kwargs):
         Because of the large number of arguments, it is mandatory to use a configuration file for adversarial training.
 
     """
-    if not config:
-        raise click.ClickException(
-            "No configuration file provided for adversarial training! Use the 'config-default' command to generate a default configuration file.")
+    from cli.logic.defense import cli_adversarial_training
 
-    config_data = load_configuration(
-        config_type=ConfigType.DEFENSE, config_file=config, **kwargs)
-    config_data = ATCliConfigType(**config_data)
-    adversarial_training = AdversarialTrainingCLI(config_data)
-    adversarial_training.train()
+    cli_adversarial_training(config, **kwargs)

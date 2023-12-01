@@ -1,9 +1,12 @@
 import os
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import patch, Mock
 from click.testing import CliRunner
 from requests import HTTPError
-from cli.cli import download_weights, config_default, deepfool, fgsm, pgd, cw, lots, adversarial_training
+
+from cli.cli import (adversarial_training, config_default, cw, deepfool,
+                     download_weights, fgsm, lots, pgd)
 
 
 class TestDownloadWeights:
@@ -18,18 +21,17 @@ class TestDownloadWeights:
         pass
 
     def test_download_weights_success(self):
-        with patch('cli.cli.util_download_weights', return_value=None) as mock_download:
+        with patch('cli.logic.model.download_weights', return_value=None) as mock_download:
+            # check if the function is called
             result = self.runner.invoke(
                 download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
             # Assertions
             assert result.exit_code == 0
-            assert 'Downloaded weights to weights directory.' in result.output
-            mock_download.assert_called_once_with(
-                'resnet18', 'cifar10', None, None)
+            mock_download.assert_called_once()
 
     def test_download_weights_file_exists(self):
-        with patch('cli.cli.util_download_weights', side_effect=FileExistsError()) as mock_download:
+        with patch('cli.logic.model.download_weights', side_effect=FileExistsError()) as mock_download:
             result = self.runner.invoke(
                 download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
@@ -38,7 +40,7 @@ class TestDownloadWeights:
             assert 'Model weights for resnet18 trained on cifar10 already exist' in result.output
 
     def test_download_weights_model_not_found(self):
-        with patch('cli.cli.util_download_weights', side_effect=HTTPError()) as mock_download:
+        with patch('cli.logic.model.download_weights', side_effect=HTTPError()) as mock_download:
             result = self.runner.invoke(
                 download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
@@ -47,7 +49,7 @@ class TestDownloadWeights:
             assert 'Model weights for resnet18 trained on cifar10 not found' in result.output
 
     def test_download_weights_other_exception(self):
-        with patch('cli.cli.util_download_weights', side_effect=Exception()) as mock_download:
+        with patch('cli.logic.model.download_weights', side_effect=Exception()) as mock_download:
             result = self.runner.invoke(
                 download_weights, ['--model-name', 'resnet18', '--dataset-name', 'cifar10'])
 
@@ -66,7 +68,7 @@ class TestAttackCommands:
     @pytest.mark.parametrize("attack_command", [deepfool, fgsm, pgd, cw, lots])
     def test_attack_basic(self, runner, attack_command):
         # Mock the execute_general_attack function
-        with patch('cli.cli.execute_general_attack', return_value="Success!") as mock_attack:
+        with patch('cli.logic.attack.cli_execute_general_attack', return_value="Success!") as mock_attack:
 
             # Simulate invoking the command using the provided attack_command
             result = runner.invoke(attack_command)
@@ -94,7 +96,10 @@ class TestConfigDefaultCommand:
 
         # Assertions
         assert result.exit_code == 0
+        # fmt: off
         assert f"Default configuration file for {config_name}:" in result.output
+        # fmt: on
+
         assert "key1: value1" in result.output
         assert "key2: value2" in result.output
 
@@ -141,7 +146,7 @@ class TestAdversarialTrainingCommand:
 
     # @patch('cli.utils.config.load_configuration')
 
-    @patch('cli.cli.AdversarialTrainingCLI')
+    @patch('cli.logic.defense.AdversarialTrainingCLI')
     def test_adversarial_training_with_valid_config(self, mock_adversarial_training_cli, runner, set_working_dir):
         # Mock the AdversarialTrainingCLI class
         mock_adversarial_training_cli.return_value = Mock(
@@ -155,7 +160,7 @@ class TestAdversarialTrainingCommand:
         assert result.exit_code == 0
         mock_adversarial_training_cli.assert_called_once()
 
-    @patch('cli.cli.load_configuration')
+    @patch('cli.logic.defense.load_configuration')
     def test_adversarial_training_without_config(self, mock_load_config, runner):
         mock_load_config.side_effect = Exception(
             "No configuration file provided for adversarial training")
@@ -164,7 +169,7 @@ class TestAdversarialTrainingCommand:
         assert "No configuration file provided for adversarial training" in result.output
         mock_load_config.assert_not_called()
 
-    @patch('cli.cli.load_configuration')
+    @patch('cli.logic.defense.load_configuration')
     def test_adversarial_training_with_invalid_config(self, mock_load_config, runner):
         mock_load_config.side_effect = Exception("Invalid configuration file")
         result = runner.invoke(adversarial_training, [

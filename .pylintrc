@@ -4,7 +4,7 @@ jobs=2
 
 [MESSAGES CONTROL]
 enable=W
-disable=line-too-long
+disable=line-too-long, import-outside-toplevel
 
 [REPORTS]
 score=y
