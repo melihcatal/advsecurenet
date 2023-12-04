@@ -1,12 +1,14 @@
 
 import os
+
 import numpy as np
 import torch
 from PIL import Image
-from torch.utils.data import random_split, Subset
+from torch.utils.data import Subset, random_split
+
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
-from cli.utils.helpers import to_bchw_format, get_device_from_cfg
+from cli.utils.helpers import get_device_from_cfg, to_bchw_format
 
 
 def load_and_prepare_data(config_data: dict) -> tuple[torch.utils.data.TensorDataset, int, torch.device]:
@@ -108,24 +110,8 @@ def get_data(config_data, dataset_type, trained_on_dataset_type) -> tuple[torch.
 
 def get_custom_data(path: str) -> tuple[torch.Tensor, torch.Tensor]:
     """
-    Returns the images and labels from the custom data directory.
-    The expected directory structure is for each class to have its own directory, and the images for that class to be in that directory. I.e.
-    custom_data_dir/
-        │
-        ├── cat/
-        │   ├── cat1.jpg
-        │   ├── cat2.jpg
-        │   ├── ...
-        │
-        ├── dog/
-        │   ├── dog1.jpg
-        │   ├── dog2.jpg
-        │   ├── ...
-        │
-        └── fish/
-            ├── fish1.jpg
-            ├── fish2.jpg
-            ├── ...
+    Returns the images and labels from the custom data directory. The expected directory structure is for each class to have its own directory, and the images for that class to be in that directory.
+
 
     Args:
         path (str): The path to the custom data directory.

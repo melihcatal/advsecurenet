@@ -1,49 +1,21 @@
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-
 .. include:: Introduction.rst
 
-Attacks
-=======
-.. automodule:: advsecurenet.attacks
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
-Defenses
-========
-.. automodule:: advsecurenet.defenses
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+    :maxdepth: 4
+    
+    Introduction
+    
+.. toctree::
+    :maxdepth: 6
+    
+    advsecurenet
 
-Datasets
-========
-.. automodule:: advsecurenet.datasets
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+    :maxdepth: 6
+    
+    cli
 
-Models
-======
-.. automodule:: advsecurenet.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
-Utils  
-=====
-.. automodule:: advsecurenet.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
-Types
-======
-.. automodule:: advsecurenet.shared.types
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
