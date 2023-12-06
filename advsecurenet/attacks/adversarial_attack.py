@@ -19,6 +19,7 @@ class AdversarialAttack(ABC):
         self.device_manager = DeviceManager(
             device=config.device, distributed_mode=config.distributed_mode)
         self.name: str = self.__class__.__name__
+        self.targeted: bool = False
 
     @abstractmethod
     def attack(self,

@@ -1,9 +1,10 @@
-import torch
-import pytest
 import warnings
 
-from torch import nn
+import pytest
+import torch
 from pytest_mock import mocker
+from torch import nn
+
 from advsecurenet.attacks import CWAttack
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig
@@ -69,11 +70,14 @@ def test_untargeted_attack(mocker, setup):
     assert torch.all(adv_x != x)
 
 
-def test_targeted_attack(setup):
+def test_targeted_attack(mocker, setup):
     model, x, y, config = setup
 
     # set targeted to True
     config.targeted = True
+
+    # Mock the model's forward pass to always return the true label
+    mocker.patch.object(model, 'forward', side_effect=fake_forward_pass)
 
     # Define the attack
     attack = CWAttack(config)

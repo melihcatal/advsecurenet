@@ -81,9 +81,6 @@ class AdversarialTraining(Trainer):
         Args:
             source: A batch of clean images
             targets: A batch of clean labels
-            batch_idx: The index of the batch
-            lots_source: A batch of LOTS source images
-            lots_targets: A batch of LOTS target images
         """
 
         source, targets = self._move_to_device(source, targets)
@@ -107,27 +104,47 @@ class AdversarialTraining(Trainer):
         adv_source.append(attack_result)
         adv_targets.append(targets)
 
-        return torch.cat(adv_source, dim=0), torch.cat(adv_targets, dim=0)
+        # Combine adversarial examples
+        adv_source = torch.cat(adv_source, dim=0)
+        adv_targets = torch.cat(adv_targets, dim=0)
+
+        return adv_source, adv_targets
 
     def _move_to_device(self, source, targets):
         return source.to(self.device), targets.to(self.device)
 
-    def _perform_attack(self, attack, model, source, targets):
+    def _perform_attack(self,
+                        attack: AdversarialAttack,
+                        model: BaseModel,
+                        source: torch.Tensor,
+                        targets: torch.Tensor) -> torch.Tensor:
+        """
+        Performs the attack on the specified model and input.
+
+        Args:
+            attack (AdversarialAttack): The attack to perform.
+            model (BaseModel): The model to attack.
+            source (torch.tensor): The original input tensor. Expected shape is (batch_size, channels, height, width).
+            targets (torch.tensor): The true labels for the input tensor. Expected shape is (batch_size,).
+
+        Returns:
+            torch.tensor: The adversarial example tensor.
+        """
         if attack.name == "LOTS":
             paired = self.adversarial_target_generator.generate_target_images(
                 zip(source, targets))
             original_images, _, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
                 paired, source)
             # Perform attack
-            adv_images, _ = attack.attack(
+            adv_images, _ = attack.attack(  # type: ignore
                 model=model,
                 data=original_images,
                 target=target_images,
                 target_classes=target_labels,
             )
             return adv_images
-        else:
-            return attack.attack(model, source, targets)
+
+        return attack.attack(model, source, targets)
 
     def _run_epoch(self, epoch: int) -> None:
 

@@ -39,6 +39,7 @@ class LOTS(AdversarialAttack):
         self.learning_rate: float = config.learning_rate
         self.max_iterations: int = config.max_iterations
         self.verbose: bool = config.verbose
+        self.targeted: bool = True
         super().__init__(config)
 
     @staticmethod

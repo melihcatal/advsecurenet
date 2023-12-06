@@ -1,40 +1,44 @@
-# test_adversarial_attack_evaluator.py
-
 import pytest
 import torch
-import numpy as np
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.utils.evaluation import AdversarialAttackEvaluator
+
+from advsecurenet.evaluation.evaluators.perturbation_distance_evaluator import \
+    PerturbationDistanceEvaluator
+
+
+# Helper function to create mock data
+def create_mock_images(batch_size, channels, height, width):
+    return torch.rand(batch_size, channels, height, width)
 
 
 @pytest.fixture
-def dummy_model():
-    model = ModelFactory.create_model(
-        "CustomMnistModel", num_classes=10, num_input_channels=1)
-    return model
+def evaluator():
+    return PerturbationDistanceEvaluator()
 
 
-@pytest.fixture
-def evaluator(dummy_model):
-    return AdversarialAttackEvaluator()
+def test_initialization(evaluator):
+    assert evaluator.total_l0_distance == 0
+    assert evaluator.total_l2_distance == 0
+    assert evaluator.total_l_inf_distance == 0
+    assert evaluator.total_samples == 0
 
 
-def test_full_evaluation(dummy_model, evaluator):
-    # Set up dummy data
-    original_images = torch.rand((10, 1, 28, 28))
-    true_labels = torch.randint(0, 10, (10,))
-    adversarial_images = torch.rand((10, 1, 28, 28))
-    target_labels = torch.randint(0, 10, (10,))
+def test_reset(evaluator):
+    evaluator.reset()
+    assert evaluator.total_l0_distance == 0
+    assert evaluator.total_l2_distance == 0
+    assert evaluator.total_l_inf_distance == 0
+    assert evaluator.total_samples == 0
 
-    # Test non-targeted attack
-    results = evaluator.full_evaluation(
-        dummy_model, original_images, true_labels, adversarial_images)
-    assert isinstance(results, dict)
 
-    # Test targeted attack
-    results = evaluator.full_evaluation(dummy_model,
-                                        original_images, true_labels, adversarial_images, is_targeted=True, target_labels=target_labels)
-    assert isinstance(results, dict)
+def test_update(evaluator):
+    original_images = create_mock_images(10, 3, 224, 224)
+    adversarial_images = create_mock_images(10, 3, 224, 224)
+
+    evaluator.update(original_images, adversarial_images)
+    assert evaluator.total_samples == 10
+    assert evaluator.total_l0_distance > 0
+    assert evaluator.total_l2_distance > 0
+    assert evaluator.total_l_inf_distance > 0
 
 
 def test_calculate_l0_distance(evaluator):
@@ -95,23 +99,3 @@ def test_identical_images_distance(evaluator):
         original_images, adversarial_images)
     expected_l_inf_distance = 0
     assert l_inf_distance == pytest.approx(expected_l_inf_distance, rel=1e-3)
-
-
-def test_identical_images_ssim(evaluator):
-    # Create identical original and adversarial images
-    original = torch.rand((10, 3, 224, 224))
-    adversarial = original.clone()
-
-    ssim = evaluator.calculate_ssim(original, adversarial)
-
-    assert ssim == pytest.approx(1.0, rel=1e-3)
-
-
-def test_identical_images_psnr(evaluator):
-    # Create identical original and adversarial images
-    original = torch.rand((10, 3, 224, 224))
-    adversarial = original.clone()
-
-    psnr = evaluator.calculate_psnr(original, adversarial)
-
-    assert psnr == pytest.approx(float("inf"), rel=1e-3)
