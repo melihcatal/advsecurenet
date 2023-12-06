@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Command Line Interface" href="cli.html" />
+    <link rel="next" title="advsecurenet.evaluation package" href="advsecurenet.evaluation.html" />
     <link rel="prev" title="advsecurenet.shared.types.configs.defense_configs package" href="advsecurenet.shared.types.configs.defense_configs.html" /> 
 </head>
 
@@ -81,6 +81,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.utils">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.evaluation.html">advsecurenet.evaluation package</a></li>
 </ul>
 </li>
 </ul>
@@ -523,216 +524,6 @@ In single mode, it places tensors on the initialized device.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l0_distance">
-<span class="sig-name descname"><span class="pre">calculate_l0_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l0_distance" title="Link to this definition"></a></dt>
-<dd><p>Calculates the L0 distance between the original and adversarial images. L0 distance is the count of pixels that are different between the two images (i.e. the number of pixels that have been changed in the adversarial image compared to the original image).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean L0 distance between the original and adversarial images.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l2_distance">
-<span class="sig-name descname"><span class="pre">calculate_l2_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l2_distance" title="Link to this definition"></a></dt>
-<dd><p>Calculates the L2 distance between the original and adversarial images. L2 distance is the Euclidean distance between the two images.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean L2 distance between the original and adversarial images.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l_inf_distance">
-<span class="sig-name descname"><span class="pre">calculate_l_inf_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l_inf_distance" title="Link to this definition"></a></dt>
-<dd><p>Calculates the L∞ distance between the original and adversarial images. L∞ distance is the maximum absolute difference between the two images in any pixel.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean L∞ distance between the original and adversarial images.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_distances">
-<span class="sig-name descname"><span class="pre">calculate_perturbation_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_distances" title="Link to this definition"></a></dt>
-<dd><p>Calculates the L0, L2, and L∞ distances between the original and adversarial images.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean L0, L2, and L∞ distances between the original and adversarial images.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, float, float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_effectiveness_score">
-<span class="sig-name descname"><span class="pre">calculate_perturbation_effectiveness_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attack_success_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_effectiveness_score" title="Link to this definition"></a></dt>
-<dd><p>Calculates the perturbation effectiveness score for the attack. The effectiveness score is the attack success rate divided by the perturbation distance. The higher the score, the more effective the attack.
-The purpose of this metric is to distinguish between attacks that have a high success rate but require a large perturbation magnitude,
-and attacks that have a lower success rate but require a smaller perturbation magnitude.
-:param attack_success_rate: The attack success rate.
-:type attack_success_rate: float
-:param perturbation_distance: The perturbation distance.
-:type perturbation_distance: float</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The effectiveness score.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_psnr">
-<span class="sig-name descname"><span class="pre">calculate_psnr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_psnr" title="Link to this definition"></a></dt>
-<dd><p>Calculates the mean peak signal-to-noise ratio (PSNR) between the original and adversarial images. PSNR is a metric that measures the similarity between two images.
-The higher the PSNR, the more similar the images are and the lower the distortion between them. A high PSNR could indicate that the perturbations introduced are
-subtle but may not necessarily reflect the perceptual similarity between the images.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images. Expected shape is (batch_size, channels, height, width).</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean PSNR between the original and adversarial images. [0, inf) range. Higher values (e.g. 30 dB or more) indicate better quality. Infinite if the images are identical.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_robustness_gap">
-<span class="sig-name descname"><span class="pre">calculate_robustness_gap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_robustness_gap" title="Link to this definition"></a></dt>
-<dd><p>Calculates the robustness gap for the adversarial examples. The robustness gap is the difference between the accuracy of the model on the original images and the accuracy of the model on the adversarial images.
-The larger the robustness gap, the more effective the attack.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
-<li><p><strong>true_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean robustness gap for the adversarial examples.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_similarity_scores">
-<span class="sig-name descname"><span class="pre">calculate_similarity_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_similarity_scores" title="Link to this definition"></a></dt>
-<dd><p>Calculates the SSIM and PSNR between the original and adversarial images.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images. Expected shape is (batch_size, channels, height, width).</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean SSIM and PSNR between the original and adversarial images.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[float, float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_ssim">
-<span class="sig-name descname"><span class="pre">calculate_ssim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_ssim" title="Link to this definition"></a></dt>
-<dd><p>Calculates the mean structural similarity index (SSIM) between the original and adversarial images. SSIM is a metric that measures the similarity between two images.
-The higher the SSIM, the more similar the images are.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images. Expected shape is (batch_size, channels, height, width).</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mean SSIM between the original and adversarial images. [-1, 1] range. 1 means the images are identical.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_transferability_rate">
-<span class="sig-name descname"><span class="pre">calculate_transferability_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_transferability_rate" title="Link to this definition"></a></dt>
-<dd><p>Calculates the attack transferability rate. This rate is the percentage of adversarial examples that are successful on the target model among those that were successful on the source model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source_model</strong> – The model used to generate adversarial examples.</p></li>
-<li><p><strong>target_model</strong> – A different model to test the transferability of adversarial examples.</p></li>
-<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
-<li><p><strong>true_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
-<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images generated from the source model.</p></li>
-<li><p><strong>is_targeted</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the attack is targeted.</p></li>
-<li><p><strong>target_labels</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – The target labels for the adversarial images if the attack is targeted.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The attack transferability rate.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.evaluate_attack">
 <span class="sig-name descname"><span class="pre">evaluate_attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.evaluate_attack" title="Link to this definition"></a></dt>
 <dd><p>Evaluates the attack success rate of the adversarial examples. The attack success rate is the percentage of adversarial examples that are misclassified by the model.
@@ -780,22 +571,6 @@ If the attack is targeted, the attack success rate is the percentage of adversar
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="advsecurenet.utils.evaluation.AdversarialAttackEvaluator.save_results_to_csv">
-<span class="sig-name descname"><span class="pre">save_results_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluation_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.save_results_to_csv" title="Link to this definition"></a></dt>
-<dd><p>Saves the evaluation results to a CSV file in a structured format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>evaluation_results</strong> (<em>dict</em>) – The evaluation results.</p></li>
-<li><p><strong>experiment_info</strong> (<em>dict</em><em>, </em><em>optional</em>) – The experiment info.</p></li>
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – The path where the file will be saved.</p></li>
-<li><p><strong>file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the CSV file.</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1032,7 +807,7 @@ If the attack is targeted, the attack success rate is the percentage of adversar
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="advsecurenet.shared.types.configs.defense_configs.html" class="btn btn-neutral float-left" title="advsecurenet.shared.types.configs.defense_configs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cli.html" class="btn btn-neutral float-right" title="Command Line Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="advsecurenet.evaluation.html" class="btn btn-neutral float-right" title="advsecurenet.evaluation package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -15,4 +15,5 @@ Subpackages
    advsecurenet.models
    advsecurenet.shared
    advsecurenet.utils
+   advsecurenet.evaluation
 

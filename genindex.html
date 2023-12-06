@@ -138,6 +138,8 @@
 </li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator">AdversarialAttackEvaluator (class in advsecurenet.utils.evaluation)</a>
 </li>
+      <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator">AdversarialEvaluator (class in advsecurenet.evaluation.adversarial_evaluator)</a>
+</li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator">AdversarialTargetGenerator (class in advsecurenet.utils.adversarial_target_generator)</a>
 </li>
       <li><a href="advsecurenet.defenses.html#advsecurenet.defenses.adversarial_training.AdversarialTraining">AdversarialTraining (class in advsecurenet.defenses.adversarial_training)</a>
@@ -350,6 +352,76 @@
 </li>
       </ul></li>
       <li>
+    advsecurenet.evaluation
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.html#module-advsecurenet.evaluation">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.adversarial_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.html#module-advsecurenet.evaluation.adversarial_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.base_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.html#module-advsecurenet.evaluation.base_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators.attack_success_rate_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.attack_success_rate_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators.perturbation_distance_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.perturbation_distance_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators.robustness_gap_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.robustness_gap_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators.similarity_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.similarity_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
+    advsecurenet.evaluation.evaluators.transferability_evaluator
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.transferability_evaluator">module</a>
+</li>
+      </ul></li>
+      <li>
     advsecurenet.models
 
       <ul>
@@ -398,6 +470,8 @@
         <li><a href="advsecurenet.models.html#module-advsecurenet.models.model_factory">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     advsecurenet.models.standard_model
 
@@ -433,8 +507,6 @@
         <li><a href="advsecurenet.shared.html#module-advsecurenet.shared.optimizer">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     advsecurenet.shared.types
 
@@ -704,6 +776,8 @@
         <li><a href="cli.types.html#cli.types.adversarial_training.ATCliConfigType.attacks">(cli.types.adversarial_training.ATCliConfigType attribute)</a>
 </li>
       </ul></li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator">AttackSuccessRateEvaluator (class in advsecurenet.evaluation.evaluators.attack_success_rate_evaluator)</a>
+</li>
       <li><a href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType">AttackType (class in advsecurenet.shared.types.attacks)</a>
 </li>
       <li><a href="cli.types.html#cli.types.adversarial_training.AttackWithConfigDict">AttackWithConfigDict (class in cli.types.adversarial_training)</a>
@@ -733,6 +807,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="advsecurenet.datasets.html#advsecurenet.datasets.base_dataset.BaseDataset">BaseDataset (class in advsecurenet.datasets.base_dataset)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator">BaseEvaluator (class in advsecurenet.evaluation.base_evaluator)</a>
 </li>
       <li><a href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel">BaseModel (class in advsecurenet.models.base_model)</a>
 </li>
@@ -768,25 +844,21 @@
 </li>
       <li><a href="advsecurenet.shared.types.configs.attack_configs.html#advsecurenet.shared.types.configs.attack_configs.cw_attack_config.CWAttackConfig.c_upper">c_upper (advsecurenet.shared.types.configs.attack_configs.cw_attack_config.CWAttackConfig attribute)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l0_distance">calculate_l0_distance() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.calculate_l0_distance">calculate_l0_distance() (advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l2_distance">calculate_l2_distance() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.calculate_l2_distance">calculate_l2_distance() (advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_l_inf_distance">calculate_l_inf_distance() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.calculate_l_inf_distance">calculate_l_inf_distance() (advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_distances">calculate_perturbation_distances() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.calculate_perturbation_distances">calculate_perturbation_distances() (advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_perturbation_effectiveness_score">calculate_perturbation_effectiveness_score() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator.calculate_perturbation_effectiveness_score">calculate_perturbation_effectiveness_score() (advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_psnr">calculate_psnr() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.calculate_psnr">calculate_psnr() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_robustness_gap">calculate_robustness_gap() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.calculate_similarity_scores">calculate_similarity_scores() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
 </li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_similarity_scores">calculate_similarity_scores() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
-</li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_ssim">calculate_ssim() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
-</li>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.calculate_transferability_rate">calculate_transferability_rate() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.calculate_ssim">calculate_ssim() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
 </li>
       <li><a href="advsecurenet.shared.types.configs.defense_configs.html#advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig.checkpoint_interval">checkpoint_interval (advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig attribute)</a>
 
@@ -879,8 +951,6 @@
         <li><a href="cli.utils.html#module-cli.utils.adversarial_training_cli">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     cli.utils.attack
 
@@ -888,6 +958,8 @@
         <li><a href="cli.utils.html#module-cli.utils.attack">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     cli.utils.config
 
@@ -1171,13 +1243,37 @@
 </li>
       <li><a href="cli.utils.html#cli.utils.helpers.get_device_from_cfg">get_device_from_cfg() (in module cli.utils.helpers)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel.get_layer">get_layer() (advsecurenet.models.base_model.BaseModel method)</a>
 </li>
       <li><a href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel.get_layer_names">get_layer_names() (advsecurenet.models.base_model.BaseModel method)</a>
 </li>
       <li><a href="cli.utils.html#cli.utils.model.get_models">get_models() (in module cli.utils.model)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.get_perturbation_distance">get_perturbation_distance() (advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.get_psnr">get_psnr() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.get_results">get_results() (advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator method)</a>
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator.get_results">(advsecurenet.evaluation.base_evaluator.BaseEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator.get_results">(advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.get_results">(advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator.get_results">(advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator.get_results">(advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.get_results">(advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator.get_results">(advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator method)</a>
+</li>
+      </ul></li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.get_ssim">get_ssim() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
 </li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.data.get_subset_data">get_subset_data() (in module advsecurenet.utils.data)</a>
 </li>
@@ -1495,6 +1591,26 @@
 </li>
         <li><a href="advsecurenet.defenses.html#module-advsecurenet.defenses.ddp_adversarial_training">advsecurenet.defenses.ddp_adversarial_training</a>
 </li>
+        <li><a href="advsecurenet.evaluation.html#module-advsecurenet.evaluation">advsecurenet.evaluation</a>
+</li>
+        <li><a href="advsecurenet.evaluation.html#module-advsecurenet.evaluation.adversarial_evaluator">advsecurenet.evaluation.adversarial_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.html#module-advsecurenet.evaluation.base_evaluator">advsecurenet.evaluation.base_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators">advsecurenet.evaluation.evaluators</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.attack_success_rate_evaluator">advsecurenet.evaluation.evaluators.attack_success_rate_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.perturbation_distance_evaluator">advsecurenet.evaluation.evaluators.perturbation_distance_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator">advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.robustness_gap_evaluator">advsecurenet.evaluation.evaluators.robustness_gap_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.similarity_evaluator">advsecurenet.evaluation.evaluators.similarity_evaluator</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.transferability_evaluator">advsecurenet.evaluation.evaluators.transferability_evaluator</a>
+</li>
         <li><a href="advsecurenet.models.html#module-advsecurenet.models">advsecurenet.models</a>
 </li>
         <li><a href="advsecurenet.models.html#module-advsecurenet.models.base_model">advsecurenet.models.base_model</a>
@@ -1740,6 +1856,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="advsecurenet.shared.types.configs.attack_configs.html#advsecurenet.shared.types.configs.attack_configs.cw_attack_config.CWAttackConfig.patience">patience (advsecurenet.shared.types.configs.attack_configs.cw_attack_config.CWAttackConfig attribute)</a>
 </li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator">PerturbationDistanceEvaluator (class in advsecurenet.evaluation.evaluators.perturbation_distance_evaluator)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator">PerturbationEffectivenessEvaluator (class in advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator)</a>
+</li>
       <li><a href="advsecurenet.shared.types.html#advsecurenet.shared.types.attacks.AttackType.PGD">PGD (advsecurenet.shared.types.attacks.AttackType attribute)</a>
 
       <ul>
@@ -1790,6 +1910,24 @@
 </li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.config_utils.read_yml_file">read_yml_file() (in module advsecurenet.utils.config_utils)</a>
 </li>
+      <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.reset">reset() (advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator method)</a>
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator.reset">(advsecurenet.evaluation.base_evaluator.BaseEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator.reset">(advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.reset">(advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator.reset">(advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator.reset">(advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.reset">(advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator.reset">(advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cli.types.attacks.html#cli.types.attacks.lots.LOTSCliConfigType.result_images_dir">result_images_dir (cli.types.attacks.lots.LOTSCliConfigType attribute)</a>
@@ -1797,6 +1935,8 @@
       <li><a href="cli.types.attacks.html#cli.types.attacks.lots.LOTSCliConfigType.result_images_prefix">result_images_prefix (cli.types.attacks.lots.LOTSCliConfigType attribute)</a>
 </li>
       <li><a href="advsecurenet.shared.html#advsecurenet.shared.optimizer.Optimizer.RMS_PROP">RMS_PROP (advsecurenet.shared.optimizer.Optimizer attribute)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator">RobustnessGapEvaluator (class in advsecurenet.evaluation.evaluators.robustness_gap_evaluator)</a>
 </li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator.run">run() (advsecurenet.utils.ddp_training_coordinator.DDPTrainingCoordinator method)</a>
 </li>
@@ -1860,10 +2000,10 @@
 </li>
       <li><a href="cli.types.attacks.html#cli.types.attacks.lots.LOTSCliConfigType.save_result_images">save_result_images (cli.types.attacks.lots.LOTSCliConfigType attribute)</a>
 </li>
+      <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator.save_results_to_csv">save_results_to_csv() (advsecurenet.evaluation.base_evaluator.BaseEvaluator method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="advsecurenet.utils.html#advsecurenet.utils.evaluation.AdversarialAttackEvaluator.save_results_to_csv">save_results_to_csv() (advsecurenet.utils.evaluation.AdversarialAttackEvaluator method)</a>
-</li>
       <li><a href="cli.types.html#cli.types.adversarial_training.ATCliConfigType.scheduler">scheduler (cli.types.adversarial_training.ATCliConfigType attribute)</a>
 </li>
       <li><a href="cli.types.html#cli.types.adversarial_training.ATCliConfigType.scheduler_gamma">scheduler_gamma (cli.types.adversarial_training.ATCliConfigType attribute)</a>
@@ -1894,6 +2034,8 @@
         <li><a href="cli.types.html#cli.types.training.TrainingCliConfigType.shuffle_train">(cli.types.training.TrainingCliConfigType attribute)</a>
 </li>
       </ul></li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator">SimilarityEvaluator (class in advsecurenet.evaluation.evaluators.similarity_evaluator)</a>
+</li>
       <li><a href="advsecurenet.shared.types.configs.attack_configs.html#advsecurenet.shared.types.configs.attack_configs.lots_attack_config.LotsAttackMode.SINGLE">SINGLE (advsecurenet.shared.types.configs.attack_configs.lots_attack_config.LotsAttackMode attribute)</a>
 </li>
       <li><a href="advsecurenet.shared.html#advsecurenet.shared.loss.Loss.SMOOTH_L1_LOSS">SMOOTH_L1_LOSS (advsecurenet.shared.loss.Loss attribute)</a>
@@ -1954,10 +2096,10 @@
 </li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.reproducibility_utils.torch_random_seed">torch_random_seed() (in module advsecurenet.utils.reproducibility_utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.reproducibility_utils.torch_unseed">torch_unseed() (in module advsecurenet.utils.reproducibility_utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.configs.ConfigType.TRAIN">TRAIN (advsecurenet.shared.types.configs.configs.ConfigType attribute)</a>
 
       <ul>
@@ -1992,6 +2134,10 @@
 </li>
       <li><a href="cli.types.html#cli.types.training.TrainingCliConfigType">TrainingCliConfigType (class in cli.types.training)</a>
 </li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator.transferability_data">transferability_data (advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator attribute)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator">TransferabilityEvaluator (class in advsecurenet.evaluation.evaluators.transferability_evaluator)</a>
+</li>
       <li><a href="advsecurenet.shared.html#advsecurenet.shared.loss.Loss.TRIPLET_MARGIN_LOSS">TRIPLET_MARGIN_LOSS (advsecurenet.shared.loss.Loss attribute)</a>
 </li>
   </ul></td>
@@ -2003,6 +2149,30 @@
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.reproducibility_utils.unique_seed">unique_seed() (in module advsecurenet.utils.reproducibility_utils)</a>
 </li>
       <li><a href="advsecurenet.utils.html#advsecurenet.utils.reproducibility_utils.unseed">unseed() (in module advsecurenet.utils.reproducibility_utils)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.update">update() (advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator method)</a>
+
+      <ul>
+        <li><a href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator.update">(advsecurenet.evaluation.base_evaluator.BaseEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator.update">(advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.update">(advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator.update">(advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator.PerturbationEffectivenessEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator.update">(advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.update">(advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
+</li>
+        <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator.update">(advsecurenet.evaluation.evaluators.transferability_evaluator.TransferabilityEvaluator method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.update_psnr">update_psnr() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
+</li>
+      <li><a href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.update_ssim">update_ssim() (advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator method)</a>
 </li>
       <li><a href="advsecurenet.shared.types.configs.defense_configs.html#advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig.use_ddp">use_ddp (advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig attribute)</a>
 
