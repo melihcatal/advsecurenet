@@ -2,6 +2,7 @@
 
 # Model Configuration
 model_name: resnet18
+num_input_channels: 3
 
 # Dataset Configuration
 dataset_name: cifar10
@@ -37,9 +38,9 @@ gpu_ids: null # List of GPU IDs to use for training. If null, uses all available
 pin_memory: True # Whether to pin memory for the dataloader.
 
 # Model Saving Configurations
-save: false
-save_path: null
-save_name: null
+save_final_model: false
+save_model_path: null
+save_model_name: null
 
 # Checkpoint Saving Configurations
 save_checkpoint: false

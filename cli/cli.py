@@ -24,7 +24,7 @@ INT_LIST = IntListParamType()
 
 
 @click.group()
-@click.version_option(version='0.1.1')
+@click.version_option(version='0.1.2')
 def main():
     pass
 

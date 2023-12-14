@@ -42,7 +42,7 @@ class ModelFactory:
             raise ValueError("Unsupported model")
 
     @staticmethod
-    def create_model(model_name: str, num_classes: int, num_input_channels: int = 3, pretrained: bool = False, weights: Optional[str] = None, random_seed: Optional[int] = None, **kwargs) -> BaseModel:
+    def create_model(model_name: str, num_classes: int, num_input_channels: int = 3, pretrained: bool = False, weights: Optional[str] = "IMAGENET1K_V1", random_seed: Optional[int] = None, **kwargs) -> BaseModel:
         """
         This function returns a model based on the model_name. If the model_name is a standard model, it will be loaded from torchvision.models. If the model_name is a custom model, it will be loaded from advsecurenet.models.CustomModels.
 
@@ -82,7 +82,7 @@ class ModelFactory:
             inferred_type: ModelType = ModelFactory.infer_model_type(
                 model_name)
 
-            if inferred_type == ModelType.CUSTOM and (weights is not None or pretrained):
+            if inferred_type == ModelType.CUSTOM and pretrained:
                 raise ValueError(
                     "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
 

@@ -21,6 +21,8 @@ class TrainConfig:
     load_checkpoint: bool = False
     load_checkpoint_path: Optional[str] = None
     save_final_model: bool = False
+    save_model_path: Optional[str] = None
+    save_model_name: Optional[str] = None
     use_ddp: bool = False
     gpu_ids: Optional[List[int]] = None
     pin_memory: bool = False

@@ -1,5 +1,6 @@
 
 import os
+import click
 from typing import Union, cast
 
 import torch
@@ -7,9 +8,11 @@ import torch.optim as optim
 from torch import nn
 from tqdm import tqdm
 
+
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
 from advsecurenet.shared.types.configs.train_config import TrainConfig
+from advsecurenet.utils.model_utils import save_model
 
 
 class Trainer:
@@ -30,6 +33,17 @@ class Trainer:
         self.optimizer = self._setup_optimizer()
         self.loss_fn = self._get_loss_function(config.criterion)
         self.start_epoch = self._load_checkpoint_if_any()
+
+    def train(self) -> None:
+        """
+        Public method for training the model.
+        """
+        self._pre_training()
+        for epoch in range(self.start_epoch, self.config.epochs + 1):
+            self._run_epoch(epoch)
+            if self._should_save_checkpoint(epoch):
+                self._save_checkpoint(epoch, self.optimizer)
+        self._post_training()
 
     def _setup_device(self) -> torch.device:
         """
@@ -207,7 +221,8 @@ class Trainer:
             'model_state_dict': self._get_model_state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
         }, checkpoint_path)
-        print(f"=> saved checkpoint '{checkpoint_path}'")
+        click.echo(click.style(
+            f"Saved checkpoint to {checkpoint_path}", fg="green"))
 
     def _should_save_checkpoint(self, epoch: int) -> bool:
         """
@@ -229,15 +244,24 @@ class Trainer:
         """
         Saves the final model to the current directory with the name of the model variant and the dataset name.
         """
-        file_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
+        if not self.config.save_model_path:
+            self.config.save_model_path = os.getcwd()
+
+        if not self.config.save_model_name:
+            self.config.save_model_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
+
         # if the same file exists, add a index to the file name
         index = 0
-        while os.path.isfile(file_name):
+        while os.path.isfile(self.config.save_model_name):
             index += 1
-            file_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
+            self.config.save_model_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
 
-        torch.save(self._get_model_state_dict(), file_name)
-        print(f"=> saved final model '{file_name}'")
+        save_model(
+            model=self.model,
+            filename=self.config.save_model_name,
+            filepath=self.config.save_model_path,
+            distributed=self.config.use_ddp
+        )
 
     def _run_batch(self, source: torch.Tensor, targets: torch.Tensor) -> float:
         """
@@ -273,7 +297,8 @@ class Trainer:
             total_loss += loss
 
         total_loss /= len(self.config.train_loader)
-        print(f"Epoch {epoch} loss: {total_loss}")
+        click.echo(
+            click.style(f"Epoch {epoch} - Average loss: {total_loss:.4f}", fg="blue"))
 
     def _pre_training(self) -> None:
         # Method to run before training starts.
@@ -283,14 +308,3 @@ class Trainer:
         # Method to run after training ends.
         if self._should_save_final_model():
             self._save_final_model()
-
-    def train(self) -> None:
-        """
-        Public method for training the model.
-        """
-        self._pre_training()
-        for epoch in range(self.start_epoch, self.config.epochs + 1):
-            self._run_epoch(epoch)
-            if self._should_save_checkpoint(epoch):
-                self._save_checkpoint(epoch, self.optimizer)
-        self._post_training()

@@ -47,37 +47,16 @@ class TransferabilityEvaluator(BaseEvaluator):
     def __exit__(self, exc_type, exc_value, traceback):
         pass
 
-    # def update(self, source_model, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor, is_targeted: bool = False, target_labels: Optional[torch.Tensor] = None):
-    #     source_model.eval()
-    #     source_predictions = source_model(adversarial_images)
-    #     source_labels = torch.argmax(source_predictions, dim=1)
-
-    #     if is_targeted and target_labels is None:
-    #         raise ValueError(
-    #             "Target labels must be provided for targeted attacks.")
-
-    #     successful_on_source = torch.sum(
-    #         source_labels == target_labels if is_targeted else source_labels != true_labels)
-    #     self.total_successful_on_source += successful_on_source
-    #     model_names_dict = {}
-    #     for target_model in self.target_models:
-    #         model_name = target_model.model_name
-    #         if model_name not in model_names_dict:
-    #             model_names_dict[model_name] = 1
-    #         else:
-    #             model_names_dict[model_name] += 1
-    #         model_name += f"_{model_names_dict[model_name]}"
-
-    #         target_model.eval()
-    #         target_predictions = target_model(adversarial_images)
-    #         target_labels = torch.argmax(target_predictions, dim=1)
-    #         successful_transfer = torch.sum((source_labels == target_labels) & (
-    #             target_labels == true_labels) if is_targeted else (source_labels != true_labels) & (target_labels != true_labels))
-    #         self.transferability_data[model_name]['successful_transfer'] += successful_transfer
-    #         self.transferability_data[model_name]['successful_on_source'] += successful_on_source
-
     def update(self, source_model, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor, is_targeted: bool = False, target_labels: Optional[torch.Tensor] = None):
         source_model.eval()
+        current_device = next(source_model.parameters()).device
+        # move the images to the device of the source model
+        original_images = original_images.to(current_device)
+        adversarial_images = adversarial_images.to(current_device)
+        true_labels = true_labels.to(current_device)
+        if is_targeted:
+            target_labels = target_labels.to(current_device)
+
         source_predictions = source_model(adversarial_images)
         source_labels = torch.argmax(source_predictions, dim=1)
 
@@ -102,16 +81,37 @@ class TransferabilityEvaluator(BaseEvaluator):
             model_name += f"_{model_names_dict[model_name]}"
             # set the model to evaluation mode
             target_model.eval()
+            current_device = next(target_model.parameters()).device
+            # move the images to the device of the target model
+            adversarial_images = adversarial_images.to(current_device)
+            true_labels = true_labels.to(current_device)
+            successful_on_source_mask = successful_on_source_mask.to(
+                current_device)
+
+            if is_targeted:
+                target_labels = target_labels.to(current_device)
+
             target_predictions = target_model(adversarial_images)
 
             target_model_predic_labels = torch.argmax(
                 target_predictions, dim=1)
 
+            target_model_predic_labels = target_model_predic_labels.to(
+                current_device)
             # Count transfers where the adversarial example was also successful on the source model
             successful_transfer = torch.sum(successful_on_source_mask & (
                 (target_model_predic_labels == target_labels) if is_targeted else (target_model_predic_labels != true_labels)))
 
             self.transferability_data[model_name]['successful_transfer'] += successful_transfer.item()
+
+            # move everything back to CPU
+            target_predictions = target_predictions.cpu()
+            target_model_predic_labels = target_model_predic_labels.cpu()
+            successful_on_source_mask = successful_on_source_mask.cpu()
+            adversarial_images = adversarial_images.cpu()
+            true_labels = true_labels.cpu()
+            if is_targeted:
+                target_labels = target_labels.cpu()
 
     def get_results(self) -> dict:
         results = {}

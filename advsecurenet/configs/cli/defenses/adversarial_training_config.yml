@@ -12,6 +12,8 @@ dataset_type: mnist # The dataset on which the model will be trained.
 num_classes: 10 # Number of classes in the dataset.
 train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
 test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.
+num_samples_train: null # Number of samples you want to use from the train dataset. If null, uses all samples.
+num_samples_test: null # Number of samples you want to use from the test dataset. If null, uses all samples.
 
 # --- Training Configurations ---
 optimizer: adam # The optimizer used for training.
@@ -51,7 +53,7 @@ pin_memory: True # Whether to pin memory for the dataloader.
 device: CPU # Training device. Options: [CPU, CUDA, MPS] or specific GPU ID [cuda:0, cuda:1, ...]
 
 # --- Model Saving Configurations ---
-save_model: True # Whether to save the model after training.
+save_final_model: True # Whether to save the model after training.
 save_model_path: null # Path to save the trained model.
 save_model_name: null # Name of the saved model.
 

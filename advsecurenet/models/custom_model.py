@@ -42,9 +42,11 @@ class CustomModel(BaseModel):
     )
     """
 
-    def __init__(self, model_name, custom_models_path="CustomModels", **kwargs):
+    def __init__(self, model_name: str, num_classes: int, num_input_channels: int, custom_models_path: str = "CustomModels", **kwargs):
         self.custom_models_path = custom_models_path
         self.model_name = model_name
+        self.num_classes = num_classes
+        self.num_input_channels = num_input_channels
 
         # Initialize the BaseModel
         super().__init__()
@@ -72,7 +74,8 @@ class CustomModel(BaseModel):
 
         model_class = getattr(custom_module, self.model_name)
 
-        self.model = model_class()
+        self.model = model_class(
+            num_classes=self.num_classes, num_input_channels=self.num_input_channels)
 
         # Perform necessary modifications after model load
         self.modify_model()

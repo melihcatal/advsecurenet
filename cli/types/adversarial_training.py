@@ -53,7 +53,7 @@ class ATCliConfigType:
     drop_last_train: bool
     drop_last_test: bool
     device: str
-    save_model: bool
+    save_final_model: bool
     save_model_path: str
     save_model_name: str
     save_checkpoint: bool

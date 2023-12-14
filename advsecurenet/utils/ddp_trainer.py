@@ -102,7 +102,6 @@ class DDPTrainer(Trainer):
         Args:
             epoch (int): Current epoch number.
         """
-        print("Normal training...")
         total_loss = 0.0
         sampler = self.config.train_loader.sampler
         assert isinstance(

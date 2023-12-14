@@ -2,6 +2,7 @@ import os
 import torch
 import pkg_resources
 import requests
+import click
 from torch import nn
 from tqdm import tqdm
 from typing import Optional
@@ -36,6 +37,8 @@ def save_model(model: nn.Module,
         torch.save(model.module.state_dict(), os.path.join(filepath, filename))
     else:
         torch.save(model.state_dict(), os.path.join(filepath, filename))
+    click.echo(click.style(
+        f"Saved model to {os.path.join(filepath, filename)}", fg="green"))
 
 
 def load_model(model, filename, filepath=None, device: torch.device = torch.device("cpu")):

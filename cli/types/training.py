@@ -23,9 +23,9 @@ class TrainingCliConfigType:
     device: str
     gpu_ids: list[int]
     pin_memory: bool
-    save: bool
-    save_path: str
-    save_name: str
+    save_final_model: bool
+    save_model_path: str
+    save_model_name: str
     save_checkpoint: bool
     save_checkpoint_path: str
     save_checkpoint_name: str
@@ -36,3 +36,4 @@ class TrainingCliConfigType:
     train_dataset_path: str
     test_dataset_path: str
     verbose: bool
+    num_input_channels: int

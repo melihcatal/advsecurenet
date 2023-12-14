@@ -2,7 +2,7 @@ import os
 import click
 import pkg_resources
 import torch
-from typing import Tuple
+from typing import Tuple, Optional
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import Dataset as TorchDataset
 from cli.types.training import TrainingCliConfigType
@@ -16,6 +16,7 @@ from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.ddp_trainer import DDPTrainer
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.utils.model_utils import save_model
 
 
 class CLITrainer:
@@ -26,15 +27,17 @@ class CLITrainer:
     def __init__(self, config: TrainingCliConfigType):
         self._validate_config(config)
         self.config_data = config
-        self.config: TrainConfig = None
+        self.config: Optional[TrainConfig] = None
 
     def train(self):
+        """
+        The main training function. This function parses the CLI arguments and executes the training.
+        """
         try:
-            self._set_save_path()
             dataset_name = self._validate_dataset_name()
             train_data, test_data, dataset_obj = self._load_datasets(
                 dataset_name)
-            train_data_loader, test_data_loader = self._prepare_dataloader(
+            train_data_loader, _ = self._prepare_dataloader(
                 train_data, test_data)
             model = self._initialize_model()
             self.config = self._prepare_train_config(
@@ -43,11 +46,7 @@ class CLITrainer:
                 self._execute_ddp_training(train_data)
             else:
                 self._execute_training()
-            if self.config.save_final_model:
-                self._save_trained_model(
-                    model, self.config_data.dataset_name.upper())
-            click.echo(
-                f"Model trained on {self.config_data.dataset_name.upper()}!")
+
         except Exception as e:
             raise e
 
@@ -66,11 +65,6 @@ class CLITrainer:
             raise ValueError("Unsupported dataset name! Choose from: " +
                              ", ".join([e.value for e in DatasetType]))
         return dataset_name
-
-    def _set_save_path(self):
-        if not self.config_data.save_path:
-            self.config_data.save_path = pkg_resources.resource_filename(
-                "advsecurenet", "weights")
 
     def _validate_config(self, config):
         if not config.model_name or not config.dataset_name:
@@ -119,7 +113,9 @@ class CLITrainer:
         return train_data_loader, test_data_loader
 
     def _initialize_model(self) -> BaseModel:
-        return ModelFactory.create_model(self.config_data.model_name, num_classes=self.config_data.num_classes)
+        click.echo(
+            f"Initializing model... with model name: {self.config_data.model_name} and num_classes: {self.config_data.num_classes} and num_input_channels: {self.config_data.num_input_channels} ")
+        return ModelFactory.create_model(self.config_data.model_name, num_classes=self.config_data.num_classes, num_input_channels=self.config_data.num_input_channels)
 
     def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader, dataset_obj: BaseDataset) -> TrainConfig:
         """
@@ -131,7 +127,17 @@ class CLITrainer:
             epochs=self.config_data.epochs,
             learning_rate=self.config_data.lr,
             use_ddp=self.config_data.use_ddp,
-            device=self.config_data.device
+            device=self.config_data.device,
+            save_final_model=self.config_data.save_final_model,
+            save_model_path=self.config_data.save_model_path if self.config_data.save_model_path else os.getcwd(),
+            save_model_name=self.config_data.save_model_name if self.config_data.save_model_name else self.config_data.model_name + "_final",
+            save_checkpoint=self.config_data.save_checkpoint,
+            save_checkpoint_path=self.config_data.save_checkpoint_path if self.config_data.save_checkpoint_path else os.getcwd(),
+            save_checkpoint_name=self.config_data.save_checkpoint_name if self.config_data.save_checkpoint_name else self.config_data.model_name + "_checkpoint",
+            checkpoint_interval=self.config_data.checkpoint_interval,
+            load_checkpoint=self.config_data.load_checkpoint,
+            load_checkpoint_path=self.config_data.load_checkpoint_path if self.config_data.load_checkpoint_path else os.getcwd(),
+
         )
 
     def _execute_training(self) -> None:

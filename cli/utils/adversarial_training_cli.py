@@ -17,7 +17,7 @@ from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.utils.model_utils import load_model
+from advsecurenet.utils.model_utils import load_model, save_model
 from advsecurenet.shared.types.attacks import AttackType as AdversarialAttackType
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from advsecurenet.shared.types.configs import attack_configs
@@ -76,6 +76,14 @@ class AdversarialTrainingCLI:
         else:
             self._execute_adversarial_training(
                 dataset_name, attacks)
+
+        if self.config.save_final_model:
+            save_model(
+                target_model,
+                filename=self.config.save_model_name,
+                filepath=self.config.save_model_path,
+                distributed=self.config.use_ddp,
+            )
 
     def _get_attack_config(self, attack_name: str) -> Type[AttackConfig]:
         """
@@ -322,6 +330,9 @@ class AdversarialTrainingCLI:
             use_ddp=self.config_data.use_ddp,
             gpu_ids=self.config_data.gpu_ids,
             pin_memory=self.config_data.pin_memory,
+            save_final_model=self.config_data.save_final_model,
+            save_model_path=self.config_data.save_model_path if self.config_data.save_model_path else os.getcwd(),
+            save_model_name=self.config_data.save_model_name if self.config_data.save_model_name else target_model.model_name,
         )
 
     def _execute_ddp_adversarial_training(self, train_data: TorchDataset) -> None:

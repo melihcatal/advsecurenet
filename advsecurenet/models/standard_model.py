@@ -1,7 +1,9 @@
+from enum import EnumMeta
+
 import torch.nn as nn
 import torchvision.models as models
-from enum import EnumMeta
 from torchvision.models._api import get_model_weights
+
 from advsecurenet.models.base_model import BaseModel
 
 
@@ -32,7 +34,7 @@ class StandardModel(BaseModel):
         self.pretrained = pretrained
         self.weights = weights
         self.num_classes = num_classes
-        self.model: nn.Module = None
+        # self.model: nn.Module = None
 
         # Initialize the BaseModel
         super().__init__()

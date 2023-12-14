@@ -30,8 +30,13 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
             sampler, DistributedSampler), "Sampler must be a DistributedSampler"
         sampler.set_epoch(epoch)
 
-        for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader)):
+        # have tqdm only on rank 0
+        if self.rank == 0:
+            train_loader = tqdm(self.config.train_loader)
+        else:
+            train_loader = self.config.train_loader
 
+        for batch_idx, (source, targets) in enumerate(train_loader):
             # Move data to device
             source = source.to(self.device)
             targets = targets.to(self.device)
