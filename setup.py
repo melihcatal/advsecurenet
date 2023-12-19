@@ -28,7 +28,8 @@ setup(
         "opencv-python",
         "ruamel.yaml",
         "matplotlib",
-        "scikit-image"
+        "scikit-image",
+        "einops"
     ],
     entry_points={
         'console_scripts': [

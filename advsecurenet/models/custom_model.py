@@ -47,6 +47,7 @@ class CustomModel(BaseModel):
         self.model_name = model_name
         self.num_classes = num_classes
         self.num_input_channels = num_input_channels
+        self.kwargs = kwargs
 
         # Initialize the BaseModel
         super().__init__()
@@ -75,7 +76,7 @@ class CustomModel(BaseModel):
         model_class = getattr(custom_module, self.model_name)
 
         self.model = model_class(
-            num_classes=self.num_classes, num_input_channels=self.num_input_channels)
+            num_classes=self.num_classes, num_input_channels=self.num_input_channels, **self.kwargs)
 
         # Perform necessary modifications after model load
         self.modify_model()
