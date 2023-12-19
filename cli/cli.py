@@ -130,13 +130,12 @@ def train(config: str, **kwargs):
 
 
 @main.command()
-@click.option('--config', type=click.Path(exists=True), default=None, help='Path to the evaluation configuration yml file.')
+@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the evaluation configuration yml file.')
 @click.option('--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset to evaluate on (e.g. "cifar10").')
 @click.option('--model-weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
 @click.option('--device', default=None, help='The device to evaluate on. Defaults to CPU')
 @click.option('--batch-size', default=None, help='Batch size for evaluation.')
-# @click.option('--loss', default=None, help='Loss function to use for evaluation. Available options: ' + ', '.join([e.name for e in Loss]))
 @click.option('--loss', default=None, help='Loss function to use for evaluation.')
 def test(config: str, **kwargs):
     """
@@ -166,7 +165,7 @@ def test(config: str, **kwargs):
 
     """
     from cli.logic.test import cli_test
-
+    
     cli_test(config, **kwargs)
 
 

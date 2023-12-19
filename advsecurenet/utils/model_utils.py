@@ -4,7 +4,7 @@ import pkg_resources
 import requests
 import click
 from torch import nn
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from typing import Optional
 
 
@@ -62,7 +62,7 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
     # add .pth extension if not present
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
-
+    # TODO: add support for loading distributed models and also improve the efficiency
     model.load_state_dict(torch.load(os.path.join(
         filepath, filename), map_location=device))
     return model

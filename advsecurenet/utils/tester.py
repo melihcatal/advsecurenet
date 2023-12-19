@@ -1,9 +1,10 @@
 import torch
 from torch import nn
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from typing import cast, Sized, Union, Optional
 from torch.utils.data import DataLoader
 
+from advsecurenet.shared.loss import Loss
 
 class Tester:
     """

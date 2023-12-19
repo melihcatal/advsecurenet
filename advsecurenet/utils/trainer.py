@@ -6,7 +6,7 @@ from typing import Union, cast
 import torch
 import torch.optim as optim
 from torch import nn
-from tqdm import tqdm
+from tqdm.auto import tqdm, trange
 
 
 from advsecurenet.shared.loss import Loss
@@ -39,7 +39,7 @@ class Trainer:
         Public method for training the model.
         """
         self._pre_training()
-        for epoch in range(self.start_epoch, self.config.epochs + 1):
+        for epoch in trange(self.start_epoch, self.config.epochs + 1, leave=True, position=0):
             self._run_epoch(epoch)
             if self._should_save_checkpoint(epoch):
                 self._save_checkpoint(epoch, self.optimizer)

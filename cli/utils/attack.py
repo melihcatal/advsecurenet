@@ -1,6 +1,6 @@
 import torch
 import click
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.attacks import AdversarialAttack
