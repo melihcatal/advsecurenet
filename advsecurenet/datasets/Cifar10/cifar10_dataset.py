@@ -21,8 +21,8 @@ class CIFAR10Dataset(BaseDataset):
 
     def __init__(self):
         super().__init__()
-        self.mean = [0.5, 0.5, 0.5]
-        self.std = [0.5, 0.5, 0.5]
+        self.mean = [0.49139968, 0.48215827, 0.44653124]
+        self.std = [0.24703233, 0.24348505, 0.26158768]
         self.input_size = (32, 32)
         self.name = "cifar10"
         self.num_classes = 10
