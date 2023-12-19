@@ -1,7 +1,9 @@
 import os
+
 import torch
 import torch.multiprocessing as mp
-from torch.distributed import init_process_group, destroy_process_group
+from torch.distributed import destroy_process_group, init_process_group
+
 from advsecurenet.utils.network import find_free_port
 
 
@@ -66,5 +68,12 @@ class DDPTrainingCoordinator:
         """
         Spawn the processes for DDP training.
         """
-        mp.spawn(self.run_process, args=(),
-                 nprocs=self.world_size, join=True)
+
+        processes = []
+        for rank in range(self.world_size):
+            p = mp.Process(target=self.run_process,
+                           args=(rank,))
+            p.start()
+            processes.append(p)
+        for p in processes:
+            p.join()
