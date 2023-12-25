@@ -153,8 +153,9 @@ class CLITrainer:
         """
         DDP Training function. Initializes the DDPTrainingCoordinator and runs the training.
         """
-        if self.config.gpu_ids is None:
-            self.config.gpu_ids = list(range(torch.cuda.device_count()))
+        # if no gpu ids are provided, use all available gpus
+        if self.config_data.gpu_ids is None or len(self.config_data.gpu_ids) == 0:
+            self.config_data.gpu_ids = list(range(torch.cuda.device_count()))
 
         world_size = len(self.config_data.gpu_ids)
 
