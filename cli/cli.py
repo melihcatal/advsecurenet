@@ -24,7 +24,7 @@ INT_LIST = IntListParamType()
 
 
 @click.group()
-@click.version_option(version='0.1.2')
+@click.version_option(version='0.1.3')
 def main():
     pass
 
@@ -165,7 +165,7 @@ def test(config: str, **kwargs):
 
     """
     from cli.logic.test import cli_test
-    
+
     cli_test(config, **kwargs)
 
 
