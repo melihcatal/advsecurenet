@@ -59,7 +59,7 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
     save_checkpoint: bool = False
     save_checkpoint_path: Optional[str] = None
     save_checkpoint_name: Optional[str] = None
-    checkpoint_interval: int = 1
+    checkpoint_interval: Optional[int] = None
     load_checkpoint: bool = False
     load_checkpoint_path: Optional[str] = None
     verbose: bool = True
