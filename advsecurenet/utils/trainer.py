@@ -1,13 +1,12 @@
 
 import os
-import click
 from typing import Union, cast
 
+import click
 import torch
 import torch.optim as optim
 from torch import nn
 from tqdm.auto import tqdm, trange
-
 
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
@@ -287,6 +286,7 @@ class Trainer:
         """
         Runs the given epoch.
         """
+        # TODO: Better naming
         total_loss = 0.0
 
         # for source, targets in self.config.train_loader:
@@ -299,6 +299,7 @@ class Trainer:
         total_loss /= len(self.config.train_loader)
         click.echo(
             click.style(f"Epoch {epoch} - Average loss: {total_loss:.4f}", fg="blue"))
+        self._log_loss(epoch, total_loss)
 
     def _pre_training(self) -> None:
         # Method to run before training starts.
@@ -308,3 +309,12 @@ class Trainer:
         # Method to run after training ends.
         if self._should_save_final_model():
             self._save_final_model()
+
+    def _log_loss(self, epoch: int, loss: float) -> None:
+        # Save the loss to the log file. If the log file does not exist, create it in the current directory.
+        path = os.path.join(os.getcwd(), "loss.log")
+        if not os.path.exists(path):
+            with open(path, "w", encoding="utf-8") as f:
+                f.write("epoch,loss\n")
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(f"{epoch},{loss}\n")

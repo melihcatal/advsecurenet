@@ -131,3 +131,4 @@ class DDPTrainer(Trainer):
         if self.rank == 0:
             click.echo(click.style(
                 f"Epoch {epoch} | Loss {total_loss}", fg="green"))
+            self._log_loss(epoch, total_loss)
