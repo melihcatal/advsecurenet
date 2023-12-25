@@ -151,7 +151,7 @@ def cli_test(config_data: TestConfig):
             config_data['model_name'], num_classes=dataset_obj.num_classes)
 
         model = load_model(model, config_data['model_weights'], device=device)
-
+        model.to(device)
         model.eval()
         tester = Tester(model=model, test_loader=test_data_loader,
                         device=device, criterion=config_data['loss'])

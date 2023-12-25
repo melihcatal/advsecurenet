@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8'
 
 setup(
     name="advsecurenet",
-    version="0.1.2",
+    version="0.1.3",
     description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -28,7 +28,8 @@ setup(
         "opencv-python",
         "ruamel.yaml",
         "matplotlib",
-        "scikit-image"
+        "scikit-image",
+        "einops"
     ],
     entry_points={
         'console_scripts': [

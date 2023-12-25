@@ -1,12 +1,14 @@
-import os
-import pytest
 import copy
+import os
 from unittest.mock import Mock, patch
-from advsecurenet.shared.types.dataset import DatasetType
+
+import pytest
+
 from advsecurenet.shared.types.configs import ConfigType
+from advsecurenet.shared.types.dataset import DatasetType
+from cli.types.training import TrainingCliConfigType
 from cli.utils.config import load_configuration
 from cli.utils.trainer import CLITrainer
-from cli.types.training import TrainingCliConfigType
 
 # Replace 'your_module' with the actual name of the module where CLITrainer is defined.
 
@@ -43,14 +45,17 @@ def test_validate_dataset_name_valid(config):
 
 def test_validate_dataset_name_invalid(config):
     config.dataset_name = "INVALID_DATASET"
-    trainer = CLITrainer(config)
     with pytest.raises(ValueError):
-        trainer._validate_dataset_name()
+        trainer = CLITrainer(config)
 
 # Test for _validate_config method
 
 
 def test_validate_config_valid(config):
+    # mock the _initialize_params method
+    mock_init_params = Mock()
+    mock_init_params.return_value = None
+    CLITrainer._initialize_params = mock_init_params
     trainer = CLITrainer(config)
     # If no exception is raised, the test passes
     trainer._validate_config(config)
@@ -86,9 +91,8 @@ def test_load_datasets(mock_validate, mock_create_dataset, config):
 
     mock_create_dataset.return_value = mock_dataset_obj
 
-    train_data, test_data, dataset_obj = trainer._load_datasets(
+    train_data, test_data = trainer._load_datasets(
         "CIFAR10")
 
     assert train_data == mock_train_dataset
     assert test_data == mock_test_dataset
-    assert dataset_obj == mock_dataset_obj

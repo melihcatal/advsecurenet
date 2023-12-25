@@ -1,6 +1,6 @@
 import click
 import torch
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from advsecurenet.attacks.lots import LOTS
 from advsecurenet.dataloader.data_loader_factory import DataLoaderFactory

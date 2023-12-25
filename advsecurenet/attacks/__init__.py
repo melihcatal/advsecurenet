@@ -4,6 +4,7 @@ from advsecurenet.attacks.fgsm import FGSM
 from advsecurenet.attacks.pgd import PGD
 from advsecurenet.attacks.lots import LOTS
 from advsecurenet.attacks.deepfool import DeepFool
+from advsecurenet.attacks.targeted_fgsm import TargetedFGSM
 
 __all__ = [
     "AdversarialAttack",
@@ -11,5 +12,6 @@ __all__ = [
     "FGSM",
     "PGD",
     "LOTS",
-    "DeepFool"
+    "DeepFool",
+    "TargetedFGSM"
 ]

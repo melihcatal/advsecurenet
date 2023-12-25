@@ -1,9 +1,12 @@
-from tqdm import tqdm
 from typing import Union
+
 from torch.utils.data.distributed import DistributedSampler
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.utils.ddp_trainer import DDPTrainer
+from tqdm.auto import tqdm
+
 from advsecurenet.defenses import AdversarialTraining
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
+    AdversarialTrainingConfig
+from advsecurenet.utils.ddp_trainer import DDPTrainer
 
 
 class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
@@ -21,9 +24,6 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
         AdversarialTraining.__init__(self, config=config)
 
     def _run_epoch(self, epoch: int) -> None:
-        if self.rank == 0:
-            print(f"Running epoch {epoch}...")
-
         total_loss = 0.0
         sampler = self.config.train_loader.sampler
         assert isinstance(
@@ -32,7 +32,8 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
 
         # have tqdm only on rank 0
         if self.rank == 0:
-            train_loader = tqdm(self.config.train_loader)
+            train_loader = tqdm(self.config.train_loader, desc="Adversarial Training",
+                                leave=False, position=1, unit="batch", colour="blue")
         else:
             train_loader = self.config.train_loader
 
@@ -66,4 +67,4 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
         total_loss /= len(self.config.train_loader) * self.world_size
 
         if self.rank == 0:
-            print(f"Average loss: {total_loss}")
+            self._log_loss(epoch, total_loss)

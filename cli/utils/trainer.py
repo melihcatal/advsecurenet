@@ -1,22 +1,24 @@
 import os
+from typing import Optional, Tuple
+
 import click
 import pkg_resources
 import torch
-from typing import Tuple, Optional
-from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import Dataset as TorchDataset
-from cli.types.training import TrainingCliConfigType
-from advsecurenet.shared.types.dataset import DatasetType
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.datasets.dataset_factory import DatasetFactory
+from torch.utils.data.distributed import DistributedSampler
+
 from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.shared.types.configs import TrainConfig
-from advsecurenet.utils.trainer import Trainer
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.ddp_trainer import DDPTrainer
 from advsecurenet.datasets.base_dataset import BaseDataset
+from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.models.model_factory import ModelFactory
+from advsecurenet.shared.types.configs import TrainConfig
+from advsecurenet.shared.types.dataset import DatasetType
+from advsecurenet.utils.ddp_trainer import DDPTrainer
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.model_utils import save_model
+from advsecurenet.utils.trainer import Trainer
+from cli.types.training import TrainingCliConfigType
 
 
 class CLITrainer:
@@ -28,27 +30,28 @@ class CLITrainer:
         self._validate_config(config)
         self.config_data = config
         self.config: Optional[TrainConfig] = None
+        self._initialize_params()
 
     def train(self):
         """
         The main training function. This function parses the CLI arguments and executes the training.
         """
         try:
-            dataset_name = self._validate_dataset_name()
-            train_data, test_data, dataset_obj = self._load_datasets(
-                dataset_name)
-            train_data_loader, _ = self._prepare_dataloader(
-                train_data, test_data)
-            model = self._initialize_model()
-            self.config = self._prepare_train_config(
-                model, train_data_loader, dataset_obj)
             if self.config_data.use_ddp:
-                self._execute_ddp_training(train_data)
+                self._execute_ddp_training()
             else:
                 self._execute_training()
 
         except Exception as e:
             raise e
+
+    def _initialize_params(self):
+        """
+        Initialize the parameters.
+        """
+        self.database_name = self._validate_dataset_name()
+        self.train_data, self.test_data = self._load_datasets(
+            self.database_name)
 
     def _validate_dataset_name(self) -> str:
         """
@@ -71,7 +74,7 @@ class CLITrainer:
             raise ValueError(
                 "Please provide both model name and dataset name!")
 
-    def _load_datasets(self, dataset_name) -> tuple[TorchDataset, TorchDataset, BaseDataset]:
+    def _load_datasets(self, dataset_name) -> tuple[TorchDataset, TorchDataset]:
         """
         Load the dataset.
 
@@ -88,22 +91,25 @@ class CLITrainer:
             train=True, root=self.config_data.train_dataset_path)
         test_data = dataset_obj.load_dataset(
             train=False, root=self.config_data.test_dataset_path)
-        return train_data, test_data, dataset_obj
+        return train_data, test_data
 
-    def _prepare_dataloader(self, train_data: TorchDataset, test_data: TorchDataset) -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
+    def _prepare_dataloader(self) -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
         """
         Initialize the dataloader for single process training.
         """
         train_data_loader = DataLoaderFactory.create_dataloader(
-            train_data,
+            self.train_data,
             batch_size=self.config_data.batch_size,
-            shuffle=self.config_data.shuffle_train,
+            shuffle=False if self.config_data.use_ddp else self.config_data.shuffle_train,
             num_workers=self.config_data.num_workers_train,
             drop_last=self.config_data.drop_last_train,
-            pin_memory=self.config_data.pin_memory)
+            pin_memory=self.config_data.pin_memory,
+            sampler=DistributedSampler(
+                self.train_data) if self.config_data.use_ddp else None
+        )
 
         test_data_loader = DataLoaderFactory.create_dataloader(
-            test_data,
+            self.test_data,
             batch_size=self.config_data.batch_size,
             shuffle=self.config_data.shuffle_test,
             num_workers=self.config_data.num_workers_test,
@@ -112,12 +118,17 @@ class CLITrainer:
 
         return train_data_loader, test_data_loader
 
-    def _initialize_model(self) -> BaseModel:
-        click.echo(
-            f"Initializing model... with model name: {self.config_data.model_name} and num_classes: {self.config_data.num_classes} and num_input_channels: {self.config_data.num_input_channels} ")
+    def _initialize_model(self, rank: Optional[int] = None) -> BaseModel:
+        """
+        Initialize the model.
+        """
+        if self.config_data.verbose:
+            if (rank is not None and rank == 0) or rank is None:
+                click.echo(
+                    f"Loading model... with model name: {self.config_data.model_name} and num_classes: {self.config_data.num_classes} and num_input_channels: {self.config_data.num_input_channels} ")
         return ModelFactory.create_model(self.config_data.model_name, num_classes=self.config_data.num_classes, num_input_channels=self.config_data.num_input_channels)
 
-    def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader, dataset_obj: BaseDataset) -> TrainConfig:
+    def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader) -> TrainConfig:
         """
         Prepare the training config.
         """
@@ -140,19 +151,13 @@ class CLITrainer:
 
         )
 
-    def _execute_training(self) -> None:
-        """
-        Single process training function. Initializes the Trainer and runs the training.
-        """
-        trainer = Trainer(self.config)
-        trainer.train()
-
-    def _execute_ddp_training(self, train_data: BaseDataset) -> None:
+    def _execute_ddp_training(self) -> None:
         """
         DDP Training function. Initializes the DDPTrainingCoordinator and runs the training.
         """
-        if self.config.gpu_ids is None:
-            self.config.gpu_ids = list(range(torch.cuda.device_count()))
+        # if no gpu ids are provided, use all available gpus
+        if self.config_data.gpu_ids is None or len(self.config_data.gpu_ids) == 0:
+            self.config_data.gpu_ids = list(range(torch.cuda.device_count()))
 
         world_size = len(self.config_data.gpu_ids)
 
@@ -162,7 +167,6 @@ class CLITrainer:
         ddp_trainer = DDPTrainingCoordinator(
             self._ddp_training_fn,
             world_size,
-            train_data,
         )
 
         if self.config_data.verbose:
@@ -171,22 +175,33 @@ class CLITrainer:
 
         ddp_trainer.run()
 
-    def _ddp_training_fn(self, rank: int, world_size: int, train_data: BaseDataset) -> None:
+    def _ddp_training_fn(self, rank: int, world_size: int) -> None:
         """
         The main training function for DDP. This function is called by each process spawned by the DDPTrainingCoordinator.
         """
+        # the model must be initialized in each process
+        model = self._initialize_model(rank)
 
-        # Need to override the train loader for
-        train_data_loader = DataLoaderFactory.create_dataloader(
-            train_data, batch_size=self.config_data.batch_size,
-            shuffle=self.config_data.shuffle_train,
-            pin_memory=self.config_data.pin_memory,
-            sampler=DistributedSampler(train_data),
-            num_workers=self.config_data.num_workers_train,
-        )
+        train_loader = self._prepare_dataloader()[0]
 
-        self.config.train_loader = train_data_loader
+        train_config = self._prepare_train_config(model, train_loader)
 
         ddp_trainer = DDPTrainer(
-            self.config, rank, world_size)
+            train_config, rank, world_size)
+
         ddp_trainer.train()
+
+    def _execute_training(self) -> None:
+        """
+        Single process training function. Initializes the Trainer and runs the training.
+        """
+
+        train_data_loader = self._prepare_dataloader()[0]
+
+        model = self._initialize_model()
+
+        train_config = self._prepare_train_config(
+            model, train_data_loader)
+
+        trainer = Trainer(train_config)
+        trainer.train()

@@ -4,11 +4,11 @@
 model: resnet18 # The model that will be trained.
 models: [] # List of models used for generating adversarial examples.
 attacks: # List of attacks used for generating adversarial examples.
-  Attack1: # Name of the attack.
-    config: path/to/attack1_config.yml # Path to the attack configuration file.
+  - Attack1: # Name of the attack.
+      config: path/to/attack1_config.yml # Path to the attack configuration file.
 
 # --- Dataset Configurations ---
-dataset_type: mnist # The dataset on which the model will be trained.
+dataset_type: cifar10 # The dataset on which the model will be trained.
 num_classes: 10 # Number of classes in the dataset.
 train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
 test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.
