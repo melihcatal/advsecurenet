@@ -1,22 +1,24 @@
 import os
+from typing import Optional, Tuple
+
 import click
 import pkg_resources
 import torch
-from typing import Tuple, Optional
-from torch.utils.data.distributed import DistributedSampler
 from torch.utils.data import Dataset as TorchDataset
-from cli.types.training import TrainingCliConfigType
-from advsecurenet.shared.types.dataset import DatasetType
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.datasets.dataset_factory import DatasetFactory
+from torch.utils.data.distributed import DistributedSampler
+
 from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.shared.types.configs import TrainConfig
-from advsecurenet.utils.trainer import Trainer
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.ddp_trainer import DDPTrainer
 from advsecurenet.datasets.base_dataset import BaseDataset
+from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.models.model_factory import ModelFactory
+from advsecurenet.shared.types.configs import TrainConfig
+from advsecurenet.shared.types.dataset import DatasetType
+from advsecurenet.utils.ddp_trainer import DDPTrainer
+from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.model_utils import save_model
+from advsecurenet.utils.trainer import Trainer
+from cli.types.training import TrainingCliConfigType
 
 
 class CLITrainer:
@@ -179,7 +181,7 @@ class CLITrainer:
         # Need to override the train loader for
         train_data_loader = DataLoaderFactory.create_dataloader(
             train_data, batch_size=self.config_data.batch_size,
-            shuffle=self.config_data.shuffle_train,
+            shuffle=False,
             pin_memory=self.config_data.pin_memory,
             sampler=DistributedSampler(train_data),
             num_workers=self.config_data.num_workers_train,
