@@ -8,7 +8,7 @@ package: remove-dist
 
 # install distribution files to create command line tool
 install-cli-dev: package
-	pip install -e .
+	python3 -m pip install -e .
 
 # test if command line tool is installed 
 #TODO: add more comprehensive tests here
