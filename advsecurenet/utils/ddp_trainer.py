@@ -1,5 +1,5 @@
-import torch
 import click
+import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 from tqdm.auto import tqdm
@@ -111,7 +111,8 @@ class DDPTrainer(Trainer):
 
         if self.rank == 0:
             # Only initialize tqdm in the master process
-            data_iterator = tqdm(self.config.train_loader, leave=False, position=1)
+            data_iterator = tqdm(self.config.train_loader,
+                                 leave=False, position=1)
         else:
             data_iterator = self.config.train_loader
         for source, targets in data_iterator:
@@ -127,6 +128,6 @@ class DDPTrainer(Trainer):
             data_iterator.set_description(
                 f"Epoch {epoch} | Loss {total_loss:.4f}")
 
-
-        # if self.rank == 0:
-        #     click.echo(click.style(f"Epoch {epoch} | Loss {total_loss}", fg="green"))  
+        if self.rank == 0:
+            click.echo(click.style(
+                f"Epoch {epoch} | Loss {total_loss}", fg="green"))
