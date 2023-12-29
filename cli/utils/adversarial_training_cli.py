@@ -111,6 +111,8 @@ class AdversarialTrainingCLI:
             return attack_configs.DeepFoolAttackConfig
         elif attack_name == "lots":
             return attack_configs.LotsAttackConfig
+        elif attack_name == "decision_boundary":
+            return attack_configs.DecisionBoundaryAttackConfig
         else:
             raise ValueError("Unsupported attack name!")
 

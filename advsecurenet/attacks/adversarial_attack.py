@@ -19,7 +19,8 @@ class AdversarialAttack(ABC):
         self.device_manager = DeviceManager(
             device=config.device, distributed_mode=config.distributed_mode)
         self.name: str = self.__class__.__name__
-        self.targeted: bool = False
+        self.targeted: bool = config.targeted if hasattr(
+            config, "targeted") else False
 
     @abstractmethod
     def attack(self,
