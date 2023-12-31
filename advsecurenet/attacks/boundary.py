@@ -83,13 +83,12 @@ class DecisionBoundary(AdversarialAttack):
                 "Initialization failed. Try increasing max_initialization_trials", fg="red"))
 
         # only return the perturbed images that successfully initialized
-        return perturbed_images[update_mask]
+        # return perturbed_images[update_mask]
 
-        # return perturbed_images
+        return perturbed_images
 
     def _orthogonal_perturb(self, delta, current_samples, original_samples):
         batch_size, channels, height, width = current_samples.shape
-
         # Generate perturbation randomly for a batch of images
         perturb = torch.randn_like(current_samples)
 
@@ -167,6 +166,7 @@ class DecisionBoundary(AdversarialAttack):
 
         return images
 
+    # mypy: ignore-errors
     def attack(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, target_labels: Optional[torch.Tensor] = None, * args, **kwargs) -> torch.Tensor:
         """
         Generates adversarial examples using the Decision Boundary attack.
