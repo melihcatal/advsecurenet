@@ -68,7 +68,7 @@ def test_update_targeted(mock_model, evaluator):
                      adversarial_images, is_targeted=True, target_labels=target_labels)
 
     # Asserts may need to be updated based on the deterministic behavior
-    assert evaluator.total_successful_attacks == 0
+    assert evaluator.total_successful_attacks == 1
     assert evaluator.total_samples == 10
 
 

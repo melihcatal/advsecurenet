@@ -1,7 +1,9 @@
-import torch
 from typing import List
-from advsecurenet.models.base_model import BaseModel
+
+import torch
+
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
 
 
@@ -18,28 +20,32 @@ class TargetedFGSM(AdversarialAttack):
             [1] Goodfellow, Ian J., et al. "Explaining and harnessing adversarial examples." arXiv preprint arXiv:1412.6572 (2014).
     """
 
-    def __init__(self, config: FgsmAttackConfig, target_classes: List[int]) -> None:
+    def __init__(self, config: FgsmAttackConfig) -> None:
         self.epsilon: float = config.epsilon
-        self.target_classes: List[int] = target_classes
         super().__init__(config)
 
-    def attack(self, model: BaseModel, x: torch.Tensor, *args, **kwargs) -> torch.Tensor:
+    def attack(self,
+               model: BaseModel,
+               x: torch.Tensor,
+               y: torch.Tensor,
+               *args, **kwargs) -> torch.Tensor:
         """
         Generates adversarial examples using the targeted FGSM attack.
 
         Args:
             model (BaseModel): The model to attack.
             x (torch.tensor): The original input tensor. Expected shape is (batch_size, channels, height, width).
+            y (torch.tensor): The target labels tensor. Expected shape is (batch_size,).
 
         Returns:
             torch.tensor: The adversarial example tensor.
         """
         # Create a tensor of the target class labels
-        target_labels = torch.tensor(
-            self.target_classes, dtype=torch.long, device=x.device)
+        # y = torch.tensor(
+        #     self.target_classes, dtype=torch.long, device=x.device)
 
         # Check if the batch size of x matches the length of target_classes
-        if x.shape[0] != len(target_labels):
+        if x.shape[0] != len(y):
             raise ValueError(
                 "The batch size of x must match the length of target_classes")
 
@@ -48,7 +54,7 @@ class TargetedFGSM(AdversarialAttack):
         x = self.device_manager.to_device(x)
         x.requires_grad = True
         outputs = model(x)
-        loss = torch.nn.functional.cross_entropy(outputs, target_labels)
+        loss = torch.nn.functional.cross_entropy(outputs, y)
         model.zero_grad()
         loss.backward()
 

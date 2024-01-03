@@ -1,3 +1,4 @@
+import io
 import pickle
 import random
 from collections import defaultdict
@@ -23,7 +24,7 @@ class AdversarialTargetGenerator:
     def __init__(self, maps_path: Optional[str] = None):
         self.maps_path = self._setup_maps_path(maps_path)
 
-    def generate_target_images(self, train_data, targets: list = None, overwrite=False, show_images=False, save_images=False, save_path=None):
+    def generate_target_images(self, train_data, targets: list = None, overwrite=False, show_images=False, save_images=False, save_path=None, total_tries=3):
         """
         Generates target images for the given train_data.
 
@@ -48,7 +49,6 @@ class AdversarialTargetGenerator:
                 class_to_images)
 
             num_tries = 0
-            total_tries = 3
             try:
                 # Step 3: Validate paired images
                 self._validate_paired_images(paired_images)

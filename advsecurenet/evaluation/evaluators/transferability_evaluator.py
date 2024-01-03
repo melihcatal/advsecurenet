@@ -103,6 +103,7 @@ class TransferabilityEvaluator(BaseEvaluator):
                 (target_model_predic_labels == target_labels) if is_targeted else (target_model_predic_labels != true_labels)))
 
             self.transferability_data[model_name]['successful_transfer'] += successful_transfer.item()
+            self.transferability_data[model_name]['successful_on_source'] += successful_on_source_mask.sum().item()
 
             # move everything back to CPU
             target_predictions = target_predictions.cpu()

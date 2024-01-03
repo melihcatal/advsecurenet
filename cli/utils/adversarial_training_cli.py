@@ -111,6 +111,8 @@ class AdversarialTrainingCLI:
             return attack_configs.DeepFoolAttackConfig
         elif attack_name == "lots":
             return attack_configs.LotsAttackConfig
+        elif attack_name == "decision_boundary":
+            return attack_configs.DecisionBoundaryAttackConfig
         else:
             raise ValueError("Unsupported attack name!")
 
@@ -211,7 +213,7 @@ class AdversarialTrainingCLI:
             return self._initialize_model(model_name, **configs)
 
     def _initialize_model(self, model_name: str, **configs) -> BaseModel:
-        custom = configs.get('custom')
+        custom = configs.get('is_custom')
         pretrained = configs.get('pretrained')
         weights_path = configs.get('weights_path')
         num_classes = self.config_data.num_classes

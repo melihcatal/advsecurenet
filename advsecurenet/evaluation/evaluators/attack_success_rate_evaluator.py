@@ -41,8 +41,7 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
             if target_labels is None:
                 raise ValueError(
                     "Target labels must be provided for targeted attacks.")
-            successful = torch.sum((labels == target_labels) & (
-                target_labels == true_labels))
+            successful = torch.sum(labels == target_labels)
         else:
             successful = torch.sum(labels != true_labels)
 

@@ -75,6 +75,7 @@ def test_targeted_attack(mocker, setup):
 
     # set targeted to True
     config.targeted = True
+    target = torch.tensor([2])
 
     # Mock the model's forward pass to always return the true label
     mocker.patch.object(model, 'forward', side_effect=fake_forward_pass)
@@ -83,7 +84,7 @@ def test_targeted_attack(mocker, setup):
     attack = CWAttack(config)
 
     # Generate the adversarial example
-    adv_x = attack.attack(model, x, y)
+    adv_x = attack.attack(model, x, target)
 
     # Check that the adversarial example is different from the original image
     assert torch.all(adv_x != x)
