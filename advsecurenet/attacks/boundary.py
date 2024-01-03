@@ -209,7 +209,7 @@ class DecisionBoundary(AdversarialAttack):
                 perturbation = self._orthogonal_perturb(
                     delta, adv_images, original_images)
                 trial_images = adv_images + perturbation
-                trial_images = torch.clamp(trial_images, min=0, max=1)
+                trial_images.clamp_(min=0, max=1)
 
                 outputs = model(trial_images)
                 predictions = outputs.argmax(dim=1)
