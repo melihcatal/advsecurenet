@@ -1,9 +1,8 @@
 import numpy as np
 import torch
+from advsecurenet.evaluation.base_evaluator import BaseEvaluator
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
-
-from advsecurenet.evaluation.base_evaluator import BaseEvaluator
 
 
 class SimilarityEvaluator(BaseEvaluator):
@@ -37,16 +36,16 @@ class SimilarityEvaluator(BaseEvaluator):
     """
 
     def __init__(self):
-        self.total_ssim = 0
-        self.total_psnr = 0
+        self.ssim_score = 0
+        self.psnr_score = 0
         self.total_images = 0
 
     def reset(self):
         """
         Resets the evaluator.
         """
-        self.total_ssim = 0
-        self.total_psnr = 0
+        self.ssim_score = 0
+        self.psnr_score = 0
         self.total_images = 0
 
     def update_ssim(self, original_images: torch.Tensor, adversarial_images: torch.Tensor, update_total_images: bool = True):
@@ -58,7 +57,7 @@ class SimilarityEvaluator(BaseEvaluator):
             adversarial_images (torch.Tensor): The adversarial images.
         """
         ssim_score = self.calculate_ssim(original_images, adversarial_images)
-        self.total_ssim += ssim_score
+        self.ssim_score += ssim_score
         if update_total_images:
             self.total_images += original_images.shape[0]
 
@@ -71,7 +70,7 @@ class SimilarityEvaluator(BaseEvaluator):
             adversarial_images (torch.Tensor): The adversarial images.
         """
         psnr_score = self.calculate_psnr(original_images, adversarial_images)
-        self.total_psnr += psnr_score
+        self.psnr_score += psnr_score
         if update_total_images:
             self.total_images += original_images.shape[0]
 
@@ -94,7 +93,7 @@ class SimilarityEvaluator(BaseEvaluator):
         Returns:
             float: The mean SSIM between the original and adversarial images. [-1, 1] range. 1 means the images are identical.
         """
-        return self.total_ssim / self.total_images
+        return self.ssim_score
 
     def get_psnr(self) -> float:
         """
@@ -103,7 +102,7 @@ class SimilarityEvaluator(BaseEvaluator):
         Returns:
             float: The mean PSNR between the original and adversarial images. [0, inf) range. Higher values (e.g. 30 dB or more) indicate better quality. Infinite if the images are identical.
         """
-        return self.total_psnr / self.total_images
+        return self.psnr_score
 
     def get_results(self) -> tuple[float, float]:
         """
@@ -136,7 +135,7 @@ class SimilarityEvaluator(BaseEvaluator):
                           data_range=data_range,
                           )
 
-        return ssim_score.mean()
+        return ssim_score.mean().item()
 
     def calculate_psnr(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> float:
         """
