@@ -1,5 +1,4 @@
 import torch
-
 from advsecurenet.evaluation.base_evaluator import BaseEvaluator
 
 
@@ -50,7 +49,7 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
             Tuple[float, float, float]: The mean L0, L2, and L∞ distances for the adversarial examples in the streaming session.
         """
         if self.total_samples > 0:
-            return self.total_l0_distance / self.total_samples, self.total_l2_distance / self.total_samples, self.total_l_inf_distance / self.total_samples
+            return self.total_l0_distance, self.total_l2_distance, self.total_l_inf_distance
         else:
             return 0.0, 0.0, 0.0
 
@@ -66,11 +65,11 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         """
         if self.total_samples > 0:
             if distance_type == "L0":
-                return self.total_l0_distance / self.total_samples
+                return self.total_l0_distance
             elif distance_type == "L2":
-                return self.total_l2_distance / self.total_samples
+                return self.total_l2_distance
             elif distance_type == "Linf":
-                return self.total_l_inf_distance / self.total_samples
+                return self.total_l_inf_distance
             else:
                 raise ValueError(
                     "Invalid distance type. Valid values are: L0, L2, Linf.")

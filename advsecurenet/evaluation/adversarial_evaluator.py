@@ -10,17 +10,25 @@ from advsecurenet.evaluation.evaluators import (
 class AdversarialEvaluator(BaseEvaluator):
     """
     Composite evaluator that can be used to evaluate multiple metrics at once.
+
+    It's possible to provide a list of target models to evaluate the transferability of the adversarial examples.
+    It's also possible to provide a distance metric to evaluate the perturbation effectiveness of the adversarial examples. Possible distance metrics are:
+    - L0
+    - L2
+    - Linf
+    Default distance metric is L0.
     """
 
     def __init__(self, evaluators: Optional[list[str]] = None, **kwargs):
         # Dictionary to store evaluator instances
+        self.kwargs = kwargs
         self.evaluators = {
             "similarity": SimilarityEvaluator(),
             "robustness_gap": RobustnessGapEvaluator(),
             "attack_success_rate": AttackSuccessRateEvaluator(),
             "perturbation_effectiveness": PerturbationEffectivenessEvaluator(),
             "perturbation_distance": PerturbationDistanceEvaluator(),
-            "transferability": TransferabilityEvaluator(**kwargs)
+            "transferability": TransferabilityEvaluator(self.kwargs["target_models"] if "target_models" in self.kwargs else [])
         }
         # Filter evaluators based on the provided list
         if evaluators is None:
@@ -57,12 +65,12 @@ class AdversarialEvaluator(BaseEvaluator):
 
         if "perturbation_effectiveness" in self.selected_evaluators:
             asr = self.evaluators["attack_success_rate"].get_results()
+            distance_metric = self.kwargs["distance_metric"] if "distance_metric" in self.kwargs else "L0"
+            distance_metric_index = self._get_distance_metric_index(
+                distance_metric)
             pd = self.evaluators["perturbation_distance"].get_results()[
-                0]  # L0 distance
+                distance_metric_index]
             self.evaluators["perturbation_effectiveness"].update(asr, pd)
-
-        # save results
-        results = self.get_results()
 
     def get_results(self) -> dict:
         """
@@ -72,3 +80,11 @@ class AdversarialEvaluator(BaseEvaluator):
         for key in self.selected_evaluators:
             results[key] = self.evaluators[key].get_results()
         return results
+
+    def _get_distance_metric_index(self, distance_metric: str):
+        distance_metrics = {
+            "L0": 0,
+            "L2": 1,
+            "Linf": 2
+        }
+        return distance_metrics[distance_metric]

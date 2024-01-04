@@ -1,9 +1,9 @@
-from torchvision import datasets, transforms
-from torch.utils.data import Dataset as TorchDataset
-from typing import Tuple, Any, List
 from abc import ABC, abstractmethod
+from typing import Any, List, Optional, Tuple
+
 from advsecurenet.shared.types.dataset import DataType
-from typing import Optional
+from torch.utils.data import Dataset as TorchDataset
+from torchvision import datasets, transforms
 
 
 class DatasetWrapper(TorchDataset):
@@ -53,7 +53,8 @@ class BaseDataset(TorchDataset, ABC):
         return transforms.Compose([
             transforms.Resize(self.input_size),
             transforms.ToTensor(),
-            transforms.Normalize(mean=self.mean, std=self.std)
+            transforms.Normalize(mean=self.mean, std=self.std),
+            transforms.Lambda(lambda x: x.clamp(0, 1))
         ])
 
     def __len__(self) -> int:
