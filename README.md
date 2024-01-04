@@ -15,10 +15,12 @@ The library provides a set of tools to generate adversarial examples and to eval
 The library currently supports the following attacks:
 
 - [FGSM](https://arxiv.org/abs/1412.6572)
+- [FGSM Targeted](https://arxiv.org/abs/1412.6572)
 - [PGD](https://arxiv.org/abs/1706.06083)
 - [DeepFool](https://arxiv.org/abs/1511.04599)
 - [CW](https://arxiv.org/abs/1608.04644)
 - [LOTS](https://arxiv.org/abs/1611.06179)
+- [Decision Boundary](https://arxiv.org/abs/1712.04248)
 
 The library currently supports the following defenses:
 
