@@ -1,11 +1,10 @@
 import click
 import torch
+from advsecurenet.shared.types.configs.train_config import TrainConfig
+from advsecurenet.utils.trainer import Trainer
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 from tqdm.auto import tqdm
-
-from advsecurenet.shared.types.configs.train_config import TrainConfig
-from advsecurenet.utils.trainer import Trainer
 
 
 class DDPTrainer(Trainer):
@@ -123,12 +122,6 @@ class DDPTrainer(Trainer):
 
         # Compute average loss across all batches and all processes
         total_loss /= len(self.config.train_loader) * self.world_size
-        # display the epoch loss in tqdm
-        if self.rank == 0:
-            data_iterator.set_description(
-                f"Epoch {epoch} | Loss {total_loss:.4f}")
 
         if self.rank == 0:
-            click.echo(click.style(
-                f"Epoch {epoch} | Loss {total_loss}", fg="green"))
             self._log_loss(epoch, total_loss)
