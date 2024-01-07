@@ -1,6 +1,7 @@
 import random
-import torch
 from typing import Optional
+
+import torch
 from torch.utils.data import Subset
 
 
@@ -23,3 +24,19 @@ def get_subset_data(data: torch.utils.data.Dataset, num_samples: int, random_see
     indices = random.sample(range(len(data)), num_samples)
     subset = Subset(data, indices)
     return subset
+
+
+def unnormalize_data(data: torch.Tensor, mean: torch.Tensor, std: torch.Tensor) -> torch.Tensor:
+    """
+    Unnormalizes the given data using the given mean and standard deviation.
+
+    Args:
+        data (torch.Tensor): The data to be unnormalized.
+        mean (torch.Tensor): The mean to be used for unnormalization.
+        std (torch.Tensor): The standard deviation to be used for unnormalization.
+
+    Returns:
+        torch.Tensor: The unnormalized data.
+    """
+    device = data.device
+    return data * torch.tensor(std, device=device).view(1, -1, 1, 1) + torch.tensor(mean, device=device).view(1, -1, 1, 1)

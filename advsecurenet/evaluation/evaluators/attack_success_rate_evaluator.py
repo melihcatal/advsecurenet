@@ -34,6 +34,12 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
             target_labels (Optional[torch.Tensor], optional): Target labels for the adversarial images if the attack is targeted.
         """
         model.eval()
+        # prediction on original images
+        clean_predictions = model(original_images)
+        clean_prediction_labels = torch.argmax(clean_predictions, dim=1)
+
+        # if the initial prediction is wrong, don't bother attacking, just skip
+
         predictions = model(adversarial_images)
         labels = torch.argmax(predictions, dim=1)
 
@@ -41,12 +47,15 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
             if target_labels is None:
                 raise ValueError(
                     "Target labels must be provided for targeted attacks.")
-            successful = torch.sum(labels == target_labels)
+            successful = torch.sum((labels == target_labels) & (
+                clean_prediction_labels == true_labels))
         else:
-            successful = torch.sum(labels != true_labels)
+            successful = torch.sum((labels != true_labels) & (
+                clean_prediction_labels == true_labels))
 
         self.total_successful_attacks += successful.item()
-        self.total_samples += original_images.size(0)
+        self.total_samples += torch.sum(clean_prediction_labels ==
+                                        true_labels).item()
 
     def get_results(self) -> float:
         """
