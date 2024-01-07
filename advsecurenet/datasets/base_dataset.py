@@ -57,6 +57,7 @@ class BaseDataset(TorchDataset, ABC):
             transforms.Compose: The data transforms.
         """
         return transforms.Compose([
+            transforms.Resize(self.input_size),
             transforms.ToTensor(),
             transforms.Normalize(mean=self.mean, std=self.std),
         ])

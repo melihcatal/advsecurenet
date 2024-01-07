@@ -122,6 +122,8 @@ class AdversarialTraining(Trainer):
             random_attack, random_model, unnormalized_source, targets
         )
 
+        assert attack_result.shape == source.shape, "adversarial image and the clean image must have the same shape"
+
         # normalize the adversarial examples to be in the same distribution as the clean examples
         attack_result = transforms.Normalize(
             mean=self.mean, std=self.std)(attack_result)
