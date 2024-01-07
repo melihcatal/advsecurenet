@@ -2,6 +2,8 @@ import os
 
 import click
 import pkg_resources
+from cli.types.training import TrainingCliConfigType
+from cli.utils.helpers import get_device_from_cfg
 
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
@@ -11,8 +13,6 @@ from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.utils.model_utils import load_model, save_model
 from advsecurenet.utils.tester import Tester
 from advsecurenet.utils.trainer import Trainer
-from cli.types.training import TrainingCliConfigType
-from cli.utils.helpers import get_device_from_cfg
 
 
 def prepare_model(config_data, num_classes, device):
@@ -120,21 +120,23 @@ def cli_train(config_data: TrainingCliConfigType):
 
 
 def cli_test(config_data: TestConfig):
-    # set weights path to weights directory if not specified
-    if not config_data['model_weights']:
+    """
+    Utility function to test a model on a dataset through the CLI.
+    """
+    if not config_data.model_weights:
         folder_path = pkg_resources.resource_filename(
             "advsecurenet", "weights")
-        file_name = f"{config_data['model_name']}_{config_data['dataset_name']}_weights.pth"
-        config_data['model_weights'] = os.path.join(folder_path, file_name)
+        file_name = f"{config_data.model_name}_{config_data.dataset_name}_weights.pth"
+        config_data.model_weights = os.path.join(folder_path, file_name)
 
-    if not config_data['model_name'] or not config_data['dataset_name']:
+    if not config_data.model_name or not config_data.dataset_name:
         raise ValueError("Please provide both model name and dataset name!")
 
     try:
         device = get_device_from_cfg(config_data)
 
         # match the dataset name to the dataset type
-        dataset_name = config_data['dataset_name'].upper()
+        dataset_name = config_data.dataset_name.upper()
         if dataset_name not in DatasetType._value2member_map_:
             raise ValueError("Unsupported dataset name! Choose from: " +
                              ", ".join([e.value for e in DatasetType]))
@@ -142,27 +144,37 @@ def cli_test(config_data: TestConfig):
         dataset_type = DatasetType(dataset_name)
 
         dataset_obj = DatasetFactory.create_dataset(dataset_type)
-        test_data = dataset_obj.load_dataset(train=False)
+        test_data = dataset_obj.load_dataset(
+            train=False,
+            root=config_data.dataset_path if config_data.dataset_path else None,
+        )
 
         test_data_loader = DataLoaderFactory.create_dataloader(
-            test_data, batch_size=config_data['batch_size'], shuffle=False)
+            test_data, batch_size=config_data.batch_size, shuffle=False)
 
         model = ModelFactory.create_model(
-            config_data['model_name'], num_classes=dataset_obj.num_classes)
+            config_data.model_name,
+            num_classes=dataset_obj.num_classes,
+            pretrained=config_data.pretrained,
+        )
 
-        model = load_model(model, config_data['model_weights'], device=device)
-        model.to(device)
-        model.eval()
-        tester = Tester(model=model, test_loader=test_data_loader,
-                        device=device, criterion=config_data['loss'])
+        model = load_model(model, config_data.model_weights,
+                           device=device) if not config_data.pretrained else model
+        tester = Tester(model=model,
+                        test_loader=test_data_loader,
+                        device=device,
+                        criterion=config_data.loss)
         tester.test()
 
     except Exception as e:
         click.echo(
-            f"Error evaluating model {config_data['model_name']} on {dataset_name}! Details: {e}")
+            f"Error evaluating model {config_data.model_name} on {dataset_name}! Details: {e}")
 
 
 def get_models(model_type: str) -> list[str]:
+    """
+    Returns a list of available models of the specified type.
+    """
     model_list_getters = {
         "all": ModelFactory.available_models,
         "custom": ModelFactory.available_custom_models,

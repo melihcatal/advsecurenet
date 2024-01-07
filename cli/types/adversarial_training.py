@@ -1,6 +1,7 @@
 
 from dataclasses import dataclass
-from typing import Dict, TypedDict
+from typing import Dict, Optional, TypedDict
+
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 
 
@@ -35,17 +36,11 @@ class ATCliConfigType:
     dataset_type: str
     num_classes: int
     optimizer: str
-    criterion: str
     epochs: int
     batch_size: int
-    adv_coeff: float
     verbose: bool
-    learning_rate: float
-    momentum: float
-    weight_decay: float
-    scheduler: str
-    scheduler_step_size: int
-    scheduler_gamma: float
+    lr: float
+    loss: str
     num_workers_train: int
     num_workers_test: int
     shuffle_train: bool
@@ -69,3 +64,6 @@ class ATCliConfigType:
     test_dataset_path: str
     num_samples_train: int
     num_samples_test: int
+    scheduler: Optional[str] = None
+    scheduler_kwargs: Optional[dict] = None
+    optimizer_kwargs: Optional[dict] = None

@@ -1,9 +1,10 @@
+from dataclasses import dataclass, field
+from typing import List, Optional, Union
+
 import torch
 from torch import nn
-from typing import List, Union, Optional
-from torch.utils.data import DataLoader
 from torch.optim import Optimizer
-from dataclasses import dataclass, field
+from torch.utils.data import DataLoader
 
 
 @dataclass
@@ -12,6 +13,9 @@ class TrainConfig:
     train_loader: DataLoader
     criterion: Union[str, nn.Module] = "cross_entropy"
     optimizer: Union[str, Optimizer] = "adam"
+    optimizer_kwargs: Optional[dict] = None
+    scheduler: Optional[Union[str, nn.Module]] = None
+    scheduler_kwargs: Optional[dict] = None
     epochs: int = 10
     learning_rate: float = 0.001
     save_checkpoint: bool = False

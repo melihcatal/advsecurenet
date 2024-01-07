@@ -37,7 +37,7 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
         else:
             train_loader = self.config.train_loader
 
-        for batch_idx, (source, targets) in enumerate(train_loader):
+        for _, (source, targets) in enumerate(train_loader):
             # Move data to device
             source = source.to(self.device)
             targets = targets.to(self.device)

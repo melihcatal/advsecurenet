@@ -33,7 +33,7 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
         optimizer (Union[str, Optimizer], optional): The optimizer to be used. Defaults to "adam".
         criterion (Union[str, nn.Module], optional): The loss function to be used. Defaults to "cross_entropy".
         epochs (int, optional): The number of epochs to be used. Defaults to 5.
-        learning_rate (float, optional): The learning rate to be used. Defaults to 0.001.
+        lr (float, optional): The learning rate to be used. Defaults to 0.001.
         save_checkpoint (bool, optional): Whether to save the checkpoints. Defaults to False.
         save_checkpoint_path (Optional[str], optional): The path to save the checkpoints. Defaults to None.
         save_checkpoint_name (Optional[str], optional): The name of the checkpoint to be saved. Defaults to None.
@@ -53,9 +53,9 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
     attacks: List[AdversarialAttack]
     train_loader: DataLoader
     optimizer: Union[str, Optimizer] = "adam"
-    criterion: Union[str, nn.Module] = "cross_entropy"
     epochs: int = 5
-    learning_rate: float = 0.001
+    lr: float = 0.001
+    loss: str = "cross_entropy"
     save_checkpoint: bool = False
     save_checkpoint_path: Optional[str] = None
     save_checkpoint_name: Optional[str] = None
@@ -63,11 +63,13 @@ class AdversarialTrainingConfig(TrainConfig, DefenseConfig):
     load_checkpoint: bool = False
     load_checkpoint_path: Optional[str] = None
     verbose: bool = True
-    adv_coeff: float = 0.5
     device: torch.device = torch.device("cpu")
     use_ddp: bool = False
     gpu_ids: Optional[List[int]] = None
     pin_memory: bool = False
+    scheduler: Optional[str] = None
+    scheduler_kwargs: Optional[dict] = None
+    optimizer_kwargs: Optional[dict] = None
 
     def __setattr__(self, prop, value):
         if prop == "device":

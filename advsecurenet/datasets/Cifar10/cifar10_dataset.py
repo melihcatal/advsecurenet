@@ -1,9 +1,11 @@
 from typing import Optional
-from torchvision import datasets
+
+import pkg_resources
 from torch.utils.data import Dataset as TorchDataset
+from torchvision import datasets
+
 from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
-import pkg_resources
 
 
 class CIFAR10Dataset(BaseDataset):
@@ -24,6 +26,7 @@ class CIFAR10Dataset(BaseDataset):
         self.mean = [0.49139968, 0.48215827, 0.44653124]
         self.std = [0.24703233, 0.24348505, 0.26158768]
         self.input_size = (32, 32)
+        self.crop_size = (32, 32)
         self.name = "cifar10"
         self.num_classes = 10
         self.num_input_channels = 3

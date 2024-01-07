@@ -1,9 +1,11 @@
+from typing import Optional
+
+import pkg_resources
+from torch.utils.data import Dataset as TorchDataset
+from torchvision import datasets
+
 from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
-from torchvision import datasets
-from torch.utils.data import Dataset as TorchDataset
-from typing import Optional
-import pkg_resources
 
 
 class MNISTDataset(BaseDataset):
@@ -23,6 +25,7 @@ class MNISTDataset(BaseDataset):
         self.mean = [0.1307]  # mean of MNIST
         self.std = [0.3081]   # std of MNIST
         self.input_size = (28, 28)
+        self.crop_size = (28, 28)
         self.name = "mnist"
         self.num_classes = 10
 

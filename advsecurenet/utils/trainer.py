@@ -10,6 +10,7 @@ from tqdm.auto import tqdm, trange
 
 from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
+from advsecurenet.shared.scheduler import Scheduler
 from advsecurenet.shared.types.configs.train_config import TrainConfig
 from advsecurenet.utils.model_utils import save_model
 
@@ -32,6 +33,7 @@ class Trainer:
         self.optimizer = self._setup_optimizer()
         self.loss_fn = self._get_loss_function(config.criterion)
         self.start_epoch = self._load_checkpoint_if_any()
+        self.scheduler = self._setup_scheduler()
 
     def train(self) -> None:
         """
@@ -69,6 +71,45 @@ class Trainer:
             self.config.optimizer, self.model, self.config.learning_rate)
         return optimizer
 
+    def _setup_scheduler(self) -> torch.optim.lr_scheduler._LRScheduler:
+        """
+        Initializes the scheduler based on the given scheduler string or torch.optim.lr_scheduler._LRScheduler.
+
+        Returns:
+            torch.optim.lr_scheduler._LRScheduler: The scheduler. I.e. ReduceLROnPlateau, etc.
+        """
+        scheduler = self._get_scheduler(
+            self.config.scheduler, self.optimizer)
+        return scheduler
+
+    def _get_scheduler(self, scheduler: Union[str, torch.optim.lr_scheduler._LRScheduler], optimizer: optim.Optimizer, **kwargs) -> torch.optim.lr_scheduler._LRScheduler:
+        """
+        Returns the scheduler based on the given scheduler string or torch.optim.lr_scheduler._LRScheduler.
+
+        Args:
+            scheduler (str or torch.optim.lr_scheduler._LRScheduler, optional): The scheduler. Defaults to None.
+            optimizer (optim.Optimizer, optional): The optimizer. Required if scheduler is a string.   
+
+        Returns:
+            torch.optim.lr_scheduler._LRScheduler: The scheduler. I.e. ReduceLROnPlateau, etc.
+        """
+        if scheduler is None:
+            return None
+        else:
+            if isinstance(scheduler, str):
+                if scheduler.upper() not in Scheduler.__members__:
+                    raise ValueError(
+                        "Unsupported scheduler! Choose from: " + ", ".join([e.name for e in Scheduler]))
+                scheduler_function_class = Scheduler[scheduler.upper()].value
+                scheduler = scheduler_function_class(
+                    optimizer,
+                    **self.config.scheduler_kwargs if self.config.scheduler_kwargs else {}
+                )
+            elif not isinstance(scheduler, torch.optim.lr_scheduler._LRScheduler):
+                raise ValueError(
+                    "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler.")
+        return cast(torch.optim.lr_scheduler._LRScheduler, scheduler)
+
     def _get_loss_function(self, criterion: Union[str, nn.Module], **kwargs) -> nn.Module:
         """
         Returns the loss function based on the given loss_function string or nn.Module.
@@ -91,7 +132,6 @@ class Trainer:
         else:
             # if criterion is a string, convert it to the corresponding loss function
             if isinstance(criterion, str):
-
                 if criterion.upper() not in Loss.__members__:
                     raise ValueError(
                         "Unsupported loss function! Choose from: " + ", ".join([e.name for e in Loss]))
@@ -134,7 +174,10 @@ class Trainer:
 
                 optimizer_class = Optimizer[optimizer.upper()].value
                 optimizer = optimizer_class(
-                    model.parameters(), lr=learning_rate, **kwargs)
+                    model.parameters(),
+                    lr=learning_rate,
+                    **self.config.optimizer_kwargs if self.config.optimizer_kwargs else {}
+                )
 
             elif not isinstance(optimizer, optim.Optimizer):
                 raise ValueError(
@@ -273,24 +316,23 @@ class Trainer:
         Returns:
             float: The loss.
         """
-        # Set the model to train mode
         self.model.train()
         self.optimizer.zero_grad()
         output = self.model(source)
         loss = self.loss_fn(output, targets)
         loss.backward()
         self.optimizer.step()
+        if self.scheduler:
+            self.scheduler.step()
         return loss.item()
 
     def _run_epoch(self, epoch: int) -> None:
         """
         Runs the given epoch.
         """
-        # TODO: Better naming
         total_loss = 0.0
-
         # for source, targets in self.config.train_loader:
-        for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader)):
+        for _, (source, targets) in enumerate(tqdm(self.config.train_loader)):
             source, targets = source.to(
                 self.device), targets.to(self.device)
             loss = self._run_batch(source, targets)

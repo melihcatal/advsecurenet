@@ -1,10 +1,10 @@
 import click
-
-from advsecurenet.shared.types.configs import ConfigType
-from advsecurenet.utils.config_utils import get_default_config_yml
 from cli.types.training import TrainingCliConfigType
 from cli.utils.config import load_configuration
 from cli.utils.trainer import CLITrainer
+
+from advsecurenet.shared.types.configs import ConfigType
+from advsecurenet.utils.config_utils import get_default_config_yml
 
 
 def cli_train(config: str, **kwargs):

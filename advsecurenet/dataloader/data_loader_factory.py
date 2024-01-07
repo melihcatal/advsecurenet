@@ -2,8 +2,8 @@
 This module contains the DataLoaderFactory class that creates a DataLoader for the given dataset.
 """
 
-import logging
-from torch.utils.data import DataLoader as TorchDataLoader, Dataset as TorchDataset
+from torch.utils.data import DataLoader as TorchDataLoader
+from torch.utils.data import Dataset as TorchDataset
 
 
 class DataLoaderFactory:
@@ -32,7 +32,6 @@ class DataLoaderFactory:
             ValueError: If the dataset is not of type TorchDataset.
 
         """
-        logging.info(f'Creating dataloader for {dataset} dataset')
         if not isinstance(dataset, TorchDataset):
             raise ValueError(
                 "Invalid dataset type provided. Expected TorchDataset.")

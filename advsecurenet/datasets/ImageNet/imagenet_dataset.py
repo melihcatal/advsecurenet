@@ -1,19 +1,24 @@
-from torchvision import datasets
-from torch.utils.data import Dataset as TorchDataset
+from typing import Optional
+
+import pkg_resources
+from torchvision import datasets, transforms
+
 from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
-from typing import Optional
-import pkg_resources
 
 
 class NamedImageFolder(datasets.ImageFolder):
+    """
+    Helper class to add a name attribute to the ImageFolder dataset.
+    """
+
     def __init__(self, name, *args, **kwargs):
         super(NamedImageFolder, self).__init__(*args, **kwargs)
         self.dataset_name = name
 
 
 class ImageNetDataset(BaseDataset):
-    """
+    """s
     The ImageNetDataset class that loads the ImageNet dataset.
 
     Attributes:
@@ -29,7 +34,8 @@ class ImageNetDataset(BaseDataset):
         super().__init__()
         self.mean = [0.485, 0.456, 0.406]
         self.std = [0.229, 0.224, 0.225]
-        self.input_size = (224, 224)
+        self.input_size = (256, 256)
+        self.crop_size = (224, 224)
         self.name = "imagenet"
         self.num_classes = 1000
         self.num_input_channels = 3
