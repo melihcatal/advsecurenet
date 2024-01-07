@@ -16,16 +16,18 @@ def evaluator():
 
 
 def test_initialization(evaluator):
-    assert evaluator.total_ssim == 0
-    assert evaluator.total_psnr == 0
+    assert evaluator.ssim_score == 0
+    assert evaluator.psnr_score == 0
     assert evaluator.total_images == 0
+    assert evaluator.total_batches == 0
 
 
 def test_reset(evaluator):
     evaluator.reset()
-    assert evaluator.total_ssim == 0
-    assert evaluator.total_psnr == 0
+    assert evaluator.ssim_score == 0
+    assert evaluator.psnr_score == 0
     assert evaluator.total_images == 0
+    assert evaluator.total_batches == 0
 
 
 def test_update_ssim_psnr(evaluator):
@@ -33,11 +35,11 @@ def test_update_ssim_psnr(evaluator):
     adversarial_images = create_mock_images(10, 3, 224, 224)
 
     evaluator.update_ssim(original_images, adversarial_images)
-    assert evaluator.total_ssim > 0
+    assert evaluator.ssim_score > 0
     assert evaluator.total_images == 10
 
     evaluator.update_psnr(original_images, adversarial_images)
-    assert evaluator.total_psnr > 0
+    assert evaluator.psnr_score > 0
     assert evaluator.total_images == 20
 
 
