@@ -1,14 +1,20 @@
-import torch
-from typing import Union
 from dataclasses import dataclass, field
+from typing import Union
+
+import torch
 
 
-@dataclass
+@dataclass(kw_only=True)
 class TestConfig:
+    """
+    This dataclass is used to store the configuration of the test CLI.
+    """
     model_name: str
     dataset_name: str
+    dataset_path: str
     # TODO: change model_weights to model_weight_path
     model_weights: str
+    pretrained: bool = False
     batch_size: int = 32
     loss: str = "cross_entropy"
     device: torch.device = torch.device("cpu")
