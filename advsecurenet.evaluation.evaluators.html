@@ -163,7 +163,7 @@
 <span id="advsecurenet-evaluation-evaluators-perturbation-distance-evaluator-module"></span><h2>advsecurenet.evaluation.evaluators.perturbation_distance_evaluator module<a class="headerlink" href="#module-advsecurenet.evaluation.evaluators.perturbation_distance_evaluator" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.</span></span><span class="sig-name descname"><span class="pre">PerturbationDistanceEvaluator</span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.</span></span><span class="sig-name descname"><span class="pre">PerturbationDistanceEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator" title="advsecurenet.evaluation.base_evaluator.BaseEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEvaluator</span></code></a></p>
 <p>Evaluator for the perturbation distance. Supported metrics are:
 - L0
@@ -268,14 +268,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.get_results">
-<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.get_results" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.get_results" title="Link to this definition"></a></dt>
 <dd><p>Calculates the mean perturbation distances for the streaming session.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The mean L0, L2, and L∞ distances for the adversarial examples in the streaming session.</p>
+<dd class="field-odd"><p>The mean perturbation distances for the adversarial examples in the streaming session.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple[float, float, float]</p>
+<dd class="field-even"><p>dict[str, float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -289,7 +289,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.perturbation_distance_evaluator.PerturbationDistanceEvaluator.update" title="Link to this definition"></a></dt>
-<dd><p>Updates the evaluator with new data for streaming mode.</p>
+<dd><p>Updates the evaluator with new data for streaming mode. Expects the unnormalized, original distribution of the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -373,17 +373,18 @@ and attacks that have a lower success rate but require a smaller perturbation ma
 <dt class="sig sig-object py" id="advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.evaluators.robustness_gap_evaluator.</span></span><span class="sig-name descname"><span class="pre">RobustnessGapEvaluator</span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="advsecurenet.evaluation.html#advsecurenet.evaluation.base_evaluator.BaseEvaluator" title="advsecurenet.evaluation.base_evaluator.BaseEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEvaluator</span></code></a></p>
-<p>Evaluator for the robustness gap.</p>
+<p>Evaluator for the robustness gap. The robustness gap is the difference between the accuracy of the model on clean and adversarial examples.
+Currently, this metric doesn’t support targeted attacks and doesn’t have an option to filter out the initially misclassified images.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator.get_results">
-<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator.get_results" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator.get_results" title="Link to this definition"></a></dt>
 <dd><p>Calculates the robustness gap for the streaming session.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The mean robustness gap for the adversarial examples in the streaming session.</p>
+<dd class="field-odd"><p>The robustness gap for the adversarial examples in the streaming session.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p>dict[str, float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -422,6 +423,10 @@ and attacks that have a lower success rate but require a smaller perturbation ma
 This evaluator supports both streaming and non-streaming modes. In streaming mode, the evaluator can be updated with new data and the results are calculated on the fly.
 In non-streaming mode, the evaluator returns the results for the provided data only.</p>
 <p>For streaming mode, the evaluator can be updated with new data using the <cite>update</cite> method. The results can be obtained using the <cite>get_results</cite> method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SSIM and PSNR metrics expect the images to be in the original range. If the images are normalized, they need to be denormalized before calculating the metrics.</p>
+</div>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.evaluation.evaluators.similarity_evaluator</span> <span class="kn">import</span> <span class="n">SimilarityEvaluator</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">SimilarityEvaluator</span><span class="p">()</span> <span class="k">as</span> <span class="n">evaluator</span><span class="p">:</span>
@@ -521,14 +526,14 @@ The higher the SSIM, the more similar the images are.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.get_results">
-<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.get_results" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.evaluation.evaluators.similarity_evaluator.SimilarityEvaluator.get_results" title="Link to this definition"></a></dt>
 <dd><p>Calculates the mean SSIM and PSNR between the original and adversarial images for all the data seen so far.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The mean SSIM and PSNR between the original and adversarial images.</p>
+<dd class="field-odd"><p>A dictionary containing the mean SSIM and PSNR between the original and adversarial images.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple[float, float]</p>
+<dd class="field-even"><p>dict[str, float]</p>
 </dd>
 </dl>
 </dd></dl>

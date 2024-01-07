@@ -194,15 +194,41 @@
 <span id="advsecurenet-evaluation-adversarial-evaluator-module"></span><h2>advsecurenet.evaluation.adversarial_evaluator module<a class="headerlink" href="#module-advsecurenet.evaluation.adversarial_evaluator" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.adversarial_evaluator.</span></span><span class="sig-name descname"><span class="pre">AdversarialEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.adversarial_evaluator.</span></span><span class="sig-name descname"><span class="pre">AdversarialEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.evaluation.base_evaluator.BaseEvaluator" title="advsecurenet.evaluation.base_evaluator.BaseEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEvaluator</span></code></a></p>
 <p>Composite evaluator that can be used to evaluate multiple metrics at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluators</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – List of evaluators to use. If None, all evaluators will be used. Defaults to None.</p></li>
+<li><p><strong>mean</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Mean of the dataset. Defaults to None. Needed for evaluators that need to unnormalize the data.</p></li>
+<li><p><strong>std</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Standard deviation of the dataset. Defaults to None. Needed for evaluators that need to unnormalize the data.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the evaluators.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>It’s possible to provide a list of target models to evaluate the transferability of the adversarial examples.
 It’s also possible to provide a distance metric to evaluate the perturbation effectiveness of the adversarial examples. Possible distance metrics are:
 - L0
 - L2
 - Linf
 Default distance metric is L0.</p>
+<p>Some metrics expect the adversarial examples to be normalized. Similarity metrics expect the unnormalized data.
+The metrics that need to feed the model expect the data to be normalized since the model has been trained on normalized data.
+The complete list of metrics and their expected data format is:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>SimilarityEvaluator: Expects unnormalized data.</p></li>
+<li><p>PerturbationDistanceEvaluator: Expects unnormalized data.</p></li>
+<li><p>PerturbationEffectivenessEvaluator: Expects unnormalized data.</p></li>
+<li><p>RobustnessGapEvaluator: Expects normalized data.</p></li>
+<li><p>AttackSuccessRateEvaluator: Expects normalized data.</p></li>
+<li><p>TransferabilityEvaluator: Expects normalized data.</p></li>
+</ul>
+</div></blockquote>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.get_results">
 <span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.get_results" title="Link to this definition"></a></dt>
@@ -218,7 +244,7 @@ Default distance metric is L0.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adv_img</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.update" title="Link to this definition"></a></dt>
-<dd><p>Updates the evaluator with new data for streaming mode.</p>
+<dd><p>Updates the evaluator with new data for streaming mode. Expects normalized data. If needed, the data will be unnormalized before calculating the metrics.</p>
 </dd></dl>
 
 </dd></dl>
