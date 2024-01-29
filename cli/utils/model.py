@@ -2,8 +2,6 @@ import os
 
 import click
 import pkg_resources
-from cli.types.training import TrainingCliConfigType
-from cli.utils.helpers import get_device_from_cfg
 
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.datasets.dataset_factory import DatasetFactory
@@ -13,15 +11,19 @@ from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.utils.model_utils import load_model, save_model
 from advsecurenet.utils.tester import Tester
 from advsecurenet.utils.trainer import Trainer
+from cli.types.training import TrainingCliConfigType
+from cli.utils.helpers import get_device_from_cfg
 
 
 def prepare_model(config_data, num_classes, device):
     """Loads the model and sets its weights."""
     model = ModelFactory.create_model(
         config_data['model_name'],
-        num_classes=num_classes,
-        pretrained=config_data['pretrained'],
-        weights=config_data['pretrained_weights'],
+        # if num_classes is not specified, use the number of classes in the dataset
+        num_classes=config_data['num_classes'] if config_data['num_classes'] else num_classes,
+        num_input_channels=config_data['num_input_channels'],
+        pretrained=config_data['pretrained'] if config_data['pretrained'] else False,
+        weights=config_data['pretrained_weights'] if config_data['pretrained_weights'] else None,
     )
 
     # set weights path to weights directory if not specified
@@ -39,6 +41,7 @@ def prepare_model(config_data, num_classes, device):
         model,
         config_data['model_weights'],
         device=device,
+        dataset_name=config_data['trained_on'],
     )
 
 

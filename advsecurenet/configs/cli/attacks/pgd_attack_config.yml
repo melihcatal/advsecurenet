@@ -2,6 +2,8 @@
 
 # Model Configuration
 model_name: CustomMnistModel # Name of the model to be attacked
+num_input_channels: 1 # Number of input channels for the model
+num_classes: 10 # Number of classes for the model
 trained_on: mnist # Dataset on which the model was trained.
 pretrained: False # Whether the model is pretrained. Defaults to False. This is only applicable if the model is a torchvision model
 pretrained_weights: null # Weights for the pretrained models. If null uses the default weights. This is only applicable if the model is a torchvision model
@@ -18,9 +20,8 @@ random_samples: 10 # Required if dataset_part is 'random'. Number of random samp
 batch_size: 32 # Batch size for attack execution
 verbose: True # Whether to print progress of the attack. Defaults to True.
 save_result_images: True # Whether to save the result images. Defaults to True.
+save_limit : 10 # Limit the number of images to save. Randomly selects images to save. If null or -1, saves all images. Be careful when setting this value to a large number as it may result in a large memory usage.
 result_images_dir: null # The path to the directory where the result images will be saved. If null, uses results/{attack_name}/{model_name}_{trained_on}_{dataset_name}_{dataset_part}_result_images.
-result_images_prefix: null # The prefix to use for the result images. If null, uses {attack_name}_{model_name}_{trained_on}_{dataset_name}_{dataset_part}.
-
 # Attack Specific Configuration
 epsilon: 0.3 # The epsilon value to use for the attack. Defaults to 0.3.
 alpha: 0.008 # The alpha value to use for the attack. Defaults to 0.008 (2/255).

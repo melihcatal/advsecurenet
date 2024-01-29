@@ -1,11 +1,12 @@
 import os
-import torch
+from typing import Optional
+
+import click
 import pkg_resources
 import requests
-import click
+import torch
 from torch import nn
 from tqdm.auto import tqdm
-from typing import Optional
 
 
 def save_model(model: nn.Module,
@@ -41,7 +42,7 @@ def save_model(model: nn.Module,
         f"Saved model to {os.path.join(filepath, filename)}", fg="green"))
 
 
-def load_model(model, filename, filepath=None, device: torch.device = torch.device("cpu")):
+def load_model(model, filename, filepath=None, device: torch.device = torch.device("cpu"), dataset_name: Optional[str] = None):
     """
     Loads the model weights from the given filepath.
 
@@ -50,6 +51,7 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
         filename (str): The filename to load the model weights from.
         filepath (str, optional): The filepath to load the model weights from. Defaults to weights directory.
         device (torch.device, optional): The device to load the model weights to. Defaults to CPU.
+        dataset_name (str, optional): The name of the dataset the model was trained on. Defaults to None. This is passed to download_weights() if the weights are not found in the given filepath.
     """
     # check if filename contains a path if so, use that instead of filepath
     if os.path.dirname(filename):
@@ -62,9 +64,28 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
     # add .pth extension if not present
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
-    # TODO: add support for loading distributed models and also improve the efficiency
-    model.load_state_dict(torch.load(os.path.join(
-        filepath, filename), map_location=device))
+
+    # if the weights are not found in the given filepath and dataset_name is provided, try to download them
+    if not os.path.exists(os.path.join(filepath, filename)) and dataset_name is not None:
+        if click.confirm(click.style(
+                f"Model weights not found at {os.path.join(filepath, filename)}. Do you want to try downloading them?", fg="yellow"), abort=False):
+            download_weights(model_name=model.model_name,
+                             dataset_name=dataset_name,
+                             filename=filename,
+                             save_path=filepath)
+
+    try:
+        model.load_state_dict(torch.load(os.path.join(
+            filepath, filename), map_location=device))
+    except FileNotFoundError:
+        click.echo(click.style(
+            f"Model weights not found at {os.path.join(filepath, filename)}. Returning model without loading weights.", fg="red"))
+    except Exception as e:
+        click.echo(click.style(
+            f"Error loading model weights from {os.path.join(filepath, filename)}! Details: {e}", fg="red"))
+    else:
+        click.echo(click.style(
+            f"Loaded model weights from {os.path.join(filepath, filename)}", fg="green"))
     return model
 
 
@@ -134,7 +155,8 @@ def download_weights(model_name: Optional[str] = None,
                 raise Exception(
                     "Error, something went wrong while downloading.")
 
-            print(f"Downloaded weights to {local_file_path}")
+            click.echo(click.style(
+                f"Downloaded weights to {local_file_path}", fg="green"))
         except (Exception, KeyboardInterrupt) as e:
             # If any error occurs, delete the file and re-raise the exception
             if os.path.exists(local_file_path):
@@ -144,6 +166,7 @@ def download_weights(model_name: Optional[str] = None,
             raise e
 
     else:
-        print(f"File {local_file_path} already exists. Skipping download.")
+        click.echo(click.style(
+            f"Weights already exist at {local_file_path}", fg="yellow"))
 
     return local_file_path

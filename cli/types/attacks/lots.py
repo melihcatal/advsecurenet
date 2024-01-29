@@ -38,4 +38,3 @@ class LOTSCliConfigType(ATLOTSCliConfigType):
     verbose: bool
     save_result_images: bool
     result_images_dir: str
-    result_images_prefix: str

@@ -307,30 +307,34 @@ def common_attack_options(func):
                      help='Path to the attack configuration yml file.'),
         click.option('-m', '--model-name', type=click.STRING, default=None,
                      help='Name of the model to be attacked.'),
+        click.option("-nic", '--num_input_channels', type=click.INT,
+                     default=None, help='Number of input channels for the model.'),
+        click.option("-nc", '--num_classes', type=click.INT,
+                     default=None, help='Number of classes for the model.'),
         click.option('--trained-on', type=click.STRING, default=None,
                      help='Dataset on which the model was trained.'),
         click.option('--model-weights', type=click.Path(exists=True), default=None,
                      help='Path to model weights. If unspecified, uses the default path based on model_name and trained_on.'),
-        click.option('--device', default=None, type=click.Choice(
+        click.option('-d', '--device', default=None, type=click.Choice(
             ['CPU', 'CUDA', 'MPS'], case_sensitive=False), help='Device for executing attacks.'),
-        click.option('--dataset-name', type=click.Choice(['cifar10', 'mnist', 'custom'], case_sensitive=False),
+        click.option('-dn', '--dataset-name', type=click.Choice(['cifar10', 'mnist', 'custom'], case_sensitive=False),
                      default=None, help='Dataset for the attack. Choose "custom" for your own dataset.'),
-        click.option('--custom-data-dir', type=click.Path(exists=True), default=None,
+        click.option('-cdd', '--custom-data-dir', type=click.Path(exists=True), default=None,
                      help='Path to custom dataset. Required if dataset_name is "custom".'),
-        click.option('--dataset-part', type=click.Choice(['train', 'test', 'all', 'random'], case_sensitive=False),
+        click.option('-dp', '--dataset-part', type=click.Choice(['train', 'test', 'all', 'random'], case_sensitive=False),
                      default=None, help='Which part of dataset to use for attack. Ignored if dataset_name is "custom".'),
-        click.option('--random-samples', type=click.INT, default=None,
+        click.option('-sl', '--save-limit', type=click.INT, default=None,
+                     help='Number of adversarial images to save. Ignored if save_result_images is False. If unspecified or -1, saves all images.'),
+        click.option('-rs', '--random-samples', type=click.INT, default=None,
                      help='Number of random samples for attack. Relevant only if dataset_part is "random" and dataset_name isn\'t "custom".'),
-        click.option('--batch-size', type=click.INT, default=None,
+        click.option('-bs', '--batch-size', type=click.INT, default=None,
                      help='Batch size for attack execution.'),
-        click.option('--verbose', type=click.BOOL, default=None,
+        click.option('-v', '--verbose', type=click.BOOL, default=None,
                      help='Whether to print progress of the attack.'),
-        click.option('--save_result_images', type=click.BOOL,
+        click.option('-sri', '--save_result_images', type=click.BOOL,
                      default=None, help='Whether to save the adversarial images.'),
-        click.option('--result_images_dir', type=click.Path(exists=True),
+        click.option('-rid', '--result_images_dir', type=click.Path(exists=True),
                      default=None, help='Directory to save the adversarial images.'),
-        click.option('--result_images_prefix', type=click.STRING,
-                     default=None, help='Prefix for the adversarial images.'),
     ]):
         func = option(func)
     return func
@@ -543,7 +547,6 @@ def fgsm(config, **kwargs):
 
     """
     from cli.logic.attack import cli_attack
-
     cli_attack("FGSM", config, **kwargs)
 
 
