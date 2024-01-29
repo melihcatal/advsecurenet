@@ -9,7 +9,6 @@ class PerturbationEffectivenessEvaluator(BaseEvaluator):
     def __init__(self):
         self.total_attack_success_rate = 0
         self.total_perturbation_distance = 0
-        self.total_samples = 0
 
     def reset(self):
         """
@@ -17,7 +16,6 @@ class PerturbationEffectivenessEvaluator(BaseEvaluator):
         """
         self.total_attack_success_rate = 0
         self.total_perturbation_distance = 0
-        self.total_samples = 0
 
     def update(self, attack_success_rate: float, perturbation_distance: float):
         """
@@ -29,7 +27,6 @@ class PerturbationEffectivenessEvaluator(BaseEvaluator):
         """
         self.total_attack_success_rate += attack_success_rate
         self.total_perturbation_distance += perturbation_distance
-        self.total_samples += 1
 
     def get_results(self) -> float:
         """
@@ -38,10 +35,10 @@ class PerturbationEffectivenessEvaluator(BaseEvaluator):
         Returns:
             float: The mean perturbation effectiveness score for the adversarial examples in the streaming session.
         """
-        if self.total_samples > 0:
+        try:
             return self.total_attack_success_rate / self.total_perturbation_distance
-        else:
-            return 0.0
+        except ZeroDivisionError:
+            return 0
 
     def calculate_perturbation_effectiveness_score(self, attack_success_rate: float, perturbation_distance: float) -> float:
         """ 

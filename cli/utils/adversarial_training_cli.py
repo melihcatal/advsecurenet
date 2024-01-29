@@ -5,6 +5,10 @@ from typing import Optional, Type, cast
 
 import click
 import torch
+from cli.types.adversarial_training import (ATCliConfigType, AttackConfigDict,
+                                            AttackWithConfigDict,
+                                            ModelWithConfigDict)
+from cli.utils.config import build_config, load_configuration
 from torch.utils.data import DataLoader as TorchDataLoader
 from torch.utils.data import Dataset as TorchDataset
 from torch.utils.data import Subset
@@ -31,10 +35,6 @@ from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
 from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.model_utils import load_model, save_model
-from cli.types.adversarial_training import (ATCliConfigType, AttackConfigDict,
-                                            AttackWithConfigDict,
-                                            ModelWithConfigDict)
-from cli.utils.config import build_config, load_configuration
 
 
 class AdversarialTrainingCLI:
@@ -318,16 +318,15 @@ class AdversarialTrainingCLI:
             attacks=attacks,
             train_loader=train_data_loader,
             epochs=self.config_data.epochs,
-            learning_rate=self.config_data.learning_rate,
+            lr=self.config_data.lr,
+            loss=self.config_data.loss,
             save_checkpoint=self.config_data.save_checkpoint,
             save_checkpoint_path=self.config_data.save_checkpoint_path,
             save_checkpoint_name=self.config_data.save_checkpoint_name,
             load_checkpoint=self.config_data.load_checkpoint,
             load_checkpoint_path=self.config_data.load_checkpoint_path,
             verbose=self.config_data.verbose,
-            adv_coeff=self.config_data.adv_coeff,
             optimizer=self.config_data.optimizer,
-            criterion=self.config_data.criterion,
             device=self.config_data.device,
             use_ddp=self.config_data.use_ddp,
             gpu_ids=self.config_data.gpu_ids,
@@ -336,6 +335,10 @@ class AdversarialTrainingCLI:
             save_model_path=self.config_data.save_model_path if self.config_data.save_model_path else os.getcwd(),
             save_model_name=self.config_data.save_model_name if self.config_data.save_model_name else target_model.model_name,
             checkpoint_interval=self.config_data.checkpoint_interval,
+            scheduler=self.config_data.scheduler if self.config_data.scheduler else None,
+            scheduler_kwargs=self.config_data.scheduler_kwargs if self.config_data.scheduler_kwargs else None,
+            optimizer_kwargs=self.config_data.optimizer_kwargs if self.config_data.optimizer_kwargs else None,
+
         )
 
     def _execute_ddp_adversarial_training(self) -> None:

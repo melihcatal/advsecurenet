@@ -4,6 +4,7 @@ from typing import Optional, Tuple
 import click
 import pkg_resources
 import torch
+from cli.types.training import TrainingCliConfigType
 from torch.utils.data import Dataset as TorchDataset
 from torch.utils.data.distributed import DistributedSampler
 
@@ -18,7 +19,6 @@ from advsecurenet.utils.ddp_trainer import DDPTrainer
 from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
 from advsecurenet.utils.model_utils import save_model
 from advsecurenet.utils.trainer import Trainer
-from cli.types.training import TrainingCliConfigType
 
 
 class CLITrainer:
@@ -148,7 +148,11 @@ class CLITrainer:
             checkpoint_interval=self.config_data.checkpoint_interval,
             load_checkpoint=self.config_data.load_checkpoint,
             load_checkpoint_path=self.config_data.load_checkpoint_path if self.config_data.load_checkpoint_path else os.getcwd(),
-
+            scheduler=self.config_data.scheduler,
+            scheduler_kwargs=self.config_data.scheduler_kwargs,
+            optimizer=self.config_data.optimizer,
+            optimizer_kwargs=self.config_data.optimizer_kwargs,
+            criterion=self.config_data.loss
         )
 
     def _execute_ddp_training(self) -> None:

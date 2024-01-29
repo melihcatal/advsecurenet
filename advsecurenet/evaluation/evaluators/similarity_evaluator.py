@@ -1,8 +1,9 @@
 import numpy as np
 import torch
-from advsecurenet.evaluation.base_evaluator import BaseEvaluator
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
+
+from advsecurenet.evaluation.base_evaluator import BaseEvaluator
 
 
 class SimilarityEvaluator(BaseEvaluator):
@@ -13,6 +14,9 @@ class SimilarityEvaluator(BaseEvaluator):
     In non-streaming mode, the evaluator returns the results for the provided data only.
 
     For streaming mode, the evaluator can be updated with new data using the `update` method. The results can be obtained using the `get_results` method. 
+
+    Note:
+        The SSIM and PSNR metrics expect the images to be in the original range. If the images are normalized, they need to be denormalized before calculating the metrics. 
 
     Example:
         >>> from advsecurenet.evaluation.evaluators.similarity_evaluator import SimilarityEvaluator
@@ -39,6 +43,7 @@ class SimilarityEvaluator(BaseEvaluator):
         self.ssim_score = 0
         self.psnr_score = 0
         self.total_images = 0
+        self.total_batches = 0
 
     def reset(self):
         """
@@ -47,6 +52,7 @@ class SimilarityEvaluator(BaseEvaluator):
         self.ssim_score = 0
         self.psnr_score = 0
         self.total_images = 0
+        self.total_batches = 0
 
     def update_ssim(self, original_images: torch.Tensor, adversarial_images: torch.Tensor, update_total_images: bool = True):
         """
@@ -84,7 +90,7 @@ class SimilarityEvaluator(BaseEvaluator):
         """
         self.update_ssim(original_images, adversarial_images, False)
         self.update_psnr(original_images, adversarial_images, False)
-        self.total_images += original_images.shape[0]
+        self.total_batches += 1
 
     def get_ssim(self) -> float:
         """
@@ -104,14 +110,17 @@ class SimilarityEvaluator(BaseEvaluator):
         """
         return self.psnr_score
 
-    def get_results(self) -> tuple[float, float]:
+    def get_results(self) -> dict[str, float]:
         """
         Calculates the mean SSIM and PSNR between the original and adversarial images for all the data seen so far.
 
         Returns:
-            Tuple[float, float]: The mean SSIM and PSNR between the original and adversarial images.
+            dict[str, float]: A dictionary containing the mean SSIM and PSNR between the original and adversarial images.
         """
-        return self.get_ssim(), self.get_psnr()
+        return {
+            "SSIM": self.get_ssim() / self.total_batches,
+            "PSNR": self.get_psnr() / self.total_batches
+        }
 
     def calculate_ssim(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> float:
         """

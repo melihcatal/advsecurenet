@@ -1,4 +1,5 @@
 import torch
+
 from advsecurenet.evaluation.base_evaluator import BaseEvaluator
 
 
@@ -10,11 +11,12 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
     - Linf
     """
 
-    def __init__(self):
+    def __init__(self, normalize: bool = False):
         self.total_l0_distance = 0
         self.total_l2_distance = 0
         self.total_l_inf_distance = 0
-        self.total_samples = 0
+        self.batch_size = 0
+        self.normalize = normalize
 
     def reset(self):
         """
@@ -23,11 +25,11 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         self.total_l0_distance = 0
         self.total_l2_distance = 0
         self.total_l_inf_distance = 0
-        self.total_samples = 0
+        self.batch_size = 0
 
     def update(self, original_images: torch.Tensor, adversarial_images: torch.Tensor):
         """
-        Updates the evaluator with new data for streaming mode.
+        Updates the evaluator with new data for streaming mode. Expects the unnormalized, original distribution of the data.
 
         Args:
             original_images (torch.Tensor): The original images.
@@ -39,19 +41,26 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         self.total_l0_distance += l0_distance
         self.total_l2_distance += l2_distance
         self.total_l_inf_distance += l_inf_distance
-        self.total_samples += original_images.size(0)
+        self.batch_size += 1
 
-    def get_results(self) -> tuple[float, float, float]:
+    def get_results(self) -> dict[str, float]:
         """
         Calculates the mean perturbation distances for the streaming session.
 
         Returns:
-            Tuple[float, float, float]: The mean L0, L2, and L∞ distances for the adversarial examples in the streaming session.
+            dict[str, float]: The mean perturbation distances for the adversarial examples in the streaming session.
         """
-        if self.total_samples > 0:
-            return self.total_l0_distance, self.total_l2_distance, self.total_l_inf_distance
-        else:
-            return 0.0, 0.0, 0.0
+        if self.batch_size > 0:
+            return {
+                "L0": self.total_l0_distance / self.batch_size,
+                "L2": self.total_l2_distance / self.batch_size,
+                "Linf": self.total_l_inf_distance / self.batch_size
+            }
+        return {
+            "L0": 0.0,
+            "L2": 0.0,
+            "Linf": 0.0
+        }
 
     def get_perturbation_distance(self, distance_type: str) -> float:
         """
@@ -63,7 +72,7 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         Returns:
             float: The mean perturbation distance for the adversarial examples in the streaming session.
         """
-        if self.total_samples > 0:
+        if self.batch_size > 0:
             if distance_type == "L0":
                 return self.total_l0_distance
             elif distance_type == "L2":

@@ -1,12 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Tuple
 
-from advsecurenet.shared.types.dataset import DataType
 from torch.utils.data import Dataset as TorchDataset
 from torchvision import datasets, transforms
 
+from advsecurenet.shared.types.dataset import DataType
+
 
 class DatasetWrapper(TorchDataset):
+    """ 
+    A wrapper class for PyTorch datasets that allows for easy access to the underlying dataset and having customized parameters.
+    """
+
     def __init__(self, dataset, name):
         self.dataset = dataset
         self.name = name
@@ -38,6 +43,7 @@ class BaseDataset(TorchDataset, ABC):
         self.mean: List[float] = []
         self.std: List[float] = []
         self.input_size: Tuple[int, int] = ()
+        self.crop_size: Tuple[int, int] = ()
         self.name: str = ""
         self.num_classes: int = 0
         self.num_input_channels: int = 0
@@ -54,7 +60,6 @@ class BaseDataset(TorchDataset, ABC):
             transforms.Resize(self.input_size),
             transforms.ToTensor(),
             transforms.Normalize(mean=self.mean, std=self.std),
-            transforms.Lambda(lambda x: x.clamp(0, 1))
         ])
 
     def __len__(self) -> int:

@@ -2,6 +2,7 @@ import random
 
 import torch
 from torch.utils.data import DataLoader
+from torchvision import transforms
 from tqdm.auto import tqdm
 
 from advsecurenet.attacks import AdversarialAttack
@@ -10,6 +11,7 @@ from advsecurenet.shared.types.configs.defense_configs.adversarial_training_conf
     AdversarialTrainingConfig
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
+from advsecurenet.utils.data import unnormalize_data
 from advsecurenet.utils.trainer import Trainer
 
 
@@ -29,9 +31,17 @@ class AdversarialTraining(Trainer):
         self.device = self._setup_device()
         self.model = self._setup_model()
         self.optimizer = self._setup_optimizer()
+        self.scheduler = self._setup_scheduler()
         self.loss_fn = self._get_loss_function(self.config.criterion)
         self.start_epoch = self._load_checkpoint_if_any()
         self.adversarial_target_generator = AdversarialTargetGenerator()
+        self.mean, self.std = self._get_meand_and_std()
+
+    def _get_meand_and_std(self):
+        # get mean and std of the dataset
+        mean = self.config.train_loader.dataset.dataset.transform.transforms[-1].mean
+        std = self.config.train_loader.dataset.dataset.transform.transforms[-1].std
+        return mean, std
 
     # Helper function to shuffle the combined clean and adversarial data
 
@@ -52,6 +62,14 @@ class AdversarialTraining(Trainer):
             raise ValueError("train_dataloader must be a DataLoader!")
 
     def _combine_clean_and_adversarial_data(self, source: torch.Tensor, adv_source: torch.Tensor, targets: torch.Tensor, adv_targets: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        # make sure that source and adv_source have the same shape and same normalization
+        assert source.shape == adv_source.shape, "source and adv_source must have the same shape"
+
+        # assert torch.allclose(source.mean(), adv_source.mean(
+        # ), atol=1e-7), "source and adv_source must have the same mean"
+        # assert torch.allclose(source.std(), adv_source.std(
+        # ), atol=1e-7), "source and adv_source must have the same std"
+
         # Combine clean and adversarial examples
         combined_data, combined_target = self._shuffle_data(
             torch.cat([source, adv_source], dim=0),
@@ -96,10 +114,19 @@ class AdversarialTraining(Trainer):
         # Set the model to eval mode
         random_model.eval()
 
-        # Perform the attack
+        # first unnormalize the source. The operation is not in-place
+        unnormalized_source = unnormalize_data(source, self.mean, self.std)
+
+        # Perform the attack using the unnormalized images
         attack_result = self._perform_attack(
-            random_attack, random_model, source, targets
+            random_attack, random_model, unnormalized_source, targets
         )
+
+        assert attack_result.shape == source.shape, "adversarial image and the clean image must have the same shape"
+
+        # normalize the adversarial examples to be in the same distribution as the clean examples
+        attack_result = transforms.Normalize(
+            mean=self.mean, std=self.std)(attack_result)
 
         adv_source.append(attack_result)
         adv_targets.append(targets)
@@ -149,8 +176,8 @@ class AdversarialTraining(Trainer):
     def _run_epoch(self, epoch: int) -> None:
 
         total_loss = 0.0
-        for batch_idx, (source, targets) in enumerate(tqdm(self.config.train_loader, desc="Adversarial Training",
-                                                           leave=False, position=1, unit="batch", colour="blue")):
+        for _, (source, targets) in enumerate(tqdm(self.config.train_loader, desc="Adversarial Training",
+                                                   leave=False, position=1, unit="batch", colour="blue")):
 
             # Move data to device
             source = source.to(self.device)

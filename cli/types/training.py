@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -37,3 +38,6 @@ class TrainingCliConfigType:
     test_dataset_path: str
     verbose: bool
     num_input_channels: int
+    scheduler: Optional[str] = None
+    scheduler_kwargs: Optional[dict] = None
+    optimizer_kwargs: Optional[dict] = None

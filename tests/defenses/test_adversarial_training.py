@@ -1,14 +1,19 @@
 import pytest
 import torch
 from torch import nn
-from torch.utils.data import DataLoader, Dataset
+from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss
 from torch.optim import Adam
-from torch.nn import CrossEntropyLoss, BCEWithLogitsLoss
-from advsecurenet.models.base_model import BaseModel
+from torch.utils.data import DataLoader, Dataset
+from torchvision import datasets, transforms
+
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.datasets.base_dataset import DatasetWrapper
 from advsecurenet.defenses import AdversarialTraining
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.shared.types.configs.attack_configs.fgsm_attack_config import FgsmAttackConfig
+from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.configs.attack_configs.fgsm_attack_config import \
+    FgsmAttackConfig
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
+    AdversarialTrainingConfig
 
 
 class DummyModel(BaseModel):
@@ -35,11 +40,21 @@ class DummyAttack(AdversarialAttack):
 
 
 class DummyDataset(Dataset):
+
+    def __init__(self):
+        super(DummyDataset, self).__init__()
+        self.dataset = datasets.MNIST(
+            root="data", train=True, download=True, transform=transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.1307,), (0.3081,))
+            ])
+        )
+
     def __len__(self):
         return 10
 
     def __getitem__(self, idx):
-        return torch.tensor([1.0]).unsqueeze(0), torch.tensor([1.0]).unsqueeze(0)
+        return torch.rand(1, 1, 1, 1), torch.rand(1, 1, 1, 1)
 
 
 @pytest.fixture(scope="module")

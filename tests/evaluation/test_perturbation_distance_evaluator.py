@@ -19,7 +19,7 @@ def test_initialization(evaluator):
     assert evaluator.total_l0_distance == 0
     assert evaluator.total_l2_distance == 0
     assert evaluator.total_l_inf_distance == 0
-    assert evaluator.total_samples == 0
+    assert evaluator.batch_size == 0
 
 
 def test_reset(evaluator):
@@ -27,7 +27,7 @@ def test_reset(evaluator):
     assert evaluator.total_l0_distance == 0
     assert evaluator.total_l2_distance == 0
     assert evaluator.total_l_inf_distance == 0
-    assert evaluator.total_samples == 0
+    assert evaluator.batch_size == 0
 
 
 def test_update(evaluator):
@@ -35,7 +35,7 @@ def test_update(evaluator):
     adversarial_images = create_mock_images(10, 3, 224, 224)
 
     evaluator.update(original_images, adversarial_images)
-    assert evaluator.total_samples == 10
+    assert evaluator.batch_size == 1
     assert evaluator.total_l0_distance > 0
     assert evaluator.total_l2_distance > 0
     assert evaluator.total_l_inf_distance > 0
