@@ -84,8 +84,10 @@ def get_device_from_cfg(config) -> torch.device:
 
     # Try to create a torch.device with the obtained string
     try:
-        device = torch.device(device_str)
-    except Exception:
+        device = torch.device(device_str.lower())
+    except Exception as e:  # pylint: disable=broad-except
+        click.secho(
+            f"Could not create device from {device_str}! Using CPU instead. Details: {e}", fg="yellow")
         device = torch.device("cpu")
 
     return device
