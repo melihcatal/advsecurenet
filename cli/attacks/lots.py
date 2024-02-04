@@ -1,15 +1,14 @@
-import click
 import torch
 from tqdm.auto import tqdm
 
 from advsecurenet.attacks.lots import LOTS
 from advsecurenet.dataloader.data_loader_factory import DataLoaderFactory
+from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs import attack_configs
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
 from cli.utils.config import build_config
-from cli.utils.data import get_custom_data, load_and_prepare_data
-from cli.utils.model import prepare_model
+from cli.utils.data import get_custom_data
 
 
 class CLILOTSAttack:
@@ -20,16 +19,17 @@ class CLILOTSAttack:
 
     """
 
-    def __init__(self, config_data):
+    def __init__(self, config_data: dict, model: BaseModel, device: torch.device, dataset: torch.utils.data.TensorDataset):
         self.config_data = config_data
         self._validate_config()
         self.adversarial_target_generator = AdversarialTargetGenerator()
+        self.model = model
+        self.device = device
+        self.dataset = dataset
 
-    def execute_attack(self):
-        print("Generating adversarial samples using LOTS attack...")
-        dataset, num_classes, device = load_and_prepare_data(self.config_data)
-        images = dataset.tensors[0]
-        labels = dataset.tensors[1]
+    def execute_attack(self) -> list[torch.Tensor]:
+        images = self.dataset.tensors[0]
+        labels = self.dataset.tensors[1]
 
         # Generate target images
         target_images, target_labels = self._generate_target_images(
@@ -41,10 +41,12 @@ class CLILOTSAttack:
         self._adjust_mode()
         attack_config = build_config(
             self.config_data, attack_configs.LotsAttackConfig)
-        model = prepare_model(self.config_data, num_classes, device)
         attack = LOTS(attack_config)
 
-        return self._perform_attack(attack, model, dataset, device, target_images, target_labels)
+        adversarial_images = self._perform_attack(
+            attack, target_images, target_labels)
+
+        return adversarial_images
 
     def _validate_config(self):
         if not self.config_data['deep_feature_layer']:
@@ -65,40 +67,34 @@ class CLILOTSAttack:
             paired = self.adversarial_target_generator.generate_target_images(
                 zip(data, labels))
 
-            original_images, original_labels, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
-                paired, data, "cuda:2")
+            _, _, target_images, target_labels = self.adversarial_target_generator.extract_images_and_labels(
+                paired, data)
             return target_images, target_labels
         raise ValueError("Target image generation configuration not provided!")
 
     def _adjust_mode(self):
+        """
+        Sets the mode of the LOTS attack based on the configuration. It can be SINGLE or ITERATIVE.
+        """
         mode_string = self.config_data.get("mode")
         self.config_data["mode"] = attack_configs.LotsAttackMode[mode_string.upper()]
 
-    def _perform_attack(self, attack, model, data, device, target_images, target_labels):
+    def _perform_attack(self, attack, target_images, target_labels):
         data_loader = DataLoaderFactory.create_dataloader(
-            data, batch_size=self.config_data['batch_size'], shuffle=False)
+            self.dataset, batch_size=self.config_data['batch_size'], shuffle=False)
 
-        adversarial_images, successful_attacks, total_samples = [], 0, 0
+        adversarial_images, total_samples = [], 0
         for images, labels in tqdm(data_loader, desc="Generating adversarial samples"):
             batch_size = images.size(0)
             target_images_batch, target_labels_batch = target_images[total_samples:total_samples +
                                                                      batch_size], target_labels[total_samples:total_samples + batch_size]
 
             images, labels, target_images_batch, target_labels_batch = [
-                x.to(device) for x in [images, labels, target_images_batch, target_labels_batch]]
-            adversarial_batch, is_found = attack.attack(
-                model=model, data=images, target=target_images_batch, target_classes=target_labels_batch)
-            adversarial_preds = torch.argmax(model(adversarial_batch), dim=1)
-            successful_attacks += (adversarial_preds ==
-                                   target_labels_batch).sum().item()
+                x.to(self.device) for x in [images, labels, target_images_batch, target_labels_batch]]
+            adversarial_batch, _ = attack.attack(
+                model=self.model, data=images, target=target_images_batch, target_classes=target_labels_batch)
 
             adversarial_images.append(adversarial_batch)
             total_samples += batch_size
-            if self.config_data['verbose']:
-                click.echo(
-                    f"Attack success rate: {successful_attacks / total_samples * 100:.2f}%")
 
-        success_rate = (successful_attacks / total_samples) * 100
-        print(
-            f"Succesfully generated adversarial samples! Attack success rate: {success_rate:.2f}%")
         return adversarial_images

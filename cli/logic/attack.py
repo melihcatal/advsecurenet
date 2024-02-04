@@ -53,9 +53,14 @@ def cli_execute_general_attack(attack_type, config_file: str, attack_config_clas
     config_data = load_configuration(
         config_type=ConfigType.ATTACK, config_file=config_file, **kwargs)
 
+    data, num_classes, device = load_and_prepare_data(config_data)
+    model = prepare_model(config_data, num_classes, device)
+    # if the attack is LOTS, we need to use a different logic as LOTS expects target layers
     if attack_type == AttackType.LOTS:
         click.echo(f"Executing {attack_name} attack...")
-        attack = CLILOTSAttack(config_data)
+        attack = CLILOTSAttack(
+            config_data=config_data, model=model, device=device, dataset=data
+        )
         adversarial_images = attack.execute_attack()
 
     else:

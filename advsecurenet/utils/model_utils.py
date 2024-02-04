@@ -86,7 +86,8 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
     else:
         click.echo(click.style(
             f"Loaded model weights from {os.path.join(filepath, filename)}", fg="green"))
-    return model
+    # move model to device if device is provided
+    return model.to(device) if device else model
 
 
 def download_weights(model_name: Optional[str] = None,

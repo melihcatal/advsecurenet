@@ -22,8 +22,9 @@ verbose: True # Whether to print progress of the attack. Defaults to True.
 save_result_images: True # Whether to save the result images. Defaults to True.
 save_limit : 10 # Limit the number of images to save. Randomly selects images to save. If null or -1, saves all images. Be careful when setting this value to a large number as it may result in a large memory usage.
 result_images_dir: null # The path to the directory where the result images will be saved. If null, uses results/{attack_name}/{model_name}_{trained_on}_{dataset_name}_{dataset_part}_result_images.
+
 # Attack Specific Configuration
-deep_feature_layer: null # [REQUIRED] The name of the layer to use for the attack. You can inspect the model to find the layers.
+deep_feature_layer: model.fc2 # [REQUIRED] The name of the layer to use for the attack. You can inspect the model to find the layers.
 mode: iterative # The mode to use for the attack. Default is iterative. Options are [iterative, single]
 epsilon: 0.1 # The epsilon value to use for the attack. Defaults to 0.1.
 learning_rate: 0.004 # The learning rate to use for the attack. Defaults to 1./255.
