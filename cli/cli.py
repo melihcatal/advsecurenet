@@ -23,9 +23,9 @@ class IntListParamType(click.ParamType):
 INT_LIST = IntListParamType()
 
 
-@click.group()
-@click.version_option(version='0.1.7')
-def main():
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+@click.version_option("0.1.7", "--version", "-v")
+def main():  # py
     pass
 
 
