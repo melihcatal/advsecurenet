@@ -3,11 +3,13 @@ This helpers module contans more general helper functions that are not specific 
 """
 import os
 
+import click
+import matplotlib.pyplot as plt
 import torch
 from torchvision.transforms import ToPILImage
 
 
-def save_img(img: torch.tensor, path: str = None, name: str = None) -> None:
+def save_img_batch(img: torch.tensor, path: str = None, name: str = None) -> None:
     """
     Save an image tensor to the given path. If no path is provided, the image is saved to the current directory.
 
@@ -91,3 +93,15 @@ def get_device_from_cfg(config) -> torch.device:
         device = torch.device("cpu")
 
     return device
+
+
+def create_directory(path: str):
+    """Create a directory if it doesn't exist."""
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
+def save_image(image: torch.Tensor, path: str):
+    """Save a tensor image to a specified path."""
+    # save_img_batch(image, path=path)
+    plt.imsave(path, image.squeeze().cpu().numpy())
