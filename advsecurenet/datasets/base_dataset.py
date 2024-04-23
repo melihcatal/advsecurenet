@@ -59,7 +59,6 @@ class BaseDataset(TorchDataset, ABC):
         return transforms.Compose([
             transforms.Resize(self.input_size),
             transforms.ToTensor(),
-            transforms.Normalize(mean=self.mean, std=self.std),
         ])
 
     def __len__(self) -> int:

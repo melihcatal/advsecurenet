@@ -22,8 +22,8 @@ class MNISTDataset(BaseDataset):
 
     def __init__(self):
         super().__init__()
-        self.mean = [0.1307]  # mean of MNIST
-        self.std = [0.3081]   # std of MNIST
+        self.mean = [0.1307]
+        self.std = [0.3081]
         self.input_size = (28, 28)
         self.crop_size = (28, 28)
         self.name = "mnist"
