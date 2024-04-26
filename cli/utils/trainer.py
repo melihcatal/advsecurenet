@@ -2,14 +2,11 @@ import os
 from typing import Optional, Tuple
 
 import click
-import pkg_resources
 import torch
-from cli.types.training import TrainingCliConfigType
 from torch.utils.data import Dataset as TorchDataset
 from torch.utils.data.distributed import DistributedSampler
 
 from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.models.model_factory import ModelFactory
@@ -17,8 +14,10 @@ from advsecurenet.shared.types.configs import TrainConfig
 from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.utils.ddp_trainer import DDPTrainer
 from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.model_utils import save_model
+from advsecurenet.utils.normalization_layer import NormalizationLayer
 from advsecurenet.utils.trainer import Trainer
+from cli.shared.messages.errors import CLIErrorMessages
+from cli.types.training import TrainingCliConfigType
 
 
 class CLITrainer:
@@ -27,9 +26,9 @@ class CLITrainer:
     """
 
     def __init__(self, config: TrainingCliConfigType):
-        self._validate_config(config)
-        self.config_data = config
+        self.config_data: TrainingCliConfigType = config
         self.config: Optional[TrainConfig] = None
+        self._validate_config()
         self._initialize_params()
 
     def train(self):
@@ -69,10 +68,12 @@ class CLITrainer:
                              ", ".join([e.value for e in DatasetType]))
         return dataset_name
 
-    def _validate_config(self, config):
-        if not config.model_name or not config.dataset_name:
+    def _validate_config(self):
+        if not self.config_data.model_name or not self.config_data.dataset_name:
             raise ValueError(
                 "Please provide both model name and dataset name!")
+        if self.config_data.add_norm_layer:
+            self._validate_norm_layer()
 
     def _load_datasets(self, dataset_name) -> tuple[TorchDataset, TorchDataset]:
         """
@@ -126,7 +127,46 @@ class CLITrainer:
             if (rank is not None and rank == 0) or rank is None:
                 click.echo(
                     f"Loading model... with model name: {self.config_data.model_name} and num_classes: {self.config_data.num_classes} and num_input_channels: {self.config_data.num_input_channels} ")
-        return ModelFactory.create_model(self.config_data.model_name, num_classes=self.config_data.num_classes, num_input_channels=self.config_data.num_input_channels)
+
+        model = ModelFactory.create_model(
+            self.config_data.model_name, num_classes=self.config_data.num_classes, num_input_channels=self.config_data.num_input_channels)
+
+        if self.config_data.add_norm_layer:
+            model = self._add_norm_layer(model)
+        return model
+
+    def _add_norm_layer(self, model: BaseModel) -> BaseModel:
+        """
+
+        """
+        if self.config_data.verbose:
+            click.echo(
+                f"Adding normalization layer with mean: {self.config_data.norm_mean} and std: {self.config_data.norm_std}")
+        norm_layer = NormalizationLayer(
+            mean=self.config_data.norm_mean, std=self.config_data.norm_std)
+        return ModelFactory.add_layer(model=model,
+                                      new_layer=norm_layer,
+                                      position=0)
+
+    def _validate_norm_layer(self):
+        """
+        Validate the normalization layer.
+        """
+        if self.config_data.add_norm_layer and (self.config_data.norm_mean is None or self.config_data.norm_std is None):
+            raise ValueError(
+                CLIErrorMessages.TRAINER.value.NORM_LAYER_MISSING_MEAN_OR_STD.value)
+        if self.config_data.add_norm_layer and (not isinstance(self.config_data.norm_mean, list) or not isinstance(self.config_data.norm_std, list)):
+            raise ValueError(
+                CLIErrorMessages.TRAINER.value.NORM_LAYER_MEAN_OR_STD_NOT_LIST.value)
+        if self.config_data.add_norm_layer and len(self.config_data.norm_mean) != self.config_data.num_input_channels:
+            raise ValueError(
+                CLIErrorMessages.TRAINER.value.NORM_LAYER_LENGTH_MISMATCH_MEAN_AND_NUM_INPUT_CHANNELS.value)
+        if self.config_data.add_norm_layer and len(self.config_data.norm_std) != self.config_data.num_input_channels:
+            raise ValueError(
+                CLIErrorMessages.TRAINER.value.NORM_LAYER_LENGTH_MISMATCH_STD_AND_NUM_INPUT_CHANNELS.value)
+        if len(self.config_data.norm_mean) != len(self.config_data.norm_std):
+            raise ValueError(
+                CLIErrorMessages.TRAINER.value.NORM_LAYER_LENGTH_MISMATCH_MEAN_AND_STD.value)
 
     def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader) -> TrainConfig:
         """

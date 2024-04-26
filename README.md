@@ -1,5 +1,3 @@
-# AdvSecureNet - Adversarial Secure Networks
-
 [![Unit Tests and Style Checks](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml)
 [![Build and Deploy Sphinx Documentation](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml)
 [![Upload Python Package](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml)
@@ -77,11 +75,12 @@ You can find various examples in the [examples](./examples/) directory. The exam
 
 ## Architecture
 
+
+
 The high-level architecture of the library is shown in the figure below.
 
-<p align="center">
-  <img src="https://drive.switch.ch/index.php/s/7dkGCqtlf4uWoai/download" alt="AdvSecureNet" width="400" />
-</p>
+![advsecurenet_arch-2](https://github.com/melihcatal/advsecurenet/assets/46859098/cd3823b7-1402-4711-a1ab-e13b270de5d4)
+
 
 ## License
 

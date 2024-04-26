@@ -1,29 +1,22 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from cli.types.dataloader import DataLoaderCliConfigType
+from cli.types.dataset import DatasetCliConfigType
+from cli.types.model import ModelCliConfigType
+
 
 @dataclass
-class TrainingCliConfigType:
+class TrainingCliConfigType(ModelCliConfigType, DatasetCliConfigType, DataLoaderCliConfigType):
     """
     This dataclass is used to store the configuration of the training CLI.
     """
-    model_name: str
-    dataset_name: str
+
     epochs: int
-    batch_size: int
-    num_workers_train: int
-    num_workers_test: int
-    shuffle_train: bool
-    shuffle_test: bool
-    drop_last_train: bool
-    drop_last_test: bool
     lr: float
     optimizer: str
     loss: str
-    use_ddp: bool
     device: str
-    gpu_ids: list[int]
-    pin_memory: bool
     save_final_model: bool
     save_model_path: str
     save_model_name: str
@@ -33,11 +26,7 @@ class TrainingCliConfigType:
     checkpoint_interval: int
     load_checkpoint: bool
     load_checkpoint_path: str
-    num_classes: int
-    train_dataset_path: str
-    test_dataset_path: str
     verbose: bool
-    num_input_channels: int
     scheduler: Optional[str] = None
     scheduler_kwargs: Optional[dict] = None
     optimizer_kwargs: Optional[dict] = None

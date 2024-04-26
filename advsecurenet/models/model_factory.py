@@ -2,6 +2,7 @@ from enum import EnumMeta
 from typing import Optional
 
 import torch
+import torch.nn as nn
 
 from advsecurenet.models import *
 from advsecurenet.models.base_model import BaseModel
@@ -158,3 +159,43 @@ class ModelFactory:
             raise ValueError(
                 "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
         return StandardModel.available_weights(model_name)
+
+    @staticmethod
+    def add_layer(model: nn.Module, new_layer: nn.Module, position: int = -1) -> nn.Module:
+        """
+        Inserts a new layer into an existing PyTorch model at the specified position. If the model is not a Sequential model,
+        it will be converted into one.
+
+        Args:
+            model (nn.Module): The original model to which the new layer will be added.
+            new_layer (nn.Module): The layer to be inserted into the model.
+            position (int): The position at which to insert the new layer. If set to -1, the layer is added at the end.
+                            Positions are zero-indexed.
+
+        Returns:
+            nn.Module: A new model with the layer added at the specified position.
+
+        Raises:
+            ValueError: If the specified position is out of bounds.
+        """
+        # Convert non-Sequential models to Sequential if necessary
+        if not isinstance(model, nn.Sequential):
+            model = nn.Sequential(model)
+
+        # Prepare the list of existing layers
+        layers = list(model.children())
+
+        # Check position validity
+        if position < -1 or position > len(layers):
+            raise ValueError("Position out of bounds.")
+
+        # Insert the new layer at the specified position or append at the end
+        if position == -1 or position == len(layers):
+            layers.append(new_layer)
+        else:
+            layers.insert(position, new_layer)
+
+        # Create a new Sequential model with the updated list of layers
+        updated_model = nn.Sequential(*layers)
+
+        return updated_model
