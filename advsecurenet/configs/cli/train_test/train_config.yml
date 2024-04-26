@@ -3,6 +3,10 @@
 # --- Model Configurations ---
 model_name: resnet18
 num_input_channels: 3 # Number of input channels for the model.
+add_norm_layer: false # Whether to add a normalization layer to the model.
+norm_mean:  # Mean value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+norm_std:  # Standard deviation value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+
 
 # --- Dataset Configurations ---
 dataset_name: cifar10
