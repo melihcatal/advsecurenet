@@ -1,3 +1,5 @@
+from typing import Union
+
 from advsecurenet.shared.types.dataset import DatasetType
 from advsecurenet.utils.dot_dict import DotDict
 
@@ -28,7 +30,8 @@ class NormalizationParameters:
     }
 
     @staticmethod
-    def get_params(dataset_name):
+    def get_params(dataset_name: Union[DatasetType, str]
+                   ) -> DotDict:
         """
         Retrieve normalization parameters for a specified dataset. Supported datasets are "CIFAR-10", "ImageNet", and "MNIST".
         Args:
@@ -47,8 +50,8 @@ class NormalizationParameters:
         return DotDict(params_dict) if params_dict else None
 
     @staticmethod
-    def list_datasets():
+    def list_datasets() -> list:
         """
         List available datasets.
         """
-        return list(NormalizationParameters.DATASETS.keys())
+        return [key.name for key in NormalizationParameters.DATASETS]

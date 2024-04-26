@@ -278,6 +278,23 @@ def model_layers(model_name: str):
     cli_model_layers(model_name)
 
 
+@main.command()
+@click.option('-d', '--dataset-name', default=None, help='Name of the dataset to inspect (e.g. "CIFAR10").')
+def normalization_params(dataset_name: str):
+    """Command to list the normalization values for a dataset.
+
+    Args:
+
+        dataset_name (str): The name of the dataset (e.g. "cifar10").
+
+    Raises:
+        ValueError: If the dataset name is not provided.
+    """
+    from cli.logic.normalization_params import cli_normalization_params
+
+    cli_normalization_params(dataset_name)
+
+
 @weights.command()
 @click.option('--model-name', default=None, help='Name of the model for which weights are to be downloaded (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset the model was trained on (e.g. "cifar10").')
