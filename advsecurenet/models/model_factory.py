@@ -6,6 +6,9 @@ import torch.nn as nn
 
 from advsecurenet.models import *
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.configs.model_config import (
+    CreateModelConfig, CustomModelConfig, ExternalModelConfig,
+    StandardModelConfig)
 from advsecurenet.shared.types.model import ModelType
 from advsecurenet.utils.reproducibility_utils import set_seed
 
@@ -37,72 +40,87 @@ class ModelFactory:
         """
         if model_name in StandardModel.models():
             return ModelType.STANDARD
-        elif model_name in CustomModel.models():
+
+        if model_name in CustomModel.models():
             return ModelType.CUSTOM
-        else:
-            raise ValueError("Unsupported model")
+
+        raise ValueError(
+            "Unsupported model. If you are trying to load an external model, please set is_external=True in the CreateModelConfig.")
 
     @staticmethod
-    def create_model(model_name: str, num_classes: int, num_input_channels: int = 3, pretrained: bool = False, weights: Optional[str] = "IMAGENET1K_V1", random_seed: Optional[int] = None, **kwargs) -> BaseModel:
-        """
-        This function returns a model based on the model_name. If the model_name is a standard model, it will be loaded from torchvision.models. If the model_name is a custom model, it will be loaded from advsecurenet.models.CustomModels.
+    def create_model(config: Optional[CreateModelConfig] = None,
+                     **kwargs) -> BaseModel:
+        """ 
+        This function creates a model based on the CreateModelConfig.
 
-        Parameters
-        ----------
-        model_name: str
-            The name of the model to be loaded. For example, 'resnet18' or 'CustomMnistModel'.
-        num_classes: int
-            The number of classes in the dataset.
-        num_input_channels: int
-            The number of input channels in the dataset. Default is 3 for RGB images.
-        pretrained: bool
-            Whether to load pretrained weights or not. Default is False. This is only applicable for standard models.
-        weights: str
-            The weights for the pretrained standard model. Default is IMAGENET1K_V1. This is only applicable for standard models.
-        random_seed: int
-            The random seed to use for the model. Default is None. If provided, the model will be initialized with the given random seed. This helps in reproducibility.
-        **kwargs
-            Additional keyword arguments that will be passed to the model.
+        Args:
+            config (Optional[CreateModelConfig]): The configuration for creating the model. If not provided, the model will be created with the passed keyword arguments.
+            **kwargs: Additional keyword arguments to be passed to the model constructor.
 
-        Raises
-        ------
-        ValueError
-            If the model_name is not supported by torchvision or is not a custom model.
-        ValueError
-            If the model_name is a standard model and pretrained is True and random_seed is not None.
-        ValueError
-            If the model_name is a custom model and weights is not None.
-
-        Returns
-        -------
-        BaseModel
-            The model for the given model_name. It will be of type StandardModel or CustomModel.
-
+        Returns:
+            BaseModel: The created model.
         """
         try:
+
+            if config is None:
+                config = CreateModelConfig(**kwargs)
+
+            if config.is_external:
+                cfg = ExternalModelConfig(
+                    model_name=config.model_name,
+                    num_classes=config.num_classes,
+                    model_arch_path=config.model_arch_path,
+                    pretrained=config.pretrained,
+                    model_weights_path=config.model_weights_path
+                )
+                return ExternalModel(cfg, **kwargs)
+
             inferred_type: ModelType = ModelFactory.infer_model_type(
-                model_name)
+                config.model_name)
 
-            if inferred_type == ModelType.CUSTOM and pretrained:
-                raise ValueError(
-                    "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
+            ModelFactory._validate_create_model_config(inferred_type, config)
 
-            if inferred_type == ModelType.STANDARD and pretrained and random_seed is not None:
-                raise ValueError(
-                    "Pretrained standard models do not support random seed. They already have a fixed set of weights :)")
-
-            if random_seed is not None:
-                set_seed(random_seed)
+            if config.random_seed is not None:
+                set_seed(config.random_seed)
 
             if inferred_type == ModelType.STANDARD:
-                return StandardModel(model_name=model_name, num_classes=num_classes, num_input_channels=num_input_channels, pretrained=pretrained, weights=weights, **kwargs)
-            elif inferred_type == ModelType.CUSTOM:
+                cfg = StandardModelConfig(
+                    model_name=config.model_name,
+                    num_classes=config.num_classes,
+                    pretrained=config.pretrained,
+                    weights=config.weights
+                )
+                return StandardModel(cfg, **kwargs)
+
+            if inferred_type == ModelType.CUSTOM:
                 # The custom model name would typically be without the 'Custom' prefix for the filename.
                 # For example: 'MnistModel' for 'CustomMnistModel.py'. Adjust as necessary.
-                return CustomModel(model_name=model_name, num_classes=num_classes, num_input_channels=num_input_channels, pretrained=pretrained, **kwargs)
+                cfg = CustomModelConfig(
+                    model_name=config.model_name,
+                    num_classes=config.num_classes,
+                    num_input_channels=config.num_input_channels,
+                    custom_models_path=config.custom_models_path,
+                    pretrained=config.pretrained
+                )
+                return CustomModel(cfg, **kwargs)
         except ValueError as e:
             raise ValueError(
-                f"Unsupported model type: {model_name}. If you are trying to load a custom model, please ensure that the model file is in the 'advsecurenet/models/custom' directory.") from e
+                f"Error creating model {config.model_name}! Details: {e}") from e
+
+    @staticmethod
+    def _validate_create_model_config(
+        inferred_type: ModelType, config: CreateModelConfig
+    ):
+        """ 
+        This function validates the CreateModelConfig based on the inferred model type.
+        """
+        if inferred_type == ModelType.CUSTOM and config.pretrained:
+            raise ValueError(
+                "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
+
+        if inferred_type == ModelType.STANDARD and config.pretrained and config.random_seed is not None:
+            raise ValueError(
+                "Pretrained standard models do not support random seed. They already have a fixed set of weights :)")
 
     @staticmethod
     def available_models() -> list[str]:

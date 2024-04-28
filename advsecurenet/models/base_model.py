@@ -21,12 +21,11 @@ class BaseModel(ABC, nn.Module):
         self.load_model()
 
     @abstractmethod
-    def load_model(self, *args, **kwargs) -> None:
+    def load_model(self) -> None:
         """
         Abstract method to load the model. This method should be implemented
         in derived classes (e.g., StandardModel, CustomModel).
         """
-        pass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -59,6 +58,17 @@ class BaseModel(ABC, nn.Module):
         predicted_classes = logits.argmax(dim=1)
         max_probabilities = probabilities.max(dim=1)[0]
         return predicted_classes, max_probabilities
+
+    def save_model(self, path: str) -> None:
+        """
+        Save the model to the specified path.
+
+        Args:
+            path (str): The path to save the model.
+        """
+        if self.model is None:
+            raise ValueError("Model is not loaded.")
+        torch.save(self.model.state_dict(), path)
 
     @abstractmethod
     def models(self):

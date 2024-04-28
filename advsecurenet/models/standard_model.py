@@ -1,10 +1,11 @@
 from enum import EnumMeta
 
-import torch.nn as nn
 import torchvision.models as models
+from torch import nn
 from torchvision.models._api import get_model_weights
 
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.configs.model_config import StandardModelConfig
 
 
 class StandardModel(BaseModel):
@@ -13,27 +14,18 @@ class StandardModel(BaseModel):
     modifying the model after loading.
 
     Args: 
-        model_name: str
-            The name of the model to load. For example, 'resnet18'.
-        num_classes: int
-            The number of classes in the dataset.
-        pretrained: bool
-            Whether to load pretrained weights or not. Default is False.
-        weights: str
-            The weights for the pretrained model. Default is IMAGENET1K_V1. Weight list can be obtained using StandardModel.available_weights(model_name).
+        config (StandardModelConfig): The configuration for the standard model.
 
     """
 
     def __init__(self,
-                 model_name: str,
-                 num_classes: int,
-                 pretrained: bool = False,
-                 weights: str = "IMAGENET1K_V1",
+                 config: StandardModelConfig,
                  **kwargs):
-        self.model_name = model_name
-        self.pretrained = pretrained
-        self.weights = weights
-        self.num_classes = num_classes
+
+        self.model_name = config.model_name
+        self.pretrained = config.pretrained
+        self.weights = config.weights
+        self.num_classes = config.num_classes
         # self.model: nn.Module = None
 
         # Initialize the BaseModel
