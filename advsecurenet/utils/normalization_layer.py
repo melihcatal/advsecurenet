@@ -33,8 +33,10 @@ class NormalizationLayer(nn.Module):
 
     def _convert_to_tensor(self, x):
         """
-        Converts the input to a tensor if it is not already.
+        Converts the input to a tensor if it is not already and reshapes it to [1, C, 1, 1] for broadcasting.
         """
         if not isinstance(x, torch.Tensor):
             x = torch.tensor(x)
-        return x
+        x = x.float()  # Ensure the tensor is of type float for division operations
+        # Reshape to [1, C, 1, 1] to broadcast along channel dimension
+        return x.view(1, -1, 1, 1)
