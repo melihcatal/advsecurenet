@@ -3,20 +3,19 @@ from typing import Optional
 
 from cli.types.dataloader import DataLoaderCliConfigType
 from cli.types.dataset import DatasetCliConfigType
+from cli.types.device import Device
 from cli.types.model import ModelCliConfigType
 
 
 @dataclass
-class TrainingCliConfigType(ModelCliConfigType, DatasetCliConfigType, DataLoaderCliConfigType):
+class Training:
+    """ 
+    This dataclass is used to store the configuration of the training.
     """
-    This dataclass is used to store the configuration of the training CLI.
-    """
-
     epochs: int
-    lr: float
+    learning_rate: float
     optimizer: str
-    loss: str
-    device: str
+    criterion: str
     save_final_model: bool
     save_model_path: str
     save_model_name: str
@@ -30,3 +29,15 @@ class TrainingCliConfigType(ModelCliConfigType, DatasetCliConfigType, DataLoader
     scheduler: Optional[str] = None
     scheduler_kwargs: Optional[dict] = None
     optimizer_kwargs: Optional[dict] = None
+
+
+@dataclass
+class TrainingCliConfigType():
+    """
+    This dataclass is used to store the configuration of the training CLI.
+    """
+    model: ModelCliConfigType
+    dataset: DatasetCliConfigType
+    dataloader: DataLoaderCliConfigType
+    training: Training
+    device: Device

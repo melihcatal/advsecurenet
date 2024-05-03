@@ -14,5 +14,3 @@ class DataLoaderCliConfigType:
     drop_last_test: bool
     pin_memory: bool
     batch_size: int
-    gpu_ids: list[int]
-    use_ddp: bool  # Not sure if this is about the data loader

@@ -18,7 +18,6 @@ class ModelPathConfig:
     This dataclass is used to store the configuration of the paths of a model.
     """
     model_arch_path: Optional[str]
-    has_weights: bool
     model_weights_path: Optional[str]
 
 
@@ -28,8 +27,10 @@ class ModelCliConfigType:
     This dataclass is used to store the configuration of the model CLI.
     """
     model_name: str
+    num_input_channels: int
+    num_classes: int
+    pretrained: bool
     is_external: bool
     path_config: ModelPathConfig
-    num_classes: int
-    num_input_channels: int
     norm_config: ModelNormConfig
+    random_seed: Optional[int]
