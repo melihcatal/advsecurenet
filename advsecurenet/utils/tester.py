@@ -1,26 +1,24 @@
+from typing import Sized, Union, cast
+
 import torch
 from torch import nn
-from tqdm.auto import tqdm
-from typing import cast, Sized, Union, Optional
 from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
 
 from advsecurenet.shared.loss import Loss
+from advsecurenet.shared.types.configs.test_config import TestConfig
+
 
 class Tester:
     """
-    Tester class for testing a model on a given test_loader.
-
-    Args:
-        test_loader (DataLoader): The test loader.
-        criterion (str or nn.Module, optional): The loss function. Defaults to nn.CrossEntropyLoss().
-        device (torch.device, optional): The device to test on. Defaults to CPU.
+    Base tester module for testing a model.
     """
 
-    def __init__(self, model: nn.Module, test_loader: DataLoader, criterion: Union[str, nn.Module] = torch.nn.CrossEntropyLoss(), device: torch.device = torch.device("cpu")) -> None:
-        self.model = model
-        self.test_loader = test_loader
-        self.device = device
-        self.loss_fn = self._get_loss_function(criterion)
+    def __init__(self, config: TestConfig):
+        self.model = config.model
+        self.test_loader = config.test_loader
+        self.device = config.device
+        self.loss_fn = self._get_loss_function(config.criterion)
 
     def test(self) -> tuple[float, float]:
         """

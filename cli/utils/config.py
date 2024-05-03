@@ -1,11 +1,18 @@
 """
 This module contains utility functions for working with configuration data through the CLI.
 """
+import re
 from dataclasses import fields
-from typing import Dict, TypeVar
-import yaml
+from typing import Any, Dict, TypeVar
+
+import click
 import pkg_resources
+import yaml
+
 from advsecurenet.shared.types.configs.configs import ConfigType
+from advsecurenet.utils.config_utils import (get_default_config_yml,
+                                             read_yml_file)
+from advsecurenet.utils.dataclass import recursive_dataclass_instantiation
 
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
 T = TypeVar('T')
@@ -39,7 +46,7 @@ def read_config_file(config_file: str) -> Dict:
 def load_configuration(config_type: ConfigType, config_file: str, **overrides: Dict):
     """Loads and overrides the configuration."""
     # Load the base configuration
-    config_data = read_config_file(config_file)
+    config_data = read_yml_file(config_file)
     # Call specific checks
     handler = CHECK_HANDLERS.get(config_type)
     if handler:
@@ -73,3 +80,38 @@ def attack_config_check(overrides: Dict):
 CHECK_HANDLERS = {
     ConfigType.ATTACK: attack_config_check,
 }
+
+
+def load_yaml_with_include(file_path: str
+                           ):
+    """
+    Load a YAML file with support for includes.
+    """
+    with open(file_path, 'r', encoding='utf-8') as f:
+        contents = f.read()
+        # Pre-process includes
+        contents = re.sub(r'!include (.+\.yaml)', r'!include \1', contents)
+        return yaml.load(contents, Loader=yaml.FullLoader)
+
+
+def load_and_instantiate_config(config: str, default_config_file: str, config_type: ConfigType, config_class, **kwargs: Dict[str, T]) -> Any:
+    """Utility function to load and instantiate configuration.
+
+    Args:
+        config (str): The path to the configuration file.
+        default_config_file (str): The default configuration file name.
+        config_type (ConfigType): The type of configuration.
+        config_class (Type): The dataclass type for configuration instantiation.
+        **kwargs (Dict[str, T]): Additional keyword arguments. If provided, they will override the configuration.
+
+    Returns:
+        Any: An instantiated configuration data class.
+    """
+    if not config:
+        click.secho(
+            "No configuration file provided! Using default configuration...", fg="blue")
+        config = get_default_config_yml(default_config_file, "cli")
+
+    config_data = load_configuration(
+        config_type=config_type, config_file=config, **kwargs)
+    return recursive_dataclass_instantiation(config_class, config_data)
