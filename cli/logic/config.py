@@ -18,8 +18,7 @@ def cli_configs():
     config_list = get_available_configs()
     if len(config_list) == 0:
         click.echo("No configuration file found!")
-        click.ClickException("No configuration file found!")
-        return
+        raise click.ClickException("No configuration file found!")
 
     click.echo("Available configuration files: \n")
     for i, config in enumerate(config_list):
