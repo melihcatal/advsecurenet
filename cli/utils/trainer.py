@@ -19,6 +19,13 @@ from cli.utils.model import create_model
 class CLITrainer:
     """
     Trainer class for the CLI. This module parses the CLI arguments and trains the model.
+
+    Args:
+        config (TrainingCliConfigType): The configuration for training.
+
+    Attributes:
+        config (TrainingCliConfigType): The configuration for training.
+
     """
 
     def __init__(self, config: TrainingCliConfigType):
@@ -84,7 +91,7 @@ class CLITrainer:
         else:
             model = self._initialize_model()
 
-        train_loader = self._prepare_dataloader()[0]
+        train_loader = self._prepare_dataloader()
         train_config = self._prepare_train_config(model, train_loader)
 
         return train_config
@@ -109,18 +116,22 @@ class CLITrainer:
 
         return create_model(self.config.model)
 
-    def _prepare_dataloader(self) -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
+    def _prepare_dataloader(self) -> torch.utils.data.DataLoader:
         """
         Initialize the dataloader for single process training.
-        """
-        train_data, test_data = get_datasets(config=self.config.dataset)
-        train_data_loader, test_data_loader = get_dataloader(
-            self.config.dataloader,
-            train_data,
-            test_data,
-            self.config.device.use_ddp)
 
-        return train_data_loader, test_data_loader
+        Returns:      
+
+            torch.utils.data.DataLoader: The training dataloader.      
+        """
+        train_data, _ = get_datasets(config=self.config.dataset)
+
+        train_data_loader = get_dataloader(
+            config=self.config.dataloader,
+            train_dataset=train_data,
+            use_ddp=self.config.device.use_ddp
+        )
+        return train_data_loader
 
     def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader) -> TrainConfig:
         """
