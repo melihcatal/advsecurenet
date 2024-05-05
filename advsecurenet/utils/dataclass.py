@@ -1,4 +1,5 @@
-from dataclasses import fields, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
+from typing import Optional, Union, get_args, get_origin
 
 
 def flatten_dataclass(instance: object) -> dict:
@@ -103,9 +104,22 @@ def recursive_dataclass_instantiation(cls: type, data: dict) -> type:
     field_types = {f.name: f.type for f in fields(cls)}
     new_data = {}
     for key, value in data.items():
-        if key in field_types and is_dataclass(field_types[key]) and isinstance(value, dict):
+        # Check if the field type is an Optional or directly a dataclass
+        field_type = field_types[key]
+        origin = get_origin(field_type)
+        args = get_args(field_type)
+
+        if origin is Union and type(None) in args:
+            # If the type is Optional[SomeType], get the actual SomeType
+            actual_type = next(arg for arg in args if arg is not type(None))
+            if is_dataclass(actual_type) and isinstance(value, dict):
+                new_data[key] = recursive_dataclass_instantiation(
+                    actual_type, value)
+            else:
+                new_data[key] = value
+        elif is_dataclass(field_type) and isinstance(value, dict):
             new_data[key] = recursive_dataclass_instantiation(
-                field_types[key], value)
+                field_type, value)
         else:
             new_data[key] = value
     return cls(**new_data)
