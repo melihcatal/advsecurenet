@@ -353,6 +353,7 @@ def common_attack_options(func):
     return func
 
 
+# TODO: This function might not be needed. Check if it can be removed.
 def execute_general_attack(attack_type, config_file: str, attack_config_class, **kwargs):
     """
     The general function to execute an attack based on the attack type.

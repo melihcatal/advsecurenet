@@ -33,7 +33,7 @@ def cli_config_default(config_name: str, save: bool, print_output: bool, output_
     """
 
     if config_name is None:
-        raise ValueError("config-name must be specified and not None!")
+        raise click.ClickException("Please provide a configuration file name!")
 
     if output_path is None:
         output_path = os.getcwd()

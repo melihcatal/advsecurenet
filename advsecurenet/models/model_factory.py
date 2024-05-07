@@ -69,7 +69,7 @@ class ModelFactory:
                 cfg = ExternalModelConfig(
                     model_name=config.model_name,
                     num_classes=config.num_classes,
-                    model_arch_path=config.model_arch_path,
+                    external_model_arch_path=config.model_arch_path,
                     pretrained=config.pretrained,
                     model_weights_path=config.model_weights_path
                 )

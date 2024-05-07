@@ -24,12 +24,29 @@ class NormalizationLayer(nn.Module):
         self.mean = self._convert_to_tensor(mean)
         self.std = self._convert_to_tensor(std)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Forward pass of the normalization layer.
         Assumes x is in shape [N, C, H, W].
+
+        Args: 
+            x (torch.Tensor): Input tensor to normalize.
+
+        Returns:
+            torch.Tensor: Normalized tensor.
+
+        Note:
+            N: Batch size
+            C: Number of channels
+            H: Height of the image
+            W: Width of the image
+
         """
-        return (x - self.mean) / self.std
+        input_device = x.device
+        mean = self.mean.to(input_device)
+        std = self.std.to(input_device)
+
+        return (x - mean) / std
 
     def _convert_to_tensor(self, x):
         """

@@ -1,22 +1,19 @@
-import click
-from cli.types.training import TrainingCliConfigType
-from cli.utils.config import load_configuration
-from cli.utils.trainer import CLITrainer
+
 
 from advsecurenet.shared.types.configs import ConfigType
-from advsecurenet.utils.config_utils import get_default_config_yml
+from cli.types.training import TrainingCliConfigType
+from cli.utils.config import load_and_instantiate_config
+from cli.utils.trainer import CLITrainer
 
 
-def cli_train(config: str, **kwargs):
-    """Train model."""
+def cli_train(config: str, **kwargs) -> None:
+    """Main function for training a model using the CLI.
 
-    if not config:
-        click.echo(
-            "No configuration file provided for training! Using default configuration...")
-        config = get_default_config_yml("train_config.yml", "cli")
-
-    config_data = load_configuration(
-        config_type=ConfigType.TRAIN, config_file=config, **kwargs)
-    config_data = TrainingCliConfigType(**config_data)
+    Args:
+        config (str): The path to the configuration file.
+        **kwargs: Additional keyword arguments.
+    """
+    config_data = load_and_instantiate_config(
+        config, "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, **kwargs)
     trainer = CLITrainer(config_data)
     trainer.train()

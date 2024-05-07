@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -8,5 +9,17 @@ class DatasetCliConfigType:
     """
     dataset_name: str
     num_classes: int
-    train_dataset_path: str
-    test_dataset_path: str
+    train_dataset_path: Optional[str] = None
+    test_dataset_path: Optional[str] = None
+    download: Optional[bool] = True
+
+
+@dataclass
+class AttacksDatasetCliConfigType:
+    """
+    This dataclass is used to store the configuration of the dataset CLI used for attacks. Attacks do not require a separate test/train dataset.
+    """
+    dataset_name: str
+    dataset_part: str
+    custom_data_dir: Optional[str]
+    random_sample_size: Optional[int]

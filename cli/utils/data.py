@@ -1,6 +1,7 @@
 
 import os
 
+import click
 import numpy as np
 import torch
 from PIL import Image
@@ -8,70 +9,78 @@ from torch.utils.data import Subset, random_split
 
 from advsecurenet.datasets.dataset_factory import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
+from cli.types.dataset import AttacksDatasetCliConfigType
 from cli.utils.helpers import get_device_from_cfg, to_bchw_format
 
 
-def load_and_prepare_data(config_data: dict) -> tuple[torch.utils.data.TensorDataset, int, torch.device]:
+def load_and_prepare_data(config_data: AttacksDatasetCliConfigType) -> torch.utils.data.TensorDataset:
     """
     Loads and prepares data based on configuration.
 
     Args:
-        config_data (dict): The configuration data.
+        config_data (AttacksDatasetCliConfigType): The configuration data.
 
     Returns:
-        tuple[torch.utils.data.TensorDataset, int, torch.device]: A tuple containing the dataset, the number of unique classes in the dataset, and the device to use for the attack.
+        torch.utils.data.TensorDataset: The dataset containing the images and labels.
     """
-    device, dataset_type, trained_on_dataset_type = set_device_and_datasets(
-        config_data)
-    config_data['device'] = device
-    config_data['dataset_type'] = dataset_type
-    config_data['trained_on_dataset_type'] = trained_on_dataset_type
-
-    data, num_classes = get_data(
-        config_data, dataset_type, trained_on_dataset_type)
-    return data, num_classes, device
+    dataset_type = _get_dataset_type(config_data)
+    return get_data(config_data, dataset_type)
 
 
-def get_data(config_data, dataset_type, trained_on_dataset_type) -> tuple[torch.utils.data.TensorDataset, int]:
+def _get_dataset_type(config_data: AttacksDatasetCliConfigType) -> DatasetType:
     """
-    Fetches and processes data based on configuration.
+    Returns the dataset type based on the configuration data.
 
     Args:
-        config_data (dict): The configuration data.
-        dataset_type (DatasetType): The type of the dataset to be loaded.
-        trained_on_dataset_type (DatasetType): The type of the dataset the model was trained on.
+        config_data (AttacksDatasetCliConfigType): The configuration data.
 
     Returns:
-        data (torch.utils.data.TensorDataset): The dataset containing the images and labels.
-        num_classes (int): The number of unique classes in the dataset.
+        DatasetType: The dataset type.
+
+    """
+    dataset_name = config_data.dataset_name.upper()
+    if dataset_name not in DatasetType._value2member_map_:
+        raise ValueError("Unsupported dataset name! Choose from: " +
+                         ", ".join([e.value for e in DatasetType]))
+
+    return DatasetType(dataset_name)
+
+
+def get_data(config_data: AttacksDatasetCliConfigType,
+             dataset_type: DatasetType) -> torch.utils.data.TensorDataset:
+    """
+    Returns the dataset based on the configuration data and dataset type.
+
+    Args:
+        config_data (AttacksDatasetCliConfigType): The configuration data.
+        dataset_type (DatasetType): The dataset type.
+
+    Returns:
+        torch.utils.data.TensorDataset: The dataset containing the images and labels.
+
     """
 
     # Initialization
     images, labels = None, None
-    num_classes = None
 
     # Load data based on dataset type
     if dataset_type == DatasetType.CUSTOM:
-        images, labels = get_custom_data(config_data['custom_data_dir'])
-        trained_on_data_obj = DatasetFactory.create_dataset(
-            trained_on_dataset_type)
-        num_classes = trained_on_data_obj.num_classes
+        images, labels = get_custom_data(config_data.custom_data_dir)
 
-        data = torch.utils.data.TensorDataset(images, labels)
-        return data, num_classes
+        return torch.utils.data.TensorDataset(images, labels)
 
     dataset_obj = DatasetFactory.create_dataset(dataset_type)
     train_data = dataset_obj.load_dataset(train=True)
     test_data = dataset_obj.load_dataset(train=False)
     all_data = train_data + test_data
 
-    if config_data['dataset_part'] == 'random' and config_data['random_samples'] is None:
-        raise ValueError(
-            "Please provide a valid number of random samples to use for the attack.")
+    if config_data.dataset_part == 'random' and config_data.random_sample_size is None:
+        raise click.UsageError(
+            "Please provide the number of random samples to select from the dataset.")
 
-    if config_data['dataset_part'] == 'random':
-        random_samples = min(config_data.get(
-            'random_samples', len(all_data)), len(all_data))
+    if config_data.dataset_part == 'random':
+        random_samples = min(
+            config_data.random_sample_size, len(all_data))
         lengths = [random_samples, len(all_data) - random_samples]
         subset, _ = random_split(all_data, lengths)
         random_data = Subset(all_data, subset.indices)
@@ -80,15 +89,13 @@ def get_data(config_data, dataset_type, trained_on_dataset_type) -> tuple[torch.
         "train": train_data,
         "test": test_data,
         "all": all_data,
-        "random": random_data if config_data['dataset_part'] == 'random' else None
+        "random": random_data if config_data.dataset_part == 'random' else None
     }
 
-    data = dataset_map.get(config_data['dataset_part'])
+    data = dataset_map.get(config_data.dataset_part)
     if data is None:
-        raise ValueError(
-            f"Invalid dataset part specified: {config_data['dataset_part']}")
-
-    num_classes = dataset_obj.num_classes
+        raise click.UsageError(
+            f"Unsupported dataset part: {config_data.dataset_part}")
 
     images = [img for img, _ in data]
     labels = [label for _, label in data]
@@ -105,7 +112,7 @@ def get_data(config_data, dataset_type, trained_on_dataset_type) -> tuple[torch.
 
     # combine images and labels into a single tensor to have a single data object
     data2 = torch.utils.data.TensorDataset(images, labels)
-    return data2, num_classes
+    return data2
 
 
 def get_custom_data(path: str) -> tuple[torch.Tensor, torch.Tensor]:

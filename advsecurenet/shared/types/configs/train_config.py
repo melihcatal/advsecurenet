@@ -9,6 +9,9 @@ from torch.utils.data import DataLoader
 
 @dataclass
 class TrainConfig:
+    """
+    Dataclass to store the training configuration.
+    """
     model: nn.Module
     train_loader: DataLoader
     criterion: Union[str, nn.Module] = "cross_entropy"
@@ -30,6 +33,7 @@ class TrainConfig:
     use_ddp: bool = False
     gpu_ids: Optional[List[int]] = None
     pin_memory: bool = False
+    verbose: bool = False
 
     device: torch.device = torch.device("cpu")
 

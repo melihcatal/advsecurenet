@@ -3,7 +3,7 @@ This module contains utility functions for working with configuration data throu
 """
 import re
 from dataclasses import fields
-from typing import Any, Dict, TypeVar
+from typing import Any, Dict, Type, TypeVar
 
 import click
 import pkg_resources
@@ -15,6 +15,7 @@ from advsecurenet.utils.config_utils import (get_default_config_yml,
 from advsecurenet.utils.dataclass import recursive_dataclass_instantiation
 
 config_path = pkg_resources.resource_filename("advsecurenet", "configs")
+# This will represent the specific class type of `config_class`
 T = TypeVar('T')
 
 
@@ -94,18 +95,18 @@ def load_yaml_with_include(file_path: str
         return yaml.load(contents, Loader=yaml.FullLoader)
 
 
-def load_and_instantiate_config(config: str, default_config_file: str, config_type: ConfigType, config_class, **kwargs: Dict[str, T]) -> Any:
+def load_and_instantiate_config(config: str, default_config_file: str, config_type: ConfigType, config_class: Type[T], **kwargs: Dict[str, Any]) -> T:
     """Utility function to load and instantiate configuration.
 
     Args:
         config (str): The path to the configuration file.
         default_config_file (str): The default configuration file name.
         config_type (ConfigType): The type of configuration.
-        config_class (Type): The dataclass type for configuration instantiation.
-        **kwargs (Dict[str, T]): Additional keyword arguments. If provided, they will override the configuration.
+        config_class (Type[T]): The dataclass type for configuration instantiation.
+        **kwargs (Dict[str, Any]): Additional keyword arguments. If provided, they will override the configuration.
 
     Returns:
-        Any: An instantiated configuration data class.
+        T: An instantiated configuration data class of the type specified by `config_class`.
     """
     if not config:
         click.secho(

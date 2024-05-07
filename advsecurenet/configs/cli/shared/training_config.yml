@@ -1,0 +1,27 @@
+# --- Training Configurations ---
+epochs: 10 # Number of epochs to train for.
+learning_rate: 0.001 # Learning rate for training.
+optimizer: adam #
+optimizer_kwargs: # Optional arguments for the optimizer. If not provided, default values will be used.
+  weight_decay: 0.0001
+scheduler: LINEAR_LR # Scheduler to use for training. Options: [CONSTANT_LR, LINEAR_LR, STEP_LR, EXP_LR, COSINE_LR] If not provided, no scheduler will be used.
+scheduler_kwargs: null # Optional arguments for the scheduler. If not provided, default values will be used.
+criterion: cross_entropy
+
+# Model Saving Configurations
+save_final_model: true
+save_model_path: null
+save_model_name: null
+
+# Checkpoint Saving Configurations
+save_checkpoint: false
+save_checkpoint_path: null
+save_checkpoint_name: null
+checkpoint_interval: 1
+
+# Checkpoint Loading Configurations
+load_checkpoint: False
+load_checkpoint_path: null
+
+# Other Configurations
+verbose: True # Whether to print the training progress.

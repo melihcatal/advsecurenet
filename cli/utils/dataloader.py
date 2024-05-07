@@ -10,52 +10,45 @@ from cli.types.dataloader import DataLoaderCliConfigType
 
 
 def get_dataloader(config: DataLoaderCliConfigType,
-                   train_dataset: Optional[torch.utils.data.Dataset] = None,
-                   test_dataset: Optional[torch.utils.data.Dataset] = None,
+                   dataset_type: Optional[str] = None,
+                   dataset: Optional[torch.utils.data.Dataset] = None,
                    use_ddp: Optional[bool] = False
-                   ) -> Union[torch.utils.data.DataLoader, Tuple[torch.utils.data.DataLoader, ...]]:
+                   ) -> torch.utils.data.DataLoader:
     """
-    Get the dataloader from the configuration.
+    Get the dataloader based on the provided configuration and dataset type.
 
     Args:
-        config (DataLoaderCliConfigType): The dataloader configuration.
-        train_dataset (Optional[torch.utils.data.Dataset]): The training dataset.
-        test_dataset (Optional[torch.utils.data.Dataset]): The testing dataset.
+        config (DataLoaderCliConfigType): The dataloader configuration object.
+        dataset_type (Optional[str]): The type of the dataset ('train', 'test', or other).
+        dataset (Optional[torch.utils.data.Dataset]): The dataset to be loaded.
         use_ddp (Optional[bool]): Whether to use Distributed Data Parallel.
 
     Returns:
-        Union[torch.utils.data.DataLoader, Tuple[torch.utils.data.DataLoader, ...]]:
-        Depending on provided datasets, returns the necessary dataloader(s).
+        torch.utils.data.DataLoader: The configured DataLoader instance.
     """
-    dataloaders = []
+    if dataset is None:
+        raise ValueError("Dataset cannot be None")
 
-    if train_dataset is not None:
-        train_loader = DataLoaderFactory.create_dataloader(
-            DataLoaderConfig(
-                dataset=train_dataset,
-                batch_size=config.batch_size,
-                num_workers=config.num_workers_train,
-                shuffle=False if use_ddp else config.shuffle_train,
-                drop_last=config.drop_last_train,
-                pin_memory=config.pin_memory,
-                sampler=DistributedSampler(train_dataset) if use_ddp else None
-            ))
-        dataloaders.append(train_loader)
+    # Determine the configuration to use based on the dataset type
+    if dataset_type == 'train' and config.train is not None:
+        loader_config = config.train
+    elif dataset_type == 'test' and config.test is not None:
+        loader_config = config.test
+    else:
+        loader_config = config.default
 
-    if test_dataset is not None:
-        test_loader = DataLoaderFactory.create_dataloader(
-            DataLoaderConfig(
-                dataset=test_dataset,
-                batch_size=config.batch_size,
-                num_workers=config.num_workers_test,
-                shuffle=config.shuffle_test,
-                drop_last=config.drop_last_test,
-                pin_memory=config.pin_memory
-            ))
-        dataloaders.append(test_loader)
+    # Adjust for Distributed Data Parallel if needed
+    shuffle_setting = loader_config.shuffle and not use_ddp
+    sampler = DistributedSampler(dataset) if use_ddp else None
 
-    if len(dataloaders) == 1:
-        # Return a single DataLoader if only one is provided
-        return dataloaders[0]
-    # Return a tuple of DataLoaders if both are provided
-    return tuple(dataloaders)
+    # Create the DataLoader using the factory
+    return DataLoaderFactory.create_dataloader(
+        DataLoaderConfig(
+            dataset=dataset,
+            batch_size=loader_config.batch_size,
+            num_workers=loader_config.num_workers,
+            shuffle=shuffle_setting,
+            drop_last=loader_config.drop_last,
+            pin_memory=loader_config.pin_memory,
+            sampler=sampler
+        ))

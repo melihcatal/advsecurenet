@@ -8,7 +8,6 @@ from requests.exceptions import HTTPError
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.utils.model_utils import download_weights
-from cli.utils.model import get_models as _get_models
 
 
 def cli_models(model_type: str):
@@ -83,3 +82,19 @@ def cli_download_weights(model_name: str, dataset_name: str, filename: str, save
     except Exception as e:
         print(
             f"Error downloading model weights for {model_name} trained on {dataset_name}!")
+
+
+def _get_models(model_type: str) -> list[str]:
+    """
+    Returns a list of available models of the specified type.
+    """
+    model_list_getters = {
+        "all": ModelFactory.available_models,
+        "custom": ModelFactory.available_custom_models,
+        "standard": ModelFactory.available_standard_models
+    }
+
+    model_list = model_list_getters.get(model_type, lambda: [])()
+    if not model_list:
+        raise ValueError("Unsupported model type!")
+    return model_list

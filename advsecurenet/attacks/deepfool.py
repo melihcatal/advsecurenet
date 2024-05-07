@@ -47,7 +47,6 @@ class DeepFool(AdversarialAttack):
         Returns:
             torch.tensor: The adversarial example tensor.
         """
-
         model.eval()
         x = x.detach()
         y = y.detach()

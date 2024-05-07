@@ -1,6 +1,7 @@
 import torch
-from advsecurenet.models.base_model import BaseModel
+
 from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
 
 
@@ -22,23 +23,25 @@ class FGSM(AdversarialAttack):
         self.epsilon: float = config.epsilon
         super().__init__(config)
 
-    """
-    Generates adversarial examples using the FGSM attack.
-
-    Args:
-        model (BaseModel): The model to attack.
-        x (torch.tensor): The original input tensor. Expected shape is (batch_size, channels, height, width).
-        y (torch.tensor): The true labels for the input tensor. Expected shape is (batch_size,).
-
-    Returns:
-    
-        torch.tensor: The adversarial example tensor.
-    """
-
     def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs) -> torch.Tensor:
+        """
+        Generates adversarial examples using the FGSM attack.
+
+        Args:
+            model (BaseModel): The model to attack.
+            x (torch.tensor): The original input tensor. Expected shape is (batch_size, channels, height, width).
+            y (torch.tensor): The true labels for the input tensor. Expected shape is (batch_size,).
+
+        Returns:
+
+            torch.tensor: The adversarial example tensor.
+        """
         # Get the gradient of the model with respect to the inputs.
+        # move model to the same device as the input
+        # model = self.device_manager.to_device(model)
         x = x.clone().detach()
-        x = self.device_manager.to_device(x)
+        # x = self.device_manager.to_device(x)
+        # y = self.device_manager.to_device(y)
         x.requires_grad = True
         outputs = model(x)
         loss = torch.nn.functional.cross_entropy(outputs, y)

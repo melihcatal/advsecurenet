@@ -1,64 +1,10 @@
 # Description: Configuration file for training the model
 
-# --- Model Configurations ---
-model_name: resnet18
-num_input_channels: 3 # Number of input channels for the model.
-add_norm_layer: false # Whether to add a normalization layer to the model.
-norm_mean:  # Mean value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
-norm_std:  # Standard deviation value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
-
-
-# --- Dataset Configurations ---
-dataset_name: cifar10
-num_classes: 10 # Number of classes in the dataset.
-train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
-test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.
-
-# --- Training Configurations ---
-epochs: 10 # Number of epochs to train for.
-batch_size: 32 # Batch size for training. If using ddp, this will be divided equally among all GPUs. Consider having batch_size_per_gpu * num_gpus in case of ddp.
-lr: 0.001 # Learning rate for training.
-optimizer: adam #
-optimizer_kwargs: # Optional arguments for the optimizer. If not provided, default values will be used.
-  weight_decay: 0.0001
-scheduler: LINEAR_LR # Scheduler to use for training. Options: [CONSTANT_LR, LINEAR_LR, STEP_LR, EXP_LR, COSINE_LR] If not provided, no scheduler will be used.
-scheduler_kwargs: null # Optional arguments for the scheduler. If not provided, default values will be used.
-loss: cross_entropy
-
-# --- DataLoader Configurations ---
-num_workers_train: 4 # Number of workers for the train dataloader.
-num_workers_test: 4 # Number of workers for the test dataloader.
-shuffle_train: True # Whether to shuffle the train dataloader. If using ddp this should be false.
-shuffle_test: false # Whether to shuffle the test dataloader.
-drop_last_train: False # Whether to drop the last batch for the train dataloader.
-drop_last_test: False # Whether to drop the last batch for the test dataloader.
-
-# Device Configuration
-use_ddp: False # Whether to use multi-GPU training with DistributedDataParallel.
-
-# --- Device Configuration SINGLE GPU ONLY ---
-# This configuration is only for single GPU training. For multi-GPU training, use the next configuration.
-device: CPU # Training device. Options: [CPU, CUDA, MPS] or specific GPU ID [cuda:0, cuda:1, ...]
-
-# --- Device Configuration MULTI GPU ONLY ---
-# This configuration is only for multi-GPU training. For single GPU training, use the previous configuration. Make sure to set use_ddp to True.
-gpu_ids: null # List of GPU IDs to use for training. If null, uses all available GPUs.
-pin_memory: True # Whether to pin memory for the dataloader.
-
-# Model Saving Configurations
-save_final_model: true
-save_model_path: null
-save_model_name: null
-
-# Checkpoint Saving Configurations
-save_checkpoint: false
-save_checkpoint_path: null
-save_checkpoint_name: null
-checkpoint_interval: 1
-
-# Checkpoint Loading Configurations
-load_checkpoint: False
-load_checkpoint_path: null
-
-# Other Configurations
-verbose: True # Whether to print the training progress.
+# Inherits shared configurations
+model: !include ../shared/model_config.yml
+dataset: !include ../shared/dataset_config.yml
+dataloader:
+  train: !include ../shared/dataloader_config.yml 
+  test: !include ../shared/dataloader_config.yml
+device: !include ../shared/device_config.yml
+training: !include ../shared/training_config.yml

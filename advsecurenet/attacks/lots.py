@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union, cast
+from typing import Optional, Tuple, Union
 
 import torch
 from torchvision.models.feature_extraction import create_feature_extractor

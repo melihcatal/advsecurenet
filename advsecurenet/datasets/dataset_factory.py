@@ -1,8 +1,8 @@
 from advsecurenet.datasets.base_dataset import BaseDataset
-from advsecurenet.shared.types import DatasetType
 from advsecurenet.datasets.Cifar10 import CIFAR10Dataset
-from advsecurenet.datasets.MNIST import MNISTDataset
 from advsecurenet.datasets.ImageNet import ImageNetDataset
+from advsecurenet.datasets.MNIST import MNISTDataset
+from advsecurenet.shared.types import DatasetType
 
 DATASET_MAP = {
     DatasetType.CIFAR10: CIFAR10Dataset,
@@ -12,6 +12,9 @@ DATASET_MAP = {
 
 
 class DatasetFactory:
+    """
+    A factory class to create datasets.
+    """
     @staticmethod
     def create_dataset(dataset_type: DatasetType, **kwargs) -> BaseDataset:
         """
@@ -40,9 +43,9 @@ class DatasetFactory:
                 f"dataset_type must be of type DatasetType, not {type(dataset_type)}"
             )
 
-        DatasetClass = DATASET_MAP[dataset_type]
-        return DatasetClass(**kwargs)
-    
+        dataset_cls = DATASET_MAP[dataset_type]
+        return dataset_cls(**kwargs)
+
     @staticmethod
     def available_datasets() -> list:
         """

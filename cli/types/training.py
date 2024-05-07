@@ -3,7 +3,7 @@ from typing import Optional
 
 from cli.types.dataloader import DataLoaderCliConfigType
 from cli.types.dataset import DatasetCliConfigType
-from cli.types.device import Device
+from cli.types.device import DeviceCliConfigType
 from cli.types.model import ModelCliConfigType
 
 
@@ -40,4 +40,4 @@ class TrainingCliConfigType():
     dataset: DatasetCliConfigType
     dataloader: DataLoaderCliConfigType
     training: Training
-    device: Device
+    device: DeviceCliConfigType

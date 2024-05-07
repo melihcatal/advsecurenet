@@ -50,10 +50,10 @@ class CLITrainer:
         DDP Training function. Initializes the DDPTrainingCoordinator and runs the training.
         """
         # if no gpu ids are provided, use all available gpus
-        if self.config.gpu_ids is None or len(self.config.gpu_ids) == 0:
-            self.config.gpu_ids = list(range(torch.cuda.device_count()))
+        if self.config.device.gpu_ids is None or len(self.config.device.gpu_ids) == 0:
+            self.config.device.gpu_ids = list(range(torch.cuda.device_count()))
 
-        world_size = len(self.config.gpu_ids)
+        world_size = len(self.config.device.gpu_ids)
 
         os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(
             str(x) for x in self.config.gpu_ids)
@@ -63,9 +63,9 @@ class CLITrainer:
             world_size,
         )
 
-        if self.config.verbose:
+        if self.config.training.verbose:
             click.echo(
-                f"Running DDP training on {world_size} GPUs with the following IDs: {self.config.gpu_ids}")
+                f"Running DDP training on {world_size} GPUs with the following IDs: {self.config.device.gpu_ids}")
 
         ddp_trainer.run()
 
@@ -125,11 +125,8 @@ class CLITrainer:
             torch.utils.data.DataLoader: The training dataloader.      
         """
         train_data, _ = get_datasets(config=self.config.dataset)
-
         train_data_loader = get_dataloader(
-            config=self.config.dataloader,
-            train_dataset=train_data,
-            use_ddp=self.config.device.use_ddp
+            config=self.config.dataloader, dataset=train_data, dataset_type='train', use_ddp=self.config.device.use_ddp
         )
         return train_data_loader
 

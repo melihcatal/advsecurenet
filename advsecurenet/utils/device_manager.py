@@ -21,6 +21,9 @@ class DeviceManager:
         if self.distributed_mode:
             return torch.device(f'cuda:{torch.cuda.current_device()}')
 
+        if isinstance(self.initial_device, str):
+            return torch.device(self.initial_device)
+
         return self.initial_device
 
     def to_device(self, *args):
@@ -32,4 +35,5 @@ class DeviceManager:
         device = self.get_current_device()
         processed_args = [
             arg.to(device) if arg is not None else None for arg in args]
+        # print(f"processed args: {processed_args}")
         return processed_args[0] if len(processed_args) == 1 else processed_args

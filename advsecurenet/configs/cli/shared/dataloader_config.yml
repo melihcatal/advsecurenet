@@ -1,0 +1,6 @@
+# --- DataLoader Configurations ---
+num_workers: 4 # Number of workers to use for data loading.
+shuffle: True # Whether to shuffle the data.
+drop_last: False # Whether to drop the last incomplete batch.
+pin_memory: True # Whether to pin memory for the data loader.
+batch_size: 32 # Batch size for data loading.

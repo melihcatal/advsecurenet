@@ -1,0 +1,5 @@
+# --- Dataset Configurations ---
+dataset_name: cifar10 # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
+num_classes: 10 # Number of classes in the dataset.
+train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
+test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.

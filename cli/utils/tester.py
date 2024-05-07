@@ -27,7 +27,9 @@ class CLITester:
         model = create_model(self.config.model)
         _, test_dataset = get_datasets(self.config.dataset)
         test_loader = get_dataloader(
-            self.config.dataloader, test_dataset=test_dataset)
+            self.config.dataloader,
+            dataset=test_dataset,
+            dataset_type='test',)
         config = TestConfig(
             model=model,
             test_loader=test_loader,

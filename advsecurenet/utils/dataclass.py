@@ -1,5 +1,5 @@
-from dataclasses import dataclass, fields, is_dataclass
-from typing import Optional, Union, get_args, get_origin
+from dataclasses import fields, is_dataclass
+from typing import Union, get_args, get_origin
 
 
 def flatten_dataclass(instance: object) -> dict:
@@ -123,3 +123,25 @@ def recursive_dataclass_instantiation(cls: type, data: dict) -> type:
         else:
             new_data[key] = value
     return cls(**new_data)
+
+
+def merge_dataclasses(dataclass1: object, dataclass2: object) -> object:
+    """
+    Merge two dataclasses into a single dataclass. The fields
+    of the second dataclass will overwrite the fields of the first dataclass.
+
+    Args:
+        dataclass1 (object): The first dataclass.
+        dataclass2 (object): The second dataclass.
+
+    Returns:
+        object: The merged dataclass.
+
+    """
+    if not is_dataclass(dataclass1) or not is_dataclass(dataclass2):
+        return dataclass1
+
+    data1 = flatten_dataclass(dataclass1)
+    data2 = flatten_dataclass(dataclass2)
+    data1.update(data2)
+    return recursive_dataclass_instantiation(type(dataclass1), data1)

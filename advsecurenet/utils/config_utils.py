@@ -27,7 +27,7 @@ def load_config_from_yaml(yaml_path: str, config_class: Type[T]) -> T:
 
         >>> from dataclasses import dataclass
         >>> from typing import List
-        >>> from advsecurenet.utils.config_loader import load_config_from_yaml 
+        >>> from advsecurenet.utils.config_loader import load_config_from_yaml
         >>>
         >>> @dataclass
         >>> class Config:
@@ -176,20 +176,33 @@ def get_available_configs() -> list:
     return config_files
 
 
-def read_yml_file(yml_path: str) -> dict:
+def _include_yaml(loader, node):
+    """ 
+    Parse the !include tag in YAML files to include other YAML files.
     """
-    Read a YAML file and return it as a dictionary.
+    # loader.name holds the path to the current file being processed
+    base_path = os.path.dirname(loader.name)
+    included_file = os.path.join(base_path, node.value)
 
-    Args:
-        yml_path (str): The path to the YAML file.
+    try:
+        with open(included_file, 'r', encoding='utf-8') as f:
+            return yaml.load(f, Loader=yaml.FullLoader)
+    except FileNotFoundError:
+        print(f"File not found: {included_file}")
+        return None
+    except Exception as e:
+        print(f"Error reading {included_file}: {e}")
+        return None
 
-    Returns:
-        dict: The YAML file as a dictionary.
 
+def read_yml_file(file_path: str):
+    """ 
+    Read a YAML file and return the data as a dictionary.
     """
-    yaml = YAML()
-    with open(yml_path, 'r') as file:
-        return yaml.load(file)
+    # Add the custom constructor to the yaml loader
+    yaml.add_constructor('!include', _include_yaml)
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return yaml.load(f, Loader=yaml.FullLoader)
 
 
 def get_default_config_yml(config_name: str, config_subdir: str = None):

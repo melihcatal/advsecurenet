@@ -31,6 +31,6 @@ class ModelCliConfigType:
     num_classes: int
     pretrained: bool
     is_external: bool
-    path_config: ModelPathConfig
+    path_configs: ModelPathConfig
     norm_config: ModelNormConfig
     random_seed: Optional[int]

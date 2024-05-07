@@ -113,6 +113,43 @@ class BaseModel(ABC, nn.Module):
         # Set the new layer
         setattr(parent, name, new_layer)
 
+    def add_layer(self, new_layer: nn.Module, position: int = -1, inplace: bool = True) -> Optional[nn.Module]:
+        """
+        Inserts a new layer into the model at the specified position.
+
+        Args:
+            new_layer (nn.Module): The new layer to be added.
+            position (int): The position at which the new layer should be added. By default, it is added at the end.
+            inplace (bool): Whether to add the layer in-place or not. If set to False, a new model is created.
+
+        Returns:
+            Optional[nn.Module]: The new model if inplace is set to False.
+
+        """
+        if self.model is None:
+            raise ValueError("The model has not been loaded.")
+
+        if not isinstance(self.model, nn.Sequential):
+            # convert the model to a Sequential model
+            self.model = nn.Sequential(self.model)
+
+        layers = list(self.model.children())
+
+        # Check if the position is out of bounds
+        if position < -1 or position > len(layers):
+            raise ValueError(f"Invalid position: {position}")
+
+        if position == -1 or position == len(layers):
+            layers.append(new_layer)
+
+        else:
+            layers.insert(position, new_layer)
+
+        if inplace:
+            self.model = nn.Sequential(*layers)
+        else:
+            return nn.Sequential(*layers)
+
     def _get_parent_module_and_name(self, layer_name: str) -> Tuple[nn.Module, str]:
         """
         Helper method to get the parent module and the attribute name of a layer.

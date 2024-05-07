@@ -1,23 +1,34 @@
-import torch
 import click
+import torch
+from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
-from advsecurenet.models.base_model import BaseModel
-from advsecurenet.datasets.base_dataset import BaseDataset
+
 from advsecurenet.attacks import AdversarialAttack
-from advsecurenet.dataloader import DataLoaderFactory
+from advsecurenet.models.base_model import BaseModel
 
 
 def execute_attack(model: BaseModel,
-                   data: BaseDataset,
-                   batch_size: int,
+                   data_loader: DataLoader,
                    attack: AdversarialAttack,
                    device: torch.device = torch.device("cpu"),
                    verbose: bool = False
                    ) -> list[torch.Tensor]:
-    try:
-        data_loader = DataLoaderFactory.create_dataloader(
-            data, batch_size=batch_size)
+    """
+    Execute the specified attack on the model using the data loader.
 
+    Args:
+        model (BaseModel): The model to attack.
+        data_loader (DataLoader): The data loader to use for generating adversarial samples.
+        attack (AdversarialAttack): The attack to execute.
+        device (torch.device): The device to use for the attack.
+        verbose (bool): Whether to print verbose logs.
+
+    Returns:
+        list[torch.Tensor]: A list of adversarial images.
+
+    """
+    try:
+        model = model.to(device)
         model.eval()
         adversarial_images = []
 

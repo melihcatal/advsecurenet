@@ -3,7 +3,7 @@ from typing import Optional
 
 
 @dataclass
-class Device():
+class DeviceCliConfigType:
     """
     This dataclass is used to store the configuration of the device.
     """
