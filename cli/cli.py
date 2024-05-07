@@ -566,6 +566,44 @@ def fgsm(config, **kwargs):
 
 @attack.command()
 @common_attack_options
+@click.option('-id', '--initial-delta', default=None, type=click.FLOAT, help='Initial delta value for the attack.')
+@click.option('-ie', '--initial-epsilon', default=None, type=click.FLOAT, help='Initial epsilon value for the attack.')
+@click.option('-mdt', '--max-delta-trials', default=None, type=click.INT, help='Maximum number of delta trials for the attack.')
+@click.option('-met', '--max-epsilon-trials', default=None, type=click.INT, help='Maximum number of epsilon trials for the attack.')
+@click.option('-m', '--max-iterations', default=None, type=click.INT, help='Number of iterations for the attack.')
+@click.option('-sa', '--step-adapt', default=None, type=click.FLOAT, help='Step adaptation value for the attack.')
+def decision_boundary(config, **kwargs):
+    """
+    Command to execute a Decision Boundary attack.
+
+    Args:
+
+            config (str, optional): Path to the attack configuration yml file.
+            model_name (str): The name of the model to be attacked.
+            trained_on (str): Dataset on which the model was trained.
+            model_weights (str): Path to model weights. If unspecified, uses the default path based on model_name and trained_on.
+            device (str, optional): Device for executing attacks. Defaults to CPU.
+            dataset_name (str, optional): Dataset for the attack. Choose "custom" for your own dataset.
+            custom_data_dir (str, optional): Path to custom dataset. Required if dataset_name is "custom".
+            dataset_part (str, optional): Which part of dataset to use for attack. Ignored if dataset_name is "custom".
+            random_samples (int, optional): Number of random samples for attack. Relevant only if dataset_part is "random" and dataset_name isn't "custom".
+            batch_size (int, optional): Batch size for attack execution. Defaults to 32.
+            verbose (bool, optional): Whether to print progress of the attack. Defaults to True.
+            save_result_images (bool, optional): Whether to save the adversarial images. Defaults to False.
+            result_images_dir (str, optional): Directory to save the adversarial images. Defaults to None.
+            initial_delta (float, optional): Initial delta value for the attack. Defaults to 0.01.
+            initial_epsilon (float, optional): Initial epsilon value for the attack. Defaults to 0.01.
+            max_delta_trials (int, optional): Maximum number of delta trials for the attack. Defaults to 15.
+            max_epsilon_trials (int, optional): Maximum number of epsilon trials for the attack. Defaults to 15.
+            max_iterations (int, optional): Number of iterations for the attack. Defaults to 100.
+            step_adapt (float, optional): Step adaptation value for the attack. Defaults to 0.01.
+    """
+    from cli.logic.attack import cli_attack
+    cli_attack("DECISION_BOUNDARY", config, **kwargs)
+
+
+@attack.command()
+@common_attack_options
 @click.option('--mode', default=None, type=click.STRING, help='Mode for the attack.')
 @click.option('--epsilon', default=None, type=click.FLOAT, help='Epsilon value for the attack.')
 @click.option('--max-iterations', default=None, type=click.INT, help='Number of iterations for the attack.')
