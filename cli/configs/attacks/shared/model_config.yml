@@ -12,6 +12,12 @@ path_configs:
   model_weights_path: null # Path to the model weights file. Required if is_external is false and pretrained is true.
 
 norm_config:
-  add_norm_layer: true # Whether to add a normalization layer to the model.
-  norm_mean: [0.5,0.5,0.5]  # Mean value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
-  norm_std: [0.5, 0.5, 0.5]  # Standard deviation value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+  add_norm_layer: false # Whether to add a normalization layer to the model.
+  norm_mean:  # Mean value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+    - 0.5
+    - 0.5
+    - 0.5
+  norm_std:   # Standard deviation value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+    - 0.5
+    - 0.5
+    - 0.5

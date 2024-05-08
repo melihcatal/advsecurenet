@@ -4,8 +4,7 @@ from typing import Union, cast
 
 import click
 import torch
-import torch.optim as optim
-from torch import nn
+from torch import nn, optim
 from tqdm.auto import tqdm, trange
 
 from advsecurenet.shared.loss import Loss
@@ -95,19 +94,18 @@ class Trainer:
         """
         if scheduler is None:
             return None
-        else:
-            if isinstance(scheduler, str):
-                if scheduler.upper() not in Scheduler.__members__:
-                    raise ValueError(
-                        "Unsupported scheduler! Choose from: " + ", ".join([e.name for e in Scheduler]))
-                scheduler_function_class = Scheduler[scheduler.upper()].value
-                scheduler = scheduler_function_class(
-                    optimizer,
-                    **self.config.scheduler_kwargs if self.config.scheduler_kwargs else {}
-                )
-            elif not isinstance(scheduler, torch.optim.lr_scheduler._LRScheduler):
+        if isinstance(scheduler, str):
+            if scheduler.upper() not in Scheduler.__members__:
                 raise ValueError(
-                    "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler.")
+                    "Unsupported scheduler! Choose from: " + ", ".join([e.name for e in Scheduler]))
+            scheduler_function_class = Scheduler[scheduler.upper()].value
+            scheduler = scheduler_function_class(
+                optimizer,
+                **self.config.scheduler_kwargs if self.config.scheduler_kwargs else {}
+            )
+        elif not isinstance(scheduler, torch.optim.lr_scheduler._LRScheduler):
+            raise ValueError(
+                "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler.")
         return cast(torch.optim.lr_scheduler._LRScheduler, scheduler)
 
     def _get_loss_function(self, criterion: Union[str, nn.Module], **kwargs) -> nn.Module:
