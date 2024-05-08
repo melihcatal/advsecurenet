@@ -8,6 +8,7 @@ from requests.exceptions import HTTPError
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.utils.model_utils import download_weights
+from advsecurenet.utils.normalization_layer import NormalizationLayer
 
 
 def cli_models(model_type: str):
@@ -40,14 +41,26 @@ def cli_available_weights(model_name: str):
         click.echo(f"\t{weight.name}")
 
 
-def cli_model_layers(model_name: str):
+def cli_model_layers(model_name: str, add_normalization: bool = False):
     """
     List layers of a model.
+
+    Args:
+        model_name (str): The name of the model.
+        add_normalization (bool): Whether to add normalization layers.
+
+    Raises:
+        ValueError: If the model name is not provided.
     """
     if not model_name:
         raise ValueError("Model name must be provided!")
 
-    model = ModelFactory.create_model(model_name, num_classes=3)
+    model = ModelFactory.create_model(model_name=model_name)
+    if add_normalization:
+        # add a dummy normalization layer
+        model.add_layer(NormalizationLayer(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]), position=0, inplace=True)
     layer_names = model.get_layer_names()
     click.echo(f"Layers for {model_name}:")
     click.echo(f"{'Layer Name':<30}{'Layer Type':<30}")

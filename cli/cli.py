@@ -263,19 +263,21 @@ def models(model_type: str):
 
 @main.command()
 @click.option('-m', '--model-name', default=None, help='Name of the model to inspect (e.g. "resnet18").')
-def model_layers(model_name: str):
+@click.option('-n', '--normalization', is_flag=True, type=click.BOOL, default=False, help='Whether to include normalization layer in the model summary.')
+def model_layers(model_name: str, normalization: bool):
     """Command to list the layers of a model.
 
     Args:
 
         model_name (str): The name of the model (e.g. "resnet18").
+        normalization (bool): Whether to include normalization layer in the model summary.
 
     Raises:
         ValueError: If the model name is not provided.
     """
     from cli.logic.model import cli_model_layers
 
-    cli_model_layers(model_name)
+    cli_model_layers(model_name, normalization)
 
 
 @main.command()
