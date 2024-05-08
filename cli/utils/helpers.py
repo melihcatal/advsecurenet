@@ -2,34 +2,50 @@
 This helpers module contans more general helper functions that are not specific to a command type.
 """
 import os
+from typing import List, Union
 
 import torch
-from torchvision.transforms import ToPILImage
+from torchvision.transforms.functional import to_pil_image
 
 
-def save_img(img: torch.tensor, path: str = None, name: str = None) -> None:
+def save_images(images: Union[torch.Tensor, List[torch.Tensor]],
+                path: str = None,
+                prefix: str = "image") -> None:
     """
-    Save an image tensor to the given path. If no path is provided, the image is saved to the current directory.
+    Save each image tensor in a batch or a list of batches to the given path. If no path is provided, the images are saved to the current directory.
 
     Args:
-
-    img (torch.tensor): The image tensor to save.
-    path (str): The path to save the image to. If None, the image is saved to the current directory.
-    name (str): The name of the image. If None, the image is saved as 'image_{i}.png' where i is the index of the image tensor in the batch.
+        images (torch.Tensor or list[torch.Tensor]): A tensor of images or a list of tensors, where each tensor is a batch of images.
+        path (str): The path to save the images to. If None, the images are saved to the current directory.
+        prefix (str): The prefix to add to the image name.
     """
-
-    to_pil = ToPILImage()
-
-    # squeeze the batch dimension if it exists
-    if len(img.shape) == 4:
-        img = img.squeeze(0)
-
+    # Set the directory where images will be saved
     save_path = path if path else os.getcwd()
-    # Save the images to the provided path. If no path is provided, save to the current directory.
-    for i, image_tensor in enumerate(img):
-        image = to_pil(image_tensor)  # Convert tensor to PIL image
-        save_name = name if name else f"image_{i}.png"
-        image.save(os.path.join(save_path, save_name))
+    # Make the directory if it does not exist
+    os.makedirs(save_path, exist_ok=True)
+
+    # If images input is a single tensor, wrap it in a list
+    if isinstance(images, torch.Tensor):
+        images = [images]
+
+    # Initialize a counter to uniquely name each image
+    image_counter = 0
+
+    # Iterate through each batch in the list
+    for batch in images:
+        # Check if the tensor is a batch of images
+        if len(batch.shape) == 4:
+            for img in batch:
+                image = to_pil_image(img)  # Convert tensor to PIL image
+                save_name = f"{prefix}_{image_counter}.png"
+                image.save(os.path.join(save_path, save_name))
+                image_counter += 1
+        elif len(batch.shape) == 3:
+            # Handling the case of a single image in a "batch"
+            image = to_pil_image(batch)
+            save_name = f"{prefix}_{image_counter}.png"
+            image.save(os.path.join(save_path, save_name))
+            image_counter += 1
 
 
 def to_bchw_format(tensor):
