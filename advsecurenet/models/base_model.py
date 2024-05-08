@@ -3,6 +3,7 @@ from typing import List, Optional, Tuple
 
 import torch
 import torch.nn as nn
+from torchvision.models.feature_extraction import get_graph_node_names
 
 
 class BaseModel(ABC, nn.Module):
@@ -81,9 +82,10 @@ class BaseModel(ABC, nn.Module):
         """
         Return a list of layer names in the model.
         """
+        train_nodes, eval_nodes = get_graph_node_names(self.model)
         if self.model is None:
             raise ValueError("Model is not loaded.")
-        return [name for name, _ in self.model.named_modules() if name != '']
+        return set(train_nodes + eval_nodes)
 
     def get_layer(self, layer_name: str) -> nn.Module:
         """
