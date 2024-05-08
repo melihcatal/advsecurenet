@@ -55,6 +55,9 @@ class ModelFactory:
 
         Args:
             config (Optional[CreateModelConfig]): The configuration for creating the model. If not provided, the model will be created with the passed keyword arguments.
+            CreateModelConfig contains the following fields:
+
+
             **kwargs: Additional keyword arguments to be passed to the model constructor.
 
         Returns:
@@ -69,9 +72,9 @@ class ModelFactory:
                 cfg = ExternalModelConfig(
                     model_name=config.model_name,
                     num_classes=config.num_classes,
-                    external_model_arch_path=config.model_arch_path,
+                    external_model_arch_path=config.external_model_arch_path,
                     pretrained=config.pretrained,
-                    model_weights_path=config.model_weights_path
+                    external_model_weights_path=config.external_model_weights_path
                 )
                 return ExternalModel(cfg, **kwargs)
 
