@@ -7,6 +7,11 @@ from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 
 
 class LotsAttackMode(Enum):
+    """
+    Enum class for the mode of the LotsAttack. Possible values are:
+        - ITERATIVE: Iterative mode. Runs the attack for the specified number of iterations.
+        - SINGLE: Single mode. Runs the attack for a single iteration.
+    """
     ITERATIVE = "iterative"
     SINGLE = "single"
 
@@ -30,4 +35,3 @@ class LotsAttackConfig(AttackConfig):
     learning_rate: float = 1./255.
     max_iterations: int = 1000
     verbose: bool = True
-    device: torch.device

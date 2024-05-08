@@ -62,16 +62,11 @@ def cli_model_layers(model_name: str, add_normalization: bool = False):
             mean=[0.485, 0.456, 0.406],
             std=[0.229, 0.224, 0.225]), position=0, inplace=True)
     layer_names = model.get_layer_names()
-    click.echo(f"Layers for {model_name}:")
+    click.secho(f"Layers of {model_name}:", bold=True, fg="green")
     click.echo(f"{'Layer Name':<30}{'Layer Type':<30}")
     for layer_name in layer_names:
         layer_type = type(model.get_layer(layer_name)).__name__
         click.echo(f"{layer_name:<30}{layer_type:<30}")
-
-    # send a warning to remind the user to add model prefix while using LOTS Attack
-    click.echo(click.style(
-        'ATTENTION: You might need to add model prefix while using LOTS Attack. I.e. model.fc1',
-        bold=True))
 
 
 def cli_download_weights(model_name: str, dataset_name: str, filename: str, save_path: str):

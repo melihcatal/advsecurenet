@@ -58,10 +58,10 @@ def execute_attack(model: BaseModel,
                     f"Attack success rate: {successful_attacks / total_samples * 100:.2f}%")
 
         success_rate = (successful_attacks / total_samples) * 100
-        print(
-            f"Succesfully generated adversarial samples! Attack success rate: {success_rate:.2f}%")
+        click.secho(
+            f"Succesfully generated adversarial samples! Attack success rate: {success_rate:.2f}%", fg="green")
 
         return adversarial_images
     except Exception as e:
-        print("Error occurred while executing attack!")
-        raise e
+        raise click.ClickException(
+            f"Error executing attack! Details: {e}")

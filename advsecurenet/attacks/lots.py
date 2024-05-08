@@ -98,26 +98,60 @@ class LOTS(AdversarialAttack):
         target = target.clone().detach()
         data = self.device_manager.to_device(data)
         target = self.device_manager.to_device(target)
+        self._validate_layer(model)
+
+        feature_extractor_model = create_feature_extractor(
+            model, {self.deep_feature_layer: "deep_feature_layer"})
+
+        feature_extractor_model = self.device_manager.to_device(
+            feature_extractor_model)
+
+        feature_extractor_model.eval()
+        target = feature_extractor_model.forward(target)["deep_feature_layer"]
+
+        # Convert data into a Parameter so it can be updated by optimizer
+        data = torch.nn.Parameter(data)
+
+        # Create an optimizer for the data
+        optimizer = torch.optim.Adam([data], lr=self.learning_rate)
 
         if self.mode == LotsAttackMode.ITERATIVE:
-            return self._lots_iterative(model, data, target, target_classes)
+            return self._lots_iterative(model, data, target, target_classes, feature_extractor_model, optimizer)
         if self.mode == LotsAttackMode.SINGLE:
-            return self._lots_single(model, data, target, target_classes)
+            return self._lots_single(model, data, target, target_classes, feature_extractor_model, optimizer)
 
         # if we reach here, the mode is invalid
         raise ValueError("Invalid mode provided.")
 
-    def _lots_iterative(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
-        feature_extractor_model = create_feature_extractor(
-            network, {self.deep_feature_layer: "deep_feature_layer"})
+    def _lots_iterative(self,
+                        network: BaseModel,
+                        data: torch.Tensor,
+                        target: torch.Tensor,
+                        target_classes: torch.Tensor,
+                        feature_extractor_model: BaseModel,
+                        optimizer: torch.optim.Optimizer
+                        ) -> Tuple[torch.Tensor, list[bool]]:
+        """
+        Iteratively generates adversarial examples using the LOTS attack.
 
-        feature_extractor_model = self.device_manager.to_device(
-            feature_extractor_model)
-        data = self.device_manager.to_device(data)
-        target = self.device_manager.to_device(target)
+        Args:
+            network (BaseModel): The model to attack.
+            data (torch.Tensor): The original input tensor.
+            target (torch.Tensor): The target tensor.
+            target_classes (torch.Tensor): The target classes tensor.
+            feature_extractor_model (BaseModel): The feature extractor model.
+            optimizer (torch.optim.Optimizer): The optimizer to use for the attack.
 
-        feature_extractor_model.eval()
-        target = feature_extractor_model.forward(target)["deep_feature_layer"]
+        Returns:
+            torch.Tensor: The adversarial example tensor.
+            list[bool]: The list of success flags for each sample.
+
+        Raises:
+            ValueError: If the provided layer name is not found in the model.
+
+        Note:
+            The success flag is used to determine if the attack was successful for a given sample.
+        """
 
         if target_classes is not None:
             if not torch.is_tensor(target_classes):
@@ -127,14 +161,9 @@ class LOTS(AdversarialAttack):
             target_classes = self.device_manager.to_device(
                 torch.tensor([-1] * data.size(0)))
 
-        # Make data a Parameter so it can be updated by optimizer
-        data = torch.nn.Parameter(data)
-
         successes = torch.zeros(
             data.size(0), dtype=torch.bool, device=data.device)
 
-        # Create an optimizer for the data
-        optimizer = torch.optim.Adam([data], lr=self.learning_rate)
         for _ in trange(self.max_iterations, desc=f"{red}Running LOTS{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=False, position=1, disable=not self.verbose):
             optimizer.zero_grad()
 
@@ -147,13 +176,6 @@ class LOTS(AdversarialAttack):
                 pred_classes = self.device_manager.to_device(pred_classes)
                 target_classes = self.device_manager.to_device(target_classes)
                 success_indices = pred_classes == target_classes
-                # if self.epsilon is not None:
-                #     distances = torch.norm(features - target, dim=1)
-                #     success_distances = distances < self.epsilon
-                #     successes = (success_indices | success_distances).tolist()
-                #     # update t
-                # else:
-                #     successes = success_indices.tolist()
                 if self.epsilon is not None:
                     distances = torch.norm(features - target, dim=1)
                     success_distances = distances < self.epsilon
@@ -165,7 +187,6 @@ class LOTS(AdversarialAttack):
                 if all(successes):
                     data = torch.clamp(data, 0, 1)
                     return data.detach(), successes.tolist()
-                    # return data.detach(), successes
 
             loss = torch.nn.functional.mse_loss(
                 features, target, reduction="sum")
@@ -177,24 +198,30 @@ class LOTS(AdversarialAttack):
             data.data.clamp_(0, 1)
 
         return data.detach(), successes.tolist()
-        # return data.detach(), [False] * data.size(0)
 
-    def _lots_single(self, network: BaseModel, data: torch.Tensor, target: torch.Tensor, target_classes: torch.Tensor) -> Tuple[torch.Tensor, list[bool]]:
-        feature_extractor_model = create_feature_extractor(
-            network, {self.deep_feature_layer: "deep_feature_layer"})
+    def _lots_single(self,
+                     network: BaseModel,
+                     data: torch.Tensor,
+                     target: torch.Tensor,
+                     target_classes: torch.Tensor,
+                     feature_extractor_model: BaseModel,
+                     optimizer: torch.optim.Optimizer
+                     ) -> Tuple[torch.Tensor, list[bool]]:
+        """ 
+        Single iteration of the LOTS attack.
 
-        feature_extractor_model = self.device_manager.to_device(
-            feature_extractor_model)
-        data = self.device_manager.to_device(data)
-        target = self.device_manager.to_device(target)
-        feature_extractor_model.eval()
-        target = feature_extractor_model.forward(target)["deep_feature_layer"]
+        Args:
+            network (BaseModel): The model to attack.
+            data (torch.Tensor): The original input tensor.
+            target (torch.Tensor): The target tensor.
+            target_classes (torch.Tensor): The target classes tensor.
+            feature_extractor_model (BaseModel): The feature extractor model.
+            optimizer (torch.optim.Optimizer): The optimizer to use for the attack.
 
-        # Convert data into a Parameter so it can be updated by optimizer
-        data = torch.nn.Parameter(data)
-
-        # Create an optimizer for the data
-        optimizer = torch.optim.Adam([data], lr=self.learning_rate)
+        Returns:
+            torch.Tensor: The adversarial example tensor.
+            list[bool]: The list of success flags for each sample.
+        """
 
         network.zero_grad()
         features = feature_extractor_model.forward(data)["deep_feature_layer"]
@@ -227,3 +254,28 @@ class LOTS(AdversarialAttack):
             successes = success_indices.tolist()
 
         return data.detach(), successes
+
+    def _validate_layer(self, model: BaseModel) -> None:
+        """
+        Validate the provided layer name.
+
+        Parameters:
+            model (BaseModel): The model to validate the layer against.
+
+        Raises:
+            ValueError: If the provided layer name is not found in the model.
+
+        Note:
+            The layer name should be prefixed with "model.". However, while checking, we need to temporarily remove the prefix before checking.
+
+        """
+        # the layer name should be prefixed with "model.". However, while checking, we need to temporarily remove the prefix before checking
+        layer = self.deep_feature_layer
+
+        if layer.replace("model.", "") not in model.get_layer_names():
+            raise ValueError(
+                f"Layer '{layer}' not found in the model. Please provide a valid layer name.")
+
+        # if the layer name is valid but not prefixed with "model.", we add the prefix
+        if not layer.startswith("model."):
+            self.deep_feature_layer = f"model.{layer}"
