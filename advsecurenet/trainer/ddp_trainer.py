@@ -1,10 +1,10 @@
-import click
 import torch
-from advsecurenet.shared.types.configs.train_config import TrainConfig
-from advsecurenet.utils.trainer import Trainer
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data.distributed import DistributedSampler
 from tqdm.auto import tqdm
+
+from advsecurenet.shared.types.configs.train_config import TrainConfig
+from advsecurenet.trainer.trainer import Trainer
 
 
 class DDPTrainer(Trainer):

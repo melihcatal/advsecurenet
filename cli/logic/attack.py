@@ -94,7 +94,7 @@ def cli_execute_general_attack(config_data: BaseAttackCLIConfigType, attack_type
         adv_images = execute_attack(model=model,
                                     data_loader=data_loader,
                                     attack=attack,
-                                    device=config_data.device.device,
+                                    device=config_data.device.processor,
                                     )
     if config_data.attack_procedure.save_result_images:
         click.secho("Saving adversarial images...", fg="green")

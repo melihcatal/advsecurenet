@@ -6,7 +6,7 @@ from tqdm.auto import tqdm
 from advsecurenet.defenses import AdversarialTraining
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
     AdversarialTrainingConfig
-from advsecurenet.utils.ddp_trainer import DDPTrainer
+from advsecurenet.trainer.ddp_trainer import DDPTrainer
 
 
 class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):

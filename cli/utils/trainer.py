@@ -1,15 +1,16 @@
 import os
 from dataclasses import asdict
-from typing import Optional, Tuple
+from typing import Optional
 
 import click
 import torch
 
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs import TrainConfig
-from advsecurenet.utils.ddp_trainer import DDPTrainer
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.trainer import Trainer
+from advsecurenet.trainer.ddp_trainer import DDPTrainer
+from advsecurenet.trainer.ddp_training_coordinator import \
+    DDPTrainingCoordinator
+from advsecurenet.trainer.trainer import Trainer
 from cli.types.training import TrainingCliConfigType
 from cli.utils.dataloader import get_dataloader
 from cli.utils.dataset import get_datasets

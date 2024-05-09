@@ -7,19 +7,24 @@ To use the script, run the following command:
 """
 
 import os
-import torch
-import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
-from torch.utils.data.distributed import DistributedSampler
 from typing import Optional
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.datasets import DatasetFactory
-from advsecurenet.dataloader import DataLoaderFactory
-from advsecurenet.shared.types import DatasetType
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import AdversarialTrainingConfig
-from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
+
+import torch
+from torch.utils.data.distributed import DistributedSampler
+
+import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
 from advsecurenet.attacks.fgsm import FGSM
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.tester import Tester
+from advsecurenet.dataloader import DataLoaderFactory
+from advsecurenet.datasets import DatasetFactory
+from advsecurenet.defenses.ddp_adversarial_training import \
+    DDPAdversarialTraining
+from advsecurenet.evaluation.tester import Tester
+from advsecurenet.models.model_factory import ModelFactory
+from advsecurenet.shared.types import DatasetType
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
+    AdversarialTrainingConfig
+from advsecurenet.trainer.ddp_training_coordinator import \
+    DDPTrainingCoordinator
 
 
 def main_training_function(rank, world_size, save_every, total_epochs, batch_size):

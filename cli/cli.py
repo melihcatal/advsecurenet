@@ -75,7 +75,7 @@ if __name__ == "__main__":
 @click.option('-s', '--save', type=click.BOOL, is_flag=True, default=None, help='Whether to save the model after training. Defaults to False.')
 @click.option('--save-path', default=None, help='The directory to save the model to. If not specified, defaults to the weights directory.')
 @click.option('--save-name', default=None, help='The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.')
-@click.option('--device', default=None, help='The device to train on. Defaults to CPU')
+@click.option('-p', '--processor', default=None, help='The processor to train on. Defaults to CPU')
 @click.option('--save-checkpoint', type=click.BOOL, is_flag=True, default=None, help='Whether to save model checkpoints during training. Defaults to False.')
 @click.option('--checkpoint_interval', default=None, type=click.INT, help='The interval at which to save model checkpoints. Defaults to 1.')
 @click.option('--save-checkpoint-path', default=None, help='The directory to save model checkpoints to. If not specified, defaults to the checkpoints directory.')
@@ -134,7 +134,7 @@ def train(config: str, **kwargs):
 @click.option('--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset to evaluate on (e.g. "cifar10").')
 @click.option('--model-weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
-@click.option('--device', default=None, help='The device to evaluate on. Defaults to CPU')
+@click.option('-p', '--processor', default=None, help='The processor to evaluate on. Defaults to CPU')
 @click.option('--batch-size', default=None, help='Batch size for evaluation.')
 @click.option('--loss', default=None, help='Loss function to use for evaluation.')
 def test(config: str, **kwargs):
@@ -330,8 +330,8 @@ def common_attack_options(func):
                      help='Dataset on which the model was trained.'),
         click.option('--model-weights', type=click.Path(exists=True), default=None,
                      help='Path to model weights. If unspecified, uses the default path based on model_name and trained_on.'),
-        click.option('--device', default=None, type=click.Choice(
-            ['CPU', 'CUDA', 'MPS'], case_sensitive=False), help='Device for executing attacks.'),
+        click.option('-p', '--processor', default=None, type=click.Choice(
+            ['cpu', 'cuda', 'mps'], case_sensitive=False), help='Processor for executing attacks.'),
         click.option('--dataset-name', type=click.Choice(['cifar10', 'mnist', 'custom'], case_sensitive=False),
                      default=None, help='Dataset for the attack. Choose "custom" for your own dataset.'),
         click.option('--custom-data-dir', type=click.Path(exists=True), default=None,

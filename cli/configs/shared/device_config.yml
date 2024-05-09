@@ -3,7 +3,7 @@ use_ddp: False # Whether to use multi-GPU training with DistributedDataParallel.
 
 # --- Device Configuration SINGLE GPU ONLY ---
 # This configuration is only for single GPU training. For multi-GPU training, use the next configuration.
-device: CPU # Training device. Options: [CPU, CUDA, MPS] or specific GPU ID [cuda:0, cuda:1, ...]
+processor: cpu # Training device. Options: [CPU, CUDA, MPS] or specific GPU ID [cuda:0, cuda:1, ...]
 
 # --- Device Configuration MULTI GPU ONLY ---
 # This configuration is only for multi-GPU training. For single GPU training, use the previous configuration. Make sure to set use_ddp to True.

@@ -1,11 +1,12 @@
 import os
-import torch
+from typing import Optional
+
+import click
 import pkg_resources
 import requests
-import click
+import torch
 from torch import nn
 from tqdm.auto import tqdm
-from typing import Optional
 
 
 def save_model(model: nn.Module,
@@ -130,7 +131,7 @@ def download_weights(model_name: Optional[str] = None,
 
             progress_bar.close()
 
-            if total_size != 0 and progress_bar.n != total_size:
+            if total_size not in (0, progress_bar.n):
                 raise Exception(
                     "Error, something went wrong while downloading.")
 

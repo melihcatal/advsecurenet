@@ -13,7 +13,7 @@ def cli_train(config: str, **kwargs) -> None:
         config (str): The path to the configuration file.
         **kwargs: Additional keyword arguments.
     """
-    config_data = load_and_instantiate_config(
+    config_data: TrainingCliConfigType = load_and_instantiate_config(
         config, "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, **kwargs)
     trainer = CLITrainer(config_data)
     trainer.train()

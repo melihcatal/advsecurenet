@@ -55,7 +55,7 @@ advsecurenet.utils.ddp\_trainer module
 advsecurenet.utils.ddp\_training\_coordinator module
 ----------------------------------------------------
 
-.. automodule:: advsecurenet.utils.ddp_training_coordinator
+.. automodule:: advsecurenet.trainer.ddp_training_coordinator
    :members:
    :undoc-members:
    :show-inheritance:

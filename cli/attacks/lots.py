@@ -125,7 +125,7 @@ class CLILOTSAttack:
             _, _, target_images, target_labels = self._adversarial_target_generator.extract_images_and_labels(
                 paired=paired,
                 images=data,
-                device=self._config.device.device
+                device=self._config.device.processor
             )
 
             return target_images, target_labels
@@ -154,7 +154,7 @@ class CLILOTSAttack:
                                                                      batch_size], target_labels[total_samples:total_samples + batch_size]
 
             images, labels, target_images_batch, target_labels_batch = [
-                x.to(self._config.device.device) for x in [images, labels, target_images_batch, target_labels_batch]]
+                x.to(self._config.device.processor) for x in [images, labels, target_images_batch, target_labels_batch]]
 
             adversarial_batch, _ = attack.attack(
                 model=self._model,

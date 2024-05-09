@@ -28,7 +28,7 @@ class DDPTrainingCoordinator:
             It assumes that the port 12355 is free on the machine.
 
         Example:
-            >>> from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
+            >>> from advsecurenet.trainer.ddp_training_coordinator import DDPTrainingCoordinator
             >>> def main_training_function(rank, model, dataset, train_config, attack_config):
             >>>     # Define the training logic here
             >>>     pass

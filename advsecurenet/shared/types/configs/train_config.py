@@ -1,10 +1,12 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List, Optional, Union
 
 import torch
 from torch import nn
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
+
+from advsecurenet.shared.types.configs.device_config import DeviceConfig
 
 
 @dataclass
@@ -30,23 +32,10 @@ class TrainConfig:
     save_final_model: bool = False
     save_model_path: Optional[str] = None
     save_model_name: Optional[str] = None
+
     use_ddp: bool = False
     gpu_ids: Optional[List[int]] = None
     pin_memory: bool = False
     verbose: bool = False
 
-    device: torch.device = torch.device("cpu")
-
-    def __setattr__(self, prop, value):
-        if prop == "device":
-            value = self._check_device(value)
-        super().__setattr__(prop, value)
-
-    @staticmethod
-    def _check_device(device: Union[str, torch.device]):
-        if isinstance(device, str):
-            try:
-                device = torch.device(device)
-            except:
-                device = torch.device("cpu")
-        return device
+    processor: torch.device = torch.device("cpu")

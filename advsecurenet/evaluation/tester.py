@@ -2,7 +2,6 @@ from typing import Sized, Union, cast
 
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from advsecurenet.shared.loss import Loss
@@ -17,7 +16,7 @@ class Tester:
     def __init__(self, config: TestConfig):
         self.model = config.model
         self.test_loader = config.test_loader
-        self.device = config.device
+        self.device = config.processor
         self.loss_fn = self._get_loss_function(config.criterion)
 
     def test(self) -> tuple[float, float]:
@@ -38,7 +37,6 @@ class Tester:
         self.model.eval()
         test_loss: float = 0.0
         correct: int = 0
-        print(f"Testing on {self.device}")
         with torch.no_grad():
             # Wrap the loop with tqdm for the progress bar
             for data, target in tqdm(self.test_loader, desc="Testing", unit="batch"):

@@ -1,5 +1,5 @@
+from advsecurenet.evaluation.tester import Tester
 from advsecurenet.shared.types.configs.test_config import TestConfig
-from advsecurenet.utils.tester import Tester
 from cli.types.testing import TestingCliConfigType
 from cli.utils.dataloader import get_dataloader
 from cli.utils.dataset import get_datasets
@@ -34,7 +34,7 @@ class CLITester:
             model=model,
             test_loader=test_loader,
             criterion=self.config.testing.criterion,
-            device=self.config.device.device)
+            processor=self.config.device.processor)
 
         tester = Tester(config)
         tester.test()

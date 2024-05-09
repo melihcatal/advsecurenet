@@ -15,7 +15,7 @@ class AdversarialAttack(ABC):
 
     def __init__(self, config: AttackConfig) -> None:
         self.device_manager = DeviceManager(
-            device=config.device.device,
+            device=config.device.processor,
             distributed_mode=config.device.use_ddp
         )
         self.name: str = self.__class__.__name__

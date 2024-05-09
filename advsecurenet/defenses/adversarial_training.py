@@ -9,10 +9,10 @@ from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
     AdversarialTrainingConfig
+from advsecurenet.trainer.trainer import Trainer
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
 from advsecurenet.utils.data import unnormalize_data
-from advsecurenet.utils.trainer import Trainer
 
 
 class AdversarialTraining(Trainer):

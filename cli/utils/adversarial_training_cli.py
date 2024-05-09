@@ -5,10 +5,6 @@ from typing import Optional, Type, cast
 
 import click
 import torch
-from cli.types.adversarial_training import (ATCliConfigType, AttackConfigDict,
-                                            AttackWithConfigDict,
-                                            ModelWithConfigDict)
-from cli.utils.config import build_config, load_configuration
 from torch.utils.data import DataLoader as TorchDataLoader
 from torch.utils.data import Dataset as TorchDataset
 from torch.utils.data import Subset
@@ -31,10 +27,15 @@ from advsecurenet.shared.types.configs.configs import ConfigType
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
     AdversarialTrainingConfig
 from advsecurenet.shared.types.dataset import DatasetType
+from advsecurenet.trainer.ddp_training_coordinator import \
+    DDPTrainingCoordinator
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.model_utils import load_model, save_model
+from advsecurenet.utils.model_utils import load_model
+from cli.types.adversarial_training import (ATCliConfigType, AttackConfigDict,
+                                            AttackWithConfigDict,
+                                            ModelWithConfigDict)
+from cli.utils.config import build_config, load_configuration
 
 
 class AdversarialTrainingCLI:

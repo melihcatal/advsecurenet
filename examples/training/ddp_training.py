@@ -2,22 +2,26 @@
 This example script shows how to use the DDPTrainingCoordinator class to train a model using DistributedDataParallel in a multi-GPU setting.
 """
 
-import time
 import os
-import torch
-import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
+import time
 from typing import Optional
+
+import torch
 from torch.utils.data.distributed import DistributedSampler
-from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.datasets import DatasetFactory
+
+import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
+from advsecurenet.attacks.fgsm import FGSM
 from advsecurenet.dataloader import DataLoaderFactory
+from advsecurenet.datasets import DatasetFactory
+from advsecurenet.defenses.ddp_adversarial_training import \
+    DDPAdversarialTraining
+from advsecurenet.evaluation.tester import Tester
+from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types import DatasetType
 from advsecurenet.shared.types.configs.train_config import TrainConfig
-from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
-from advsecurenet.attacks.fgsm import FGSM
-from advsecurenet.utils.ddp_training_coordinator import DDPTrainingCoordinator
-from advsecurenet.utils.ddp_trainer import DDPTrainer
-from advsecurenet.utils.tester import Tester
+from advsecurenet.trainer.ddp_trainer import DDPTrainer
+from advsecurenet.trainer.ddp_training_coordinator import \
+    DDPTrainingCoordinator
 
 
 def main_training_function(rank, world_size, save_every, total_epochs, batch_size):
