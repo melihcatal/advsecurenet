@@ -135,25 +135,57 @@ def load_and_instantiate_config(config: str, default_config_file: str, config_ty
 
 def get_available_configs() -> list:
     """
-    Get a list of all available configuration files, including those in subdirectories.
+    Get a list of all available configuration settings, including those in subdirectories,
+    based on attributes defined in each module's __init__.py file.
+
+    Parameters:
+        config_path (str): The base directory path where the configuration files are stored.
 
     Returns:
-        list: A list of all available configuration files.
+        list: A list of dictionaries with the configuration settings including custom title, description,
+        and config file name, filtered by the INCLUDE_IN_CLI_CONFIGS attribute.
 
     Examples:
         >>> from advsecurenet.utils.config_utils import get_available_configs
-        >>> get_available_configs()
-        ['lots_attack_config.yml', 'cw_attack_config.yml', ...]
-
+        >>> get_available_configs('/path/to/configs')
+        [
+            {'title': 'Example Configuration Module', 'description': 'Configuration for attack types.', 'config_file': 'lots_attack_config.yml'},
+            {'title': 'Example Configuration Module', 'description': 'Configuration for defense mechanisms.', 'config_file': 'cw_attack_config.yml'}
+        ]
     """
-    config_files = []
-    for _, _, files in os.walk(config_path):
-        for file in files:
-            if file.endswith("_config.yml"):
-                # add the name of the file to the list
-                config_files.append(file)
+    configs = []
+    for dirpath, dirnames, files in os.walk(config_path):
+        init_file_path = os.path.join(dirpath, "__init__.py")
+        title = os.path.basename(dirpath)  # Default to folder name as title
+        description = "No description provided"  # Default description
+        include_in_cli = True  # Default to include if the flag is not specified
+        try:
+            # Evaluate __init__.py for title, description and INCLUDE_IN_CLI_CONFIGS
+            if os.path.exists(init_file_path):
+                exec_namespace = {}
+                with open(init_file_path, 'r', encoding='utf-8') as f:
+                    exec_content = f.read()
+                    exec(exec_content, {}, exec_namespace)
+                    # Use custom title if provided
+                    title = exec_namespace.get('MODULE_TITLE', title).strip()
+                    description = exec_namespace.get(
+                        'MODULE_DESCRIPTION', description).strip()
+                    include_in_cli = exec_namespace.get(
+                        'INCLUDE_IN_CLI_CONFIGS', include_in_cli)
 
-    return config_files
+            if include_in_cli:
+                config_files = [
+                    file for file in files if file.endswith("_config.yml")]
+                for config_file in config_files:
+                    configs.append({
+                        "title": title,
+                        "description": description,
+                        "config_file": config_file
+                    })
+        except:
+            pass
+
+    return configs
 
 
 def generate_default_config_yaml(config_name: str, output_path: str, save=False, config_subdir=None) -> dict:

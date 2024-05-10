@@ -3,6 +3,7 @@ Logic for the 'configs' command.
 """
 
 import os
+from collections import defaultdict
 from typing import Optional
 
 import click
@@ -13,18 +14,33 @@ from cli.utils.config import (generate_default_config_yaml,
 
 def cli_configs():
     """
-    List available configuration files.
+    List available configuration files using Click for command line interface, grouped by title and description.
     """
 
+    # Ensure you pass the appropriate path where configs are stored
     config_list = get_available_configs()
     if len(config_list) == 0:
-        click.echo("No configuration file found!")
         raise click.ClickException("No configuration file found!")
 
-    click.echo("Available configuration files: \n")
-    for i, config in enumerate(config_list):
-        click.echo(f"{i+1}. {config}")
-    # add space
+    # Group configurations by title and description
+    grouped_configs = defaultdict(list)
+    for config in config_list:
+        grouped_configs[(config['title'], config['description'])
+                        ].append(config['config_file'])
+    # Add an additional space at the beginning for better readability
+    click.echo("")
+    click.secho("Available configuration files:\n", bold=True, fg="magenta")
+    for idx, ((title, description), config_files) in enumerate(grouped_configs.items(), start=1):
+        click.secho(f"{idx}. Title: {title} ", bold=True, fg="blue")
+        click.secho(
+            f"   Description: {description if description else 'No description available.'}", fg="green")
+        click.secho("   Config Files:", fg="red", bold=True)
+        for file_idx, file in enumerate(config_files, start=1):
+            click.secho(f"       {file_idx}. {file}")
+        # Separator for better visual distinction between categories
+        click.secho("\n" + "="*60 + "\n", bold=True, fg="cyan")
+
+    # Adds an additional space at the end for better readability
     click.echo("")
 
 
