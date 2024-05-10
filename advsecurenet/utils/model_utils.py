@@ -33,11 +33,10 @@ def save_model(model: nn.Module,
     # add .pth extension if not present
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
-
     if distributed:
         torch.save(model.module.state_dict(), os.path.join(filepath, filename))
     else:
-        torch.save(model.state_dict(), os.path.join(filepath, filename))
+        torch.save(model.model.state_dict(), os.path.join(filepath, filename))
     click.echo(click.style(
         f"Saved model to {os.path.join(filepath, filename)}", fg="green"))
 

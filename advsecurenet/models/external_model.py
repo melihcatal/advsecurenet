@@ -19,7 +19,7 @@ class ExternalModel(BaseModel):
         self.model_name = config.model_name
         self.external_model_arch_path = config.external_model_arch_path
         self.pretrained = config.pretrained
-        self.model_weights_path = config.model_weights_path
+        self.external_model_weights_path = config.external_model_weights_path
 
         self.model = None
         super().__init__()
@@ -48,7 +48,8 @@ class ExternalModel(BaseModel):
         self.model = model_class()
         if self.pretrained:
             try:
-                self.model.load_state_dict(torch.load(self.model_weights_path))
+                self.model.load_state_dict(torch.load(
+                    self.external_model_weights_path))
             except Exception as e:
                 raise ValueError(
                     f"Error loading model weights! Details: {e}") from e
