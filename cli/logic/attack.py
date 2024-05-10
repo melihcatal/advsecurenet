@@ -4,11 +4,7 @@ import click
 from advsecurenet.shared.types.attacks import AttackType
 from advsecurenet.shared.types.configs import ConfigType
 from cli.attacks.lots import CLILOTSAttack
-from cli.types.attacks import (CwAttackCLIConfigType,
-                               DecisionBoundaryAttackCLIConfigType,
-                               DeepFoolAttackCLIConfigType,
-                               FgsmAttackCLIConfigType,
-                               LotsAttackCLIConfigType, PgdAttackCLIConfigType)
+from cli.shared.attack_mappings import attack_mapping
 from cli.types.attacks.attack_base import BaseAttackCLIConfigType
 from cli.utils.attack import execute_attack
 from cli.utils.config import load_and_instantiate_config
@@ -16,17 +12,6 @@ from cli.utils.data import load_and_prepare_data
 from cli.utils.dataloader import get_dataloader
 from cli.utils.helpers import save_images
 from cli.utils.model import create_model
-
-# Mapping of attack types to their respective configurations
-attack_mapping = {
-    "CW": (AttackType.CW, CwAttackCLIConfigType),
-    "DEEPFOOL": (AttackType.DEEPFOOL, DeepFoolAttackCLIConfigType),
-    "PGD": (AttackType.PGD, PgdAttackCLIConfigType),
-    "FGSM": (AttackType.FGSM, FgsmAttackCLIConfigType),
-    "DECISION_BOUNDARY": (AttackType.DECISION_BOUNDARY, DecisionBoundaryAttackCLIConfigType),
-    "LOTS": (AttackType.LOTS, LotsAttackCLIConfigType),
-
-}
 
 
 def cli_attack(attack_name: str, config: str, **kwargs) -> None:

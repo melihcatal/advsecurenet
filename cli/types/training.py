@@ -32,7 +32,7 @@ class Training:
 
 
 @dataclass
-class TrainingCliConfigType():
+class TrainingCliConfigType:
     """
     This dataclass is used to store the configuration of the training CLI.
     """

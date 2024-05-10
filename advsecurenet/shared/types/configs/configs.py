@@ -9,3 +9,7 @@ class ConfigType(Enum):
     DEFENSE = "defense"
     TRAIN = "train"
     TEST = "test"
+    MODEL = "model"
+    DATASET = "dataset"
+    EVALUATION = "evaluation"
+    ADVERSARIAL_TRAINING = "adversarial_training"

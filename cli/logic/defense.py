@@ -1,21 +1,24 @@
-import click
 
 from advsecurenet.shared.types.configs import ConfigType
 from cli.types.adversarial_training import ATCliConfigType
-from cli.utils.adversarial_training_cli import AdversarialTrainingCLI
-from cli.utils.config import load_configuration
+from cli.utils.adversarial_training_cli import ATCLITrainer
+from cli.utils.config import load_and_instantiate_config
 
 
 def cli_adversarial_training(config: str, **kwargs) -> None:
     """
     Logic function to execute adversarial training.
     """
-    if not config:
-        raise click.ClickException(
-            "No configuration file provided for adversarial training! Use the 'config-default' command to generate a default configuration file.")
 
-    config_data = load_configuration(
-        config_type=ConfigType.DEFENSE, config_file=config, **kwargs)
-    config_data = ATCliConfigType(**config_data)
-    adversarial_training = AdversarialTrainingCLI(config_data)
+    # config_data = load_configuration(
+    #    config_type=ConfigType.DEFENSE, config_file=config, **kwargs)
+
+    config_data = load_and_instantiate_config(
+        config=config,
+        default_config_file="adversarial_training_config.yml",
+        config_type=ConfigType.ADVERSARIAL_TRAINING,
+        config_class=ATCliConfigType,
+        **kwargs
+    )
+    adversarial_training = ATCLITrainer(config_data)
     adversarial_training.train()

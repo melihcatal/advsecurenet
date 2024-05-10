@@ -25,7 +25,6 @@ class AdversarialTraining(Trainer):
     """
 
     def __init__(self, config: AdversarialTrainingConfig) -> None:
-        # first check the config
         self._check_config(config)
         self.config: AdversarialTrainingConfig = config
         self.device = self._setup_device()
@@ -35,13 +34,6 @@ class AdversarialTraining(Trainer):
         self.loss_fn = self._get_loss_function(self.config.criterion)
         self.start_epoch = self._load_checkpoint_if_any()
         self.adversarial_target_generator = AdversarialTargetGenerator()
-        self.mean, self.std = self._get_meand_and_std()
-
-    def _get_meand_and_std(self):
-        # get mean and std of the dataset
-        mean = self.config.train_loader.dataset.dataset.transform.transforms[-1].mean
-        std = self.config.train_loader.dataset.dataset.transform.transforms[-1].std
-        return mean, std
 
     # Helper function to shuffle the combined clean and adversarial data
 
@@ -114,19 +106,12 @@ class AdversarialTraining(Trainer):
         # Set the model to eval mode
         random_model.eval()
 
-        # first unnormalize the source. The operation is not in-place
-        unnormalized_source = unnormalize_data(source, self.mean, self.std)
-
         # Perform the attack using the unnormalized images
         attack_result = self._perform_attack(
-            random_attack, random_model, unnormalized_source, targets
+            random_attack, random_model, source, targets
         )
 
         assert attack_result.shape == source.shape, "adversarial image and the clean image must have the same shape"
-
-        # normalize the adversarial examples to be in the same distribution as the clean examples
-        attack_result = transforms.Normalize(
-            mean=self.mean, std=self.std)(attack_result)
 
         adv_source.append(attack_result)
         adv_targets.append(targets)
@@ -176,8 +161,12 @@ class AdversarialTraining(Trainer):
     def _run_epoch(self, epoch: int) -> None:
 
         total_loss = 0.0
-        for _, (source, targets) in enumerate(tqdm(self.config.train_loader, desc="Adversarial Training",
-                                                   leave=False, position=1, unit="batch", colour="blue")):
+        for _, (source, targets) in enumerate(tqdm(self.config.train_loader,
+                                                   desc="Adversarial Training",
+                                                   leave=False,
+                                                   position=1,
+                                                   unit="batch",
+                                                   colour="blue")):
 
             # Move data to device
             source = source.to(self.device)

@@ -1,6 +1,7 @@
 from enum import EnumMeta
 from typing import Optional
 
+import click
 import torch
 import torch.nn as nn
 
@@ -107,8 +108,8 @@ class ModelFactory:
                 )
                 return CustomModel(cfg, **kwargs)
         except ValueError as e:
-            raise ValueError(
-                f"Error creating model {config.model_name}! Details: {e}") from e
+            raise click.ClickException(
+                "Error creating model. More details: " + str(e))
 
     @staticmethod
     def _validate_create_model_config(

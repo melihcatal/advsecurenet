@@ -146,9 +146,9 @@ class TestAdversarialTrainingCommand:
 
     # @patch('cli.utils.config.load_configuration')
 
-    @patch('cli.logic.defense.AdversarialTrainingCLI')
+    @patch('cli.logic.defense.ATCLITrainer')
     def test_adversarial_training_with_valid_config(self, mock_adversarial_training_cli, runner, set_working_dir):
-        # Mock the AdversarialTrainingCLI class
+        # Mock the ATCLITrainer class
         mock_adversarial_training_cli.return_value = Mock(
             adversarial_training=Mock(return_value=None))
 
