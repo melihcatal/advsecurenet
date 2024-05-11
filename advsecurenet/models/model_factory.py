@@ -57,18 +57,30 @@ class ModelFactory:
         Args:
             config (Optional[CreateModelConfig]): The configuration for creating the model. If not provided, the model will be created with the passed keyword arguments.
             CreateModelConfig contains the following fields:
-
+                - model_name: str
+                - num_classes: Optional[int] = 1000
+                - num_input_channels: Optional[int] = 3
+                - pretrained: Optional[bool] = True
+                - weights: Optional[str] = "IMAGENET1K_V1"
+                - custom_models_path: Optional[str] = "CustomModels"
+                - external_model_arch_path: Optional[str] = None
+                - external_model_weights_path: Optional[str] = None
+                - is_external: bool = False
+                - random_seed: Optional[int] = None
 
             **kwargs: Additional keyword arguments to be passed to the model constructor.
 
         Returns:
             BaseModel: The created model.
+
+        Note:
+            If the model is a custom model, the model_name should be the name of the custom model class. For example, 'CustomMnistModel'.
+            You can use your external model by setting is_external=True in the CreateModelConfig and providing the external_model_arch_path and external_model_weights_path.
         """
         try:
 
-            if config is None:
+            if config is None or not isinstance(config, CreateModelConfig):
                 config = CreateModelConfig(**kwargs)
-
             if config.is_external:
                 cfg = ExternalModelConfig(
                     model_name=config.model_name,
