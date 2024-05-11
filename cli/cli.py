@@ -26,7 +26,9 @@ INT_LIST = IntListParamType()
 @click.group()
 @click.version_option(version='0.1.7')
 def main():
-    pass
+    """
+    Welcome to AdvSecureNet CLI!
+    """
 
 
 @click.group()
@@ -34,7 +36,6 @@ def attack():
     """
     Command to execute attacks.
     """
-    pass
 
 
 @click.group()
@@ -42,7 +43,6 @@ def defense():
     """
     Command to execute defenses.
     """
-    pass
 
 
 @click.group()
@@ -50,12 +50,44 @@ def weights():
     """
     Command to model weights.
     """
-    pass
+
+
+@click.group()
+def evaluate():
+    """
+    Command to evaluate models.
+    """
+
+
+@click.group()
+def utils():
+    """
+    Command to utilities.
+    """
+
+
+@click.group()
+def configs():
+    """
+    Command to list available configuration files.
+    """
+
+
+@click.group()
+def models():
+    """
+    Command to list available models.
+    """
 
 
 main.add_command(attack)
 main.add_command(defense)
-main.add_command(weights)
+main.add_command(evaluate)
+main.add_command(utils)
+
+utils.add_command(weights)
+utils.add_command(configs)
+utils.add_command(models)
 
 if __name__ == "__main__":
     main()
@@ -129,7 +161,7 @@ def train(config: str, **kwargs):
     cli_train(config, **kwargs)
 
 
-@main.command()
+@evaluate.command()
 @click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the evaluation configuration yml file.')
 @click.option('--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
 @click.option('--dataset-name', default=None, help='Name of the dataset to evaluate on (e.g. "cifar10").')
@@ -139,7 +171,7 @@ def train(config: str, **kwargs):
 @click.option('--loss', default=None, help='Loss function to use for evaluation.')
 def test(config: str, **kwargs):
     """
-    Command to evaluate a model.
+    Command to test a model on a dataset. This command does not evaluate the model on adversarial examples.
 
     Args:
         config (str, optional): Path to the evaluation configuration yml file.
@@ -155,9 +187,9 @@ def test(config: str, **kwargs):
 
     Examples:
 
-        >>> advsecurenet test --model-name=resnet18 --dataset-name=cifar10 --model-weights=resnet18_cifar10_weights.pth
+        >>> advsecurenet evaluate test --model-name=resnet18 --dataset-name=cifar10 --model-weights=resnet18_cifar10_weights.pth
         or
-        >>> advsecurenet test --config=test_config.yml
+        >>> advsecurenet evaluate test --config=test_config.yml
 
     Notes:
         If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
@@ -191,8 +223,8 @@ def available_weights(model_name: str):
     cli_available_weights(model_name)
 
 
-@main.command()
-def configs():
+@configs.command()
+def list_configs():
     """
     Return the list of available configuration files.
 
@@ -208,7 +240,7 @@ def configs():
     cli_configs()
 
 
-@main.command()
+@configs.command()
 @click.option('-c', '--config-name', default=None, help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.')
 @click.option('-s', '--save', type=click.BOOL, is_flag=True, default=False, help='Whether to save the configuration file to the current directory. Defaults to False.')
 @click.option('-p', '--print-output', 'print_output', is_flag=True, default=False, help='Whether to print the configuration file to the console. Defaults to False.')
@@ -241,12 +273,12 @@ def config_default(config_name: str, save: bool, print_output: bool, output_path
     cli_config_default(config_name, save, print_output, output_path)
 
 
-@main.command()
+@models.command()
 @click.option('-m', '--model-type',
               # type=click.Choice([e.value for e in ModelType] + ['all']),
               default='all',
               help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.")
-def models(model_type: str):
+def list_models(model_type: str):
     """Command to list available models.
 
     Args:
@@ -261,7 +293,7 @@ def models(model_type: str):
     cli_models(model_type)
 
 
-@main.command()
+@models.command()
 @click.option('-m', '--model-name', default=None, help='Name of the model to inspect (e.g. "resnet18").')
 @click.option('-n', '--normalization', is_flag=True, type=click.BOOL, default=False, help='Whether to include normalization layer in the model summary.')
 def model_layers(model_name: str, normalization: bool):
@@ -280,7 +312,7 @@ def model_layers(model_name: str, normalization: bool):
     cli_model_layers(model_name, normalization)
 
 
-@main.command()
+@utils.command()
 @click.option('-d', '--dataset-name', default=None, help='Name of the dataset to inspect (e.g. "CIFAR10").')
 def normalization_params(dataset_name: str):
     """Command to list the normalization values for a dataset.
@@ -681,3 +713,13 @@ def adversarial_training(config, **kwargs):
     from cli.logic.defense import cli_adversarial_training
 
     cli_adversarial_training(config, **kwargs)
+
+
+################################# EVALUATION #####################################
+
+@evaluate.command()
+def evaluation():
+    """
+    Command to evaluate the model on adversarial examples.
+    """
+    pass
