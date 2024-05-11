@@ -38,10 +38,13 @@ class DatasetFactory:
             If the dataset_type is not of type DatasetType.
         """
 
-        if not isinstance(dataset_type, DatasetType):
-            raise TypeError(
-                f"dataset_type must be of type DatasetType, not {type(dataset_type)}"
-            )
+        if not isinstance(dataset_type, DatasetType) and isinstance(dataset_type, str):
+            # try to convert the dataset_type to DatasetType
+            try:
+                dataset_type = DatasetType(dataset_type.upper())
+            except ValueError:
+                raise TypeError(
+                    "dataset_type must be of type DatasetType or a valid string value from DatasetType.")
 
         dataset_cls = DATASET_MAP[dataset_type]
         return dataset_cls(**kwargs)
