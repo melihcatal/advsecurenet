@@ -31,6 +31,7 @@ class CLITrainer:
 
     def __init__(self, config: TrainingCliConfigType):
         self.config: TrainingCliConfigType = config
+        self.train_dataset = self._prepare_dataset()
 
     def train(self):
         """
@@ -57,7 +58,7 @@ class CLITrainer:
         world_size = len(self.config.device.gpu_ids)
 
         os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(
-            str(x) for x in self.config.gpu_ids)
+            [str(i) for i in self.config.device.gpu_ids])
 
         ddp_trainer = DDPTrainingCoordinator(
             self._ddp_training_fn,
@@ -117,6 +118,13 @@ class CLITrainer:
 
         return create_model(self.config.model)
 
+    def _prepare_dataset(self):
+        """
+        Prepare the datasets.
+        """
+        train_data, _ = get_datasets(config=self.config.dataset)
+        return train_data
+
     def _prepare_dataloader(self) -> torch.utils.data.DataLoader:
         """
         Initialize the dataloader for single process training.
@@ -125,9 +133,11 @@ class CLITrainer:
 
             torch.utils.data.DataLoader: The training dataloader.      
         """
-        train_data, _ = get_datasets(config=self.config.dataset)
         train_data_loader = get_dataloader(
-            config=self.config.dataloader, dataset=train_data, dataset_type='train', use_ddp=self.config.device.use_ddp
+            config=self.config.dataloader,
+            dataset=self.train_dataset,
+            dataset_type='train',
+            use_ddp=self.config.device.use_ddp
         )
         return train_data_loader
 
