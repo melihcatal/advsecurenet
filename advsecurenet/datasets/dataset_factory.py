@@ -1,3 +1,5 @@
+from typing import Union
+
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.datasets.Cifar10 import CIFAR10Dataset
 from advsecurenet.datasets.ImageNet import ImageNetDataset
@@ -16,26 +18,20 @@ class DatasetFactory:
     A factory class to create datasets.
     """
     @staticmethod
-    def create_dataset(dataset_type: DatasetType, **kwargs) -> BaseDataset:
+    def create_dataset(dataset_type: DatasetType,
+                       return_loaded: bool = False,
+                       **kwargs) -> Union[BaseDataset, tuple[BaseDataset, BaseDataset]]:
         """
         Returns a dataset for the given dataset type.
 
-        Parameters
-        ----------
-        dataset_type: DatasetType
-            The type of the dataset to return.
-        kwargs: dict
-            The keyword arguments to pass to the dataset class.
+        Args:
+            dataset_type (DatasetType): The type of the dataset to be created.
+            return_loaded (bool): Whether to load the train and test datasets and return them immediately. Default is False.
+            **kwargs: Arbitrary keyword arguments to be passed to the dataset class.
 
-        Returns
-        -------
-        BaseDataset
-            The dataset for the given dataset type. 
+        Returns:
+            BaseDataset: The dataset for the given dataset type.
 
-        Raises
-        ------
-        TypeError
-            If the dataset_type is not of type DatasetType.
         """
 
         if not isinstance(dataset_type, DatasetType) and isinstance(dataset_type, str):
@@ -47,6 +43,13 @@ class DatasetFactory:
                     "dataset_type must be of type DatasetType or a valid string value from DatasetType.")
 
         dataset_cls = DATASET_MAP[dataset_type]
+
+        if return_loaded:
+            dataset_obj = dataset_cls()
+            train_dataset = dataset_obj.load_dataset(train=True)
+            test_dataset = dataset_obj.load_dataset(train=False)
+            return train_dataset, test_dataset
+
         return dataset_cls(**kwargs)
 
     @staticmethod
