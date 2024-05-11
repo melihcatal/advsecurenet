@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import List, Optional
 
 
 @dataclass
@@ -9,5 +9,5 @@ class DeviceCliConfigType:
     """
     use_ddp: bool = field(default=False, init=True)
     processor: str = field(default="cpu")
-    gpu_ids: Optional[str] = field(default=None)
+    gpu_ids: Optional[List[int]] = field(default=None)
     pin_memory: Optional[bool] = field(default=False)

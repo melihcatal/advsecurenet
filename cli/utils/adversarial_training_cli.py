@@ -1,11 +1,10 @@
 
-import os
 from dataclasses import asdict
 from typing import List, cast
 
 import click
-import torch
 
+from advsecurenet.attacks.adversarial_attack import AdversarialAttack
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from advsecurenet.defenses.ddp_adversarial_training import \
     DDPAdversarialTraining
@@ -13,18 +12,13 @@ from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.attacks import \
     AttackType as AdversarialAttackType
 from advsecurenet.shared.types.configs.attack_configs import AttackConfig
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
 from advsecurenet.shared.types.configs.configs import ConfigType
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
     AdversarialTrainingConfig
-from advsecurenet.trainer.ddp_training_coordinator import \
-    DDPTrainingCoordinator
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
 from cli.shared.attack_mappings import at_attack_mapping, attack_mapping
-from cli.types.adversarial_training import (ATCliConfigType, AttackConfigDict,
-                                            AttackWithConfigDict)
+from cli.types.adversarial_training import ATCliConfigType, AttackConfigDict
 from cli.types.model import ModelCliConfigType
 from cli.utils.config import load_and_instantiate_config
 from cli.utils.model import create_model
@@ -54,7 +48,7 @@ class ATCLITrainer(CLITrainer):
         else:
             self._execute_training()
 
-    def _prepare_attacks(self) -> list[AttackWithConfigDict]:
+    def _prepare_attacks(self) -> list[AdversarialAttack]:
         """
         Get the attack objects based on the attack names.
 
