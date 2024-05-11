@@ -37,6 +37,14 @@ class DataLoaderFactory:
 
         Note:
             It is possible to create a DataLoader without providing a DataLoaderConfig. In this case, the DataLoader will be created with the provided keyword arguments.
+            DataLoaderConfig contains the following fields:
+                - dataset: TorchDataset
+                - batch_size: int
+                - num_workers: int
+                - shuffle: bool
+                - drop_last: bool
+                - pin_memory: bool
+                - sampler: Optional[torch.utils.data.Sampler]
 
         """
         if config is None:
