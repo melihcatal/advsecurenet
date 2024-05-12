@@ -11,12 +11,11 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
     - Linf
     """
 
-    def __init__(self, normalize: bool = False):
+    def __init__(self):
         self.total_l0_distance = 0
         self.total_l2_distance = 0
         self.total_l_inf_distance = 0
         self.batch_size = 0
-        self.normalize = normalize
 
     def reset(self):
         """

@@ -172,7 +172,6 @@ def get_available_configs() -> list:
                         'MODULE_DESCRIPTION', description).strip()
                     include_in_cli = exec_namespace.get(
                         'INCLUDE_IN_CLI_CONFIGS', include_in_cli)
-
             if include_in_cli:
                 config_files = [
                     file for file in files if file.endswith("_config.yml")]

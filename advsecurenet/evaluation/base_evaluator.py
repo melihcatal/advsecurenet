@@ -33,9 +33,24 @@ class BaseEvaluator(ABC):
         pass
 
     @abstractmethod
-    def update(self, *args, **kwargs):
+    def update(self,
+               model: BaseModel,
+               original_images: torch.Tensor,
+               true_labels: torch.Tensor,
+               adversarial_images: torch.Tensor,
+               is_targeted: Optional[bool] = False,
+               target_labels: Optional[torch.Tensor] = None
+               ) -> None:
         """
         Updates the evaluator with new data for streaming mode.
+
+        Args:
+            model (BaseModel): The model being evaluated.
+            original_images (torch.Tensor): The original images.
+            original_labels (torch.Tensor): The true labels for the original images.
+            adversarial_images (torch.Tensor): The adversarial images.
+            is_targeted (bool, optional): Whether the attack is targeted.
+            target_labels (Optional[torch.Tensor], optional): Target labels for the adversarial images if the attack is targeted.
         """
         pass
 
@@ -98,14 +113,3 @@ class BaseEvaluator(ABC):
             values = [str(value)
                       for value in evaluation_results.values()]
             writer.writerow(values)
-
-    def _calculate_accuracy(self, model: BaseModel, images: torch.Tensor, labels: torch.Tensor) -> float:
-        """
-        Calculates the accuracy of the model on the given images.
-        """
-        model.eval()
-        predictions = model(images)
-        predicted_labels = torch.argmax(predictions, dim=1)
-        correct_predictions = torch.sum(predicted_labels == labels)
-        accuracy = correct_predictions.item() / len(labels)
-        return accuracy

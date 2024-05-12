@@ -4,7 +4,7 @@ jobs=2
 
 [MESSAGES CONTROL]
 enable=W
-disable=line-too-long, import-outside-toplevel, missing-module-docstring, too-few-public-methods
+disable=line-too-long, import-outside-toplevel, missing-module-docstring, too-few-public-methods, redefined-builtin
 
 [REPORTS]
 score=y
@@ -15,3 +15,4 @@ generated-members=numpy.*, torch.*
 
 [DESIGN]
 max-attributes=25
+max-args=10
