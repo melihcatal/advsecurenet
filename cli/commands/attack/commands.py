@@ -83,8 +83,7 @@ def deepfool(config, **kwargs):
             If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
-    from cli.logic.attack import cli_attack
-
+    from cli.logic.attack.attack import cli_attack
     cli_attack("DEEPFOOL", config, **kwargs)
 
 
@@ -146,7 +145,7 @@ def cw(config, **kwargs):
             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
 
     """
-    from cli.logic.attack import cli_attack
+    from cli.logic.attack.attack import cli_attack
 
     cli_attack("CW", config, **kwargs)
 
@@ -189,7 +188,7 @@ def pgd(config, **kwargs):
                 If a configuration file is provided, matching CLI arguments will override the configuration file. The CLI arguments have priority.
                 Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.  
     """
-    from cli.logic.attack import cli_attack
+    from cli.logic.attack.attack import cli_attack
 
     cli_attack("PGD", config, **kwargs)
 
@@ -230,7 +229,7 @@ def fgsm(config, **kwargs):
                     Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
 
     """
-    from cli.logic.attack import cli_attack
+    from cli.logic.attack.attack import cli_attack
 
     cli_attack("FGSM", config, **kwargs)
 
@@ -269,7 +268,7 @@ def decision_boundary(config, **kwargs):
             max_iterations (int, optional): Number of iterations for the attack. Defaults to 100.
             step_adapt (float, optional): Step adaptation value for the attack. Defaults to 0.01.
     """
-    from cli.logic.attack import cli_attack
+    from cli.logic.attack.attack import cli_attack
     cli_attack("DECISION_BOUNDARY", config, **kwargs)
 
 
@@ -323,6 +322,6 @@ def lots(config, **kwargs):
                             Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.   
 
     """
-    from cli.logic.attack import cli_attack
+    from cli.logic.attack.attack import cli_attack
 
     cli_attack("LOTS", config, **kwargs)

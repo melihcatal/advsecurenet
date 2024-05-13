@@ -87,6 +87,6 @@ def train(config: str, **kwargs):
         If a configuration file is provided, the CLI arguments will override the configuration file. The CLI arguments have priority.
         Configuration file attributes must match the CLI arguments. For example, if the configuration file has a "model_name" attribute, the CLI argument must be named "model_name" as well.
     """
-    from cli.logic.train import cli_train
+    from cli.logic.train.train import cli_train
 
     cli_train(config, **kwargs)

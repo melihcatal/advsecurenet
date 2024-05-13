@@ -20,7 +20,7 @@ def list():
         >>> advsecurenet configs
 
     """
-    from cli.logic.config import cli_configs
+    from cli.logic.utils.config import cli_configs
 
     cli_configs()
 
@@ -53,6 +53,6 @@ def get(config_name: str, save: bool, print_output: bool, output_path: str):
         You can provide a full path including the filename to the output path. If the directory does not exist, it will be created. If the file already exists, it will be overwritten.
         You can provide the relative path to the output path. Make sure it ends with a slash (e.g., ./myconfigs/).
     """
-    from cli.logic.config import cli_config_default
+    from cli.logic.utils.config import cli_config_default
 
     cli_config_default(config_name, save, print_output, output_path)

@@ -5,7 +5,8 @@ import pytest
 import torch
 from torchvision.transforms import ToPILImage
 
-from cli.utils.helpers import get_device_from_cfg, save_img, to_bchw_format
+from cli.shared.utils.helpers import (get_device_from_cfg, save_img,
+                                      to_bchw_format)
 
 
 class MockConfig:

@@ -9,7 +9,7 @@ Subpackages
 
    cli.attacks
    cli.types
-   cli.utils
+   cli.shared.utils
 
 
 cli.cli module

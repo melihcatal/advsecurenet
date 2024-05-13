@@ -23,7 +23,7 @@ def list(model_type: str):
     Raises:
         ValueError: If the model_type is not supported.
     """
-    from cli.logic.model import cli_models
+    from cli.logic.utils.model import cli_models
 
     cli_models(model_type)
 
@@ -42,6 +42,6 @@ def layers(model_name: str, normalization: bool):
     Raises:
         ValueError: If the model name is not provided.
     """
-    from cli.logic.model import cli_model_layers
+    from cli.logic.utils.model import cli_model_layers
 
     cli_model_layers(model_name, normalization)

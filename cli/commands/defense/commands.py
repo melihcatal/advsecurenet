@@ -24,6 +24,6 @@ def adversarial_training(config: str, **kwargs):
         Because of the large number of arguments, it is mandatory to use a configuration file for adversarial training.
 
     """
-    from cli.logic.defense import cli_adversarial_training
+    from cli.logic.defense.defense import cli_adversarial_training
 
     cli_adversarial_training(config, **kwargs)

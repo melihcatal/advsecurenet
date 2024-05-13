@@ -76,8 +76,6 @@ class CWAttack(AdversarialAttack):
 
         image = self._initialize_x(image)
 
-        print(
-            f"c lower type: {type(self.c_lower)} and c lower value: {self.c_lower}")
         c_lower = torch.full((batch_size,), self.c_lower,
                              device=self.device_manager.get_current_device(), dtype=torch.float32)
         c_upper = torch.full((batch_size,), self.c_upper,

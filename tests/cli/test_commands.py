@@ -144,7 +144,7 @@ class TestAdversarialTrainingCommand:
         # Reset the working directory after the test
         os.chdir(original_dir)
 
-    # @patch('cli.utils.config.load_configuration')
+    # @patch('cli.shared.utils.config.load_configuration')
 
     @patch('cli.logic.defense.ATCLITrainer')
     def test_adversarial_training_with_valid_config(self, mock_adversarial_training_cli, runner, set_working_dir):

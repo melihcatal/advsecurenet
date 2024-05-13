@@ -6,9 +6,9 @@ import pytest
 
 from advsecurenet.shared.types.configs import ConfigType
 from advsecurenet.shared.types.dataset import DatasetType
-from cli.types.training import TrainingCliConfigType
-from cli.utils.config import load_configuration
-from cli.utils.trainer import CLITrainer
+from cli.logic.train.trainer import CLITrainer
+from cli.shared.utils.config import load_configuration
+from cli.types.train.training import TrainingCliConfigType
 
 # Replace 'your_module' with the actual name of the module where CLITrainer is defined.
 
@@ -77,8 +77,8 @@ def test_validate_config_invalid_no_dataset_name(config):
         trainer._validate_config(mock_config)
 
 
-@patch('cli.utils.trainer.DatasetFactory.create_dataset')
-@patch('cli.utils.trainer.CLITrainer._validate_dataset_name', return_value="CIFAR10")
+@patch('cli.shared.utils.trainer.DatasetFactory.create_dataset')
+@patch('cli.shared.utils.trainer.CLITrainer._validate_dataset_name', return_value="CIFAR10")
 def test_load_datasets(mock_validate, mock_create_dataset, config):
     trainer = CLITrainer(config)
 

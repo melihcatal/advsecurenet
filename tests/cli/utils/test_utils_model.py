@@ -1,7 +1,10 @@
 from unittest.mock import MagicMock, patch
+
 import pytest
-from cli.utils.model import prepare_model, cli_train, cli_test, get_models
-from advsecurenet.shared.types.configs import TrainConfig, TestConfig
+
+from advsecurenet.shared.types.configs import TestConfig, TrainConfig
+from cli.shared.utils.model import (cli_test, cli_train, get_models,
+                                    prepare_model)
 
 
 @pytest.mark.parametrize("model_type", ["all", "custom", "standard"])

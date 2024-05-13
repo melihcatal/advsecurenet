@@ -29,6 +29,6 @@ def normalization_params(dataset_name: str):
     Raises:
         ValueError: If the dataset name is not provided.
     """
-    from cli.logic.normalization_params import cli_normalization_params
+    from cli.logic.utils.normalization_params import cli_normalization_params
 
     cli_normalization_params(dataset_name)

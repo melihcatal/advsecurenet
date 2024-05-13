@@ -1,8 +1,11 @@
 from dataclasses import dataclass
+
 import pytest
 from yaml.scanner import ScannerError
-from cli.utils.config import build_config, read_config_file, load_configuration, attack_config_check
+
 from advsecurenet.shared.types.configs.configs import ConfigType
+from cli.shared.utils.config import (attack_config_check, build_config,
+                                     load_configuration, read_config_file)
 
 # Mock configuration class for testing build_config
 
