@@ -2,6 +2,7 @@
 Logic for the 'configs' command.
 """
 
+import json
 import os
 from collections import defaultdict
 from typing import Optional
@@ -78,12 +79,16 @@ def cli_config_default(config_name: str,
             config_name, output_path, save=save)
 
         if print_output:
-            click.echo("*"*50)
-            click.echo(f"Default configuration file for {config_name}:\n")
-            formatted_config = '\n'.join(
-                [f"{key}: {value}" for key, value in default_config.items()])
-            click.echo(formatted_config)
-            click.echo("*"*50)
+            click.secho("*"*50, fg='blue', bold=True)
+            click.secho(
+                f"Default configuration file for the {config_name}:\n", fg='red', bold=True)
+            # formatted_config = '\n'.join(
+            #     [f"{key}: {value}" for key, value in default_config.items()])
+            # Convert the dictionary to a JSON string with proper indentation
+            formatted_config = json.dumps(default_config, indent=4)
+
+            click.secho(formatted_config, fg='green')
+            click.secho("*"*50, fg='blue', bold=True)
         if save:
             click.echo(f"Generated default configuration file {config_name}!")
     except FileNotFoundError:
