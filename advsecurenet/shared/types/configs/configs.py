@@ -13,3 +13,4 @@ class ConfigType(Enum):
     DATASET = "dataset"
     EVALUATION = "evaluation"
     ADVERSARIAL_TRAINING = "adversarial_training"
+    ADVERSARIAL_EVALUATION = "adversarial_evaluation"

@@ -17,8 +17,8 @@ class ModelPathConfig:
     """
     This dataclass is used to store the configuration of the paths of a model.
     """
-    external_model_arch_path: Optional[str]
-    external_model_weights_path: Optional[str]
+    model_arch_path: Optional[str]
+    model_weights_path: Optional[str]
 
 
 @dataclass

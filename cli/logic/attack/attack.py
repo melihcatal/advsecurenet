@@ -10,7 +10,7 @@ from advsecurenet.shared.types.attacks import AttackType
 from advsecurenet.shared.types.configs import ConfigType
 from cli.logic.attack.attacks.lots import CLILOTSAttack
 from cli.shared.types.attack import BaseAttackCLIConfigType
-from cli.shared.utils.attack_mappings import attack_mapping
+from cli.shared.utils.attack_mappings import attack_cli_mapping
 from cli.shared.utils.config import load_and_instantiate_config
 from cli.shared.utils.data import load_and_prepare_data
 from cli.shared.utils.dataloader import get_dataloader
@@ -32,10 +32,10 @@ def cli_attack(attack_name: str, config: str, **kwargs) -> None:
     Raises:
         ValueError: If the attack type is unknown.
     """
-    if attack_name not in attack_mapping:
+    if attack_name not in attack_cli_mapping:
         raise ValueError(f"Unknown attack type: {attack_name}")
 
-    attack_type, attack_config_class = attack_mapping[attack_name]
+    attack_type, attack_config_class = attack_cli_mapping[attack_name]
     config_data = load_and_instantiate_config(
         config=config,
         default_config_file=f"{attack_name.lower()}_attack_config.yml",

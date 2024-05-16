@@ -8,7 +8,4 @@ device: !include ../shared/device_config.yml
 attack_procedure: !include ./shared/attack_procedure_config.yml
 
 # Attack Specific Configuration
-attack_config: 
-  epsilon: 0.3 # The epsilon value to use for the attack. Defaults to 0.3.
-  alpha: 0.008 # The alpha value to use for the attack. Defaults to 0.008 (2/255).
-  num_iter: 40 # The number of iterations to use for the attack. Defaults to 40.
+attack_config: !include ./base/pgd_attack_base_config.yml

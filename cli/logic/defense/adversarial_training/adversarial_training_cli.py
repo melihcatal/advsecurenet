@@ -21,7 +21,7 @@ from cli.logic.train.trainer import CLITrainer
 from cli.shared.types.defense.adversarial_training import (ATCliConfigType,
                                                            AttackConfigDict)
 from cli.shared.types.utils.model import ModelCliConfigType
-from cli.shared.utils.attack_mappings import at_attack_mapping, attack_mapping
+from cli.shared.utils.attack_mappings import attack_cli_mapping, attack_mapping
 from cli.shared.utils.config import load_and_instantiate_config
 from cli.shared.utils.model import create_model
 
@@ -68,12 +68,12 @@ class ATCLITrainer(CLITrainer):
                     config=attack_config_path,
                     default_config_file=f"at_{attack_name.lower()}_attack_config.yml",
                     config_type=ConfigType.ATTACK,
-                    config_class=at_attack_mapping[attack_name],
+                    config_class=attack_mapping[attack_name],
 
                 )
 
                 attack_config.device = self.config.device
-                attack_type, _ = attack_mapping[attack_name]
+                attack_type, _ = attack_cli_mapping[attack_name]
 
                 # if the attack is LOTS, we need to use the custom lots wrapper
                 if attack_type == AdversarialAttackType.LOTS:

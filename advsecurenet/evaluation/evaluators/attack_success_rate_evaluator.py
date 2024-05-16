@@ -32,30 +32,50 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
             adversarial_images (torch.Tensor): The adversarial images.
             is_targeted (bool, optional): Whether the attack is targeted.
             target_labels (Optional[torch.Tensor], optional): Target labels for the adversarial images if the attack is targeted.
+
+        Note:
+            This e
         """
         model.eval()
-        # prediction on original images
+
+        # Prediction on original images
         clean_predictions = model(original_images)
         clean_prediction_labels = torch.argmax(clean_predictions, dim=1)
 
-        # if the initial prediction is wrong, don't bother attacking, just skip
+        # Mask to identify correct initial predictions
+        correct_initial_predictions_mask = (
+            clean_prediction_labels == true_labels)
 
-        predictions = model(adversarial_images)
-        labels = torch.argmax(predictions, dim=1)
+        # Calculate total samples based on correct initial predictions
+        total_correct_initial = correct_initial_predictions_mask.sum().item()
+
+        # If no correct initial predictions, skip the update
+        if total_correct_initial == 0:
+            return
+
+        # Filter the data based on the correct initial predictions
+        correct_true_labels = true_labels[correct_initial_predictions_mask]
+        correct_adversarial_images = adversarial_images[correct_initial_predictions_mask]
 
         if is_targeted:
             if target_labels is None:
                 raise ValueError(
                     "Target labels must be provided for targeted attacks.")
-            successful = torch.sum((labels == target_labels) & (
-                clean_prediction_labels == true_labels))
-        else:
-            successful = torch.sum((labels != true_labels) & (
-                clean_prediction_labels == true_labels))
+            correct_target_labels = target_labels[correct_initial_predictions_mask]
 
-        self.total_successful_attacks += successful.item()
-        self.total_samples += torch.sum(clean_prediction_labels ==
-                                        true_labels).item()
+        # Prediction on adversarial images
+        adversarial_predictions = model(correct_adversarial_images)
+        adversarial_labels = torch.argmax(adversarial_predictions, dim=1)
+
+        if is_targeted:
+            successful_attacks = torch.sum(
+                adversarial_labels == correct_target_labels)
+        else:
+            successful_attacks = torch.sum(
+                adversarial_labels != correct_true_labels)
+
+        self.total_successful_attacks += successful_attacks.item()
+        self.total_samples += total_correct_initial
 
     def get_results(self) -> float:
         """
@@ -66,5 +86,4 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         """
         if self.total_samples > 0:
             return self.total_successful_attacks / self.total_samples
-        else:
-            return 0.0
+        return 0.0

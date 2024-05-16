@@ -82,9 +82,6 @@ def cli_config_default(config_name: str,
             click.secho("*"*50, fg='blue', bold=True)
             click.secho(
                 f"Default configuration file for the {config_name}:\n", fg='red', bold=True)
-            # formatted_config = '\n'.join(
-            #     [f"{key}: {value}" for key, value in default_config.items()])
-            # Convert the dictionary to a JSON string with proper indentation
             formatted_config = json.dumps(default_config, indent=4)
 
             click.secho(formatted_config, fg='green')

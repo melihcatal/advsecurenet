@@ -1,6 +1,6 @@
-import importlib.util
 
 import click
+import torch
 
 from advsecurenet.models import BaseModel
 from advsecurenet.models.model_factory import ModelFactory
@@ -28,6 +28,14 @@ def create_model(config: ModelCliConfigType) -> BaseModel:
 
     # create the model
     model = ModelFactory.create_model(create_model_config)
+
+    if not config.is_external and config.path_configs.model_weights_path is not None and config.pretrained:
+        click.secho(
+            "Trying to load the model weights from the provided path...", fg="yellow")
+
+        # load the model weights if provided
+        model.load_state_dict(torch.load(
+            config.path_configs.model_weights_path))
 
     # if we are using a normalization layer, add it to the model
     if config.norm_config.add_norm_layer:

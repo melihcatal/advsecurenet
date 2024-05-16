@@ -34,8 +34,8 @@ class ExternalModelConfig(BaseModelConfig):
     """
     Configuration for an external model.
     """
-    external_model_arch_path: Optional[str] = None
-    external_model_weights_path: Optional[str] = None
+    model_arch_path: Optional[str] = None
+    model_weights_path: Optional[str] = None
 
 
 @dataclass

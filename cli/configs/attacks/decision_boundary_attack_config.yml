@@ -8,11 +8,4 @@ device: !include ../shared/device_config.yml
 attack_procedure: !include ./shared/attack_procedure_config.yml
 
 # Attack Specific Configuration
-attack_config: 
-  initial_delta: 0.1 # The initial delta value to be used for the Decision Boundary attack. The higher the value, the more the perturbation
-  initial_epsilon: 0.1 # The initial epsilon value to be used for the Decision Boundary attack. The higher the value, the more the perturbation
-  max_delta_trials: 10 # The maximum number of trials to be used for the Decision Boundary attack during orthogonal search
-  max_epsilon_trials: 10 # The maximum number of trials to be used for the Decision Boundary attack during forward search
-  max_iterations: 1000 # The maximum number of iterations to be used for the Decision Boundary attack
-  step_adapt: 0.9 # The step adapt value to be used to update the hyperparameters during the Decision Boundary attack
-
+attack_config: !include ./base/decision_boundary_attack_base_config.yml

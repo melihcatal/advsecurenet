@@ -2,7 +2,6 @@ import random
 
 import torch
 from torch.utils.data import DataLoader
-from torchvision import transforms
 from tqdm.auto import tqdm
 
 from advsecurenet.attacks import AdversarialAttack
@@ -12,7 +11,6 @@ from advsecurenet.shared.types.configs.defense_configs.adversarial_training_conf
 from advsecurenet.trainer.trainer import Trainer
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
-from advsecurenet.utils.data import unnormalize_data
 
 
 class AdversarialTraining(Trainer):
@@ -27,13 +25,8 @@ class AdversarialTraining(Trainer):
     def __init__(self, config: AdversarialTrainingConfig) -> None:
         self._check_config(config)
         self.config: AdversarialTrainingConfig = config
-        self.device = self._setup_device()
-        self.model = self._setup_model()
-        self.optimizer = self._setup_optimizer()
-        self.scheduler = self._setup_scheduler()
-        self.loss_fn = self._get_loss_function(self.config.criterion)
-        self.start_epoch = self._load_checkpoint_if_any()
         self.adversarial_target_generator = AdversarialTargetGenerator()
+        super().__init__(config)
 
     # Helper function to shuffle the combined clean and adversarial data
 

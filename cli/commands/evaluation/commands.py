@@ -1,11 +1,16 @@
 import click
 
+from cli.commands.evaluation.adversarial.commands import adversarial
+
 
 @click.group()
 def evaluate():
     """
     Command to evaluate models.
     """
+
+
+evaluate.add_command(adversarial)
 
 
 @evaluate.command()
@@ -46,14 +51,3 @@ def test(config: str, **kwargs):
     from cli.logic.evaluation.test.test import cli_test
 
     cli_test(config, **kwargs)
-
-
-@evaluate.command()
-@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the evaluation configuration yml file.')
-def evaluation(config: str, **kwargs):
-    """
-    Command to evaluate the model on adversarial examples.
-    """
-    from cli.logic.evaluation.evaluation import cli_evaluation
-
-    cli_evaluation(config, **kwargs)

@@ -5,7 +5,7 @@ import click
 
 from .commands.attack import attack
 from .commands.defense import defense
-from .commands.evaluation import evaluation
+from .commands.evaluation import evaluate
 from .commands.train import train
 from .commands.utils import utils
 
@@ -20,7 +20,7 @@ def main():
 
 main.add_command(attack)
 main.add_command(defense)
-main.add_command(evaluation)
+main.add_command(evaluate)
 main.add_command(utils)
 main.add_command(train)
 

@@ -8,8 +8,8 @@ is_external: false # Whether the model is external. If true, the model will be l
 random_seed: null # Random seed for the model. If null, uses the default random seed.
 
 path_configs:
-  external_model_arch_path: null # Path to the model architecture file. Required if is_external is false.
-  external_model_weights_path: null # Path to the model weights file. Required if is_external is false and pretrained is true.
+  model_arch_path: null # Path to the model architecture file. Required if is_external is false.
+  model_weights_path: null # Path to the model weights file. Required if is_external is false and pretrained is true.
 
 norm_config:
   add_norm_layer: false # Whether to add a normalization layer to the model.

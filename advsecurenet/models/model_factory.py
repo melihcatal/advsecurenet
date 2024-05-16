@@ -63,8 +63,8 @@ class ModelFactory:
                 - pretrained: Optional[bool] = True
                 - weights: Optional[str] = "IMAGENET1K_V1"
                 - custom_models_path: Optional[str] = "CustomModels"
-                - external_model_arch_path: Optional[str] = None
-                - external_model_weights_path: Optional[str] = None
+                - model_arch_path: Optional[str] = None
+                - model_weights_path: Optional[str] = None
                 - is_external: bool = False
                 - random_seed: Optional[int] = None
 
@@ -75,7 +75,7 @@ class ModelFactory:
 
         Note:
             If the model is a custom model, the model_name should be the name of the custom model class. For example, 'CustomMnistModel'.
-            You can use your external model by setting is_external=True in the CreateModelConfig and providing the external_model_arch_path and external_model_weights_path.
+            You can use your external model by setting is_external=True in the CreateModelConfig and providing the model_arch_path and model_weights_path.
         """
         try:
 
@@ -85,9 +85,9 @@ class ModelFactory:
                 cfg = ExternalModelConfig(
                     model_name=config.model_name,
                     num_classes=config.num_classes,
-                    external_model_arch_path=config.external_model_arch_path,
+                    model_arch_path=config.model_arch_path,
                     pretrained=config.pretrained,
-                    external_model_weights_path=config.external_model_weights_path
+                    model_weights_path=config.model_weights_path
                 )
                 return ExternalModel(cfg, **kwargs)
 

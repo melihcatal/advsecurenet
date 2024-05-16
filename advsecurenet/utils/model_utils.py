@@ -21,6 +21,7 @@ def save_model(model: nn.Module,
         model (nn.Module): The model to save.
         filename (str): The filename to save the model weights to.
         filepath (str, optional): The filepath to save the model weights to. Defaults to weights directory.
+        distributed (bool, optional): Whether the model is distributed or not. Defaults to False.
 
     """
 
@@ -36,7 +37,7 @@ def save_model(model: nn.Module,
     if distributed:
         torch.save(model.module.state_dict(), os.path.join(filepath, filename))
     else:
-        torch.save(model.model.state_dict(), os.path.join(filepath, filename))
+        torch.save(model.state_dict(), os.path.join(filepath, filename))
     click.echo(click.style(
         f"Saved model to {os.path.join(filepath, filename)}", fg="green"))
 

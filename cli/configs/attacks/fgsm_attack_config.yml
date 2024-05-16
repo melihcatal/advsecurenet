@@ -8,6 +8,4 @@ device: !include ../shared/device_config.yml
 attack_procedure: !include ./shared/attack_procedure_config.yml
 
 # Attack Specific Configuration
-attack_config: 
-  epsilon: 0.1 # The epsilon value to be used for the FGSM attack. The higher the value, the more the perturbation
-  targeted: False # Whether the attack is targeted or not. Defaults to False.
+attack_config: !include ./base/fgsm_attack_base_config.yml

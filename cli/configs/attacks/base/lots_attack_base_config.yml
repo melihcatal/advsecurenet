@@ -1,6 +1,5 @@
-# Description: Configuration file for the LOTS attack to be used in adversarial training.
+# Description: Base configuration file for the LOTS attack
 
-# --- Attack Configurations ---
 deep_feature_layer: model.fc # [REQUIRED] The name of the layer to use for the attack. You can inspect the model to find the layers.
 mode: iterative # The mode to use for the attack. Default is iterative. Options are [iterative, single]
 epsilon: 0.1 # The epsilon value to use for the attack. Defaults to 0.1.

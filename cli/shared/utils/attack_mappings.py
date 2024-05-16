@@ -8,7 +8,7 @@ from cli.shared.types.attack.attacks import (
     DeepFoolAttackCLIConfigType, FgsmAttackCLIConfigType,
     LotsAttackCLIConfigType, PgdAttackCLIConfigType)
 
-attack_mapping = {
+attack_cli_mapping = {
     "CW": (AttackType.CW, CwAttackCLIConfigType),
     "DEEPFOOL": (AttackType.DEEPFOOL, DeepFoolAttackCLIConfigType),
     "PGD": (AttackType.PGD, PgdAttackCLIConfigType),
@@ -18,7 +18,7 @@ attack_mapping = {
 
 }
 
-at_attack_mapping = {
+attack_mapping = {
     "FGSM": FgsmAttackConfig,
     "PGD": PgdAttackConfig,
     "DEEPFOOL": DeepFoolAttackConfig,
