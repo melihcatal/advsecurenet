@@ -6,11 +6,16 @@ from torchvision import datasets
 
 from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
+from advsecurenet.shared.types.configs.preprocess_config import \
+    PreprocessConfig
 
 
 class MNISTDataset(BaseDataset):
     """
     The MNISTDataset class that loads the MNIST dataset.
+
+    Args:
+        preprocess_config (Optional[PreprocessConfig], optional): The preprocessing configuration for the MNIST dataset. Defaults to None.
 
     Attributes:
         mean (List[float]): Mean of the MNIST dataset.
@@ -20,8 +25,8 @@ class MNISTDataset(BaseDataset):
         num_classes (int): Number of classes in the MNIST dataset.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
+        super().__init__(preprocess_config)
         self.mean = [0.1307]
         self.std = [0.3081]
         self.input_size = (28, 28)

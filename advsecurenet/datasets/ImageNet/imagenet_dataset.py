@@ -5,6 +5,8 @@ from torchvision import datasets, transforms
 
 from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
 from advsecurenet.shared.types import DataType
+from advsecurenet.shared.types.configs.preprocess_config import \
+    PreprocessConfig
 
 
 class NamedImageFolder(datasets.ImageFolder):
@@ -30,8 +32,8 @@ class ImageNetDataset(BaseDataset):
         num_input_channels (int): Number of input channels in the ImageNet images.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
+        super().__init__(preprocess_config)
         self.mean = [0.485, 0.456, 0.406]
         self.std = [0.229, 0.224, 0.225]
         self.input_size = (256, 256)

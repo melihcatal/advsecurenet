@@ -1,0 +1,12 @@
+# --- Preprocessing Configs ---
+
+# Preprocessing Configs
+steps:
+  - name : "Resize"
+    params:
+      size: 32
+  - name: "CenterCrop"
+    params:
+      size: 32
+  - name : "ToTensor"
+    params: {}

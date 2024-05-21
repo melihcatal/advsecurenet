@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from advsecurenet.shared.types.configs.preprocess_config import \
+    PreprocessConfig
+
 
 @dataclass
 class DatasetCliConfigType:
@@ -12,6 +15,7 @@ class DatasetCliConfigType:
     train_dataset_path: Optional[str] = None
     test_dataset_path: Optional[str] = None
     download: Optional[bool] = True
+    preprocessing: Optional[PreprocessConfig] = None
 
 
 @dataclass

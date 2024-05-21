@@ -2,8 +2,10 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Tuple
 
 from torch.utils.data import Dataset as TorchDataset
-from torchvision import datasets, transforms
+from torchvision.transforms import v2 as transforms
 
+from advsecurenet.shared.types.configs.preprocess_config import (
+    PreprocessConfig, PreprocessStep)
 from advsecurenet.shared.types.dataset import DataType
 
 
@@ -27,6 +29,9 @@ class BaseDataset(TorchDataset, ABC):
     """
     A base class for PyTorch datasets.
 
+    Args:
+        preprocess_config (Optional[PreprocessConfig], optional): The preprocessing configuration for the dataset. Defaults to None.
+
     Attributes:
         _dataset (TorchDataset): The underlying PyTorch dataset.
         mean (List[float]): The mean values of the dataset.
@@ -36,9 +41,14 @@ class BaseDataset(TorchDataset, ABC):
         num_classes (int): The number of classes in the dataset.
         num_input_channels (int): The number of input channels in the dataset.
         data_type (DataType): The type of the dataset (train or test).
+
+    Note:
+        This module uses v2 of the torchvision transforms. Please refer to the official PyTorch documentation for more information about the possible transforms.
     """
 
-    def __init__(self):
+    def __init__(self,
+                 preprocess_config: Optional[PreprocessConfig] = None
+                 ):
         self._dataset: DatasetWrapper
         self.mean: List[float] = []
         self.std: List[float] = []
@@ -48,6 +58,21 @@ class BaseDataset(TorchDataset, ABC):
         self.num_classes: int = 0
         self.num_input_channels: int = 0
         self.data_type: DataType = None
+        self._preprocess_config = preprocess_config
+
+    @abstractmethod
+    def load_dataset(self,
+                     root: Optional[str] = None,
+                     train: Optional[bool] = True,
+                     download: Optional[bool] = True,
+                     **kwargs) -> DatasetWrapper:
+        """
+        Loads the dataset.
+
+        Raises:
+            NotImplementedError: If the method is not implemented in the child class.
+        """
+        pass
 
     def get_transforms(self) -> transforms.Compose:
         """
@@ -56,10 +81,31 @@ class BaseDataset(TorchDataset, ABC):
         Returns:
             transforms.Compose: The data transforms.
         """
-        return transforms.Compose([
-            transforms.Resize(self.input_size),
-            transforms.ToTensor(),
-        ])
+        available_transforms = transforms.__dict__.keys()
+        available_transforms = [
+            t for t in available_transforms if not t.startswith("_")]
+
+        if self._preprocess_config and self._preprocess_config.steps:
+            preprocess_steps = self._preprocess_config.steps
+            transform_steps = []
+            for preprocess_step in preprocess_steps:
+                # convert the preprocess step to a PreprocessStep object
+                preprocess_step = PreprocessStep(**preprocess_step)
+                # get the name of the transform
+                name = preprocess_step.name
+                # get the transform function from the v2 module
+                transform = getattr(transforms, name)
+                # get the parameters provided in the config
+                params = preprocess_step.params
+                # add the transform to the list of transforms with the provided parameters
+                transform_steps.append(transform(**params))
+
+            return transforms.Compose(transform_steps)
+        else:
+            return transforms.Compose([
+                transforms.Resize(self.input_size),
+                transforms.ToTensor(),
+            ])
 
     def __len__(self) -> int:
         """
@@ -88,17 +134,3 @@ class BaseDataset(TorchDataset, ABC):
         if self._dataset:
             return self._dataset[idx]
         raise NotImplementedError("Dataset not loaded or specified.")
-
-    @abstractmethod
-    def load_dataset(self,
-                     root: Optional[str] = None,
-                     train: Optional[bool] = True,
-                     download: Optional[bool] = True,
-                     **kwargs) -> DatasetWrapper:
-        """
-        Loads the dataset.
-
-        Raises:
-            NotImplementedError: If the method is not implemented in the child class.
-        """
-        pass
