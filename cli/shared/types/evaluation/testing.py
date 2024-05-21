@@ -12,6 +12,7 @@ class Testing:
     This dataclass is used to store the configuration of the testing.
     """
     criterion: str
+    topk: int
 
 
 @dataclass

@@ -17,3 +17,4 @@ class TestConfig:
     test_loader: DataLoader
     criterion: Union[str, nn.Module] = "cross_entropy"
     processor: Optional[torch.device] = torch.device("cpu")
+    topk: int = 1

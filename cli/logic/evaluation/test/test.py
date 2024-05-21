@@ -1,8 +1,8 @@
 
 from advsecurenet.shared.types.configs import ConfigType
 from cli.logic.evaluation.test.tester import CLITester
+from cli.shared.types.evaluation.testing import TestingCliConfigType
 from cli.shared.utils.config import load_and_instantiate_config
-from cli.types.evaluation.testing import TestingCliConfigType
 
 
 def cli_test(config: str, **kwargs) -> None:
