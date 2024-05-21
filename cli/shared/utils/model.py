@@ -25,17 +25,8 @@ def create_model(config: ModelCliConfigType) -> BaseModel:
     flat_config = flatten_dataclass(config)
     filtered_config = filter_for_dataclass(flat_config, CreateModelConfig)
     create_model_config = CreateModelConfig(**filtered_config)
-
     # create the model
     model = ModelFactory.create_model(create_model_config)
-
-    if not config.is_external and config.path_configs.model_weights_path is not None and config.pretrained:
-        click.secho(
-            "Trying to load the model weights from the provided path...", fg="yellow")
-
-        # load the model weights if provided
-        model.load_state_dict(torch.load(
-            config.path_configs.model_weights_path))
 
     # if we are using a normalization layer, add it to the model
     if config.norm_config.add_norm_layer:
@@ -48,6 +39,14 @@ def create_model(config: ModelCliConfigType) -> BaseModel:
 
         model.add_layer(new_layer=norm_layer, position=0, inplace=True)
         click.secho("Normalization layer added to the model!", fg="green")
+
+    if not config.is_external and config.path_configs.model_weights_path is not None and config.pretrained:
+        click.secho(
+            "Trying to load the model weights from the provided path...", fg="yellow")
+
+        # load the model weights if provided
+        model.load_state_dict(torch.load(
+            config.path_configs.model_weights_path))
 
     return model
 
