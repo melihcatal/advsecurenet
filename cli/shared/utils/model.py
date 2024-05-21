@@ -38,7 +38,6 @@ def create_model(config: ModelCliConfigType) -> BaseModel:
         )
 
         model.add_layer(new_layer=norm_layer, position=0, inplace=True)
-        click.secho("Normalization layer added to the model!", fg="green")
 
     if not config.is_external and config.path_configs.model_weights_path is not None and config.pretrained:
         click.secho(
