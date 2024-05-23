@@ -1,11 +1,8 @@
 from typing import Optional
 
-import pkg_resources
-from torch.utils.data import Dataset as TorchDataset
 from torchvision import datasets
 
-from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
-from advsecurenet.shared.types import DataType
+from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.shared.types.configs.preprocess_config import \
     PreprocessConfig
 
@@ -36,36 +33,5 @@ class CIFAR10Dataset(BaseDataset):
         self.num_classes = 10
         self.num_input_channels = 3
 
-    def load_dataset(self,
-                     root: Optional[str] = None,
-                     train: Optional[bool] = True,
-                     download: Optional[bool] = True,
-                     **kwargs) -> DatasetWrapper:
-        """
-        Loads the CIFAR-10 dataset.
-
-        Args:
-            root (str, optional): The root directory where the dataset should be stored. Defaults to './data'.
-            train (bool, optional): If True, loads the training data. Otherwise, loads the test data. Defaults to True.
-            download (bool, optional): If True, downloads the dataset from the internet. Defaults to True.
-            **kwargs: Arbitrary keyword arguments for the CIFAR-10 dataset.
-
-        Returns:
-            DatasetWrapper: The CIFAR-10 dataset loaded into memory.
-        """
-
-        # If root is not given, use the default data directory
-        if root is None:
-            root = pkg_resources.resource_filename("advsecurenet", "data")
-
-        transform = self.get_transforms()
-        cifar10_dataset = datasets.CIFAR10(
-            root=root,
-            train=train,
-            transform=transform,
-            download=download, **kwargs)
-        self._dataset = DatasetWrapper(
-            dataset=cifar10_dataset,
-            name=self.name)
-        self.data_type = DataType.TRAIN if train else DataType.TEST
-        return self._dataset
+    def get_dataset_class(self):
+        return datasets.CIFAR10

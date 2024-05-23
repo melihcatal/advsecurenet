@@ -8,7 +8,6 @@ from advsecurenet.attacks.lots import LOTS
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
 from cli.shared.types.attack.attacks.lots import LOTSAttackCLIConfig
-from cli.shared.utils.data import get_custom_data
 
 
 class CLILOTSAttack:
@@ -115,7 +114,8 @@ class CLILOTSAttack:
         """
         if self._config.target_images_dir:
             try:
-                return get_custom_data(self._config.target_images_dir)
+                return
+                # return get_custom_data(self._config.target_images_dir)
             except Exception as e:
                 raise ValueError(f"Error loading target images! Details: {e}")
 

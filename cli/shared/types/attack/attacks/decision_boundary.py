@@ -1,3 +1,4 @@
+
 from dataclasses import dataclass
 
 from advsecurenet.shared.types.configs.attack_configs.decision_boundary_attack_config import \

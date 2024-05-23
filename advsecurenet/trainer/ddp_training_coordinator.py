@@ -1,6 +1,5 @@
 import os
 
-import torch
 import torch.multiprocessing as mp
 from torch.distributed import destroy_process_group, init_process_group
 
@@ -25,7 +24,7 @@ class DDPTrainingCoordinator:
 
         Note:
             Currently, the trainer only supports training on a single machine with multiple GPUs.
-            It assumes that the port 12355 is free on the machine.
+            It finds a free port on the machine and uses it as the master port.
 
         Example:
             >>> from advsecurenet.trainer.ddp_training_coordinator import DDPTrainingCoordinator
@@ -42,6 +41,7 @@ class DDPTrainingCoordinator:
         self.args = args
         self.kwargs = kwargs
         self.port = find_free_port()
+        self.backend = 'nccl'
         os.environ['MASTER_ADDR'] = 'localhost'
         os.environ['MASTER_PORT'] = str(self.port)
 
@@ -53,7 +53,8 @@ class DDPTrainingCoordinator:
 
         The default backend is nccl.
         """
-        init_process_group(backend='nccl', rank=rank,
+        init_process_group(backend=self.backend,
+                           rank=rank,
                            world_size=self.world_size)
 
     def run_process(self, rank: int):
@@ -68,7 +69,6 @@ class DDPTrainingCoordinator:
         """
         Spawn the processes for DDP training.
         """
-
         processes = []
         for rank in range(self.world_size):
             p = mp.Process(target=self.run_process,

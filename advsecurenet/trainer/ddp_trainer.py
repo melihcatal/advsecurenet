@@ -35,6 +35,7 @@ class DDPTrainer(Trainer):
         Returns:
             torch.device: The device.
         """
+        print(f"Setting up device for rank {self.rank}")
         torch.cuda.set_device(self.rank)
         return torch.device(f"cuda:{self.rank}")
 

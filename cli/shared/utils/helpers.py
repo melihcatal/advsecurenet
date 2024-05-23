@@ -4,8 +4,10 @@ This helpers module contans more general helper functions that are not specific 
 import os
 from typing import List, Union
 
+import click
 import torch
 from torchvision.transforms.functional import to_pil_image
+from tqdm.auto import tqdm
 
 
 def save_images(images: Union[torch.Tensor, List[torch.Tensor]],
@@ -28,24 +30,30 @@ def save_images(images: Union[torch.Tensor, List[torch.Tensor]],
     if isinstance(images, torch.Tensor):
         images = [images]
 
-    # Initialize a counter to uniquely name each image
-    image_counter = 0
+    # Calculate total number of images
+    total_images = sum(len(batch) if len(batch.shape)
+                       == 4 else 1 for batch in images)
 
-    # Iterate through each batch in the list
-    for batch in images:
-        # Check if the tensor is a batch of images
-        if len(batch.shape) == 4:
-            for img in batch:
-                image = to_pil_image(img)  # Convert tensor to PIL image
+    # Initialize tqdm progress bar with total number of images
+    with tqdm(total=total_images, desc="Saving images", unit="image") as pbar:
+        image_counter = 0
+        # Iterate through each batch in the list
+        for batch in images:
+            # Check if the tensor is a batch of images
+            if len(batch.shape) == 4:
+                for img in batch:
+                    image = to_pil_image(img)  # Convert tensor to PIL image
+                    save_name = f"{prefix}_{image_counter}.png"
+                    image.save(os.path.join(save_path, save_name))
+                    image_counter += 1
+                    pbar.update(1)
+            elif len(batch.shape) == 3:
+                # Handling the case of a single image in a "batch"
+                image = to_pil_image(batch)
                 save_name = f"{prefix}_{image_counter}.png"
                 image.save(os.path.join(save_path, save_name))
                 image_counter += 1
-        elif len(batch.shape) == 3:
-            # Handling the case of a single image in a "batch"
-            image = to_pil_image(batch)
-            save_name = f"{prefix}_{image_counter}.png"
-            image.save(os.path.join(save_path, save_name))
-            image_counter += 1
+                pbar.update(1)
 
 
 def to_bchw_format(tensor):

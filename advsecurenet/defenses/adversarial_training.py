@@ -50,11 +50,6 @@ class AdversarialTraining(Trainer):
         # make sure that source and adv_source have the same shape and same normalization
         assert source.shape == adv_source.shape, "source and adv_source must have the same shape"
 
-        # assert torch.allclose(source.mean(), adv_source.mean(
-        # ), atol=1e-7), "source and adv_source must have the same mean"
-        # assert torch.allclose(source.std(), adv_source.std(
-        # ), atol=1e-7), "source and adv_source must have the same std"
-
         # Combine clean and adversarial examples
         combined_data, combined_target = self._shuffle_data(
             torch.cat([source, adv_source], dim=0),

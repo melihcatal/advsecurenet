@@ -1,8 +1,10 @@
+import typing
 from collections import deque
 from typing import Optional
 
 import click
 import torch
+import torch.nn as nn
 from tqdm.auto import trange
 
 import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
@@ -32,12 +34,43 @@ class DecisionBoundary(AdversarialAttack):
         self.early_stopping_patience = config.early_stopping_patience
         super().__init__(config)
 
+    @typing.no_type_check
+    def attack(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, target_labels: Optional[torch.Tensor] = None, *args, **kwargs) -> torch.Tensor:
+        if self.targeted and target_labels is None:
+            raise ValueError(
+                "Target labels must be provided for a targeted attack")
+
+        if self.targeted and target_labels is not None:
+            target_labels = self.device_manager.to_device(target_labels)
+
+        # model.eval()
+
+        adv_images = self._initialize(
+            model, original_images, true_labels, target_labels)
+
+        adv_images = self.device_manager.to_device(adv_images)
+        best_adv_images, best_distances = self._initialize_best_images(
+            adv_images, original_images)
+
+        delta = self.initial_delta
+        epsilon = self.initial_epsilon
+
+        for iteration in trange(self.max_iterations, desc="Boundary Attack", colour="blue", disable=not self.verbose):
+            adv_images, delta = self._perturb_orthogonal(
+                model, original_images, true_labels, target_labels, adv_images, delta)
+            adv_images, epsilon = self._perturb_forward(
+                model, original_images, true_labels, target_labels, adv_images, epsilon)
+
+        best_adv_images, best_distances = self._update_best_images(
+            adv_images, original_images, best_adv_images, best_distances)
+
+        return best_adv_images
+
     def _initialize(self, model, original_images, true_labels, target_labels=None):
         """
-        Initializes the perturbed images for the Decision Boundary attack. The initialization is done by randomly and trying to find an adversarial example in given number of iterations.
+        Initializes the perturbed images for the Decision Boundary attack. The initialization is done by randomly and trying to find an adversarial example in a given number of iterations.
         If the attack is targeted, initialization tries to find an adversarial example that is classified as the target label. If the attack is untargeted, initialization tries to find an adversarial example that is misclassified (i.e. not classified as the true label).
         """
-        model.eval()
 
         # Ensure original_images, true_labels, and target_labels are all tensors on the same device
         original_images = self.device_manager.to_device(original_images)
@@ -68,22 +101,6 @@ class DecisionBoundary(AdversarialAttack):
                 update_mask = ~(preds == target_labels)
             else:
                 update_mask = preds == true_labels  # Ensure this is a boolean tensor
-
-            # Check and debug the type of update_mask
-            assert update_mask.dtype == torch.bool, "Update mask must be a boolean tensor"
-            # Check if all images are adversarial according to the respective condition
-            if not update_mask.any():
-                if self.verbose:
-                    click.echo(click.style(
-                        "Successfully initialized all images", fg="green"))
-                break
-
-        if update_mask.all() and self.verbose:
-            click.echo(click.style(
-                "Initialization failed. Try increasing max_initialization_trials", fg="red"))
-
-        # only return the perturbed images that successfully initialized
-        # return perturbed_images[update_mask]
 
         return perturbed_images
 
@@ -145,139 +162,93 @@ class DecisionBoundary(AdversarialAttack):
 
         return perturbation
 
-    def _preprocess(self, images: torch.Tensor) -> torch.Tensor:
-        """
-        Preprocesses the images before attack. The attack expects the images to be in the range [0, 1] and normalized with the mean and standard deviation of the dataset.
-        The datasets are already normalized with the mean and standard deviation of the dataset, so we only need to check if the images are in the range [0, 1].
-
-        Args:
-            images (torch.Tensor): The images to preprocess.
-
-        Returns:
-            torch.Tensor: The preprocessed images.
-        """
-
-        if images.min() < 0 or images.max() > 1:
-            if self.verbose:
-                click.echo(click.style(
-                    "Images are not in the range [0, 1], normalizing them...", fg="red"))
-            # The images are not in the range [0, 1], so we need to normalize them
-            images = torch.clamp(images, min=0, max=1)
-
-        return images
-
-    # mypy: ignore-errors
-    def attack(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, target_labels: Optional[torch.Tensor] = None, * args, **kwargs) -> torch.Tensor:
-        """
-        Generates adversarial examples using the Decision Boundary attack.
-
-
-        """
-        if self.targeted and target_labels is None:
-            raise ValueError(
-                "Target labels must be provided for a targeted attack")
-
-        if self.targeted and target_labels is not None:
-            target_labels = self.device_manager.to_device(target_labels)
-
-        model.eval()
-        batch_size = original_images.size(0)
-
-        # preprocess the images
-        original_images = self._preprocess(original_images)
-
-        adv_images = self._initialize(
-            model, original_images, true_labels, target_labels)
-
-        adv_images = self.device_manager.to_device(adv_images)
+    def _initialize_best_images(self, adv_images: torch.Tensor, original_images: torch.Tensor):
         best_adv_images = adv_images.clone()
-        best_distances = torch.full((batch_size,), float(
+        best_distances = torch.full((adv_images.size(0),), float(
             'inf'), device=original_images.device)
+        return best_adv_images, best_distances
 
-        # copy the initial delta and epsilon values
-        delta = self.initial_delta
-        epsilon = self.initial_epsilon
+    def _perturb_orthogonal(self, model: nn.Module, original_images: torch.Tensor, true_labels: torch.Tensor, target_labels: Optional[torch.Tensor], adv_images: torch.Tensor, delta: float) -> tuple:
+        for _ in range(self.max_delta_trials):
+            perturbation = self._orthogonal_perturb(
+                delta, adv_images, original_images)
+            trial_images = adv_images + perturbation
+            trial_images.clamp_(min=0, max=1)
 
-        # Initialize a list or deque to track the last 'n' improvements in best distance, where 'n' is the patience. Used only if early stopping is enabled.
-        recent_improvements = deque(maxlen=self.early_stopping_patience)
+            outputs = model(trial_images)
+            predictions = outputs.argmax(dim=1)
+            success = self._evaluate_success(
+                predictions, true_labels, target_labels)
 
-        # try to get closer to the decision boundary
-        for iteration in trange(self.max_iterations, desc="Boundary Attack", colour="blue", disable=not self.verbose):
+            delta = self._adjust_delta(success, delta)
+            adv_images = self._update_adv_images(
+                success, adv_images, trial_images)
 
-            # move orthogonal to the decision boundary
-            for _ in range(self.max_delta_trials):
-                perturbation = self._orthogonal_perturb(
-                    delta, adv_images, original_images)
-                trial_images = adv_images + perturbation
-                trial_images.clamp_(min=0, max=1)
+        return adv_images, delta
 
-                outputs = model(trial_images)
-                predictions = outputs.argmax(dim=1)
-                if self.targeted:
-                    success = predictions == target_labels
-                else:
-                    success = predictions != true_labels
+    def _perturb_forward(self, model: nn.Module, original_images: torch.Tensor, true_labels: torch.Tensor, target_labels: Optional[torch.Tensor], adv_images: torch.Tensor, epsilon: float) -> tuple:
+        for _ in range(self.max_epsilon_trials):
+            perturbation = self._forward_perturb(
+                epsilon, adv_images, original_images)
+            trial_images = adv_images + perturbation
+            trial_images.clamp_(min=0, max=1)
 
-                success_rate = success.float().mean().item()
-                if success_rate < 0.2:
-                    delta *= self.step_adapt
-                elif success_rate > 0.5:
-                    delta /= self.step_adapt
+            outputs = model(trial_images)
+            predictions = outputs.argmax(dim=1)
+            success = self._evaluate_success(
+                predictions, true_labels, target_labels)
 
-                for idx in range(batch_size):
-                    if success[idx]:
-                        adv_images[idx] = trial_images[idx]
+            epsilon = self._adjust_epsilon(success, epsilon)
+            adv_images = self._update_adv_images(
+                success, adv_images, trial_images)
 
-            # move towards the original image
-            for _ in range(self.max_epsilon_trials):
-                perturbation = self._forward_perturb(
-                    epsilon, adv_images, original_images)
-                trial_images = adv_images + perturbation
-                trial_images = torch.clamp(trial_images, min=0, max=1)
+        return adv_images, epsilon
 
-                outputs = model(trial_images)
-                predictions = outputs.argmax(dim=1)
+    def _evaluate_success(self, predictions: torch.Tensor, true_labels: torch.Tensor, target_labels: Optional[torch.Tensor]) -> torch.Tensor:
+        if self.targeted:
+            return predictions == target_labels
+        else:
+            return predictions != true_labels
 
-                if self.targeted:
-                    success = predictions == target_labels
-                else:
-                    success = predictions != true_labels
+    def _adjust_delta(self, success: torch.Tensor, delta: float) -> float:
+        success_rate = success.float().mean().item()
+        if success_rate < 0.2:
+            delta *= self.step_adapt
+        elif success_rate > 0.5:
+            delta /= self.step_adapt
+        return delta
 
-                success_rate = success.float().mean().item()
-                if success_rate < 0.2:
-                    epsilon *= self.step_adapt
-                elif success_rate > 0.5:
-                    epsilon /= self.step_adapt
+    def _adjust_epsilon(self, success: torch.Tensor, epsilon: float) -> float:
+        success_rate = success.float().mean().item()
+        if success_rate < 0.2:
+            epsilon *= self.step_adapt
+        elif success_rate > 0.5:
+            epsilon /= self.step_adapt
+        return epsilon
 
-                for idx in range(batch_size):
-                    if success[idx]:
-                        adv_images[idx] = trial_images[idx]
+    def _update_adv_images(self, success: torch.Tensor, adv_images: torch.Tensor, trial_images: torch.Tensor) -> torch.Tensor:
+        for idx in range(adv_images.size(0)):
+            if success[idx]:
+                adv_images[idx] = trial_images[idx]
+        return adv_images
 
-            with torch.no_grad():
-                distances = torch.norm(
-                    adv_images - original_images, p=2, dim=(1, 2, 3))
-                improved = distances < best_distances
-                best_adv_images[improved] = adv_images[improved]
-                best_distances[improved] = distances[improved]
+    def _update_best_images(self, adv_images: torch.Tensor, original_images: torch.Tensor, best_adv_images: torch.Tensor, best_distances: torch.Tensor) -> tuple:
+        with torch.no_grad():
+            distances = torch.norm(
+                adv_images - original_images, p=2, dim=(1, 2, 3))
+            improved = distances < best_distances
+            best_adv_images[improved] = adv_images[improved]
+            best_distances[improved] = distances[improved]
+        return best_adv_images, best_distances
 
-                if self.early_stopping:
-                    # Update the recent improvements tracker
-                    if iteration >= self.early_stopping_patience:
-                        # Calculate improvement over the last 'patience' iterations
-                        improvement = recent_improvements[0] - \
-                            best_distances.mean().item()
-                        recent_improvements.append(
-                            best_distances.mean().item())
-
-                        # Check if the improvement is less than the threshold for early stopping
-                        if improvement < self.early_stopping_threshold:
-                            if self.verbose:
-                                click.echo(click.style(
-                                    "Early stopping", fg="yellow"))
-                            break
-                    else:
-                        # Just append the current mean distance before the patience threshold is reached
-                        recent_improvements.append(
-                            best_distances.mean().item())
-
-        return best_adv_images
+    def _check_early_stopping(self, best_distances: torch.Tensor, recent_improvements: deque, iteration: int) -> bool:
+        if iteration >= self.early_stopping_patience:
+            improvement = recent_improvements[0] - best_distances.mean().item()
+            recent_improvements.append(best_distances.mean().item())
+            if improvement < self.early_stopping_threshold:
+                if self.verbose:
+                    click.echo(click.style("Early stopping", fg="yellow"))
+                return True
+        else:
+            recent_improvements.append(best_distances.mean().item())
+        return False

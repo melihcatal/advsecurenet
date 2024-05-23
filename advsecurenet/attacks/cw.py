@@ -75,13 +75,20 @@ class CWAttack(AdversarialAttack):
         # model = self.device_manager.to_device(model)
 
         image = self._initialize_x(image)
+        c_lower = torch.full(size=(batch_size,),
+                             fill_value=float(self.c_lower),
+                             device=self.device_manager.get_current_device(),
+                             dtype=torch.float32)
 
-        c_lower = torch.full((batch_size,), self.c_lower,
-                             device=self.device_manager.get_current_device(), dtype=torch.float32)
-        c_upper = torch.full((batch_size,), self.c_upper,
-                             dtype=torch.float32, device=self.device_manager.get_current_device())
-        self.c = torch.full((batch_size,), self.c_init,
-                            device=self.device_manager.get_current_device(), dtype=torch.float32)
+        c_upper = torch.full(size=(batch_size,),
+                             fill_value=float(self.c_upper),
+                             dtype=torch.float32,
+                             device=self.device_manager.get_current_device())
+
+        self.c = torch.full(size=(batch_size,),
+                            fill_value=float(self.c_init),
+                            device=self.device_manager.get_current_device(), 
+                            dtype=torch.float32)
 
         best_adv_images = image.clone()
         best_perturbations = torch.full(

@@ -1,5 +1,5 @@
 from dataclasses import fields, is_dataclass
-from typing import Union, get_args, get_origin
+from typing import Optional, Union, get_args, get_origin
 
 
 def flatten_dataclass(instance: object) -> dict:
@@ -11,19 +11,6 @@ def flatten_dataclass(instance: object) -> dict:
 
     Returns:
         dict: The flattened dataclass instance.
-
-    Example:
-        >>> from dataclasses import dataclass
-        >>>
-        >>> @dataclass
-        ... class Data:
-        ...     name: str
-        ...     age: int
-        ...
-        >>> data = Data(name='John', age=30)
-        >>> flatten_dataclass(data)
-        {'name': 'John', 'age': 30}
-
     """
     if not is_dataclass(instance):
         return instance
@@ -32,74 +19,45 @@ def flatten_dataclass(instance: object) -> dict:
     for field in fields(instance):
         value = getattr(instance, field.name)
         if is_dataclass(value):
-            result.update(flatten_dataclass(value))
+            result[field.name] = flatten_dataclass(value)
         else:
             result[field.name] = value
     return result
 
 
-def filter_for_dataclass(data: dict,
-                         dataclass_type: type) -> dict:
+def filter_for_dataclass(data: Union[dict, object], dataclass_type: type, convert: Optional[bool] = False) -> Union[dict, object]:
     """
     Filter a dictionary to only include keys that are valid fields of the given dataclass type. 
 
     Args:
-        data (dict): The dictionary to filter.
+        data (Union[dict, dataclass]): The data to filter. If a dataclass instance is provided, it will be flattened first.
         dataclass_type (type): The dataclass type to filter for.
+        convert (Optional[bool]): Whether to convert the filtered data back to a dataclass instance. Default is False.
 
     Returns:
-        dict: The filtered dictionary.
-
-    Example:
-        >>> from dataclasses import dataclass
-        >>>
-        >>> @dataclass
-        ... class Data:
-        ...     name: str
-        ...     age: int
-        ...
-        >>> data = {'name': 'John',
-        ...         'age': 30,
-        ...
-        ...         'invalid_key': 'value'}
-        ...
-        >>> filter_for_dataclass(data, Data)
-        {'name': 'John', 'age': 30}
-
+        dict or object: The filtered data. If the convert flag is set to True, the filtered data will be converted to a dataclass instance.
     """
+    if is_dataclass(data):
+        data = flatten_dataclass(data)
     valid_keys = {field.name for field in fields(dataclass_type)}
-    return {key: value for key, value in data.items() if key in valid_keys}
+    filtered_data = {key: value for key,
+                     value in data.items() if key in valid_keys}
+    if convert:
+        return recursive_dataclass_instantiation(dataclass_type, filtered_data)
+    return filtered_data
 
 
 def recursive_dataclass_instantiation(cls: type, data: dict) -> type:
     """
     Recursively instantiate a dataclass with nested dataclasses from a dictionary. 
     A dictionary may contain nested dictionaries that represent nested dataclasses. Recursion is used to instantiate the nested dataclasses.
+
     Args:   
         cls (type): The dataclass type to instantiate.
         data (dict): The data to instantiate the dataclass with.
 
     Returns:
         The instantiated dataclass.
-
-    Example:
-        >>> from dataclasses import dataclass
-        >>>
-        >>> @dataclass
-        ... class Data:
-        ...     name: str
-        ...     age: int
-        ...
-        ... @dataclass
-        ... class NestedData:
-        ...     data: Data
-        ...     value: int
-        ...
-        >>> data = {'data': {'name': 'John', 'age': 30},
-        ...         'value': 10}
-        ...
-        >>> recursive_dataclass_instantiation(NestedData, data)
-        NestedData(data=Data(name='John', age=30), value=10)
     """
     field_types = {f.name: f.type for f in fields(cls)}
     new_data = {}
