@@ -10,4 +10,3 @@ class DeviceCliConfigType:
     use_ddp: bool = field(default=False, init=True)
     processor: str = field(default="cpu")
     gpu_ids: Optional[List[int]] = field(default=None)
-    pin_memory: Optional[bool] = field(default=False)
