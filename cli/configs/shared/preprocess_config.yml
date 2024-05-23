@@ -2,11 +2,9 @@
 
 # Preprocessing Configs
 steps:
-  - name : "Resize"
+  - name: ToImage
+    params: 
+  - name: ToDtype
     params:
-      size: 32
-  - name: "CenterCrop"
-    params:
-      size: 32
-  - name : "ToTensor"
-    params: {}
+      dtype: torch.float32
+      scale: True

@@ -8,4 +8,3 @@ processor: cpu # Training device. Options: [CPU, CUDA, MPS] or specific GPU ID [
 # --- Device Configuration MULTI GPU ONLY ---
 # This configuration is only for multi-GPU training. For single GPU training, use the previous configuration. Make sure to set use_ddp to True.
 gpu_ids: null # List of GPU IDs to use for training. If null, uses all available GPUs.
-pin_memory: True # Whether to pin memory for the dataloader.

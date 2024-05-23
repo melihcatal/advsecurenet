@@ -2,6 +2,7 @@ from typing import Optional, Union
 
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.datasets.Cifar10 import CIFAR10Dataset
+from advsecurenet.datasets.Custom import CustomDataset
 from advsecurenet.datasets.ImageNet import ImageNetDataset
 from advsecurenet.datasets.MNIST import MNISTDataset
 from advsecurenet.shared.types import DatasetType
@@ -11,7 +12,8 @@ from advsecurenet.shared.types.configs.preprocess_config import \
 DATASET_MAP = {
     DatasetType.CIFAR10: CIFAR10Dataset,
     DatasetType.IMAGENET: ImageNetDataset,
-    DatasetType.MNIST: MNISTDataset
+    DatasetType.MNIST: MNISTDataset,
+    DatasetType.CUSTOM: CustomDataset
 }
 
 

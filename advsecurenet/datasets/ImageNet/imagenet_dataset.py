@@ -1,25 +1,12 @@
 from typing import Optional
 
-import pkg_resources
-from torchvision import datasets, transforms
-
-from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
-from advsecurenet.shared.types import DataType
+from advsecurenet.datasets.base_dataset import (BaseDataset,
+                                                ImageFolderBaseDataset)
 from advsecurenet.shared.types.configs.preprocess_config import \
     PreprocessConfig
 
 
-class NamedImageFolder(datasets.ImageFolder):
-    """
-    Helper class to add a name attribute to the ImageFolder dataset.
-    """
-
-    def __init__(self, name, *args, **kwargs):
-        super(NamedImageFolder, self).__init__(*args, **kwargs)
-        self.dataset_name = name
-
-
-class ImageNetDataset(BaseDataset):
+class ImageNetDataset(ImageFolderBaseDataset, BaseDataset):
     """s
     The ImageNetDataset class that loads the ImageNet dataset.
 
@@ -33,7 +20,8 @@ class ImageNetDataset(BaseDataset):
     """
 
     def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
-        super().__init__(preprocess_config)
+        ImageFolderBaseDataset.__init__(self)
+        BaseDataset.__init__(self, preprocess_config)
         self.mean = [0.485, 0.456, 0.406]
         self.std = [0.229, 0.224, 0.225]
         self.input_size = (256, 256)
@@ -41,35 +29,3 @@ class ImageNetDataset(BaseDataset):
         self.name = "imagenet"
         self.num_classes = 1000
         self.num_input_channels = 3
-
-    def load_dataset(self,
-                     root: Optional[str] = None,
-                     train: Optional[bool] = True,
-                     download: Optional[bool] = False,
-                     **kwargs) -> DatasetWrapper:
-        """
-        Loads the ImageNet dataset.
-
-        Args:
-            root (str, optional): The root directory where the dataset should be stored. Defaults to './data/imagenet'.
-            train (bool, optional): If True, assumes the dataset is the training set. Otherwise, assumes it's the validation set. Defaults to True.
-            download (bool, optional): If True, would download the dataset from the internet (though this is generally not feasible for ImageNet). Defaults to False.
-            **kwargs: Arbitrary keyword arguments for the ImageNet dataset.
-
-        Returns:
-            DatasetWrapper: The ImageNet dataset loaded into memory.
-        """
-
-        # If root is not given, use the default data directory
-        if root is None:
-            root = pkg_resources.resource_filename("advsecurenet", "data")
-
-        transform = self.get_transforms()
-        imagenet_dataset = datasets.ImageFolder(
-            root=root,
-            transform=transform,
-            **kwargs)
-        self._dataset = DatasetWrapper(
-            dataset=imagenet_dataset, name=self.name)
-        self.data_type = DataType.TRAIN if train else DataType.TEST
-        return self._dataset
