@@ -1,5 +1,0 @@
-# --- Dataset Configurations ---
-dataset_name: cifar10 # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
-dataset_part: test # Dataset part to use for attack. Options: [train, test, random]. Note: random will randomly select a subset of the dataset for the attack
-custom_data_dir: null # The path to the directory containing the custom dataset. If null, uses the default dataset directory
-random_sample_size: 100 # The number of random samples to use for the attack. Only applicable if dataset_part is random

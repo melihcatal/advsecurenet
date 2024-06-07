@@ -49,6 +49,7 @@ class Trainer:
         """
         Setup the device.
         """
+        print(f"setup device in trainer")
         device = self.config.processor or torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
         return device

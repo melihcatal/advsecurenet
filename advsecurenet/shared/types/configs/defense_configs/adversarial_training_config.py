@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.train_config import TrainConfig
 

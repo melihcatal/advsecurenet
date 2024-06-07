@@ -10,4 +10,3 @@ class DeviceConfig:
     use_ddp: Optional[bool] = False
     processor: Optional[str] = "cpu"
     gpu_ids: Optional[str] = None
-    pin_memory: Optional[bool] = False

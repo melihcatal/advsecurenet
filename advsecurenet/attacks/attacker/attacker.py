@@ -1,0 +1,133 @@
+from typing import Optional
+
+import click
+import torch
+from tqdm.auto import tqdm
+
+from advsecurenet.dataloader import DataLoaderFactory
+from advsecurenet.evaluation.adversarial_evaluator import AdversarialEvaluator
+from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
+    AttackerConfig
+
+
+class Attacker:
+    """
+    Attacker module is specialized module for attacking a model.
+    """
+
+    def __init__(self, config: AttackerConfig):
+        self._config = config
+        self._device = self._setup_device()
+        self._model = self._setup_model()
+        self._dataloader = self._create_dataloader()
+
+    def execute(self):
+        """
+        Entry point for the attacker module. This function executes the attack.
+        """
+        return self._execute_attack()
+
+    def _execute_attack(self):
+        adversarial_images = []
+
+        with AdversarialEvaluator(["attack_success_rate"]) as evaluator:
+            data_iterator = self._get_iterator()
+
+            self._model.eval()
+            for data in data_iterator:
+                if self._config.attack.targeted and len(data) == 4:
+                    # Dataset returns (images, true_labels, target_labels, target_images)
+                    images, true_labels, target_labels, target_images = data
+                else:
+                    # Dataset returns (images, labels)
+                    images, true_labels = data
+                    target_labels = true_labels
+                    target_images = None
+
+                images, true_labels, target_labels = self._prepare_data(
+                    images, true_labels, target_labels)
+
+                adv_images = self._generate_adversarial_images(
+                    images,
+                    target_labels if self._config.attack.targeted else true_labels,
+                    target_images
+                )
+                evaluator.update(model=self._model,
+                                 original_images=images,
+                                 true_labels=true_labels,
+                                 adversarial_images=adv_images,
+                                 is_targeted=self._config.attack.targeted,
+                                 target_labels=target_labels)
+
+                if torch.cuda.is_available():
+                    # Free up memory
+                    images = images.cpu()
+                    true_labels = true_labels.cpu()
+                    target_labels = target_labels.cpu()
+                    adv_images = adv_images.cpu()
+                    with torch.cuda.device(self._device):
+                        torch.cuda.empty_cache()
+
+                if self._config.return_adversarial_images:
+                    adversarial_images.append(adv_images)
+
+            results = evaluator.get_results()
+            self._summarize_results(results)
+
+        return adversarial_images
+
+    def _prepare_data(self, *args):
+        """ 
+        Move the required data to the device.
+        """
+        return [arg.to(self._device) for arg in args]
+
+    def _get_predictions(self, images):
+        return torch.argmax(self._model(images), dim=1)
+
+    def _generate_adversarial_images(self,
+                                     images: torch.Tensor,
+                                     labels: torch.Tensor,
+                                     target_images: Optional[torch.Tensor] = None
+                                     ):
+        """
+        Running the attack to generate adversarial images.
+
+        Args:
+            images (torch.Tensor): The input images.
+            labels (torch.Tensor): The true labels.
+            target_images (Optional[torch.Tensor]): The target images for the attack. This is only used for certain attacks i.e. LOTS.
+        """
+        return self._config.attack.attack(self._model, images, labels, target_images)
+
+    def _summarize_results(self, results: dict):
+        """
+        Summarizes the results of the attack.
+
+        Args:
+            results (dict): The results of the attack.
+        """
+        click.secho(
+            f"Attack success rate: {results['attack_success_rate']:.2f}", fg="green")
+
+    def _create_dataloader(self):
+        return DataLoaderFactory.create_dataloader(self._config.dataloader)
+
+    def _get_iterator(self):
+        return tqdm(self._dataloader, leave=False, position=1, unit="batch", desc="Generating adversarial samples", colour="red")
+
+    def _setup_device(self) -> torch.device:
+        """
+        Setup the device.
+        """
+        device = torch.device(
+            self._config.device.processor) if self._config.device.processor else torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu")
+
+        return device
+
+    def _setup_model(self) -> torch.nn.Module:
+        """
+        Initializes the model and moves it to the device.
+        """
+        return self._config.model.to(self._device)

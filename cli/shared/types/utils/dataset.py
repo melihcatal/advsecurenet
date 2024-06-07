@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from advsecurenet.shared.types.configs.preprocess_config import \
+    PreprocessConfig
+
 
 @dataclass
 class DatasetCliConfigType:
@@ -12,14 +15,18 @@ class DatasetCliConfigType:
     train_dataset_path: Optional[str] = None
     test_dataset_path: Optional[str] = None
     download: Optional[bool] = True
+    preprocessing: Optional[PreprocessConfig] = None
 
 
 @dataclass
-class AttacksDatasetCliConfigType:
+class AttacksDatasetCliConfigType(DatasetCliConfigType):
     """
-    This dataclass is used to store the configuration of the dataset CLI used for attacks. Attacks do not require a separate test/train dataset.
+    This dataclass is used to store the configuration of the dataset CLI used for attacks. It extends the DatasetCliConfigType. In addition to the attributes of the DatasetCliConfigType, it has the following attributes:
+
+    Attributes:
+        dataset_part (Optional[str]): The part of the dataset to be used for the attack. it can be train, test or all. This is valid if the dataset paths are not provided.
+        random_sample_size (Optional[int]): The size of the random sample to be taken from the dataset.
+
     """
-    dataset_name: str
-    dataset_part: str
-    custom_data_dir: Optional[str]
-    random_sample_size: Optional[int]
+    dataset_part: Optional[str] = "test"
+    random_sample_size: Optional[int] = None

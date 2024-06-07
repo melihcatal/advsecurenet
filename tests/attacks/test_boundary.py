@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import torch
 
-from advsecurenet.attacks.boundary import DecisionBoundary
+from advsecurenet.attacks.decision_based.boundary import DecisionBoundary
 from advsecurenet.shared.types.configs import attack_configs
 
 # Assume there are existing mock or dummy objects

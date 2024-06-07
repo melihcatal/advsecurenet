@@ -1,9 +1,12 @@
-import torch
-import pytest
-from advsecurenet.attacks.lots import LOTS
 from collections import OrderedDict
+
+import pytest
+import torch
 import torch.nn as nn
-from advsecurenet.shared.types.configs.attack_configs import LotsAttackConfig, LotsAttackMode
+
+from advsecurenet.attacks.gradient_based.lots import LOTS
+from advsecurenet.shared.types.configs.attack_configs import (LotsAttackConfig,
+                                                              LotsAttackMode)
 
 
 class TestLOTS:

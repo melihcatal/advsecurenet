@@ -24,6 +24,36 @@ class AdversarialTargetGenerator:
     def __init__(self, maps_path: Optional[str] = None):
         self.maps_path = self._setup_maps_path(maps_path)
 
+    def generate_target_labels(self, data, targets: list = None, overwrite=False):
+        """
+        Generates target labels for the given data.
+
+        Args:
+            train_data (torch.utils.data.Dataset): The training data.
+            targets (list, optional): The list of target labels. Defaults to None.
+            overwrite (bool, optional): If True, overwrites the existing indices map. Defaults to False.
+
+        Returns:
+            list: The list of target labels.
+        """
+        try:
+            # Step 1: Generate class to image indices map
+            class_to_images = self._generate_class_to_image_indices_map(
+                data, targets, overwrite)
+
+            # Step 2: Shuffle and pair images across classes
+            paired_images = self._shuffle_and_pair_images_across_classes(
+                class_to_images)
+
+            # Step 3: Extract target labels
+            target_labels = [d['target_label'] for d in paired_images]
+
+            return target_labels
+        except Exception as e:
+            raise ValueError(
+                "Could not generate target labels. Please try again. Detailed error: " +
+                str(e))
+
     def generate_target_images(self, train_data, targets: list = None, overwrite=False, show_images=False, save_images=False, save_path=None, total_tries=3):
         """
         Generates target images for the given train_data.
@@ -78,7 +108,10 @@ class AdversarialTargetGenerator:
             raise ValueError(
                 "Could not generate target images. Please try again. Detailed error: " + str(e))
 
-    def extract_images_and_labels(self, paired: list, images: torch.Tensor, device: Optional[torch.device] = None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    def extract_images_and_labels(self,
+                                  paired: list,
+                                  dataset: DatasetWrapper,
+                                  device: Optional[torch.device] = None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         Extracts and stacks original and target images and labels from paired data.
 
@@ -99,11 +132,17 @@ class AdversarialTargetGenerator:
         original_labels = [x['original_label'] for x in paired]
         target_labels = [x['target_label'] for x in paired]
 
-        # Stack images and labels into tensors
-        original_images = torch.stack([images[idx]
-                                      for idx in original_img_indices])
-        target_images = torch.stack([images[idx]
-                                    for idx in target_img_indices])
+        # Convert generator to a list of tensors
+        original_images_list = [dataset[idx][0].clone().detach()
+                                for idx in original_img_indices]
+
+        # Stack images into a single tensor
+        original_images = torch.stack(original_images_list)
+
+        # Similarly for target images if needed
+        target_images_list = [dataset[idx][0].clone().detach()
+                              for idx in target_img_indices]
+        target_images = torch.stack(target_images_list)
 
         original_labels_tensor = torch.tensor(original_labels)
         target_labels_tensor = torch.tensor(target_labels)
@@ -115,7 +154,7 @@ class AdversarialTargetGenerator:
             original_labels_tensor = original_labels_tensor.to(device)
             target_labels_tensor = target_labels_tensor.to(device)
 
-        return original_images, original_labels_tensor, target_images, target_labels_tensor
+        return original_images, original_labels_tensor, target_images_list, target_labels
 
     def _save_images(self, paired_images, train_data, save_path):
         """Saves the generated target images."""

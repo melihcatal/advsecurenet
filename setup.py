@@ -29,7 +29,8 @@ setup(
         "ruamel.yaml",
         "matplotlib",
         "scikit-image",
-        "einops"
+        "einops",
+        "filetype"
     ],
     entry_points={
         'console_scripts': [

@@ -26,7 +26,6 @@ class StandardModel(BaseModel):
         self.pretrained = config.pretrained
         self.weights = config.weights
         self.num_classes = config.num_classes
-        # self.model: nn.Module = None
 
         # Initialize the BaseModel
         super().__init__()

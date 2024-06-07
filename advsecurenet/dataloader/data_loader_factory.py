@@ -2,14 +2,32 @@
 This module contains the DataLoaderFactory class that creates a DataLoader for the given dataset.
 """
 
-from dataclasses import asdict
+from dataclasses import asdict, is_dataclass
 from typing import Optional
 
 from torch.utils.data import DataLoader as TorchDataLoader
 from torch.utils.data import Dataset as TorchDataset
+from torch.utils.data.distributed import DistributedSampler
 
 from advsecurenet.shared.types.configs.dataloader_config import \
     DataLoaderConfig
+
+
+def dataclass_to_dict(instance):
+    """
+    Convert a dataclass instance to a dictionary, handling non-serializable fields appropriately.
+    """
+    result = {}
+    for field in instance.__dataclass_fields__:
+        value = getattr(instance, field)
+        # Handle special cases for non-serializable fields if necessary
+        if isinstance(value, (DistributedSampler, TorchDataset)):
+            result[field] = value
+        elif is_dataclass(value):
+            result[field] = asdict(value)
+        else:
+            result[field] = value
+    return result
 
 
 class DataLoaderFactory:
@@ -55,8 +73,12 @@ class DataLoaderFactory:
             raise ValueError(
                 "Invalid dataset type provided. Expected TorchDataset.")
 
+        if config.sampler is not None and config.shuffle:
+            config.shuffle = False
+
+        config_dict = dataclass_to_dict(config)
         # merge the config and kwargs
-        params = {**asdict(config), **kwargs}
+        params = {**config_dict, **kwargs}
         dataloader = TorchDataLoader(**params)
 
         return dataloader

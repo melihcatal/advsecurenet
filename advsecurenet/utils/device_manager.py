@@ -18,6 +18,7 @@ class DeviceManager:
         Returns the current device. In distributed mode, it returns the device of the current process.
         In single mode, it returns the initialized device.
         """
+
         if self.distributed_mode:
             return torch.device(f'cuda:{torch.cuda.current_device()}')
 

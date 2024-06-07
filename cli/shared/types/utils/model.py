@@ -30,6 +30,7 @@ class ModelCliConfigType:
     num_input_channels: int
     num_classes: int
     pretrained: bool
+    weights: Optional[str]
     is_external: bool
     path_configs: ModelPathConfig
     norm_config: ModelNormConfig

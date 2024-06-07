@@ -1,0 +1,9 @@
+# --- Dataset Configurations ---
+dataset_name: cifar10 # Dataset for attack. Options: [cifar10, mnist, custom]. Note: Using a different dataset from the one on which the model was trained may result in an error if the model is not generalized enough
+download: true # Download the dataset if not present in the data directory.
+num_classes: 10 # Number of classes in the dataset.
+dataset_part: test # The part of the dataset to be used. Possible values are train, test. All the other values are considered as all and all the available data will be used. Random samples can be used by setting the value to random sample size.
+train_dataset_path: null # Path to the train dataset. Required if dataset_type is custom.
+test_dataset_path: null # Path to the test dataset. Required if dataset_type is custom.
+random_sample_size: null
+preprocessing: !include ../../shared/preprocess_config.yml # Preprocessing configurations for the dataset. 

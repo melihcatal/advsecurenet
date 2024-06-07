@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import torch
 
@@ -16,22 +16,20 @@ class AdversarialAttack(ABC):
     def __init__(self, config: AttackConfig) -> None:
         self.device_manager = DeviceManager(
             device=config.device.processor,
-            distributed_mode=config.device.use_ddp
-        )
+            distributed_mode=config.device.use_ddp)
         self.name: str = self.__class__.__name__
         self.targeted: bool = config.targeted
 
-    @abstractmethod
+    @ abstractmethod
     def attack(self,
                model: BaseModel,
                x: torch.Tensor,
                y: torch.Tensor,
-               *args, **kwargs
-               ) -> Tuple[torch.Tensor, Optional[bool]]:
+               *args, **kwargs) -> Union[torch.Tensor, Tuple[torch.Tensor, bool]]:
         """
-        Performs the attack on the specified model and input. 
+        Performs the attack on the specified model and input.
 
-        Args:   
+        Args:
             model (BaseModel): The model to attack.
             x (torch.tensor): The original input tensor. Expected shape is (batch_size, channels, height, width).
             y (torch.tensor): The true labels for the input tensor. Expected shape is (batch_size,).

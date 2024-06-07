@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
 
-import torch
-
 from advsecurenet.shared.types.configs.attack_configs import AttackConfig
 
 

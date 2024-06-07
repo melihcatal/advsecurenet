@@ -11,6 +11,7 @@ from advsecurenet.trainer.ddp_trainer import DDPTrainer
 from advsecurenet.trainer.ddp_training_coordinator import \
     DDPTrainingCoordinator
 from advsecurenet.trainer.trainer import Trainer
+from advsecurenet.utils.ddp import set_visible_gpus
 from cli.shared.types.train import TrainingCliConfigType
 from cli.shared.utils.dataloader import get_dataloader
 from cli.shared.utils.dataset import get_datasets
@@ -57,8 +58,7 @@ class CLITrainer:
 
         world_size = len(self.config.device.gpu_ids)
 
-        os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(
-            [str(i) for i in self.config.device.gpu_ids])
+        set_visible_gpus(self.config.device.gpu_ids)
 
         ddp_trainer = DDPTrainingCoordinator(
             self._ddp_training_fn,
@@ -88,10 +88,7 @@ class CLITrainer:
         """
         Prepare the common training environment components like model and dataloader.
         """
-        if rank is not None:
-            model = self._initialize_model(rank)
-        else:
-            model = self._initialize_model()
+        model = self._initialize_model(rank)
 
         train_loader = self._prepare_dataloader()
         train_config = self._prepare_train_config(model, train_loader)
@@ -108,13 +105,6 @@ class CLITrainer:
         Returns:
             BaseModel: The initialized model.
         """
-        if self.config.training.verbose:
-            if (rank is not None and rank == 0) or rank is None:
-                click.echo(
-                    f"""Loading model... with model name:
-                    {self.config.model.model_name} and num_classes:
-                    {self.config.model.num_classes} and num_input_channels:
-                    {self.config.model.num_input_channels} """)
 
         return create_model(self.config.model)
 

@@ -98,7 +98,6 @@ class ModelFactory:
 
             if config.random_seed is not None:
                 set_seed(config.random_seed)
-
             if inferred_type == ModelType.STANDARD:
                 cfg = StandardModelConfig(
                     model_name=config.model_name,
@@ -120,6 +119,9 @@ class ModelFactory:
                 )
                 return CustomModel(cfg, **kwargs)
         except ValueError as e:
+            raise click.ClickException(
+                "Error creating model. More details: " + str(e))
+        except Exception as e:
             raise click.ClickException(
                 "Error creating model. More details: " + str(e))
 

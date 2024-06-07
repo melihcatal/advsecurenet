@@ -1,18 +1,20 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, cast
 
 from torch.utils.data import Dataset as TorchDataset
 
 from advsecurenet.datasets import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
-from cli.shared.types.utils.dataset import DatasetCliConfigType
+from cli.shared.types.utils.dataset import (AttacksDatasetCliConfigType,
+                                            DatasetCliConfigType)
 
 
-def get_datasets(config: DatasetCliConfigType) -> Tuple[Optional[TorchDataset], Optional[TorchDataset]]:
+def get_datasets(config: DatasetCliConfigType, **kwargs) -> Tuple[Optional[TorchDataset], Optional[TorchDataset]]:
     """
     Load the datasets conditionally based on provided paths.
 
     Args:
         config (DatasetCliConfigType): Configuration for datasets.
+        **kwargs: Arbitrary keyword arguments for the dataset.
 
     Returns:
         Tuple[Optional[TorchDataset], Optional[TorchDataset]]: Tuple containing the training dataset (if requested)
@@ -20,13 +22,33 @@ def get_datasets(config: DatasetCliConfigType) -> Tuple[Optional[TorchDataset], 
     """
     dataset_name = _validate_dataset_name(config.dataset_name)
     dataset_type = DatasetType(dataset_name)
-    dataset_obj = DatasetFactory.create_dataset(dataset_type)
+    dataset_obj = DatasetFactory.create_dataset(
+        dataset_type=dataset_type,
+        preprocess_config=config.preprocessing,
+    )
 
-    train_data = dataset_obj.load_dataset(
-        train=True, root=config.train_dataset_path, download=config.download)
+    def load_dataset_part(train: bool, path: Optional[str]) -> Optional[TorchDataset]:
+        try:
+            return dataset_obj.load_dataset(
+                train=train,
+                root=path,
+                download=config.download,
+                **kwargs
+            )
+        except FileNotFoundError:
+            return None
 
-    test_data = dataset_obj.load_dataset(
-        train=False, root=config.test_dataset_path, download=config.download)
+    if isinstance(config, AttacksDatasetCliConfigType):
+        config = cast(AttacksDatasetCliConfigType, config)
+        train_data = load_dataset_part(
+            train=True, path=config.train_dataset_path) if config.dataset_part in ["train", "all"] else None
+        test_data = load_dataset_part(
+            train=False, path=config.test_dataset_path) if config.dataset_part in ["test", "all"] else None
+    else:
+        train_data = load_dataset_part(
+            train=True, path=config.train_dataset_path)
+        test_data = load_dataset_part(
+            train=False, path=config.test_dataset_path)
 
     return train_data, test_data
 
