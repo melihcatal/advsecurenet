@@ -1,8 +1,11 @@
+import logging
 
 from advsecurenet.shared.types.configs import ConfigType
 from cli.logic.evaluation.test.tester import CLITester
 from cli.shared.types.evaluation.testing import TestingCliConfigType
 from cli.shared.utils.config import load_and_instantiate_config
+
+logger = logging.getLogger(__name__)
 
 
 def cli_test(config: str, **kwargs) -> None:
@@ -14,5 +17,12 @@ def cli_test(config: str, **kwargs) -> None:
     """
     config_data = load_and_instantiate_config(
         config, "test_config.yml", ConfigType.TEST, TestingCliConfigType, **kwargs)
-    tester = CLITester(config_data)
-    tester.test()
+
+    logging.info("Loaded test configuration: %s", config_data)
+    try:
+        tester = CLITester(config_data)
+        tester.test()
+        logging.info("Model testing completed successfully")
+    except Exception as e:
+        logging.error("Failed to test model: %s", e)
+        raise e

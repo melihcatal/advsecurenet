@@ -1,3 +1,4 @@
+import logging
 from typing import Union
 
 import click
@@ -19,6 +20,8 @@ from cli.shared.utils.dataset import get_datasets
 from cli.shared.utils.helpers import read_data_from_file, save_images
 from cli.shared.utils.model import create_model
 
+logger = logging.getLogger(__name__)
+
 
 class CLIAttacker:
     """
@@ -35,19 +38,26 @@ class CLIAttacker:
         The main attack function. This function parses the CLI arguments and executes the attack.
         """
         config = self._prepare_attack_config()
+        logger.info("Starting %s attack.", self._attack_type.value)
         if self._config.device.use_ddp:
             attacker = DDPAttacker(
                 config=config,
                 gpu_ids=self._config.device.gpu_ids)
+            logger.info("Using DDP for attack.")
         else:
             attacker = Attacker(config=config)
+            logger.info("Using single GPU or CPU for attack.")
 
         adv_imgs = attacker.execute()
 
         if self._config.attack_procedure.save_result_images and adv_imgs:
+            logger.info("Saving adversarial images.")
             self._save_adversarial_images(adv_imgs)
+            logger.info("Adversarial images saved successfully.")
 
         click.secho("Attack completed successfully.", fg="green")
+        logger.info("%s attack completed successfully.",
+                    self._attack_type.value)
 
     def _prepare_attack_config(self) -> AttackerConfig:
         """
@@ -143,32 +153,33 @@ class CLIAttacker:
                 all_data, self._config.dataset.random_sample_size)
 
         if target_parameters and target_parameters.targeted and target_parameters.auto_generate_target:
+            logger.info("Generating target labels and images.")
             all_data = self._generate_target(all_data)
+            logger.info(
+                "Target labels and images generated successfully. Total length of the dataset: %s", len(all_data))
         elif target_parameters and target_parameters.targeted and target_labels:
             all_data = AdversarialDataset(
                 base_dataset=all_data,
                 target_labels=target_labels)
-
-            # if target_parameters and target_parameters.targeted and target_labels:
-            #     # wrap the dataset with the adversarial dataset to include the target labels
-            #     all_data = AdversarialDataset(
-            #         base_dataset=all_data,
-            #         target_labels=target_labels)
+            logger.info(
+                "Target labels are provided. Total length of the dataset: %s", len(all_data))
 
         return all_data
 
     def _generate_target(self, data: DatasetWrapper) -> AdversarialDataset:
         # if the attack is lots and targeted and auto_generate_target is set to True, generate target labels and target images
         if self._attack_type == AttackType.LOTS:
-
+            logger.info("Generating target labels and images for LOTS attack.")
             paired = self._adv_target_generator.generate_target_images(
                 train_data=data,
                 total_tries=3)
+            logger.info("Successfully paired target labels and images.")
 
             _, _, target_images, target_labels = self._adv_target_generator.extract_images_and_labels(
                 paired=paired,
                 dataset=data,
             )
+            logger.info("Successfully extracted target labels and images.")
 
             adv_data = AdversarialDataset(
                 base_dataset=data,

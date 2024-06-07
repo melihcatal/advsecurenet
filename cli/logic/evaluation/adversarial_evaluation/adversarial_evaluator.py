@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from typing import List
 
@@ -22,6 +23,8 @@ from cli.shared.utils.data import load_and_prepare_data
 from cli.shared.utils.dataloader import get_dataloader
 from cli.shared.utils.model import create_model
 
+logger = logging.getLogger(__name__)
+
 
 class CLIAdversarialEvaluator():
     """
@@ -36,9 +39,36 @@ class CLIAdversarialEvaluator():
         """
         Run the evaluation.
         """
-        model, data_loader, attack, target_models = self._prepare_evaluation_env()
-        self._execute_evaluation(
-            model, data_loader, attack, target_models)
+        try:
+            logging.info("Starting adversarial evaluation with the following evaluators: %s",
+                         self.config.evaluation.evaluators)
+            model, data_loader, attack, target_models = self._prepare_evaluation_env()
+            self._execute_evaluation(
+                model, data_loader, attack, target_models)
+            logging.info("Adversarial evaluation completed successfully.")
+        except Exception as e:
+            click.secho("Evaluation failed.", fg="red")
+            logging.error("Failed to evaluate adversarial examples: %s", e)
+            raise e
+
+    def _prepare_evaluation_env(self) -> tuple[BaseModel, torch.utils.data.DataLoader, AdversarialAttack, List[BaseModel]]:
+        """
+        Prepares the environment for evaluation by loading the model, dataset, dataloader, attack, and target models.
+
+        Returns:
+            tuple[BaseModel, torch.utils.data.DataLoader, AdversarialAttack, List[BaseModel]]: The model, dataloader, attack, target models
+        """
+        model = create_model(self.config.model)
+        dataset = load_and_prepare_data(self.config.dataset)
+        data_loader = get_dataloader(
+            config=self.config.dataloader,
+            dataset=dataset,
+            dataset_type='default',
+            use_ddp=self.config.device.use_ddp)
+
+        attack = self._prepare_attack()
+        target_models = self._prepare_target_models()
+        return model, data_loader, attack, target_models
 
     def _prepare_attack(self) -> list[AdversarialAttack]:
         """
@@ -60,17 +90,8 @@ class CLIAdversarialEvaluator():
         attack_config.device = self.config.device
         attack_type, _ = attack_cli_mapping[attack_name]
 
-        # if the attack is LOTS, we need to use the custom lots wrapper
-
-        if attack_type == AdversarialAttackType.LOTS:
-            # lots = CLILOTSAttack(config=attack_config,
-            #                     dataset=dataset,
-            #                     data_loader=data_loader,
-            #                     model=model)
-            pass
-        else:
-            attack_class = attack_type.value
-            attack = attack_class(attack_config)
+        attack_class = attack_type.value
+        attack = attack_class(attack_config)
 
         return attack
 
@@ -101,25 +122,6 @@ class CLIAdversarialEvaluator():
 
         return models
 
-    def _prepare_evaluation_env(self) -> tuple[BaseModel, torch.utils.data.DataLoader, AdversarialAttack, List[BaseModel]]:
-        """
-        Prepares the environment for evaluation by loading the model, dataset, dataloader, attack, and target models.
-
-        Returns:
-            tuple[BaseModel, torch.utils.data.DataLoader, AdversarialAttack, List[BaseModel]]: The model, dataloader, attack, target models
-        """
-        model = create_model(self.config.model)
-        dataset = load_and_prepare_data(self.config.dataset)
-        data_loader = get_dataloader(
-            config=self.config.dataloader,
-            dataset=dataset,
-            dataset_type='default',
-            use_ddp=self.config.device.use_ddp)
-
-        attack = self._prepare_attack()
-        target_models = self._prepare_target_models()
-        return model, data_loader, attack, target_models
-
     def _execute_evaluation(self,
                             model: BaseModel,
                             dataloader: torch.utils.data.DataLoader,
@@ -141,13 +143,16 @@ class CLIAdversarialEvaluator():
             with AdversarialEvaluator(evaluators=self.config.evaluation.evaluators,
                                       target_models=target_models,
                                       ) as evaluator:
+
                 for images, labels in tqdm(dataloader, total=len(dataloader), desc="Evaluating adversarial examples"):
+
                     adv_images = attack.attack(model=model, x=images, y=labels)
                     evaluator.update(model=model, original_images=images, true_labels=labels,
                                      adversarial_images=adv_images, is_targeted=False)
 
             click.secho("Evaluation completed successfully.", fg="green")
             click.secho("Results:", fg="green", bold=True)
+
             results = evaluator.get_results()
             self._print_results(results)
 

@@ -1,7 +1,6 @@
 """
 CLI command functions related to models.
 """
-
 import click
 from requests.exceptions import HTTPError
 
@@ -57,7 +56,7 @@ def cli_model_layers(model_name: str, add_normalization: bool = False):
 
     model = ModelFactory.create_model(model_name=model_name)
     if add_normalization:
-        # add a dummy normalization layer
+        # add a dummy normalization layer to correctly display the model summary
         model.add_layer(NormalizationLayer(
             mean=[0.485, 0.456, 0.406],
             std=[0.229, 0.224, 0.225]), position=0, inplace=True)

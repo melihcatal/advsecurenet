@@ -50,7 +50,7 @@ class LOTS(AdversarialAttack):
     def attack(self,
                model: BaseModel,
                x: torch.Tensor,
-               target_classes: Optional[torch.Tensor] = None,
+               y: Optional[torch.Tensor] = None,
                x_target: torch.Tensor = None) -> torch.Tensor:
         """
         Generates adversarial examples using the LOTS attack. Based on the provided mode, either the iterative or single attack will be used.
@@ -59,7 +59,7 @@ class LOTS(AdversarialAttack):
             model (BaseModel): The model to attack.
             x (torch.Tensor): The original input tensor. Shape: (batch_size, channels, height, width).
             x_target (torch.Tensor): The x_target tensor. Shape: (batch_size, channels, height, width).
-            target_classes (torch.Tensor, optional): The target classes tensor. Shape: (batch_size,).
+            y (torch.Tensor, optional): The target classes tensor. Shape: (batch_size,).
 
         Returns:
             torch.Tensor: The adversarial example tensor.
@@ -76,7 +76,7 @@ class LOTS(AdversarialAttack):
         optimizer = torch.optim.Adam([x], lr=self._learning_rate)
 
         if self._mode == LotsAttackMode.ITERATIVE:
-            return self._lots_iterative(model, x, x_target, feature_extractor_model, optimizer, target_classes)
+            return self._lots_iterative(model, x, x_target, feature_extractor_model, optimizer, y)
         elif self._mode == LotsAttackMode.SINGLE:
             return self._lots_single(x, x_target, feature_extractor_model, optimizer)
         else:
@@ -88,7 +88,7 @@ class LOTS(AdversarialAttack):
                         x_target: torch.Tensor,
                         feature_extractor_model: torch.nn.Module,
                         optimizer: torch.optim.Optimizer,
-                        target_classes: Optional[torch.Tensor] = None
+                        y: Optional[torch.Tensor] = None
                         ) -> torch.Tensor:
         """
         Performs the LOTS iterative attack.
@@ -99,7 +99,7 @@ class LOTS(AdversarialAttack):
             x_target (torch.Tensor): The target image to be matched.
             feature_extractor_model (torch.nn.Module): The feature extractor model.
             optimizer (torch.optim.Optimizer): The optimizer used to update the input image.
-            target_classes (Optional[Union[torch.Tensor, int]], optional): The target classes for the attack. Defaults to None.
+            y (Optional[Union[torch.Tensor, int]], optional): The target classes for the attack. Defaults to None.
 
         Returns:
             torch.Tensor: The perturbed input image.
@@ -114,10 +114,10 @@ class LOTS(AdversarialAttack):
             optimizer.zero_grad()
             x_deep_features = feature_extractor_model(x)["deep_feature_layer"]
 
-            if target_classes is not None:
+            if y is not None:
                 with torch.no_grad():
                     successes |= self._evaluate_adversarial_success(
-                        model, x, x_deep_features, x_target_deep_feature, target_classes)
+                        model, x, x_deep_features, x_target_deep_feature, y)
                     if all(successes):
                         return x.clamp(0, 1).detach()
 
@@ -163,7 +163,7 @@ class LOTS(AdversarialAttack):
                                       x: torch.Tensor,
                                       x_deep_features: torch.Tensor,
                                       x_target_deep_features: torch.Tensor,
-                                      target_classes: Optional[torch.Tensor] = None
+                                      y: Optional[torch.Tensor] = None
                                       ) -> torch.Tensor:
         """
         Evaluates the success of adversarial attacks. 
@@ -175,7 +175,7 @@ class LOTS(AdversarialAttack):
             x (torch.Tensor): The input tensor.
             x_deep_features (torch.Tensor): The deep features of the input tensor.
             x_target_deep_features (torch.Tensor): The deep features of the target tensor.
-            target_classes (torch.Tensor): The target classes.
+            y (torch.Tensor): The target classes.
 
         Returns:
             torch.Tensor: A tensor indicating the success of adversarial attacks.
@@ -187,9 +187,9 @@ class LOTS(AdversarialAttack):
         success_distances = torch.zeros(
             x.size(0), dtype=torch.bool, device=x.device)
 
-        if target_classes is not None:
-            target_classes = self.device_manager.to_device(target_classes)
-            success_indices = pred_classes == target_classes
+        if y is not None:
+            y = self.device_manager.to_device(y)
+            success_indices = pred_classes == y
            # print(f"Success indices: {success_indices}")
 
         if self._epsilon is not None:

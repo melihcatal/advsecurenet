@@ -36,5 +36,11 @@ def cli_attack(attack_name: str, config: str, **kwargs) -> None:
         config_class=attack_config_class,
         **kwargs
     )
-    attacker = CLIAttacker(config_data, attack_type)
-    attacker.execute()
+    logging.info("Loaded attack configuration: %s", config_data)
+    try:
+        attacker = CLIAttacker(config_data, attack_type)
+        attacker.execute()
+        logging.info("Attack completed successfully")
+    except Exception as e:
+        logging.error("Failed to execute attack: %s", e)
+        raise e
