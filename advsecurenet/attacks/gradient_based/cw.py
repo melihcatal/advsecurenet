@@ -1,7 +1,7 @@
 import torch
 from torch import optim
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs import CWAttackConfig
 
@@ -87,7 +87,7 @@ class CWAttack(AdversarialAttack):
 
         self.c = torch.full(size=(batch_size,),
                             fill_value=float(self.c_init),
-                            device=self.device_manager.get_current_device(), 
+                            device=self.device_manager.get_current_device(),
                             dtype=torch.float32)
 
         best_adv_images = image.clone()

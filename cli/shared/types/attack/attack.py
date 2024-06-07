@@ -1,12 +1,16 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Generic, Optional, TypeVar
 
 from advsecurenet.shared.types.configs.attack_configs.attack_config import \
     AttackConfig
+from advsecurenet.shared.types.configs.device_config import DeviceConfig
 from cli.shared.types.utils.dataloader import DataLoaderCliConfigType
 from cli.shared.types.utils.dataset import AttacksDatasetCliConfigType
-from cli.shared.types.utils.device import DeviceCliConfigType
 from cli.shared.types.utils.model import ModelCliConfigType
+from cli.shared.types.utils.target import TargetCLIConfigType
+
+# Define a generic type variable for the attack configuration.
+T = TypeVar('T', bound=AttackConfig)
 
 
 @dataclass
@@ -21,6 +25,22 @@ class AttackProcedureCliConfigType:
 
 
 @dataclass
+class AttackCLIConfigType(Generic[T]):
+    """
+    This dataclass is used to store the configuration of the attack CLI.
+    """
+    attack_parameters: T
+
+
+@dataclass
+class TargetedAttackCLIConfigType(AttackCLIConfigType[T]):
+    """
+    This dataclass is used to store the configuration of the targeted attack CLI.
+    """
+    target_parameters: TargetCLIConfigType
+
+
+@dataclass
 class BaseAttackCLIConfigType:
     """
     This dataclass is used to store the configuration of the shared attack CLI configurations.
@@ -28,6 +48,6 @@ class BaseAttackCLIConfigType:
     model: ModelCliConfigType
     dataset: AttacksDatasetCliConfigType
     dataloader: DataLoaderCliConfigType
-    device: DeviceCliConfigType
+    device: DeviceConfig
     attack_procedure: AttackProcedureCliConfigType
-    attack_config: AttackConfig
+    attack_config: AttackCLIConfigType

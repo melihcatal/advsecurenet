@@ -1,12 +1,8 @@
 import torch
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.attack_configs import PgdAttackConfig
-
-"""
-This module contains the implementation of the Projected Gradient Descent attack.
-"""
 
 
 class PGD(AdversarialAttack):
@@ -29,7 +25,7 @@ class PGD(AdversarialAttack):
         self.num_iter: int = config.num_iter
         super().__init__(config)
 
-    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool = False, *args, **kwargs) -> torch.Tensor:
+    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs) -> torch.Tensor:
         """
         Performs the PGD attack on the specified model and input.
 
@@ -42,19 +38,17 @@ class PGD(AdversarialAttack):
         Returns:
             torch.tensor: The adversarial example tensor.
         """
-
         # Random initialization
         delta = torch.zeros_like(x).uniform_(-self.epsilon, self.epsilon)
         delta = torch.clamp(delta, min=-self.epsilon, max=self.epsilon)
 
-        # for _ in trange(self.num_iter, desc=f"{red}PGD Iterations{reset}", bar_format="{l_bar}%s{bar}%s{r_bar}" % (yellow, reset), leave=True):
         for _ in range(self.num_iter):
-            delta = self._pgd_step(model, x, y, targeted, delta)
+            delta = self._pgd_step(model, x, y, delta)
 
         adv_x = torch.clamp(x + delta, 0, 1)
         return adv_x.detach()
 
-    def _pgd_step(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, targeted: bool, delta: torch.Tensor) -> torch.Tensor:
+    def _pgd_step(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, delta: torch.Tensor) -> torch.Tensor:
         """
         Perform a single PGD step.
         """
@@ -63,7 +57,7 @@ class PGD(AdversarialAttack):
         delta_prime.requires_grad = True
 
         outputs = model(x + delta_prime)
-        if targeted:
+        if self.targeted:
             # minimize the loss for the target label
             loss = -torch.nn.functional.cross_entropy(outputs, y)
         else:

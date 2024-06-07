@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from advsecurenet.shared.types.configs.device_config import DeviceConfig
 from cli.shared.types.utils.dataloader import DataLoaderCliConfigType
 from cli.shared.types.utils.dataset import DatasetCliConfigType
-from cli.shared.types.utils.device import DeviceCliConfigType
 from cli.shared.types.utils.model import ModelCliConfigType
 
 
@@ -40,4 +40,4 @@ class TrainingCliConfigType:
     dataset: DatasetCliConfigType
     dataloader: DataLoaderCliConfigType
     training: Training
-    device: DeviceCliConfigType
+    device: DeviceConfig

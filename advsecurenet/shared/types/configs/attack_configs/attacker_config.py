@@ -3,7 +3,7 @@ from typing import Optional
 
 import torch
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.shared.types.configs.dataloader_config import \
     DataLoaderConfig
 from advsecurenet.shared.types.configs.device_config import DeviceConfig

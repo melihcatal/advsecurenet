@@ -1,0 +1,10 @@
+# Targeted attack configs
+targeted: False # Whether to perform a targeted attack. Defaults to False.
+auto_generate_target: True # Whether to auto-generate target labels. Defaults to True. If True, target_labels will be ignored.
+target_images_config:
+  target_images_dir: null # Path to the directory containing target images. If specified, target_images will be ignored.
+target_labels_config:
+  target_labels: [] # You can specify target labels here. This might not be useful if you have a large number of classes. Instead refer to target_labels_path to specify a file containing target labels.
+  target_labels_path: null # Path to the file containing target labels. It can be a .txt, .csv, or .json file. If specified, target_labels will be ignored.
+  target_labels_separator: "," # The separator to use for the target labels file. Defaults to ",". i.e. comma separated values [1,2,3,4,5]
+

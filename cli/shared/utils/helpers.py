@@ -1,10 +1,13 @@
 """
 This helpers module contans more general helper functions that are not specific to a command type.
 """
+import csv
+import json
 import os
-from typing import List, Union
+from typing import Any, List, Type, Union
 
 import click
+import filetype
 import torch
 from torchvision.transforms.functional import to_pil_image
 from tqdm.auto import tqdm
@@ -113,3 +116,74 @@ def get_device_from_cfg(config) -> torch.device:
         device = torch.device("cpu")
 
     return device
+
+
+def read_data_from_file(file_path: str, cast_type: Type = str, return_type: Type = list, separator: str = '/n') -> Union[List[Any], set, tuple, torch.Tensor]:
+    """
+    Reads data from a file and returns it in the specified format. The function supports text, CSV, and JSON files.
+
+    Args:
+        file_path (str): The path to the file.
+        cast_type (Type): The type to cast the items to. Default is str.
+        return_type (Type): The type of collection to return. Default is list. Other options are set and tuple.
+        separator (str): The delimiter to use for text and CSV files. Default is '/n' (newline).
+
+    Returns:
+        Union[List[Any], set, tuple, torch.Tensor]: The data read from the file in the specified format.
+    """
+    def read_text_file(file_path: str, cast_type: Type, separator: str) -> List[Any]:
+        items = []
+        with open(file_path, "r", encoding="utf-8") as file:
+            content = file.read()
+            if separator == '/n':
+                for line in content.splitlines():
+                    stripped_line = line.strip()
+                    if stripped_line:
+                        items.append(cast_type(stripped_line))
+            else:
+                for line in content.splitlines():
+                    for item in line.split(separator):
+                        stripped_item = item.strip()
+                        if stripped_item:
+                            items.append(cast_type(stripped_item))
+        return items
+
+    def read_csv_file(file_path: str, cast_type: Type, separator: str) -> List[Any]:
+        items = []
+        with open(file_path, "r", encoding="utf-8") as file:
+            reader = csv.reader(file, delimiter=separator)
+            for row in reader:
+                for item in row:
+                    stripped_item = item.strip()
+                    if stripped_item:
+                        items.append(cast_type(stripped_item))
+        return items
+
+    def read_json_file(file_path: str) -> List[Any]:
+        with open(file_path, "r", encoding="utf-8") as file:
+            return json.load(file)
+
+    # Determine the file extension
+    _, file_extension = os.path.splitext(file_path)
+    file_extension = file_extension.lower()
+
+    if file_extension == '.txt':
+        data = read_text_file(file_path, cast_type, separator)
+    elif file_extension == '.json':
+        data = read_json_file(file_path)
+    elif file_extension == '.csv':
+        data = read_csv_file(file_path, cast_type, separator)
+    else:
+        raise ValueError(f"Unsupported file extension: {file_extension}")
+
+    # Convert to the desired return type
+    if return_type == list:
+        return data
+    elif return_type == set:
+        return set(data)
+    elif return_type == tuple:
+        return tuple(data)
+    elif return_type == torch.Tensor:
+        return torch.tensor(data)
+    else:
+        raise ValueError(f"Unsupported return type: {return_type}")

@@ -4,7 +4,7 @@ from typing import List, cast
 
 import click
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from advsecurenet.defenses.ddp_adversarial_training import \
     DDPAdversarialTraining

@@ -45,7 +45,7 @@ def create_model(config: ModelCliConfigType) -> BaseModel:
 
         # load the model weights if provided
         model.load_state_dict(torch.load(
-            config.path_configs.model_weights_path))
+            config.path_configs.model_weights_path, map_location=torch.device('cpu')))
 
     return model
 

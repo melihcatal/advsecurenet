@@ -34,6 +34,7 @@ class DDPAttacker(Attacker):
         set_visible_gpus(self._gpu_ids)
         os.environ['MASTER_ADDR'] = 'localhost'
         os.environ['MASTER_PORT'] = str(find_free_port())
+        torch.multiprocessing.set_sharing_strategy('file_system')
         super().__init__(config)
 
     def execute(self) -> list:
@@ -52,7 +53,6 @@ class DDPAttacker(Attacker):
             gathered_adv_images = self._gather_results()
             adversarial_images = [
                 img for sublist in gathered_adv_images for img in sublist]
-            print(f"Adversarial images: {len(adversarial_images)}")
             return adversarial_images
         else:
             return []
@@ -127,7 +127,8 @@ class DDPAttacker(Attacker):
         Cleans up the distributed training environment.
         """
         dist.destroy_process_group()
-        torch.cuda.empty_cache()
+        with torch.cuda.device(self._device):
+            torch.cuda.empty_cache()
 
     def _get_iterator(self) -> iter:
         """
@@ -155,4 +156,4 @@ class DDPAttacker(Attacker):
         dist.all_reduce(local_results, op=dist.ReduceOp.AVG)
         if self._rank == 0:
             click.secho(
-                f"Attack Success Rate: {local_results.item() * 100:.2f}%", fg='green')
+                f"Attack Success Rate: {local_results.item():.2f}", fg='green')

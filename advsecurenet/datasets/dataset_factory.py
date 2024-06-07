@@ -13,7 +13,8 @@ DATASET_MAP = {
     DatasetType.CIFAR10: CIFAR10Dataset,
     DatasetType.IMAGENET: ImageNetDataset,
     DatasetType.MNIST: MNISTDataset,
-    DatasetType.CUSTOM: CustomDataset
+    DatasetType.CUSTOM: CustomDataset,
+
 }
 
 

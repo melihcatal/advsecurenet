@@ -6,7 +6,7 @@ import click
 import torch
 from tqdm.auto import tqdm
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.evaluation.adversarial_evaluator import AdversarialEvaluator
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.attacks import \

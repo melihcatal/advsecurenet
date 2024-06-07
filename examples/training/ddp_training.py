@@ -10,7 +10,7 @@ import torch
 from torch.utils.data.distributed import DistributedSampler
 
 import advsecurenet.shared.types.configs.attack_configs as AttackConfigs
-from advsecurenet.attacks.fgsm import FGSM
+from advsecurenet.attacks.gradient_based.fgsm import FGSM
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.datasets import DatasetFactory
 from advsecurenet.defenses.ddp_adversarial_training import \

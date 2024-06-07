@@ -63,7 +63,6 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         correct_initial_predictions_mask = self._get_correct_predictions_mask(
             clean_prediction_labels, true_labels)
         total_correct_initial = correct_initial_predictions_mask.sum().item()
-
         # If there are no correct initial predictions, no need to evaluate
         if total_correct_initial == 0:
             return

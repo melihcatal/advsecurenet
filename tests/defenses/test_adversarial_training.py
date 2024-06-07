@@ -6,7 +6,7 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 
-from advsecurenet.attacks.adversarial_attack import AdversarialAttack
+from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.datasets.base_dataset import DatasetWrapper
 from advsecurenet.defenses import AdversarialTraining
 from advsecurenet.models.base_model import BaseModel

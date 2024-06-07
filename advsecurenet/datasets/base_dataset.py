@@ -7,8 +7,8 @@ from torch.utils.data import Dataset as TorchDataset
 from torchvision import datasets
 from torchvision.transforms import v2 as transforms
 
-from advsecurenet.shared.types.configs.preprocess_config import (
-    PreprocessConfig, PreprocessStep)
+from advsecurenet.shared.types.configs.preprocess_config import \
+    PreprocessConfig
 from advsecurenet.shared.types.dataset import DataType
 
 
@@ -166,7 +166,7 @@ class BaseDataset(TorchDataset, ABC):
         for step in preprocess_steps:
             transform = self._get_transform(step['name'])
             params = {k: self._convert_param(
-                v) for k, v in step.get('params', {}).items()}
+                v) for k, v in step.get('params', {}).items() if v is not None} if step.get('params') else {}
             transform_steps.append(transform(**params))
         return transform_steps
 

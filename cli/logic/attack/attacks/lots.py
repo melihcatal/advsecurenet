@@ -4,10 +4,9 @@ import click
 import torch
 from tqdm.auto import tqdm
 
-from advsecurenet.attacks.lots import LOTS
+from advsecurenet.attacks.gradient_based.lots import LOTS
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
-from cli.shared.types.attack.attacks.lots import LOTSAttackCLIConfig
 
 
 class CLILOTSAttack:
@@ -35,7 +34,7 @@ class CLILOTSAttack:
     """
 
     def __init__(self,
-                 config: LOTSAttackCLIConfig,
+                 config,
                  model: torch.nn.Module,
                  dataset: torch.utils.data.Dataset,
                  data_loader: torch.utils.data.DataLoader,
@@ -121,7 +120,8 @@ class CLILOTSAttack:
 
         elif self._config.auto_generate_target_images:
             paired = self._adversarial_target_generator.generate_target_images(
-                zip(data, labels), total_tries=self._config.maximum_generation_attempts)
+                zip(data, labels),
+                total_tries=self._config.maximum_generation_attempts)
             _, _, target_images, target_labels = self._adversarial_target_generator.extract_images_and_labels(
                 paired=paired,
                 images=data,

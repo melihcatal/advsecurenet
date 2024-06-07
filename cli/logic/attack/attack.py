@@ -1,8 +1,12 @@
+import logging
+
 from advsecurenet.shared.types.configs import ConfigType
 from cli.logic.attack.attacker import CLIAttacker
 from cli.shared.types.attack import BaseAttackCLIConfigType
 from cli.shared.utils.attack_mappings import attack_cli_mapping
 from cli.shared.utils.config import load_and_instantiate_config
+
+logger = logging.getLogger(__name__)
 
 
 def cli_attack(attack_name: str, config: str, **kwargs) -> None:
@@ -20,6 +24,7 @@ def cli_attack(attack_name: str, config: str, **kwargs) -> None:
         ValueError: If the attack type is unknown.
     """
     if attack_name not in attack_cli_mapping:
+        logging.error("Unknown attack type %s", attack_name)
         raise ValueError(f"Unknown attack type: {attack_name}")
 
     attack_type, attack_config_class = attack_cli_mapping[attack_name]
