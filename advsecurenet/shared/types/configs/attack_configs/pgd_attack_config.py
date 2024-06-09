@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from advsecurenet.shared.types.configs.attack_configs import AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import \
+    AttackConfig
 
 
 @dataclass(kw_only=True)

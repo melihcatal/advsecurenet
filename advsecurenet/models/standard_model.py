@@ -1,7 +1,7 @@
 from enum import EnumMeta
 
-import torchvision.models as models
 from torch import nn
+from torchvision import models
 from torchvision.models._api import get_model_weights
 
 from advsecurenet.models.base_model import BaseModel
@@ -22,10 +22,11 @@ class StandardModel(BaseModel):
                  config: StandardModelConfig,
                  **kwargs):
 
-        self.model_name = config.model_name
-        self.pretrained = config.pretrained
-        self.weights = config.weights
-        self.num_classes = config.num_classes
+        self._model_name = config.model_name
+        self._pretrained = config.pretrained
+        self._weights = config.weights
+        self._num_classes = config.num_classes
+        self._kwargs = kwargs
 
         # Initialize the BaseModel
         super().__init__()
@@ -38,17 +39,17 @@ class StandardModel(BaseModel):
             ValueError: If the model_name is not supported by torchvision.
 
         """
-        if not hasattr(models, self.model_name):
-            raise ValueError(f"Unsupported model type: {self.model_name}")
+        if not hasattr(models, self._model_name):
+            raise ValueError(f"Unsupported model type: {self._model_name}")
 
-        model_fn = getattr(models, self.model_name)
-        if self.pretrained:
-            self.model = model_fn(weights=self.weights)
-            if self.num_classes != 1000:  # ImageNet has 1000 classes, pretrained models are trained on ImageNet
+        model_fn = getattr(models, self._model_name)
+        if self._pretrained:
+            self.model = model_fn(weights=self._weights)
+            if self._num_classes != 1000:  # ImageNet has 1000 classes, pretrained models are trained on ImageNet
                 self.modify_model()
         else:
             # if not pretrained, load the model without weights and with the specified number of classes
-            self.model = model_fn(num_classes=self.num_classes, weights=None)
+            self.model = model_fn(num_classes=self._num_classes, weights=None)
 
     def modify_model(self):
         """
@@ -59,7 +60,7 @@ class StandardModel(BaseModel):
         for name, module in reversed(named_children_list):
             if isinstance(module, nn.Linear):
                 setattr(self.model, name, nn.Linear(
-                    module.in_features, self.num_classes))
+                    module.in_features, self._num_classes))
                 break
 
     @staticmethod

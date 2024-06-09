@@ -27,7 +27,7 @@ class ImageFolderBaseDataset():
                         dataset_class: datasets,
                         transform: transforms.Compose,
                         root: Optional[str] = None,
-                        **kwargs):
+                        ):
         """ 
         Creates the dataset.
         """
@@ -156,8 +156,8 @@ class BaseDataset(TorchDataset, ABC):
         if isinstance(value, str) and "." in value and "torch" in value:
             try:
                 return torch.__dict__[value.split('.')[-1]]
-            except KeyError:
-                raise ValueError(f"Invalid torch parameter: {value}")
+            except KeyError as exc:
+                raise ValueError(f'Invalid torch parameter: {value}') from exc
         return value
 
     def _construct_transforms(self, preprocess_steps):

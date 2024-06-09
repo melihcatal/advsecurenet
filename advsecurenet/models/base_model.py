@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional, Tuple
 
 import torch
-import torch.nn as nn
+from torch import nn
 from torchvision.models.feature_extraction import get_graph_node_names
 
 

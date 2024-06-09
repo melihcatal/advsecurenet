@@ -180,7 +180,8 @@ class LOTS(AdversarialAttack):
         Returns:
             torch.Tensor: A tensor indicating the success of adversarial attacks.
         """
-
+        success_indices = torch.zeros(
+            x.size(0), dtype=torch.bool, device=x.device)
         logits = model(x)
         pred_classes = torch.argmax(logits, dim=-1)
         pred_classes = self.device_manager.to_device(pred_classes)
@@ -190,7 +191,6 @@ class LOTS(AdversarialAttack):
         if y is not None:
             y = self.device_manager.to_device(y)
             success_indices = pred_classes == y
-           # print(f"Success indices: {success_indices}")
 
         if self._epsilon is not None:
             distances = torch.norm(

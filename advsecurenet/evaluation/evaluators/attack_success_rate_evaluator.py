@@ -57,6 +57,7 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         Note:
             This function only considers the samples where the model's initial prediction is correct. This is to ensure that the metrics are not skewed by incorrect initial predictions.
         """
+        correct_target_labels = None
         model.eval()
 
         clean_prediction_labels = self._predict(model, original_images)

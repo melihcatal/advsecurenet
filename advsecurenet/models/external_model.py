@@ -16,10 +16,11 @@ class ExternalModel(BaseModel):
                  config: ExternalModelConfig,
                  **kwargs):
 
-        self.model_name = config.model_name
-        self.model_arch_path = config.model_arch_path
-        self.pretrained = config.pretrained
-        self.model_weights_path = config.model_weights_path
+        self._model_name = config.model_name
+        self._model_arch_path = config.model_arch_path
+        self._pretrained = config.pretrained
+        self._model_weights_path = config.model_weights_path
+        self._kwargs = kwargs
 
         self.model = None
         super().__init__()
@@ -28,28 +29,28 @@ class ExternalModel(BaseModel):
         """
         Loads the external model from the specified path.
         """
-        if not os.path.exists(self.model_arch_path):
+        if not os.path.exists(self._model_arch_path):
             raise FileNotFoundError(
-                f"Model architecture file not found at {self.model_arch_path}")
+                f"Model architecture file not found at {self._model_arch_path}")
 
         # Dynamically import the external model based on its path
         spec = importlib.util.spec_from_file_location(
-            self.model_name, self.model_arch_path)
+            self._model_name, self._model_arch_path)
         custom_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(custom_module)
 
         # Assume the model class inside the external model file has the same name as the file
-        if not hasattr(custom_module, self.model_name):
+        if not hasattr(custom_module, self._model_name):
             raise ValueError(
-                f"Model class {self.model_name} not found in module {self.model_arch_path}")
+                f"Model class {self._model_name} not found in module {self._model_arch_path}")
 
-        model_class = getattr(custom_module, self.model_name)
+        model_class = getattr(custom_module, self._model_name)
 
         self.model = model_class()
-        if self.pretrained:
+        if self._pretrained:
             try:
                 self.model.load_state_dict(torch.load(
-                    self.model_weights_path))
+                    self._model_weights_path))
             except Exception as e:
                 raise ValueError(
                     f"Error loading model weights! Details: {e}") from e

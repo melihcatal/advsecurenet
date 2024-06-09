@@ -44,9 +44,9 @@ class DatasetFactory:
             # try to convert the dataset_type to DatasetType
             try:
                 dataset_type = DatasetType(dataset_type.upper())
-            except ValueError:
+            except ValueError as exc:
                 raise TypeError(
-                    "dataset_type must be of type DatasetType or a valid string value from DatasetType.")
+                    'dataset_type must be of type DatasetType or a valid string value from DatasetType.') from exc
 
         dataset_cls = DATASET_MAP[dataset_type]
 

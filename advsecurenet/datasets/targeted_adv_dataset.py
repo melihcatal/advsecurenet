@@ -1,12 +1,11 @@
 from typing import Any, List, Optional, Tuple, Union
 
 import torch
-from torch.utils.data import Dataset
 
 from advsecurenet.datasets.base_dataset import BaseDataset
 
 
-class AdversarialDataset(BaseDataset):
+class AdversarialDataset():
     """
     A dataset class that wraps a base dataset and allows for targeted adversarial attacks.
 
@@ -17,7 +16,7 @@ class AdversarialDataset(BaseDataset):
     """
 
     def __init__(self,
-                 base_dataset: Dataset,
+                 base_dataset: BaseDataset,
                  target_labels: Optional[Union[List[int],
                                                torch.Tensor]] = None,
                  target_images: Optional[Union[List[torch.Tensor], torch.Tensor]] = None):

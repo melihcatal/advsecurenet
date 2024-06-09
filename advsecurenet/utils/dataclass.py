@@ -1,9 +1,5 @@
-from dataclasses import dataclass, fields, is_dataclass
-from typing import (Any, Dict, Generic, List, Optional, Type, TypeVar, Union,
-                    get_args, get_origin)
-
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
+from dataclasses import fields, is_dataclass
+from typing import Optional, Type, TypeVar, Union, get_args, get_origin
 
 # This is needed to support recursive dataclass instantiation
 T = TypeVar('T')
@@ -114,7 +110,7 @@ def recursive_dataclass_instantiation(cls: Type[T], data: dict) -> T:
                     origin, value)
             else:
                 new_data[key] = value
-        except Exception as e:
+        except Exception:
             new_data[key] = value
 
     return cls(**new_data)

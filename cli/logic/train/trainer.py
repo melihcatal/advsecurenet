@@ -1,6 +1,4 @@
-import os
 from dataclasses import asdict
-from typing import Optional
 
 import click
 import torch
@@ -84,23 +82,23 @@ class CLITrainer:
         trainer = Trainer(train_config)
         trainer.train()
 
-    def _prepare_training_environment(self, rank: Optional[int] = None) -> TrainConfig:
+    def _prepare_training_environment(self) -> TrainConfig:
         """
         Prepare the common training environment components like model and dataloader.
+
+        Returns:
+            TrainConfig: The training configuration.
         """
-        model = self._initialize_model(rank)
+        model = self._initialize_model()
 
         train_loader = self._prepare_dataloader()
         train_config = self._prepare_train_config(model, train_loader)
 
         return train_config
 
-    def _initialize_model(self, rank: Optional[int] = None) -> BaseModel:
+    def _initialize_model(self) -> BaseModel:
         """
         Initialize the model.
-
-        Args:
-            rank (Optional[int]): The rank of the process in DDP training.
 
         Returns:
             BaseModel: The initialized model.

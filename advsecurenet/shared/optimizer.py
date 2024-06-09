@@ -1,7 +1,12 @@
-from torch import optim
 from enum import Enum
 
+from torch import optim
+
+
 class Optimizer(Enum):
+    """
+    Enum class representing different optimization algorithms.
+    """
     SGD = optim.SGD
     ADAM = optim.Adam
     ADAMW = optim.AdamW

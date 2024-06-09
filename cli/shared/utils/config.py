@@ -154,7 +154,7 @@ def get_available_configs() -> list:
         ]
     """
     configs = []
-    for dirpath, dirnames, files in os.walk(config_path):
+    for dirpath, _, files in os.walk(config_path):
         init_file_path = os.path.join(dirpath, "__init__.py")
         title = os.path.basename(dirpath)  # Default to folder name as title
         description = "No description provided"  # Default description

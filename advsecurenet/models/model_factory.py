@@ -2,8 +2,7 @@ from enum import EnumMeta
 from typing import Optional
 
 import click
-import torch
-import torch.nn as nn
+from torch import nn
 
 from advsecurenet.models import *
 from advsecurenet.models.base_model import BaseModel

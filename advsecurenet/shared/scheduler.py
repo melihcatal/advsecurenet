@@ -1,6 +1,6 @@
 from enum import Enum
 
-import torch.optim.lr_scheduler as lr_scheduler
+from torch.optim import lr_scheduler
 
 
 class Scheduler(Enum):

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from advsecurenet.shared.types.configs.attack_configs import AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import \
+    AttackConfig
 
 
 class LotsAttackMode(Enum):

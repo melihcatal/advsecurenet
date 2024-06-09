@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple, Union
+from typing import Tuple, Union
 
 import torch
 
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.configs.attack_configs import AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import \
+    AttackConfig
 from advsecurenet.utils.device_manager import DeviceManager
 
 
@@ -39,4 +40,3 @@ class AdversarialAttack(ABC):
             Optional[bool]: True if the attack was successful, False otherwise. This is specially used in LOTS attack.
 
         """
-        pass

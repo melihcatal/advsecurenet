@@ -6,8 +6,6 @@ import json
 import os
 from typing import Any, List, Type, Union
 
-import click
-import filetype
 import torch
 from torchvision.transforms.functional import to_pil_image
 from tqdm.auto import tqdm

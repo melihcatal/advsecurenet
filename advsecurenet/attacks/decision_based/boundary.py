@@ -3,7 +3,7 @@ from collections import deque
 
 import click
 import torch
-import torch.nn as nn
+from torch import nn
 from tqdm.auto import trange
 
 import advsecurenet.shared.types.configs.attack_configs as AttackConfigs

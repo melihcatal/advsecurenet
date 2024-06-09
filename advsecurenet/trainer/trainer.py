@@ -49,7 +49,6 @@ class Trainer:
         """
         Setup the device.
         """
-        print(f"setup device in trainer")
         device = self.config.processor or torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
         return device
@@ -82,7 +81,7 @@ class Trainer:
             self.config.scheduler, self.optimizer)
         return scheduler
 
-    def _get_scheduler(self, scheduler: Union[str, torch.optim.lr_scheduler._LRScheduler], optimizer: optim.Optimizer, **kwargs) -> torch.optim.lr_scheduler._LRScheduler:
+    def _get_scheduler(self, scheduler: Union[str, torch.optim.lr_scheduler._LRScheduler], optimizer: optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
         """
         Returns the scheduler based on the given scheduler string or torch.optim.lr_scheduler._LRScheduler.
 
@@ -141,7 +140,7 @@ class Trainer:
                     "Criterion must be a string or an instance of nn.Module.")
         return cast(nn.Module, criterion)
 
-    def _get_optimizer(self, optimizer: Union[str, optim.Optimizer], model: nn.Module, learning_rate: float = 0.001, **kwargs) -> optim.Optimizer:
+    def _get_optimizer(self, optimizer: Union[str, optim.Optimizer], model: nn.Module, learning_rate: float = 0.001) -> optim.Optimizer:
         """
         Returns the optimizer based on the given optimizer string or optim.Optimizer.
 

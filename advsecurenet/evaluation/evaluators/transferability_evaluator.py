@@ -3,6 +3,7 @@ from typing import List, Optional
 import torch
 
 from advsecurenet.evaluation.base_evaluator import BaseEvaluator
+from advsecurenet.models.base_model import BaseModel
 
 
 class TransferabilityEvaluator(BaseEvaluator):
@@ -47,25 +48,28 @@ class TransferabilityEvaluator(BaseEvaluator):
     def __exit__(self, exc_type, exc_value, traceback):
         pass
 
-    def update(self, source_model, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor, is_targeted: bool = False, target_labels: Optional[torch.Tensor] = None) -> None:
+    def update(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor, is_targeted: bool = False, target_labels: Optional[torch.Tensor] = None) -> None:
         """
-        Updates the transferability evaluation with new data.
+        Update the transferability evaluator with new data.
 
         Args:
-            source_model: The model used to generate adversarial images.
-            original_images: The original images before adversarial perturbation.
-            true_labels: The true labels of the original images.
-            adversarial_images: The adversarial images generated.
-            is_targeted: Whether the attack is targeted.
-            target_labels: The target labels for a targeted attack.
+            model (BaseModel): The model to evaluate transferability on.
+            original_images (torch.Tensor): The original images.
+            true_labels (torch.Tensor): The true labels of the original images.
+            adversarial_images (torch.Tensor): The adversarial images.
+            is_targeted (bool, optional): Whether the attack is targeted or not. Defaults to False.
+            target_labels (torch.Tensor, optional): The target labels for targeted attacks. Defaults to None.
+
+        Returns:
+            None
         """
-        device = next(source_model.parameters()).device
+        device = next(model.parameters()).device
         original_images, adversarial_images, true_labels, target_labels = self._prepare_tensors(
             device, original_images, adversarial_images, true_labels, is_targeted, target_labels)
 
-        source_model.eval()
+        model.eval()
         successful_on_source_mask, filtered_adversarial_images, filtered_true_labels, filtered_target_labels = self._get_successful_on_source_mask(
-            source_model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
+            model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
 
         if successful_on_source_mask.numel() == 0:
             return  # No successful adversarial examples to evaluate
@@ -74,7 +78,7 @@ class TransferabilityEvaluator(BaseEvaluator):
                                        successful_on_source_mask, is_targeted, filtered_target_labels)
 
     def _get_successful_on_source_mask(self,
-                                       source_model: torch.nn.Module,
+                                       model: torch.nn.Module,
                                        original_images: torch.Tensor,
                                        true_labels: torch.Tensor,
                                        adversarial_images: torch.Tensor,
@@ -85,7 +89,7 @@ class TransferabilityEvaluator(BaseEvaluator):
         Identifies the successful adversarial examples on the source model. This method filters the data based on the correct initial predictions. This is important to avoid evaluating the transferability of unsuccessful adversarial examples.
 
         Args:
-            source_model (torch.nn.Module): The source model used to generate adversarial examples.
+            model (torch.nn.Module): The source model used to generate adversarial examples.
             original_images (torch.Tensor): The original images.
             true_labels (torch.Tensor): The true labels of the original images.
             adversarial_images (torch.Tensor): The adversarial images.
@@ -96,7 +100,7 @@ class TransferabilityEvaluator(BaseEvaluator):
             tuple[torch.Tensor, torch.Tensor, torch.Tensor, Optional[torch.Tensor]]: The mask identifying successful adversarial examples on the source model, the filtered adversarial images, the filtered true labels, and the filtered target labels if the attack is targeted.
 
         """
-        device = next(source_model.parameters()).device
+        device = next(model.parameters()).device
 
         original_images = original_images.to(device)
         true_labels = true_labels.to(device)
@@ -107,11 +111,11 @@ class TransferabilityEvaluator(BaseEvaluator):
                     "Target labels must be provided for targeted attacks.")
             target_labels = target_labels.to(device)
 
-        initial_predictions = source_model(original_images)
+        initial_predictions = model(original_images)
         initial_labels = torch.argmax(initial_predictions, dim=1)
 
         # Mask to identify correct initial predictions
-        correct_initial_predictions_mask = (initial_labels == true_labels)
+        correct_initial_predictions_mask = initial_labels == true_labels
         total_correct_initial = correct_initial_predictions_mask.sum().item()
 
         if total_correct_initial == 0:
@@ -122,7 +126,7 @@ class TransferabilityEvaluator(BaseEvaluator):
         filtered_true_labels = true_labels[correct_initial_predictions_mask]
         filtered_target_labels = target_labels[correct_initial_predictions_mask] if is_targeted else None
 
-        source_predictions = source_model(filtered_adversarial_images)
+        source_predictions = model(filtered_adversarial_images)
         source_labels = torch.argmax(source_predictions, dim=1)
 
         successful_on_source_mask = (source_labels == filtered_target_labels) if is_targeted else (

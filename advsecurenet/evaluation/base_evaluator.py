@@ -14,7 +14,6 @@ class BaseEvaluator(ABC):
     Base class for all evaluators.
     """
 
-    @abstractmethod
     def __init__(self, *args, **kwargs):
         pass
 
@@ -30,7 +29,6 @@ class BaseEvaluator(ABC):
         """
         Resets the evaluator for a new streaming session.
         """
-        pass
 
     @abstractmethod
     def update(self,
@@ -92,7 +90,7 @@ class BaseEvaluator(ABC):
 
         file_exists = os.path.exists(file_path)
 
-        with open(file_path, mode='a', newline='') as file:
+        with open(file_path, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
 
             # Write the experiment info and headers if file doesn't exist

@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import pkg_resources
 import requests
 import torch
-import torchvision.transforms as transforms
 from PIL import Image
+from torchvision import transforms
 from torchvision.datasets import VisionDataset as TorchDataset
 
 from advsecurenet.datasets.base_dataset import DatasetWrapper
@@ -21,8 +21,9 @@ class AdversarialTargetGenerator:
     The example can be found in `examples/attacks/targeted_attacks.ipynb`.
     """
 
-    def __init__(self, maps_path: Optional[str] = None):
-        self.maps_path = self._setup_maps_path(maps_path)
+    def __init__(self, maps_path: Optional[str] = pkg_resources.resource_filename(
+            "advsecurenet", "data")):
+        self.maps_path = maps_path
 
     def generate_target_labels(self, data, targets: list = None, overwrite=False):
         """
@@ -51,8 +52,7 @@ class AdversarialTargetGenerator:
             return target_labels
         except Exception as e:
             raise ValueError(
-                "Could not generate target labels. Please try again. Detailed error: " +
-                str(e))
+                'Could not generate target labels. Please try again. Detailed error: ' + str(e)) from e
 
     def generate_target_images(self, train_data, targets: list = None, overwrite=False, show_images=False, save_images=False, save_path=None, total_tries=3):
         """
@@ -93,7 +93,7 @@ class AdversarialTargetGenerator:
                     self._validate_paired_images(paired_images)
                 else:
                     raise ValueError(
-                        "Could not generate target images. Maybe you forgot to shuffle the data? Detailed error: " + str(e))
+                        'Could not generate target images. Maybe you forgot to shuffle the data? Detailed error: ' + str(e)) from e
 
             # Step 4: Show images if specified
             if show_images:
@@ -106,7 +106,7 @@ class AdversarialTargetGenerator:
             return paired_images
         except Exception as e:
             raise ValueError(
-                "Could not generate target images. Please try again. Detailed error: " + str(e))
+                'Could not generate target images. Please try again. Detailed error: ' + str(e)) from e
 
     def extract_images_and_labels(self,
                                   paired: list,
@@ -168,17 +168,9 @@ class AdversarialTargetGenerator:
             target_image.save(
                 f"{save_path}/target_image_{i}.png")
 
-    def _setup_maps_path(self, maps_path: Optional[str] = None):
-        """Sets up the path to the maps."""
-        if maps_path is None:
-            self.maps_path = pkg_resources.resource_filename(
-                "advsecurenet", "data")
-        else:
-            self.maps_path = maps_path
-
     def _load_mappings(self, url):
         """Downloads and loads a pickle file from the provided URL."""
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         if response.status_code == 200:
             file_stream = io.BytesIO(response.content)
             return pickle.load(file_stream)
@@ -187,10 +179,8 @@ class AdversarialTargetGenerator:
 
     def _get_existing_indices_map(self, data_type: str) -> Union[dict, None]:
         """Checks if the indices map already exists."""
-        # TODO: Better way to access the maps
         available_maps = {
             "imagenet": "https://advsecurenet.s3.eu-central-1.amazonaws.com/maps/imagenet_class_idx_to_img_indices.pkl",
-            # TODO: Add more maps here
         }
         try:
             if data_type in available_maps:
@@ -223,7 +213,7 @@ class AdversarialTargetGenerator:
             return [label for _, label in data]
         except Exception as e:
             raise ValueError(
-                f"Could not extract targets from the train_data: {e}")
+                f'Could not extract targets from the data: {e}') from e
 
     def _generate_class_to_image_indices_map(self, train_data, targets: list = None, overwrite=False) -> dict:
         """Generates a map of class to images."""
@@ -234,7 +224,6 @@ class AdversarialTargetGenerator:
                     existing_map = self._get_existing_indices_map(
                         train_data.name)
                     if existing_map:
-                        print("Using existing class to image indices map.")
                         return existing_map
                 except:
                     pass
@@ -253,7 +242,7 @@ class AdversarialTargetGenerator:
             return class_idx_to_img_indices
         except Exception as e:
             raise ValueError(
-                "Could not generate class to image indices map. Detailed error: " + str(e))
+                'Could not generate class to image indices map. Detailed error: ' + str(e)) from e
 
     def _shuffle_and_pair_images_across_classes(self, class_to_images):
         """Pairs images from consecutive classes in a circular fashion and then shuffles the target pairs to break the circular pattern."""

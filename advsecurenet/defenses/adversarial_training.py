@@ -147,40 +147,44 @@ class AdversarialTraining(Trainer):
         return attack.attack(model, source, targets)
 
     def _run_epoch(self, epoch: int) -> None:
+        """
+        Run a single epoch of adversarial training.
 
+        Args:
+            epoch (int): The current epoch number.
+
+        Returns:
+            None
+        """
         total_loss = 0.0
-        for _, (source, targets) in enumerate(tqdm(self.config.train_loader,
-                                                   desc="Adversarial Training",
-                                                   leave=False,
-                                                   position=1,
-                                                   unit="batch",
-                                                   colour="blue")):
+        train_loader = self._get_train_loader(epoch)
 
-            # Move data to device
-            source = source.to(self.device)
-            targets = targets.to(self.device)
+        for _, (source, targets) in enumerate(train_loader):
+            source, targets = self._prepare_data(source, targets)
 
-            # Generate adversarial examples
             adv_source, adv_targets = self._generate_adversarial_batch(
-                source=source,
-                targets=targets
-            )
+                source, targets)
+            adv_source, adv_targets = self._prepare_data(
+                adv_source, adv_targets)
 
-            # Move adversarial examples to device
-            adv_source = adv_source.to(self.device)
-            adv_targets = adv_targets.to(self.device)
-
-            # Combine clean and adversarial examples
             combined_data, combined_targets = self._combine_clean_and_adversarial_data(
-                source=source,
-                adv_source=adv_source,
-                targets=targets,
-                adv_targets=adv_targets
+                source, adv_source, targets, adv_targets
             )
+
             loss = self._run_batch(combined_data, combined_targets)
             total_loss += loss
 
-        # Compute average loss across all batches and all processes
-        total_loss /= len(self.config.train_loader)
-
+        total_loss /= self._get_loss_divisor()
         self._log_loss(epoch, total_loss)
+
+    def _get_train_loader(self, epoch: int):
+        return tqdm(self.config.train_loader, desc="Adversarial Training",
+                    leave=False, position=1, unit="batch", colour="blue")
+
+    def _prepare_data(self, source, targets):
+        source = source.to(self.device)
+        targets = targets.to(self.device)
+        return source, targets
+
+    def _get_loss_divisor(self):
+        return len(self.config.train_loader)
