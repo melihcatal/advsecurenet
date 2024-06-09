@@ -46,7 +46,8 @@ class CLIAttacker:
                 gpu_ids=self._config.device.gpu_ids,
                 **self._kwargs
             )
-            logger.info("Using DDP for attack.")
+            logger.info("Using DDP for attack with the following GPUs: %s",
+                        self._config.device.gpu_ids)
         else:
             attacker = Attacker(config=config, **self._kwargs)
             logger.info("Using single GPU or CPU for attack.")
