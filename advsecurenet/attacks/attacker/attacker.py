@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 import click
@@ -9,17 +10,20 @@ from advsecurenet.evaluation.adversarial_evaluator import AdversarialEvaluator
 from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
     AttackerConfig
 
+logger = logging.getLogger(__name__)
+
 
 class Attacker:
     """
     Attacker module is specialized module for attacking a model.
     """
 
-    def __init__(self, config: AttackerConfig):
+    def __init__(self, config: AttackerConfig,  **kwargs):
         self._config = config
         self._device = self._setup_device()
         self._model = self._setup_model()
         self._dataloader = self._create_dataloader()
+        self._kwargs = kwargs
 
     def execute(self):
         """
@@ -30,7 +34,10 @@ class Attacker:
     def _execute_attack(self):
         adversarial_images = []
 
-        with AdversarialEvaluator(["attack_success_rate"]) as evaluator:
+        with AdversarialEvaluator(evaluators=self._config.evaluators,
+                                  target_models=self._kwargs.get(
+                                      "target_models", [])
+                                  ) as evaluator:
             data_iterator = self._get_iterator()
 
             self._model.eval()
@@ -77,7 +84,7 @@ class Attacker:
         return adversarial_images
 
     def _prepare_data(self, *args):
-        """ 
+        """
         Move the required data to the device.
         """
         return [arg.to(self._device) for arg in args]
@@ -100,15 +107,27 @@ class Attacker:
         """
         return self._config.attack.attack(self._model, images, labels, target_images)
 
-    def _summarize_results(self, results: dict):
+    def _summarize_results(self, results: dict) -> None:
         """
         Summarizes the results of the attack.
 
         Args:
             results (dict): The results of the attack.
         """
+        logger.info("Results summary: %s", results)
+
+        for metric_name, metric_value in results.items():
+            if isinstance(metric_value, dict):
+                for sub_metric_name, sub_metric_value in metric_value.items():
+                    full_metric_name = f"{metric_name}-{sub_metric_name}"
+                    self._summarize_metric(full_metric_name, sub_metric_value)
+            else:
+                self._summarize_metric(metric_name, metric_value)
+
+    def _summarize_metric(self, name, value):
+        local_results = torch.tensor(value, device=self._device)
         click.secho(
-            f"Attack success rate: {results['attack_success_rate']:.2f}", fg="green")
+            f"{name.replace('_', ' ').title()}: {local_results.item():.4f}", fg='green')
 
     def _create_dataloader(self):
         return DataLoaderFactory.create_dataloader(self._config.dataloader)

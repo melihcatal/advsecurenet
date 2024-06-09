@@ -20,7 +20,7 @@ class DDPAttacker(Attacker):
     DDPAttacker is a specialized module for attacking a model using DistributedDataParallel in a multi-GPU setting.
     """
 
-    def __init__(self, config: AttackerConfig, gpu_ids: list) -> None:
+    def __init__(self, config: AttackerConfig, gpu_ids: list, **kwargs) -> None:
         """
         Initializes the DDPAttacker object.
 
@@ -35,7 +35,8 @@ class DDPAttacker(Attacker):
         os.environ['MASTER_ADDR'] = 'localhost'
         os.environ['MASTER_PORT'] = str(find_free_port())
         torch.multiprocessing.set_sharing_strategy('file_system')
-        super().__init__(config)
+        self._kwargs = kwargs
+        super().__init__(config, **kwargs)
 
     def execute(self) -> list:
         """ 
@@ -143,17 +144,9 @@ class DDPAttacker(Attacker):
         else:
             return self._dataloader
 
-    def _summarize_results(self, results: dict) -> None:
-        """
-        Summarizes the results of the attack.
-
-        Args:
-              results (dict): The results of the attack.
-        """
-        local_results = torch.tensor(
-            results["attack_success_rate"], device=self._device)
-
+    def _summarize_metric(self, name, value):
+        local_results = torch.tensor(value, device=self._device)
         dist.all_reduce(local_results, op=dist.ReduceOp.AVG)
         if self._rank == 0:
             click.secho(
-                f"Attack Success Rate: {local_results.item():.2f}", fg='green')
+                f"{name.replace('_', ' ').title()}: {local_results.item():.4f}", fg='green')

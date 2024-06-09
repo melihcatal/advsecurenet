@@ -28,10 +28,11 @@ class CLIAttacker:
     Attacker class for the CLI. This module parses the CLI arguments and executes the attack.
     """
 
-    def __init__(self, config: BaseAttackCLIConfigType, attack_type: AttackType):
+    def __init__(self, config: BaseAttackCLIConfigType, attack_type: AttackType, **kwargs):
         self._config: BaseAttackCLIConfigType = config
         self._attack_type: AttackType = attack_type
         self._adv_target_generator = AdversarialTargetGenerator()
+        self._kwargs = kwargs
 
     def execute(self):
         """
@@ -42,10 +43,12 @@ class CLIAttacker:
         if self._config.device.use_ddp:
             attacker = DDPAttacker(
                 config=config,
-                gpu_ids=self._config.device.gpu_ids)
+                gpu_ids=self._config.device.gpu_ids,
+                **self._kwargs
+            )
             logger.info("Using DDP for attack.")
         else:
-            attacker = Attacker(config=config)
+            attacker = Attacker(config=config, **self._kwargs)
             logger.info("Using single GPU or CPU for attack.")
 
         adv_imgs = attacker.execute()
@@ -81,6 +84,7 @@ class CLIAttacker:
             dataloader=dataloader_config,
             device=self._config.device,
             return_adversarial_images=self._config.attack_procedure.save_result_images,
+            evaluators=self._kwargs.get("evaluators", ["attack_success_rate"])
         )
 
         return config

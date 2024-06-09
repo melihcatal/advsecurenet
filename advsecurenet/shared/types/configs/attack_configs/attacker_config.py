@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 import torch
@@ -19,3 +19,5 @@ class AttackerConfig:
     dataloader: DataLoaderConfig
     device: DeviceConfig
     return_adversarial_images: Optional[bool] = False
+    evaluators: Optional[list[str]] = field(
+        default_factory=lambda: ["attack_success_rate"])

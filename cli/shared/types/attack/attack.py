@@ -14,6 +14,15 @@ T = TypeVar('T', bound=AttackConfig)
 
 
 @dataclass
+class AttackWithNameConfigDict:
+    """
+    This dataclass is used to store the configuration of an attack with its name.
+    """
+    name: str
+    config: str
+
+
+@dataclass
 class AttackProcedureCliConfigType:
     """
     This dataclass is used to store the configuration of the attack procedure CLI.
