@@ -19,7 +19,8 @@ class LoggingConfig:
         version (int): The logging configuration version.
     """
     log_dir: str = field(
-        default_factory=lambda: os.path.join(os.getcwd(), 'logs'))
+        default_factory=lambda: os.path.join(os.path.expanduser('~'), 'logs')
+    )
     log_file: str = 'advsecurenet.log'
     level: str = 'INFO'
     disable_existing_loggers: bool = False
@@ -32,7 +33,7 @@ class LoggingConfig:
 
 
 def setup_logging(config: Optional[LoggingConfig] = None) -> None:
-    """ 
+    """
     Setup logging configuration.
 
     Args:
