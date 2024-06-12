@@ -10,7 +10,6 @@ def models():
 
 @models.command()
 @click.option('-m', '--model-type',
-              # type=click.Choice([e.value for e in ModelType] + ['all']),
               default='all',
               help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.")
 def list(model_type: str):
