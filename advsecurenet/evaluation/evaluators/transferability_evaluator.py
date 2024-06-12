@@ -70,7 +70,7 @@ class TransferabilityEvaluator(BaseEvaluator):
         model.eval()
         successful_on_source_mask, filtered_adversarial_images, filtered_true_labels, filtered_target_labels = self._get_successful_on_source_mask(
             model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
-
+        print(f"Succesful on source: {successful_on_source_mask}")
         if successful_on_source_mask.numel() == 0:
             return  # No successful adversarial examples to evaluate
 
@@ -113,9 +113,13 @@ class TransferabilityEvaluator(BaseEvaluator):
 
         initial_predictions = model(original_images)
         initial_labels = torch.argmax(initial_predictions, dim=1)
+        print(
+            f"Initial labels: {initial_labels}, initial predictions: {initial_predictions}, true labels: {true_labels}")
 
         # Mask to identify correct initial predictions
         correct_initial_predictions_mask = initial_labels == true_labels
+        print(
+            f"Correct initial predictions mask: {correct_initial_predictions_mask}")
         total_correct_initial = correct_initial_predictions_mask.sum().item()
 
         if total_correct_initial == 0:
@@ -185,6 +189,8 @@ class TransferabilityEvaluator(BaseEvaluator):
             is_targeted (bool): Whether the attack is targeted.
             target_labels (Optional[torch.Tensor]): The target labels for the targeted attack.
         """
+        print(
+            f"true labels: {true_labels}, successful on source: {successful_on_source_mask}, targeted: {is_targeted}, target labels: {target_labels}")
         model_names_count = {}
 
         for target_model in self.target_models:

@@ -10,7 +10,6 @@ class Scheduler(Enum):
     REDUCE_LR_ON_PLATEAU = lr_scheduler.ReduceLROnPlateau
     STEP_LR = lr_scheduler.StepLR
     MULTI_STEP_LR = lr_scheduler.MultiStepLR
-    EXPO_LR = lr_scheduler.ExponentialLR
     COSINE_ANNEALING_LR = lr_scheduler.CosineAnnealingLR
     CYCLIC_LR = lr_scheduler.CyclicLR
     ONE_CYCLE_LR = lr_scheduler.OneCycleLR

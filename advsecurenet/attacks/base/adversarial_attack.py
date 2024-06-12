@@ -21,7 +21,7 @@ class AdversarialAttack(ABC):
         self.name: str = self.__class__.__name__
         self.targeted: bool = config.targeted
 
-    @ abstractmethod
+    @abstractmethod
     def attack(self,
                model: BaseModel,
                x: torch.Tensor,

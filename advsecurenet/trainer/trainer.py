@@ -235,7 +235,7 @@ class Trainer:
         if self.config.save_checkpoint_name:
             return self.config.save_checkpoint_name
         else:
-            return f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
+            return f"{self.config.model._model_name}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
 
     def _save_checkpoint(self, epoch: int, optimizer: optim.Optimizer) -> None:
         """
@@ -288,13 +288,13 @@ class Trainer:
             self.config.save_model_path = os.getcwd()
 
         if not self.config.save_model_name:
-            self.config.save_model_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
+            self.config.save_model_name = f"{self.config.model._model_name}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
 
         # if the same file exists, add a index to the file name
         index = 0
         while os.path.isfile(self.config.save_model_name):
             index += 1
-            self.config.save_model_name = f"{self.config.model.model_name}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
+            self.config.save_model_name = f"{self.config.model._model_name}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
 
         save_model(
             model=self.model,
@@ -350,9 +350,10 @@ class Trainer:
         if self._should_save_final_model():
             self._save_final_model()
 
-    def _log_loss(self, epoch: int, loss: float) -> None:
+    def _log_loss(self, epoch: int, loss: float, dir: str = None, filename: str = "loss.log") -> None:
+        path = os.path.join(dir, filename) if dir else os.path.join(
+            os.getcwd(), filename)
         # Save the loss to the log file. If the log file does not exist, create it in the current directory.
-        path = os.path.join(os.getcwd(), "loss.log")
         if not os.path.exists(path):
             with open(path, "w", encoding="utf-8") as f:
                 f.write("epoch,loss\n")

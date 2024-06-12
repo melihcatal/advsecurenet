@@ -1,5 +1,6 @@
 import importlib.util
 import os
+from types import ModuleType
 
 import torch
 
@@ -40,9 +41,7 @@ class ExternalModel(BaseModel):
         spec.loader.exec_module(custom_module)
 
         # Assume the model class inside the external model file has the same name as the file
-        if not hasattr(custom_module, self._model_name):
-            raise ValueError(
-                f"Model class {self._model_name} not found in module {self._model_arch_path}")
+        self._ensure_model_class_exists(custom_module)
 
         model_class = getattr(custom_module, self._model_name)
 
@@ -61,3 +60,17 @@ class ExternalModel(BaseModel):
         """
         raise NotImplementedError(
             "This method is not applicable for external models.")
+
+    def _ensure_model_class_exists(self, module: ModuleType) -> None:
+        """
+        Ensures that the model class exists within the given module.
+
+        Args:
+            module (ModuleType): The module to check for the model class.
+
+        Raises:
+            ValueError: If the model class is not found within the module.
+        """
+        if not hasattr(module, self._model_name):
+            raise ValueError(
+                f"Model class {self._model_name} not found in module {self._model_arch_path}")

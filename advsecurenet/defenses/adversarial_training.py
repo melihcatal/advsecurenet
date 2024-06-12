@@ -98,6 +98,8 @@ class AdversarialTraining(Trainer):
         attack_result = self._perform_attack(
             random_attack, random_model, source, targets
         )
+        print(
+            f"type of attack_result: {type(attack_result)} attack_result: {attack_result.shape} source: {source.shape}")
 
         assert attack_result.shape == source.shape, "adversarial image and the clean image must have the same shape"
 

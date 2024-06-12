@@ -9,7 +9,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from tqdm.auto import tqdm
 
 from advsecurenet.attacks.attacker import Attacker, AttackerConfig
-from advsecurenet.dataloader.DistributedEvalSampler import \
+from advsecurenet.dataloader.distributed_eval_sampler import \
     DistributedEvalSampler
 from advsecurenet.utils.ddp import set_visible_gpus
 from advsecurenet.utils.network import find_free_port

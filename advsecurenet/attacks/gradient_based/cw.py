@@ -46,7 +46,7 @@ class CWAttack(AdversarialAttack):
         self.c_lower: float = config.c_lower
         self.c_upper: float = config.c_upper
         self.patience: int = config.patience
-        self.verbose: bool = True  # TODO: Add verbose to the config
+        self.verbose: bool = True
         self.c = config.c_init
         super().__init__(config)
 
@@ -70,9 +70,6 @@ class CWAttack(AdversarialAttack):
         batch_size = x.shape[0]
         image = x.clone().detach()
         label = y.clone().detach()
-        # image = self.device_manager.to_device(image)
-        # label = self.device_manager.to_device(label)
-        # model = self.device_manager.to_device(model)
 
         image = self._initialize_x(image)
         c_lower = torch.full(size=(batch_size,),
@@ -95,10 +92,11 @@ class CWAttack(AdversarialAttack):
             (batch_size,), float("inf"), device=self.device_manager.get_current_device())
 
         for _ in range(self.binary_search_steps):
-            # for _ in trange(self.binary_search_steps, desc="Binary Search Steps", disable=not self.verbose):
             adv_images = self._run_attack(model, image, label)
             successful_mask = self._is_successful(model, adv_images, label)
 
+            print(
+                f"adv images type: {type(adv_images)} image type: {type(image)} adv element type: {type(adv_images[0])} image element type: {type(image[0])} dtype: {adv_images.dtype} image dtype: {image.dtype}")
             # Calculate L2 perturbations
             perturbations = torch.norm(adv_images - image, dim=[1, 2, 3], p=2)
 
@@ -128,7 +126,6 @@ class CWAttack(AdversarialAttack):
 
         perturbation = torch.zeros_like(
             image, requires_grad=True)
-        # perturbation = self.device_manager.to_device(perturbation)
         optimizer = optim.Adam([perturbation], lr=self.learning_rate)
         patience_counter = 0
         min_loss = float('inf')
@@ -149,7 +146,6 @@ class CWAttack(AdversarialAttack):
             else:
                 patience_counter += 1
 
-            # TODO: Better early stopping
             if self.abort_early and patience_counter >= self.patience:
                 print("Early stopping at iteration: ", iteration)
                 break
@@ -169,9 +165,7 @@ class CWAttack(AdversarialAttack):
         # prediction score of the target class
         j = torch.masked_select(outputs, one_hot_labels.bool())
         if self.targeted:
-            # return i - j + self.kappa or 0 max of these two
             return torch.clamp(i - j + self.kappa, min=0)
-            # return torch.clamp(i - j, min=-self.kappa)
         else:
             return torch.clamp(j - i + self.kappa, min=0)
 

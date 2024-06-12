@@ -66,7 +66,7 @@ class Attacker:
                                  is_targeted=self._config.attack.targeted,
                                  target_labels=target_labels)
 
-                if torch.cuda.is_available():
+                if torch.cuda.is_available() and self._device.type == "cuda":
                     # Free up memory
                     images = images.cpu()
                     true_labels = true_labels.cpu()

@@ -23,7 +23,7 @@ class DatasetFactory:
     A factory class to create datasets.
     """
     @staticmethod
-    def create_dataset(dataset_type: DatasetType,
+    def create_dataset(dataset_type: Union[DatasetType, str],
                        preprocess_config: Optional[PreprocessConfig] = None,
                        return_loaded: Optional[bool] = False,
                        **kwargs) -> Union[BaseDataset, tuple[BaseDataset, BaseDataset]]:
@@ -31,7 +31,7 @@ class DatasetFactory:
         Returns a dataset for the given dataset type.
 
         Args:
-            dataset_type (DatasetType): The type of the dataset to be created.
+            dataset_type (Union[DatasetType, str]): The dataset type to create.
             return_loaded (bool): Whether to load the train and test datasets and return them immediately. Default is False.
             **kwargs: Arbitrary keyword arguments to be passed to the dataset class.
 

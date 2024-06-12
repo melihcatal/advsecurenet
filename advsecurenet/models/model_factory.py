@@ -1,7 +1,7 @@
+import logging
 from enum import EnumMeta
 from typing import Optional
 
-import click
 from torch import nn
 
 from advsecurenet.models import *
@@ -11,6 +11,8 @@ from advsecurenet.shared.types.configs.model_config import (
     StandardModelConfig)
 from advsecurenet.shared.types.model import ModelType
 from advsecurenet.utils.reproducibility_utils import set_seed
+
+logger = logging.getLogger(__name__)
 
 
 class ModelFactory:
@@ -109,6 +111,7 @@ class ModelFactory:
             if inferred_type == ModelType.CUSTOM:
                 # The custom model name would typically be without the 'Custom' prefix for the filename.
                 # For example: 'MnistModel' for 'CustomMnistModel.py'. Adjust as necessary.
+                print(config)
                 cfg = CustomModelConfig(
                     model_name=config.model_name,
                     num_classes=config.num_classes,
@@ -117,12 +120,10 @@ class ModelFactory:
                     pretrained=config.pretrained
                 )
                 return CustomModel(cfg, **kwargs)
-        except ValueError as e:
-            raise click.ClickException(
-                "Error creating model. More details: " + str(e))
         except Exception as e:
-            raise click.ClickException(
-                "Error creating model. More details: " + str(e))
+            err = f"Error creating model. Please check the model_name and other arguments. Error: {str(e)}"
+            logger.error(err)
+            raise Exception(err) from e
 
     @staticmethod
     def _validate_create_model_config(

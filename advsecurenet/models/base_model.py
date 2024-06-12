@@ -82,9 +82,10 @@ class BaseModel(ABC, nn.Module):
         """
         Return a list of layer names in the model.
         """
-        train_nodes, eval_nodes = get_graph_node_names(self.model)
         if self.model is None:
             raise ValueError("Model is not loaded.")
+
+        train_nodes, eval_nodes = get_graph_node_names(self.model)
         return set(train_nodes + eval_nodes)
 
     def get_layer(self, layer_name: str) -> nn.Module:
