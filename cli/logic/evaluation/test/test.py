@@ -16,7 +16,12 @@ def cli_test(config: str, **kwargs) -> None:
         **kwargs: Additional keyword arguments.
     """
     config_data = load_and_instantiate_config(
-        config, "test_config.yml", ConfigType.TEST, TestingCliConfigType, **kwargs)
+        config=config,
+        default_config_file="test_config.yml",
+        config_type=ConfigType.TEST,
+        config_class=TestingCliConfigType,
+        **kwargs
+    )
 
     logging.info("Loaded test configuration: %s", config_data)
     try:

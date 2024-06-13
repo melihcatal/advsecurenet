@@ -1,5 +1,8 @@
+import threading
+import time
 from unittest.mock import MagicMock, patch
 
+import matplotlib.pyplot as plt
 import pytest
 import torch
 
@@ -22,18 +25,24 @@ def target_generator():
     return AdversarialTargetGenerator()
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_generate_target_labels(mock_dataset, target_generator):
     targets = target_generator.generate_target_labels(mock_dataset)
     assert isinstance(targets, list)
     assert len(targets) == len(mock_dataset)
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_generate_target_images(mock_dataset, target_generator):
     targets = target_generator.generate_target_images(mock_dataset)
     assert isinstance(targets, list)
     assert len(targets) == len(mock_dataset)
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_extract_images_and_labels(mock_dataset, target_generator):
     paired_images = target_generator.generate_target_images(mock_dataset)
     original_images, original_labels, target_images, target_labels = target_generator.extract_images_and_labels(
@@ -44,6 +53,8 @@ def test_extract_images_and_labels(mock_dataset, target_generator):
     assert isinstance(target_labels, list)
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 @patch('advsecurenet.utils.adversarial_target_generator.requests.get')
 @patch('advsecurenet.utils.adversarial_target_generator.pickle.load')
 def test_load_mappings(mock_pickle_load, mock_requests_get, target_generator):
@@ -56,6 +67,8 @@ def test_load_mappings(mock_pickle_load, mock_requests_get, target_generator):
     assert result == {'test': 'value'}
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_generate_class_to_image_indices_map(mock_dataset, target_generator):
     class_to_images = target_generator._generate_class_to_image_indices_map(
         mock_dataset)
@@ -64,6 +77,8 @@ def test_generate_class_to_image_indices_map(mock_dataset, target_generator):
     assert all(isinstance(value, list) for value in class_to_images.values())
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_shuffle_and_pair_images_across_classes(mock_dataset, target_generator):
     class_to_images = target_generator._generate_class_to_image_indices_map(
         mock_dataset)
@@ -75,6 +90,8 @@ def test_shuffle_and_pair_images_across_classes(mock_dataset, target_generator):
         'original_image' in pair and 'target_image' in pair for pair in paired_images)
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_validate_paired_images(mock_dataset, target_generator):
     class_to_images = target_generator._generate_class_to_image_indices_map(
         mock_dataset)
@@ -86,6 +103,8 @@ def test_validate_paired_images(mock_dataset, target_generator):
         pytest.fail(f"Validation failed: {e}")
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 @patch('advsecurenet.utils.adversarial_target_generator.Image.Image.save')
 def test_save_images(mock_save, mock_dataset, target_generator):
     class_to_images = target_generator._generate_class_to_image_indices_map(
@@ -97,7 +116,11 @@ def test_save_images(mock_save, mock_dataset, target_generator):
         paired_images) * 2  # Each pair saves two images
 
 
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_show_image_pair(mock_dataset, target_generator):
+    # Set the matplotlib backend to a non-interactive one for testing
+    plt.switch_backend('Agg')
     class_to_images = target_generator._generate_class_to_image_indices_map(
         mock_dataset)
     paired_images = target_generator._shuffle_and_pair_images_across_classes(
