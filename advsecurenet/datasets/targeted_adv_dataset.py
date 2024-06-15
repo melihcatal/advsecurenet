@@ -5,7 +5,7 @@ import torch
 from advsecurenet.datasets.base_dataset import BaseDataset
 
 
-class AdversarialDataset():
+class AdversarialDataset(BaseDataset):
     """
     A dataset class that wraps a base dataset and allows for targeted adversarial attacks.
 
@@ -20,6 +20,7 @@ class AdversarialDataset():
                  target_labels: Optional[Union[List[int],
                                                torch.Tensor]] = None,
                  target_images: Optional[Union[List[torch.Tensor], torch.Tensor]] = None):
+        super().__init__()
         self.base_dataset = base_dataset
 
         self.target_labels = target_labels

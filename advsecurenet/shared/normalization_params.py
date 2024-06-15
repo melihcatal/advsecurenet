@@ -11,13 +11,20 @@ class NormalizationParameters:
 
     Supported datasets:
     - CIFAR-10
+    - CIFAR-100
     - ImageNet
     - MNIST
+    - SVHN
+    - Fashion-MNIST
     """
     DATASETS = {
         DatasetType.CIFAR10: {
             "mean": [0.4914, 0.4822, 0.4465],
             "std": [0.2470, 0.2435, 0.2616]
+        },
+        DatasetType.CIFAR100: {
+            "mean": [0.5071, 0.4867, 0.4408],
+            "std": [0.2675, 0.2565, 0.2761]
         },
         DatasetType.IMAGENET: {
             "mean": [0.485, 0.456, 0.406],
@@ -26,6 +33,14 @@ class NormalizationParameters:
         DatasetType.MNIST: {
             "mean": [0.1307],
             "std": [0.3081]
+        },
+        DatasetType.SVHN: {
+            "mean": [0.4377, 0.4438, 0.4728],
+            "std": [0.1980, 0.2010, 0.1970]
+        },
+        DatasetType.FASHION_MNIST: {
+            "mean": [0.2860],
+            "std": [0.3530]
         }
     }
 

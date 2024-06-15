@@ -2,6 +2,7 @@ from typing import Optional
 
 from advsecurenet.datasets.base_dataset import (BaseDataset,
                                                 ImageFolderBaseDataset)
+from advsecurenet.shared.normalization_params import NormalizationParameters
 from advsecurenet.shared.types.configs.preprocess_config import \
     PreprocessConfig
 
@@ -22,8 +23,8 @@ class ImageNetDataset(ImageFolderBaseDataset, BaseDataset):
     def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
         ImageFolderBaseDataset.__init__(self)
         BaseDataset.__init__(self, preprocess_config)
-        self.mean = [0.485, 0.456, 0.406]
-        self.std = [0.229, 0.224, 0.225]
+        self.mean = NormalizationParameters.get_params("IMAGENET").mean
+        self.std = NormalizationParameters.get_params("IMAGENET").std
         self.input_size = (256, 256)
         self.crop_size = (224, 224)
         self.name = "imagenet"
