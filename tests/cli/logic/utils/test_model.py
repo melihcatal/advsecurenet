@@ -50,6 +50,17 @@ def test_cli_available_weights_no_model():
 
 @pytest.mark.cli
 @pytest.mark.essential
+def test_cli_available_weights_invalid_model():
+    with patch("click.echo") as mock_echo:
+        with pytest.raises(click.ClickException):
+            cli_available_weights("invalid_model")
+            mock_echo.assert_called_once_with(
+                "Could not find available weights for the specified model!"
+            )
+
+
+@pytest.mark.cli
+@pytest.mark.essential
 @patch("click.secho")
 @patch("click.echo")
 @patch("advsecurenet.models.model_factory.ModelFactory.create_model")
