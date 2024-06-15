@@ -111,7 +111,6 @@ class ModelFactory:
             if inferred_type == ModelType.CUSTOM:
                 # The custom model name would typically be without the 'Custom' prefix for the filename.
                 # For example: 'MnistModel' for 'CustomMnistModel.py'. Adjust as necessary.
-                print(config)
                 cfg = CustomModelConfig(
                     model_name=config.model_name,
                     num_classes=config.num_classes,

@@ -10,7 +10,7 @@ class BaseModelConfig:
     model_name: str
     num_classes: Optional[int] = 1000
     num_input_channels: Optional[int] = 3
-    pretrained: Optional[bool] = True
+    pretrained: Optional[bool] = False
 
 
 @dataclass
