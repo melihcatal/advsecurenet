@@ -110,6 +110,25 @@ CHECK_HANDLERS = {
 }
 
 
+def make_paths_absolute(base_path: str, config: Union[Dict[str, Any], List[Any]]) -> None:
+    """
+    Recursively update the paths in the configuration dictionary or list to be absolute paths.
+
+    Args:
+        base_path (str): The base directory path.
+        config (Union[Dict[str, Any], List[Any]]): The configuration data to update.
+    """
+    if isinstance(config, dict):
+        for key, value in config.items():
+            if isinstance(value, str) and os.path.exists(os.path.join(base_path, value)):
+                config[key] = os.path.abspath(os.path.join(base_path, value))
+            elif isinstance(value, (dict, list)):
+                make_paths_absolute(base_path, value)
+    elif isinstance(config, list):
+        for item in config:
+            make_paths_absolute(base_path, item)
+
+
 def load_and_instantiate_config(config: str, default_config_file: str, config_type: ConfigType, config_class: Type[T], **kwargs: Dict[str, Any]) -> T:
     """Utility function to load and instantiate configuration.
 
@@ -128,8 +147,14 @@ def load_and_instantiate_config(config: str, default_config_file: str, config_ty
             "No configuration file provided! Using default configuration...", fg="blue")
         config = get_default_config_yml(default_config_file)
 
+    # Load the configuration data
     config_data = load_configuration(
         config_type=config_type, config_file=config, **kwargs)
+
+    # Convert relative paths to absolute paths
+    base_path = os.path.dirname(config)
+    make_paths_absolute(base_path, config_data)
+
     return recursive_dataclass_instantiation(config_class, config_data)
 
 
