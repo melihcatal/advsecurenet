@@ -21,7 +21,7 @@ class Tester:
         self._test_loader = config.test_loader
         self._device = config.processor
         self._loss_fn = self._get_loss_function(config.criterion)
-        self._topk = config.topk
+        self._topk = int(config.topk)
         self._validate()
 
     def test(self) -> tuple[float, float]:
@@ -100,6 +100,6 @@ class Tester:
         # topk can't be less than 1 and greater than the number of classes
         if self._topk < 1:
             raise ValueError("Top-k value must be greater than 0.")
-        if self._topk > self._model.num_classes:
+        if self._topk > self._model._num_classes:
             raise ValueError(
                 "Top-k value must be less than or equal to the number of classes.")
