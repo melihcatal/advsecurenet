@@ -6,20 +6,11 @@ from cli.shared.types.train import TrainingCliConfigType
 
 
 @dataclass
-class AttackConfigDict(TypedDict):
+class AttackConfigDict:
     """
     This class is used as a type hint for the configuration of an adversarial attack.
     """
-    config: Dict[str, str]
-
-
-@dataclass
-class AttackWithConfigDict(TypedDict):
-    """
-    This class is used as a type hint for an adversarial attack with its configuration.
-    """
-    attack: str
-    config: AttackConfigDict
+    attack: Dict[str, str]
 
 
 @dataclass
@@ -36,7 +27,7 @@ class AdversarialTrainingConfig:
     This class is used to store the configuration of the adversarial training.
     """
     models: List[ModelWithConfigDict]
-    attacks: List[AttackWithConfigDict]
+    attacks: List[AttackConfigDict]
 
 
 @dataclass

@@ -1,6 +1,6 @@
 
 from dataclasses import asdict
-from typing import List, cast
+from typing import List
 
 import click
 
@@ -19,8 +19,7 @@ from advsecurenet.shared.types.configs.defense_configs.adversarial_training_conf
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
 from cli.logic.train.trainer import CLITrainer
-from cli.shared.types.defense.adversarial_training import (ATCliConfigType,
-                                                           AttackConfigDict)
+from cli.shared.types.defense.adversarial_training import ATCliConfigType
 from cli.shared.types.utils.model import ModelCliConfigType
 from cli.shared.utils.attack_mappings import attack_cli_mapping, attack_mapping
 from cli.shared.utils.config import load_and_instantiate_config
@@ -61,16 +60,12 @@ class ATCLITrainer(CLITrainer):
         for attack_dict in self.at_config.attacks:
             for key, value in attack_dict.items():
                 attack_name = key.upper()
-
-                value = cast(AttackConfigDict, value)
-                attack_config_path = value.get('config')
-
+                attack_config_path = value
                 attack_config: AttackConfig = load_and_instantiate_config(
                     config=attack_config_path,
-                    default_config_file=f"at_{attack_name.lower()}_attack_config.yml",
+                    default_config_file=f"{attack_name.lower()}_attack_base_config.yml",
                     config_type=ConfigType.ATTACK,
                     config_class=attack_mapping[attack_name],
-
                 )
 
                 attack_config.device = self.config.device
