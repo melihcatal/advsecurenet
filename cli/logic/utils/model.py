@@ -33,11 +33,14 @@ def cli_available_weights(model_name: str):
     if not model_name:
         raise click.ClickException(
             "Model name must be provided! You can use the 'models' command to list available models.")
-
-    weights = StandardModel.available_weights(model_name)
-    click.echo(f"Available weights for {model_name}:")
-    for weight in weights:
-        click.echo(f"\t{weight.name}")
+    try:
+        weights = StandardModel.available_weights(model_name.lower())
+        click.echo(f"Available weights for {model_name}:")
+        for weight in weights:
+            click.echo(f"\t{weight.name}")
+    except ValueError as e:
+        raise click.ClickException(
+            "Could not find available weights for the specified model!")
 
 
 def cli_model_layers(model_name: str, add_normalization: bool = False):
@@ -54,7 +57,7 @@ def cli_model_layers(model_name: str, add_normalization: bool = False):
     if not model_name:
         raise ValueError("Model name must be provided!")
 
-    model = ModelFactory.create_model(model_name=model_name)
+    model = ModelFactory.create_model(model_name=model_name.lower())
     if add_normalization:
         # add a dummy normalization layer to correctly display the model summary
         model.add_layer(NormalizationLayer(
