@@ -3,7 +3,7 @@ This module contains utility functions for working with configuration data throu
 """
 import os
 from dataclasses import fields
-from typing import Any, Dict, Type, TypeVar, Union
+from typing import Any, Dict, List, Type, TypeVar, Union
 
 import click
 import pkg_resources

@@ -4,7 +4,7 @@ import click
 @click.group()
 def configs():
     """
-    Command to list available configuration files.
+    Command to manage configuration files. Configuration files are used to run experiments with different settings. With this command, you can list available configuration files, generate a default configuration file, and save it to a directory.
     """
 
 
