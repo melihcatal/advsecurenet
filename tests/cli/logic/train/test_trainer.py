@@ -28,7 +28,7 @@ def test_cli_trainer_init(mock_prepare_dataset, mock_create_model, mock_get_data
 @pytest.mark.essential
 @patch("cli.logic.train.trainer.CLITrainer._prepare_dataset", return_value=MagicMock())
 @patch("cli.logic.train.trainer.set_visible_gpus")
-@patch("cli.logic.train.trainer.DDPTrainingCoordinator")
+@patch("cli.logic.train.trainer.DDPCoordinator")
 @patch("cli.logic.train.trainer.DDPTrainer")
 def test_cli_trainer_execute_ddp_training(mock_ddp_trainer, mock_ddp_training_coordinator, mock_set_visible_gpus, mock_prepare_dataset):
     # Setup

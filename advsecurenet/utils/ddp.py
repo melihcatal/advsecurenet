@@ -24,9 +24,11 @@ def set_visible_gpus(gpu_ids: Optional[List[int]] = None) -> None:
         try:
             gpu_ids = list(range(torch.cuda.device_count()))
         except Exception as e:
-            logger.error(f"Error getting CUDA device count: {str(e)}")
+            logger.error("Error getting CUDA device count. %s" % str(e))
             raise RuntimeError(f"Error getting CUDA device count: {str(e)}")
 
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(x) for x in gpu_ids)
     logger.info(
-        f"Set CUDA_VISIBLE_DEVICES to: {os.environ['CUDA_VISIBLE_DEVICES']}")
+        "Set CUDA_VISIBLE_DEVICES to: %s" % os.environ['CUDA_VISIBLE_DEVICES'])
+    logger.info("current env CUDA_VISIBLE_DEVICES: %s" %
+                os.environ['CUDA_VISIBLE_DEVICES'])

@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Optional, Union
 
 import click
 import torch
@@ -9,11 +9,13 @@ from advsecurenet.attacks.attacker import Attacker, AttackerConfig
 from advsecurenet.attacks.attacker.ddp_attacker import DDPAttacker
 from advsecurenet.datasets.base_dataset import DatasetWrapper
 from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
+from advsecurenet.distributed.ddp_coordinator import DDPCoordinator
 from advsecurenet.shared.types.attacks import AttackType
 from advsecurenet.shared.types.configs.dataloader_config import \
     DataLoaderConfig
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
+from advsecurenet.utils.ddp import set_visible_gpus
 from cli.shared.types.attack import BaseAttackCLIConfigType
 from cli.shared.types.utils.target import TargetCLIConfigType
 from cli.shared.utils.dataset import get_datasets
@@ -33,35 +35,81 @@ class CLIAttacker:
         self._attack_type: AttackType = attack_type
         self._adv_target_generator = AdversarialTargetGenerator()
         self._kwargs = kwargs
+        self._dataset = self._prepare_dataset()
 
     def execute(self):
         """
         The main attack function. This function parses the CLI arguments and executes the attack.
         """
-        config = self._prepare_attack_config()
         logger.info("Starting %s attack.", self._attack_type.value)
         if self._config.device.use_ddp:
-            attacker = DDPAttacker(
-                config=config,
-                gpu_ids=self._config.device.gpu_ids,
-                **self._kwargs
-            )
             logger.info("Using DDP for attack with the following GPUs: %s",
                         self._config.device.gpu_ids)
+            self._execute_ddp_attack()
+
         else:
-            attacker = Attacker(config=config, **self._kwargs)
             logger.info("Using single GPU or CPU for attack.")
-
-        adv_imgs = attacker.execute()
-
-        if self._config.attack_procedure.save_result_images and adv_imgs:
-            logger.info("Saving adversarial images.")
-            self._save_adversarial_images(adv_imgs)
-            logger.info("Adversarial images saved successfully.")
+            self._execute_attack()
 
         click.secho("Attack completed successfully.", fg="green")
         logger.info("%s attack completed successfully.",
                     self._attack_type.value)
+
+    def _execute_attack(self):
+        """ 
+        Non-Distributed attack function. Initializes the attacker and runs the attack.
+        """
+        config = self._prepare_attack_config()
+        attacker = Attacker(config=config, **self._kwargs)
+        adv_imgs = attacker.execute()
+        self._save_images_if_needed(adv_imgs)
+
+    def _execute_ddp_attack(self) -> None:
+        """
+        DDP Training function. Initializes the DDPCoordinator and runs the training.
+        """
+        if self._config.device.gpu_ids is None or len(self._config.device.gpu_ids) == 0:
+            self._config.device.gpu_ids = list(
+                range(torch.cuda.device_count()))
+
+        world_size = len(self._config.device.gpu_ids)
+        set_visible_gpus(self._config.device.gpu_ids)
+
+        ddp_attacker = DDPCoordinator(self._ddp_attack_fn, world_size)
+        ddp_attacker.run()
+
+        if self._config.attack_procedure.save_result_images:
+            gathered_adv_images = DDPAttacker.gather_results(world_size)
+            self._save_adversarial_images(gathered_adv_images)
+
+    def _ddp_attack_fn(self, rank: int, world_size: int) -> None:
+        attack_config = self._prepare_attack_config()
+        ddp_attacker = DDPAttacker(attack_config, rank, world_size)
+        ddp_attacker.execute()
+
+    def _save_images_if_needed(self,
+                               adv_imgs: Optional[list] = None,
+                               world_size: Optional[int] = None
+                               ):
+        """ 
+        Save the adversarial images if needed. If the attack is distributed, gather the results from all processes.
+
+        Args:
+            adv_imgs (Optional[list]): The adversarial images.
+            world_size (Optional[int]): The total number of processes. Needed for distributed attacks. If not provided and the attack is distributed, the function will gather the results from the configured world size.
+
+        """
+
+        if self._config.attack_procedure.save_result_images and self._config.device.use_ddp and (world_size or len(self._config.device.gpu_ids)) and not adv_imgs:
+            logger.info("Gathering results from all processes.")
+            adv_imgs = DDPAttacker.gather_results(world_size)
+
+        if adv_imgs:
+            logger.info("Saving adversarial images.")
+            self._save_adversarial_images(adv_imgs)
+            logger.info("Adversarial images saved successfully.")
+        else:
+            logger.info("No adversarial images to save.")
 
     def _prepare_attack_config(self) -> AttackerConfig:
         """
@@ -115,9 +163,9 @@ class CLIAttacker:
         return attack
 
     def _create_dataloader_config(self):
-        dataset = self._prepare_dataset()
+        # dataset = self._prepare_dataset()
         dataloader_config = DataLoaderConfig(
-            dataset=dataset,
+            dataset=self._dataset,
             batch_size=self._config.dataloader.default.batch_size,
             num_workers=self._config.dataloader.default.num_workers,
             shuffle=self._config.dataloader.default.shuffle,

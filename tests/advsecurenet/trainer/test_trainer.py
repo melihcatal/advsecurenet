@@ -45,12 +45,12 @@ def train_config(device):
 @pytest.mark.essential
 def test_trainer_initialization(train_config, device):
     trainer = Trainer(train_config)
-    assert trainer.config == train_config
-    assert trainer.device == device
-    assert trainer.model == train_config.model
-    assert trainer.optimizer is not None
-    assert trainer.loss_fn is not None
-    assert trainer.scheduler is None
+    assert trainer._config == train_config
+    assert trainer._device == device
+    assert trainer._model == train_config.model
+    assert trainer._optimizer is not None
+    assert trainer._loss_fn is not None
+    assert trainer._scheduler is None
 
 
 @pytest.mark.advsecurenet
@@ -100,7 +100,7 @@ def test_get_loss_function(train_config):
 @patch("torch.save")
 def test_save_checkpoint(mock_save, train_config):
     trainer = Trainer(train_config)
-    trainer._save_checkpoint(epoch=1, optimizer=trainer.optimizer)
+    trainer._save_checkpoint(epoch=1, optimizer=trainer._optimizer)
     assert mock_save.called
 
 
@@ -143,7 +143,7 @@ def test_run_epoch(train_config):
 def test_pre_training(train_config):
     trainer = Trainer(train_config)
     trainer._pre_training()
-    assert trainer.model.training is True
+    assert trainer._model.training is True
 
 
 @pytest.mark.advsecurenet

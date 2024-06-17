@@ -3,11 +3,10 @@ from dataclasses import asdict
 import click
 import torch
 
+from advsecurenet.distributed.ddp_coordinator import DDPCoordinator
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs import TrainConfig
 from advsecurenet.trainer.ddp_trainer import DDPTrainer
-from advsecurenet.trainer.ddp_training_coordinator import \
-    DDPTrainingCoordinator
 from advsecurenet.trainer.trainer import Trainer
 from advsecurenet.utils.ddp import set_visible_gpus
 from cli.shared.types.train import TrainingCliConfigType
@@ -48,7 +47,7 @@ class CLITrainer:
 
     def _execute_ddp_training(self) -> None:
         """
-        DDP Training function. Initializes the DDPTrainingCoordinator and runs the training.
+        DDP Training function. Initializes the DDPCoordinator and runs the training.
         """
         # if no gpu ids are provided, use all available gpus
         if self.config.device.gpu_ids is None or len(self.config.device.gpu_ids) == 0:
@@ -58,7 +57,7 @@ class CLITrainer:
 
         set_visible_gpus(self.config.device.gpu_ids)
 
-        ddp_trainer = DDPTrainingCoordinator(
+        ddp_trainer = DDPCoordinator(
             self._ddp_training_fn,
             world_size,
         )
@@ -70,8 +69,7 @@ class CLITrainer:
         ddp_trainer.run()
 
     def _ddp_training_fn(self, rank: int, world_size: int) -> None:
-        train_config = self._prepare_training_environment(
-            rank)
+        train_config = self._prepare_training_environment()
 
         ddp_trainer = DDPTrainer(train_config, rank, world_size)
         ddp_trainer.train()

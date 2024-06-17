@@ -26,30 +26,30 @@ class Trainer:
         Args:
             config (TrainConfig): The train config.
         """
-        self.config = config
-        self.device = self._setup_device()
-        self.model = self._setup_model()
-        self.optimizer = self._setup_optimizer()
-        self.loss_fn = self._get_loss_function(config.criterion)
-        self.start_epoch = self._load_checkpoint_if_any()
-        self.scheduler = self._setup_scheduler()
+        self._config = config
+        self._device = self._setup_device()
+        self._model = self._setup_model()
+        self._optimizer = self._setup_optimizer()
+        self._loss_fn = self._get_loss_function(config.criterion)
+        self._start_epoch = self._load_checkpoint_if_any()
+        self._scheduler = self._setup_scheduler()
 
     def train(self) -> None:
         """
         Public method for training the model.
         """
         self._pre_training()
-        for epoch in trange(self.start_epoch, self.config.epochs + 1, leave=True, position=0):
+        for epoch in trange(self._start_epoch, self._config.epochs + 1, leave=True, position=0):
             self._run_epoch(epoch)
             if self._should_save_checkpoint(epoch):
-                self._save_checkpoint(epoch, self.optimizer)
+                self._save_checkpoint(epoch, self._optimizer)
         self._post_training()
 
     def _setup_device(self) -> torch.device:
         """
         Setup the device.
         """
-        device = self.config.processor or torch.device(
+        device = self._config.processor or torch.device(
             "cuda" if torch.cuda.is_available() else "cpu")
         return device
 
@@ -57,7 +57,7 @@ class Trainer:
         """
         Initializes the model and moves it to the device.
         """
-        return self.config.model.to(self.device)
+        return self._config.model.to(self._device)
 
     def _setup_optimizer(self) -> optim.Optimizer:
         """
@@ -67,7 +67,7 @@ class Trainer:
             optim.Optimizer: The optimizer. I.e. Adam, SGD, etc.
         """
         optimizer = self._get_optimizer(
-            self.config.optimizer, self.model, self.config.learning_rate)
+            self._config.optimizer, self._model, self._config.learning_rate)
         return optimizer
 
     def _setup_scheduler(self) -> torch.optim.lr_scheduler._LRScheduler:
@@ -78,7 +78,7 @@ class Trainer:
             torch.optim.lr_scheduler._LRScheduler: The scheduler. I.e. ReduceLROnPlateau, etc.
         """
         scheduler = self._get_scheduler(
-            self.config.scheduler, self.optimizer)
+            self._config.scheduler, self._optimizer)
         return scheduler
 
     def _get_scheduler(self, scheduler: Union[str, torch.optim.lr_scheduler._LRScheduler], optimizer: optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
@@ -101,7 +101,7 @@ class Trainer:
             scheduler_function_class = Scheduler[scheduler.upper()].value
             scheduler = scheduler_function_class(
                 optimizer,
-                **self.config.scheduler_kwargs if self.config.scheduler_kwargs else {}
+                **self._config.scheduler_kwargs if self._config.scheduler_kwargs else {}
             )
         elif not isinstance(scheduler, torch.optim.lr_scheduler._LRScheduler):
             raise ValueError(
@@ -174,7 +174,7 @@ class Trainer:
                 optimizer = optimizer_class(
                     model.parameters(),
                     lr=learning_rate,
-                    **self.config.optimizer_kwargs if self.config.optimizer_kwargs else {}
+                    **self._config.optimizer_kwargs if self._config.optimizer_kwargs else {}
                 )
 
             elif not isinstance(optimizer, optim.Optimizer):
@@ -190,36 +190,36 @@ class Trainer:
             int: The start epoch.
         """
         start_epoch = 1
-        if self.config.load_checkpoint and self.config.load_checkpoint_path:
-            if os.path.isfile(self.config.load_checkpoint_path):
+        if self._config.load_checkpoint and self._config.load_checkpoint_path:
+            if os.path.isfile(self._config.load_checkpoint_path):
                 print(
-                    f"=> loading checkpoint '{self.config.load_checkpoint_path}'")
-                checkpoint = torch.load(self.config.load_checkpoint_path)
+                    f"=> loading checkpoint '{self._config.load_checkpoint_path}'")
+                checkpoint = torch.load(self._config.load_checkpoint_path)
                 start_epoch = checkpoint['epoch']
                 self._load_model_state_dict(checkpoint['model_state_dict'])
-                self.optimizer.load_state_dict(
+                self._optimizer.load_state_dict(
                     checkpoint['optimizer_state_dict'])
                 self._assign_device_to_optimizer_state()
                 start_epoch = checkpoint['epoch'] + 1
             else:
                 print(
-                    f"=> no checkpoint found at '{self.config.load_checkpoint_path}'")
+                    f"=> no checkpoint found at '{self._config.load_checkpoint_path}'")
         return start_epoch
 
     def _load_model_state_dict(self, state_dict):
         # Loads the given model state dict.
-        self.model.load_state_dict(state_dict)
+        self._model.load_state_dict(state_dict)
 
     def _get_model_state_dict(self) -> dict:
         # Returns the model state dict.
-        return self.model.state_dict()
+        return self._model.state_dict()
 
     def _assign_device_to_optimizer_state(self):
         # Default implementation
-        for state in self.optimizer.state.values():
+        for state in self._optimizer.state.values():
             for k, v in state.items():
                 if isinstance(v, torch.Tensor):
-                    state[k] = v.to(self.device)
+                    state[k] = v.to(self._device)
 
     def _get_save_checkpoint_prefix(self) -> str:
         """
@@ -232,10 +232,10 @@ class Trainer:
             If the save checkpoint name is provided, it will be used as the prefix. Otherwise, the model variant and the dataset name will be used as the prefix.
         """
 
-        if self.config.save_checkpoint_name:
-            return self.config.save_checkpoint_name
+        if self._config.save_checkpoint_name:
+            return self._config.save_checkpoint_name
         else:
-            return f"{self.config.model._model_name}_{self.config.train_loader.dataset.__class__.__name__}_checkpoint"
+            return f"{self._config.model._model_name}_{self._config.train_loader.dataset.__class__.__name__}_checkpoint"
 
     def _save_checkpoint(self, epoch: int, optimizer: optim.Optimizer) -> None:
         """
@@ -246,7 +246,7 @@ class Trainer:
             optimizer (optim.Optimizer): The optimizer.
         """
         checkpoint_sub_dir = "training"
-        checkpoint_dir = self.config.save_checkpoint_path or os.path.join(
+        checkpoint_dir = self._config.save_checkpoint_path or os.path.join(
             os.getcwd(), f"checkpoints/{checkpoint_sub_dir}")
 
         if not os.path.exists(checkpoint_dir):
@@ -272,35 +272,40 @@ class Trainer:
         Returns:
             bool: True if a checkpoint should be saved, False otherwise.  
         """
-        return self.config.save_checkpoint and self.config.checkpoint_interval > 0 and epoch % self.config.checkpoint_interval == 0
+        return self._config.save_checkpoint and self._config.checkpoint_interval > 0 and epoch % self._config.checkpoint_interval == 0
 
     def _should_save_final_model(self) -> bool:
         """
         Determines if the final model should be saved based on the given save_final_model flag and the current rank.
         """
-        return self.config.save_final_model
+        return self._config.save_final_model
 
     def _save_final_model(self) -> None:
         """
         Saves the final model to the current directory with the name of the model variant and the dataset name.
         """
-        if not self.config.save_model_path:
-            self.config.save_model_path = os.getcwd()
+        if not self._config.save_model_path:
+            self._config.save_model_path = os.getcwd()
 
-        if not self.config.save_model_name:
-            self.config.save_model_name = f"{self.config.model._model_name}_{self.config.train_loader.dataset.__class__.__name__}_final.pth"
+        model_name = self._config.model._model_name if hasattr(
+            self._config.model, "_model_name") else "model"
+        dataset_name = self._config.train_loader.dataset.name if hasattr(
+            self._config.train_loader.dataset, "name") else "dataset"
+
+        if not self._config.save_model_name:
+            self._config.save_model_name = f"{model_name}_{dataset_name}_final.pth"
 
         # if the same file exists, add a index to the file name
         index = 0
-        while os.path.isfile(self.config.save_model_name):
+        while os.path.isfile(self._config.save_model_name):
             index += 1
-            self.config.save_model_name = f"{self.config.model._model_name}_{self.config.train_loader.dataset.__class__.__name__}_final_{index}.pth"
+            self._config.save_model_name = f"{model_name}_{dataset_name}_final_{index}.pth"
 
         save_model(
-            model=self.model,
-            filename=self.config.save_model_name,
-            filepath=self.config.save_model_path,
-            distributed=self.config.use_ddp
+            model=self._model,
+            filename=self._config.save_model_name,
+            filepath=self._config.save_model_path,
+            distributed=self._config.use_ddp
         )
 
     def _run_batch(self, source: torch.Tensor, targets: torch.Tensor) -> float:
@@ -314,14 +319,14 @@ class Trainer:
         Returns:
             float: The loss.
         """
-        self.model.train()
-        self.optimizer.zero_grad()
-        output = self.model(source)
-        loss = self.loss_fn(output, targets)
+        self._model.train()
+        self._optimizer.zero_grad()
+        output = self._model(source)
+        loss = self._loss_fn(output, targets)
         loss.backward()
-        self.optimizer.step()
-        if self.scheduler:
-            self.scheduler.step()
+        self._optimizer.step()
+        if self._scheduler:
+            self._scheduler.step()
         return loss.item()
 
     def _run_epoch(self, epoch: int) -> None:
@@ -329,21 +334,20 @@ class Trainer:
         Runs the given epoch.
         """
         total_loss = 0.0
-        # for source, targets in self.config.train_loader:
-        for _, (source, targets) in enumerate(tqdm(self.config.train_loader)):
+        for _, (source, targets) in enumerate(tqdm(self._config.train_loader, leave=False)):
             source, targets = source.to(
-                self.device), targets.to(self.device)
+                self._device), targets.to(self._device)
             loss = self._run_batch(source, targets)
             total_loss += loss
 
-        total_loss /= len(self.config.train_loader)
+        total_loss /= len(self._config.train_loader)
         click.echo(
             click.style(f"Epoch {epoch} - Average loss: {total_loss:.4f}", fg="blue"))
         self._log_loss(epoch, total_loss)
 
     def _pre_training(self) -> None:
         # Method to run before training starts.
-        self.model.train()
+        self._model.train()
 
     def _post_training(self) -> None:
         # Method to run after training ends.

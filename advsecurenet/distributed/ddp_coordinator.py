@@ -6,14 +6,14 @@ from torch.distributed import destroy_process_group, init_process_group
 from advsecurenet.utils.network import find_free_port
 
 
-class DDPTrainingCoordinator:
+class DDPCoordinator:
     """
     The generic DDP DDPTrainer class. This class is used to train a model using DistributedDataParallel. 
     """
 
     def __init__(self, train_func, world_size, *args, **kwargs):
         """
-        Initialize the  DDP DDPTrainer. DDPTrainingCoordinator is a wrapper class for DistributedDataParallel used for multi-GPU training.
+        Initialize the  DDP DDPTrainer. DDPCoordinator is a wrapper class for DistributedDataParallel used for multi-GPU training.
         The module can be used for both adversarial and non-adversarial training.
 
         Args:
@@ -27,7 +27,7 @@ class DDPTrainingCoordinator:
             It finds a free port on the machine and uses it as the master port.
 
         Example:
-            >>> from advsecurenet.trainer.ddp_training_coordinator import DDPTrainingCoordinator
+            >>> from advsecurenet.trainer.ddp_training_coordinator import DDPCoordinator
             >>> def main_training_function(rank, model, dataset, train_config, attack_config):
             >>>     # Define the training logic here
             >>>     pass
@@ -42,6 +42,7 @@ class DDPTrainingCoordinator:
         self.kwargs = kwargs
         self.port = find_free_port()
         self.backend = 'nccl'
+        mp.set_start_method('spawn')
         os.environ['MASTER_ADDR'] = 'localhost'
         os.environ['MASTER_PORT'] = str(self.port)
 
@@ -69,11 +70,4 @@ class DDPTrainingCoordinator:
         """
         Spawn the processes for DDP training.
         """
-        processes = []
-        for rank in range(self.world_size):
-            p = mp.Process(target=self.run_process,
-                           args=(rank,))
-            p.start()
-            processes.append(p)
-        for p in processes:
-            p.join()
+        mp.spawn(self.run_process, nprocs=self.world_size, join=True)
