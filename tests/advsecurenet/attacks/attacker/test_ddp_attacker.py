@@ -1,4 +1,6 @@
 import os
+import pickle
+from unittest import mock
 from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
@@ -9,6 +11,7 @@ from advsecurenet.attacks.attacker.attacker import Attacker
 from advsecurenet.attacks.attacker.ddp_attacker import DDPAttacker
 from advsecurenet.attacks.gradient_based.fgsm import FGSM
 from advsecurenet.datasets import DatasetFactory
+from advsecurenet.distributed.ddp_base_task import DDPBaseTask
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
 from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
@@ -55,84 +58,70 @@ def attacker_config(processor):
     )
 
 
-@pytest.mark.advsecurenet
-@pytest.mark.essential
-@patch('torch.cuda.device_count', return_value=2)
-@patch('advsecurenet.attacks.attacker.ddp_attacker.set_visible_gpus')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.find_free_port', return_value=12345)
-# mock super class
-@patch('advsecurenet.attacks.attacker.ddp_attacker.Attacker.__init__', return_value=None)
-def test_ddp_attacker_initialization(mock_super_init, mock_find_port, mock_set_visible_gpus, mock_device_count, attacker_config):
-    gpu_ids = [0, 1]
-    attacker = DDPAttacker(config=attacker_config, gpu_ids=gpu_ids)
-
-    assert attacker._world_size == 2
-    assert attacker._gpu_ids == gpu_ids
-    mock_set_visible_gpus.assert_called_with(gpu_ids)
-    assert os.environ['MASTER_ADDR'] == 'localhost'
-    assert os.environ['MASTER_PORT'] == '12345'
+@pytest.fixture
+@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model')
+def ddp_attacker(mock_model, attacker_config):
+    rank = 0
+    world_size = 2
+    return DDPAttacker(config=attacker_config, rank=rank, world_size=world_size)
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('torch.cuda.device_count', return_value=2)
-@patch('advsecurenet.attacks.attacker.ddp_attacker.mp.spawn')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.set_visible_gpus')
-def test_execute_method(mock_set_visible_gpus, mock_spawn, mock_device_count, processor, attacker_config):
-    attacker = DDPAttacker(config=attacker_config,
-                           gpu_ids=attacker_config.device.gpu_ids)
-    result = attacker.execute()
-    mock_spawn.assert_called_once()
+def test_ddp_attacker_initialization(ddp_attacker):
+    assert ddp_attacker._rank == 0
+    assert ddp_attacker._world_size == 2
+    assert isinstance(ddp_attacker, DDPBaseTask)
+    assert isinstance(ddp_attacker, Attacker)
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.attacks.attacker.ddp_attacker.set_visible_gpus')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.dist.init_process_group')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.torch.cuda.set_device')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DDP')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DistributedEvalSampler')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.torch.device')
-def test_setup_method(mock_device, mock_sampler, mock_ddp, mock_set_device, mock_init_pg, mock_set_visible_gpus, attacker_config):
-    gpu_ids = [0, 1]
+@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model')
+def test_execute_attack(mock_setup_model, attacker_config):
+    attacker_config.return_adversarial_images = True
 
-    with patch.object(attacker_config.model, 'to', return_value=MagicMock()) as mock_to:
-        attacker = DDPAttacker(config=attacker_config, gpu_ids=gpu_ids)
-        rank = 0
-        mock_device.return_value = 'mocked_device'
-        with patch.object(attacker, '_create_dataloader', return_value=MagicMock()) as mock_dataloader:
-            attacker._setup(rank)
-
-            mock_init_pg.assert_called_with(
-                backend='nccl', rank=rank, world_size=2)
-            mock_set_device.assert_called_with('mocked_device')
-            mock_ddp.assert_called_once_with(
-                mock_to.return_value, device_ids=['mocked_device'])
-            mock_sampler.assert_called_once_with(
-                attacker_config.dataloader.dataset)
-            mock_dataloader.assert_called_once()
-            mock_to.assert_called_with('mocked_device')
+    ddp_attacker = DDPAttacker(config=attacker_config, rank=0, world_size=2)
+    with mock.patch.object(ddp_attacker, '_execute_attack', return_value=['dummy_image']) as mock_execute_attack, \
+            mock.patch.object(ddp_attacker, '_store_results') as mock_store_results:
+        ddp_attacker.execute()
+        mock_execute_attack.assert_called_once()
+        mock_store_results.assert_called_once_with(['dummy_image'])
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.attacks.attacker.ddp_attacker.set_visible_gpus')
-@patch('os.remove')
-@patch('builtins.open', new_callable=mock_open)
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPAttacker._gather_results', return_value=[torch.tensor(1)])
-def test_store_and_gather_results(mock_gather_results, mock_open, mock_remove, mock_set_visible_gpus, attacker_config):
-    gpu_ids = [0, 1]
-    attacker = DDPAttacker(config=attacker_config, gpu_ids=gpu_ids)
+def test_store_results(ddp_attacker):
+    adv_images = ['dummy_image']
+    output_path = f'./adv_images_{ddp_attacker._rank}.pkl'
+    with mock.patch('builtins.open', mock.mock_open()) as mock_file, \
+            mock.patch('pickle.dump') as mock_pickle_dump:
+        ddp_attacker._store_results(adv_images)
+        mock_file.assert_called_once_with(output_path, 'wb')
+        mock_pickle_dump.assert_called_once_with(adv_images, mock_file())
 
-    adv_images = [torch.tensor(1)]
-    attacker._rank = 0
-    attacker._store_results(adv_images)
 
-    mock_open.assert_called_once_with('./adv_images_0.pkl', 'wb')
-    mock_open().write.assert_called_once()
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+def test_gather_results():
+    world_size = 2
+    dummy_images = ['dummy_image']
+    for rank in range(world_size):
+        output_path = f'./adv_images_{rank}.pkl'
+        with open(output_path, 'wb') as f:
+            pickle.dump(dummy_images, f)
+    gathered_images = DDPAttacker.gather_results(world_size)
+    assert gathered_images == dummy_images * world_size
+    for rank in range(world_size):
+        output_path = f'./adv_images_{rank}.pkl'
+        assert not os.path.exists(output_path)
 
-    mock_open.reset_mock()
-    gathered_images = attacker._gather_results()
 
-    # mock_open.assert_called_with('./adv_images_0.pkl', 'rb')
-    assert gathered_images == [torch.tensor(1)]
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+def test_get_iterator(ddp_attacker):
+    iterator = ddp_attacker._get_iterator()
+    if ddp_attacker._rank == 0:
+        assert hasattr(iterator, '__iter__')
+    else:
+        assert not hasattr(iterator, '__iter__')

@@ -13,6 +13,8 @@ from advsecurenet.shared.types.configs.device_config import DeviceConfig
 class TestAdversarialAttack(AdversarialAttack):
     def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs):
         return x  # minimal implementation
+    __test__ = False
+    
 
 
 @pytest.mark.advsecurenet

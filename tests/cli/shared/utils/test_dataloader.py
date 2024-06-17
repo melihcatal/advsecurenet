@@ -95,7 +95,8 @@ def test_get_dataloader_test(mock_secho, mock_create_dataloader):
 @patch("torch.distributed.is_initialized", return_value=True)
 @patch("torch.distributed.get_rank", return_value=0)
 @patch("torch.utils.data.distributed.DistributedSampler", autospec=True)
-def test_get_dataloader_ddp(mock_DistributedSampler, mock_get_rank, mock_is_initialized, mock_get_world_size, mock_secho, mock_create_dataloader):
+@patch('cli.shared.utils.dataloader.logger')
+def test_get_dataloader_ddp(mock_logger, mock_DistributedSampler, mock_get_rank, mock_is_initialized, mock_get_world_size, mock_secho, mock_create_dataloader):
     mock_config = MagicMock()
     mock_dataset = MagicMock(spec=BaseDataset)
     mock_loader_config = MagicMock()
@@ -105,8 +106,8 @@ def test_get_dataloader_ddp(mock_DistributedSampler, mock_get_rank, mock_is_init
     dataloader = get_dataloader(
         mock_config, mock_dataset, dataset_type="train", use_ddp=True)
 
-    mock_secho.assert_called_once_with(
-        "Warning: Disabling shuffle for Distributed Data Parallel.", fg="yellow")
+    mock_logger.warning.assert_called_once_with(
+        "Disabling shuffle for Distributed Data Parallel.")
     assert dataloader == mock_create_dataloader()
 
 

@@ -11,7 +11,7 @@ from advsecurenet.shared.types.configs.test_config import TestConfig
 @pytest.fixture
 def mock_model():
     model = MagicMock(spec=nn.Module)
-    model.num_classes = 10
+    model._num_classes = 10
     return model
 
 

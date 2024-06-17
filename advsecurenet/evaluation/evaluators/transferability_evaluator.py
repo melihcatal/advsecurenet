@@ -27,15 +27,10 @@ class TransferabilityEvaluator(BaseEvaluator):
         Resets the evaluator for a new streaming session.
         """
         self.transferability_data = {}
-        # if we have multiple models of the same type, we append a number to the model name starting from 2
-        model_names_dict = {}
+        model_names_count = {}
+
         for model in self.target_models:
-            model_name = model.model_name
-            if model_name not in model_names_dict:
-                model_names_dict[model_name] = 1
-            else:
-                model_names_dict[model_name] += 1
-            model_name += f"_{model_names_dict[model_name]}"
+            model_name = self._get_model_name(model, model_names_count)
             self.transferability_data[model_name] = {
                 'successful_transfer': 0, 'successful_on_source': 0}
 
@@ -70,7 +65,6 @@ class TransferabilityEvaluator(BaseEvaluator):
         model.eval()
         successful_on_source_mask, filtered_adversarial_images, filtered_true_labels, filtered_target_labels = self._get_successful_on_source_mask(
             model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
-        print(f"Succesful on source: {successful_on_source_mask}")
         if successful_on_source_mask.numel() == 0:
             return  # No successful adversarial examples to evaluate
 
@@ -113,13 +107,9 @@ class TransferabilityEvaluator(BaseEvaluator):
 
         initial_predictions = model(original_images)
         initial_labels = torch.argmax(initial_predictions, dim=1)
-        print(
-            f"Initial labels: {initial_labels}, initial predictions: {initial_predictions}, true labels: {true_labels}")
 
         # Mask to identify correct initial predictions
         correct_initial_predictions_mask = initial_labels == true_labels
-        print(
-            f"Correct initial predictions mask: {correct_initial_predictions_mask}")
         total_correct_initial = correct_initial_predictions_mask.sum().item()
 
         if total_correct_initial == 0:
@@ -189,8 +179,6 @@ class TransferabilityEvaluator(BaseEvaluator):
             is_targeted (bool): Whether the attack is targeted.
             target_labels (Optional[torch.Tensor]): The target labels for the targeted attack.
         """
-        print(
-            f"true labels: {true_labels}, successful on source: {successful_on_source_mask}, targeted: {is_targeted}, target labels: {target_labels}")
         model_names_count = {}
 
         for target_model in self.target_models:
@@ -205,9 +193,7 @@ class TransferabilityEvaluator(BaseEvaluator):
             self._move_tensors_to_cpu(
                 adversarial_images, true_labels, successful_on_source_mask, is_targeted, target_labels)
 
-    def _get_model_name(self,
-                        target_model: torch.nn.Module,
-                        model_names_count: dict) -> str:
+    def _get_model_name(self, target_model, model_names_count):
         """
         Generates a unique name for the target model.
 
@@ -218,10 +204,12 @@ class TransferabilityEvaluator(BaseEvaluator):
         Returns:
             str: The unique name for the target model.
         """
-        model_name = target_model.model_name
-        model_names_count[model_name] = model_names_count.get(
-            model_name, 0) + 1
-        return f"{model_name}_{model_names_count[model_name]}"
+        model_name = target_model._model_name
+        model_names_count[model_name] = model_names_count.get(model_name, 0) + 1
+        if model_names_count[model_name] == 1:
+            return model_name
+        else:
+            return f"{model_name}_{model_names_count[model_name]}"
 
     def _evaluate_model_transferability(self,
                                         target_model: torch.nn.Module,

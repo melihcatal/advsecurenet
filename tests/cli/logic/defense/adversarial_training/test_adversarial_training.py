@@ -38,7 +38,7 @@ def test_atcli_trainer_prepare_attacks(mock_load_and_instantiate_config, mock_pr
     mock_config = MagicMock()
     mock_config.device = MagicMock()
     mock_at_config = MagicMock()
-    mock_at_config.attacks = [{"PGD": {"config": "path/to/config"}}]
+    mock_at_config.attacks = [{"PGD": "path/to/config"}]
 
     mock_load_and_instantiate_config.return_value = MagicMock(
         spec=AttackConfig)
@@ -56,7 +56,7 @@ def test_atcli_trainer_prepare_attacks(mock_load_and_instantiate_config, mock_pr
     assert len(attacks) == 1
     mock_load_and_instantiate_config.assert_called_once_with(
         config="path/to/config",
-        default_config_file="at_pgd_attack_config.yml",
+        default_config_file="pgd_attack_base_config.yml",
         config_type=ConfigType.ATTACK,
         config_class=attack_mapping["PGD"]
     )

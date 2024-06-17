@@ -66,7 +66,7 @@ class AdversarialTraining(Trainer):
         self.config.models = [model.train() for model in self.config.models]
 
         # move each model to device
-        self.config.models = [model.to(self.device)
+        self.config.models = [model.to(self._device)
                               for model in self.config.models]
 
     def _generate_adversarial_batch(
@@ -89,7 +89,7 @@ class AdversarialTraining(Trainer):
         random_attack = random.choice(self.config.attacks)
 
         # Move the model to the device
-        random_model.to(self.device)
+        random_model.to(self._device)
 
         # Set the model to eval mode
         random_model.eval()
@@ -111,7 +111,7 @@ class AdversarialTraining(Trainer):
         return adv_source, adv_targets
 
     def _move_to_device(self, source, targets):
-        return source.to(self.device), targets.to(self.device)
+        return source.to(self._device), targets.to(self._device)
 
     def _perform_attack(self,
                         attack: AdversarialAttack,
@@ -182,8 +182,8 @@ class AdversarialTraining(Trainer):
                     leave=False, position=1, unit="batch", colour="blue")
 
     def _prepare_data(self, source, targets):
-        source = source.to(self.device)
-        targets = targets.to(self.device)
+        source = source.to(self._device)
+        targets = targets.to(self._device)
         return source, targets
 
     def _get_loss_divisor(self):

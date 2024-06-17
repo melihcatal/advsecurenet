@@ -2,11 +2,8 @@ import os
 from unittest.mock import MagicMock, patch
 
 import pytest
-import torch.multiprocessing as mp
 
-from advsecurenet.trainer.ddp_training_coordinator import (
-    DDPTrainingCoordinator, destroy_process_group, init_process_group)
-from advsecurenet.utils.network import find_free_port
+from advsecurenet.distributed.ddp_coordinator import DDPCoordinator
 
 
 @pytest.fixture
@@ -15,8 +12,9 @@ def mock_train_func():
 
 
 @pytest.fixture
-def ddp_training_coordinator(mock_train_func):
-    return DDPTrainingCoordinator(
+@patch('advsecurenet.distributed.ddp_coordinator.mp.set_start_method')
+def ddp_training_coordinator(mock_set_start_method, mock_train_func):
+    return DDPCoordinator(
         train_func=mock_train_func,
         world_size=2
     )
@@ -24,9 +22,10 @@ def ddp_training_coordinator(mock_train_func):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.trainer.ddp_training_coordinator.find_free_port', return_value=12345)
-def test_initialization(mock_find_free_port, mock_train_func):
-    coordinator = DDPTrainingCoordinator(
+@patch('advsecurenet.distributed.ddp_coordinator.find_free_port', return_value=12345)
+@patch('advsecurenet.distributed.ddp_coordinator.mp.set_start_method')
+def test_initialization(mock_set_start_method, mock_find_free_port, mock_train_func):
+    coordinator = DDPCoordinator(
         train_func=mock_train_func,
         world_size=2,
     )
@@ -38,7 +37,7 @@ def test_initialization(mock_find_free_port, mock_train_func):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.trainer.ddp_training_coordinator.init_process_group')
+@patch('advsecurenet.distributed.ddp_coordinator.init_process_group')
 def test_ddp_setup(mock_init_process_group, ddp_training_coordinator):
     rank = 0
     ddp_training_coordinator.ddp_setup(rank)
@@ -51,8 +50,8 @@ def test_ddp_setup(mock_init_process_group, ddp_training_coordinator):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.trainer.ddp_training_coordinator.init_process_group')
-@patch('advsecurenet.trainer.ddp_training_coordinator.destroy_process_group')
+@patch('advsecurenet.distributed.ddp_coordinator.init_process_group')
+@patch('advsecurenet.distributed.ddp_coordinator.destroy_process_group')
 def test_run_process(mock_destroy_process_group, mock_init_process_group, ddp_training_coordinator, mock_train_func):
     rank = 0
     ddp_training_coordinator.run_process(rank)
@@ -69,14 +68,11 @@ def test_run_process(mock_destroy_process_group, mock_init_process_group, ddp_tr
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('torch.multiprocessing.Process')
-def test_run(mock_process, ddp_training_coordinator):
+@patch('advsecurenet.distributed.ddp_coordinator.mp.spawn')
+def test_run(mock_spawn, ddp_training_coordinator):
     ddp_training_coordinator.run()
-    assert mock_process.call_count == ddp_training_coordinator.world_size
-    for i in range(ddp_training_coordinator.world_size):
-        mock_process.assert_any_call(
-            target=ddp_training_coordinator.run_process,
-            args=(i,)
-        )
-    assert all(p.start.called for p in mock_process.mock_calls)
-    assert all(p.join.called for p in mock_process.mock_calls)
+    mock_spawn.assert_called_once_with(
+        ddp_training_coordinator.run_process,
+        nprocs=ddp_training_coordinator.world_size,
+        join=True
+    )

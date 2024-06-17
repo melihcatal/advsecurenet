@@ -120,7 +120,7 @@ def make_paths_absolute(base_path: str, config: Union[Dict[str, Any], List[Any]]
     """
     if isinstance(config, dict):
         for key, value in config.items():
-            if isinstance(value, str) and os.path.exists(os.path.join(base_path, value)):
+            if isinstance(value, str) and (os.path.exists(os.path.join(base_path, value)) or "dir" in key or "path" in key):
                 config[key] = os.path.abspath(os.path.join(base_path, value))
             elif isinstance(value, (dict, list)):
                 make_paths_absolute(base_path, value)

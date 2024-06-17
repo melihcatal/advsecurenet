@@ -133,8 +133,8 @@ def test_move_to_device(adversarial_training):
     device_source, device_targets = adversarial_training._move_to_device(
         source, targets)
 
-    assert device_source.device.type == adversarial_training.device
-    assert device_targets.device.type == adversarial_training.device
+    assert device_source.device.type == adversarial_training._device
+    assert device_targets.device.type == adversarial_training._device
 
 
 @pytest.mark.advsecurenet
@@ -162,8 +162,8 @@ def test_prepare_data(adversarial_training):
     prepared_source, prepared_targets = adversarial_training._prepare_data(
         source, targets)
 
-    assert prepared_source.device.type == adversarial_training.device
-    assert prepared_targets.device.type == adversarial_training.device
+    assert prepared_source.device.type == adversarial_training._device
+    assert prepared_targets.device.type == adversarial_training._device
 
 
 @pytest.mark.advsecurenet

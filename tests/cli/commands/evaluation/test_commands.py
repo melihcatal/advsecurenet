@@ -36,8 +36,15 @@ def test_evaluate_test(mock_cli_test, runner):
     result = runner.invoke(evaluate, ['test', '--model-name', 'resnet18',
                            '--dataset-name', 'cifar10', '--model-weights', 'resnet18_cifar10_weights.pth'])
     assert result.exit_code == 0
-    mock_cli_test.assert_called_once_with(None, model_name='resnet18', dataset_name='cifar10',
-                                          model_weights='resnet18_cifar10_weights.pth', processor=None, batch_size=None, loss=None)
+    mock_cli_test.assert_called_once_with(None,
+                                          model_name='resnet18',
+                                          dataset_name='cifar10',
+                                          model_weights='resnet18_cifar10_weights.pth',
+                                          processor=None,
+                                          batch_size=None,
+                                          loss=None,
+                                          topk=None
+                                          )
 
 
 @pytest.mark.cli
@@ -53,4 +60,12 @@ def test_evaluate_test_with_config(mock_click_path, mock_cli_test, runner):
             evaluate, ['test', '--config', 'test_config.yml'])
         assert result.exit_code == 0
         mock_cli_test.assert_called_once_with(
-            'test_config.yml', model_name=None, dataset_name=None, model_weights=None, processor=None, batch_size=None, loss=None)
+            'test_config.yml',
+            model_name=None,
+            dataset_name=None,
+            model_weights=None,
+            processor=None,
+            batch_size=None,
+            loss=None,
+            topk=None
+        )

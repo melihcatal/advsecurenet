@@ -30,5 +30,3 @@ def set_visible_gpus(gpu_ids: Optional[List[int]] = None) -> None:
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(x) for x in gpu_ids)
     logger.info(
         "Set CUDA_VISIBLE_DEVICES to: %s" % os.environ['CUDA_VISIBLE_DEVICES'])
-    logger.info("current env CUDA_VISIBLE_DEVICES: %s" %
-                os.environ['CUDA_VISIBLE_DEVICES'])

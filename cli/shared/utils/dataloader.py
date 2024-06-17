@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 import click
@@ -9,6 +10,8 @@ from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.shared.types.configs.dataloader_config import \
     DataLoaderConfig
 from cli.shared.types.utils.dataloader import DataLoaderCliConfigType
+
+logger = logging.getLogger(__name__)
 
 
 def get_dataloader(config: DataLoaderCliConfigType,
@@ -42,9 +45,8 @@ def get_dataloader(config: DataLoaderCliConfigType,
 
     # Adjust for Distributed Data Parallel if needed
     if use_ddp and loader_config.shuffle:
-        click.secho(
-            "Warning: Disabling shuffle for Distributed Data Parallel.",
-            fg="yellow"
+        logger.warning(
+            "Disabling shuffle for Distributed Data Parallel."
         )
         loader_config.shuffle = False
 

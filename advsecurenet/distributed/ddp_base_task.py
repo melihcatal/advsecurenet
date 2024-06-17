@@ -14,7 +14,7 @@ class DDPBaseTask:
         world_size (int): The total number of processes.
     """
 
-    def __init__(self, model, rank: int, world_size: int):
+    def __init__(self, model: BaseModel, rank: int, world_size: int):
         self._model = model
         self._rank = rank
         self._world_size = world_size

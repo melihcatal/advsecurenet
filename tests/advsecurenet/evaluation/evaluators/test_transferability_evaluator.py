@@ -10,7 +10,7 @@ from advsecurenet.evaluation.evaluators.transferability_evaluator import \
 class DummyModel():
     def __init__(self, model_name):
         super().__init__()
-        self.model_name = model_name
+        self._model_name = model_name
 
     def forward(self, x):
         return torch.zeros(x.size(0), 10)  # Dummy output
@@ -54,7 +54,7 @@ def test_reset(evaluator):
 
 
 @pytest.mark.advsecurenet
-@pytest.mark.comphrensive
+@pytest.mark.comprehensive
 def test_update(evaluator, dummy_models):
     # Create dummy inputs
     model = dummy_models[0]
