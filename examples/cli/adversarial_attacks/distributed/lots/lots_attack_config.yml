@@ -1,0 +1,69 @@
+model:
+  model_name: vgg16
+  num_input_channels: 3
+  num_classes: 10
+  pretrained: true
+  weights: IMAGENET1K_V1
+  is_external: false
+  random_seed:
+  path_configs:
+    model_arch_path:
+    model_weights_path:
+  norm_config:
+    add_norm_layer: true
+    norm_mean:
+    - 0.4914
+    - 0.4822
+    - 0.4465
+    norm_std:
+    - 0.2470
+    - 0.2435
+    - 0.2616
+dataset:
+  dataset_name: cifar10
+  download: true
+  num_classes: 10
+  dataset_part: test
+  train_dataset_path:
+  test_dataset_path:
+  random_sample_size:
+  preprocessing:
+    steps:
+    - name: ToImage
+      params:
+    - name: ToDtype
+      params:
+        dtype: torch.float32
+        scale: true
+dataloader:
+  default:
+    num_workers: 4
+    shuffle: true
+    drop_last: false
+    pin_memory: true
+    batch_size: 64
+device:
+  use_ddp: true
+  processor: cuda
+  gpu_ids: [1,2,4]
+attack_procedure:
+  verbose: true
+  save_result_images: false
+  result_images_dir: attack
+  result_images_prefix: adv
+attack_config:
+  target_parameters:
+    targeted: true
+    auto_generate_target: true
+    target_images_config:
+      target_images_dir:
+    target_labels_config:
+      target_labels: []
+      target_labels_path:
+      target_labels_separator: ','
+  attack_parameters:
+    deep_feature_layer: 1.classifier.6
+    mode: single
+    epsilon: 0.1
+    learning_rate: 0.004
+    max_iterations: 1000

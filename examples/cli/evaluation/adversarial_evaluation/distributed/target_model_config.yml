@@ -1,0 +1,20 @@
+model_name: vgg16
+num_input_channels: 3
+num_classes: 10
+pretrained: false
+weights: IMAGENET1K_V1
+is_external: false
+random_seed:
+path_configs:
+  model_arch_path:
+  model_weights_path:
+norm_config:
+  add_norm_layer: false
+  norm_mean:
+  - 0.5
+  - 0.5
+  - 0.5
+  norm_std:
+  - 0.5
+  - 0.5
+  - 0.5
