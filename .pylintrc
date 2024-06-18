@@ -1,5 +1,5 @@
 [MASTER]
-fail-under=7.0
+fail-under=8.0
 jobs=2
 
 [MESSAGES CONTROL]
