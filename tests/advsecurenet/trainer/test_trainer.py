@@ -89,14 +89,6 @@ def test_setup_scheduler(train_config):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-def test_get_loss_function(train_config):
-    trainer = Trainer(train_config)
-    loss_fn = trainer._get_loss_function(train_config.criterion)
-    assert isinstance(loss_fn, torch.nn.CrossEntropyLoss)
-
-
-@pytest.mark.advsecurenet
-@pytest.mark.essential
 @patch("torch.save")
 def test_save_checkpoint(mock_save, train_config):
     trainer = Trainer(train_config)

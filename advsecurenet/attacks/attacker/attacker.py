@@ -139,10 +139,13 @@ class Attacker:
         """
         Setup the device.
         """
-        device = torch.device(
-            self._config.device.processor) if self._config.device.processor else torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu")
-
+        if self._config.device.processor:
+            device = torch.device(self._config.device.processor)
+        else:
+            if torch.cuda.is_available():
+                device = torch.device("cuda")
+            else:
+                device = torch.device("cpu")
         return device
 
     def _setup_model(self) -> torch.nn.Module:

@@ -4,7 +4,7 @@ import pytest
 import torch
 from torch import nn
 
-from advsecurenet.models.base_model import BaseModel
+from advsecurenet.models.base_model import BaseModel, check_model_loaded
 
 
 class MockBaseModel(BaseModel):
@@ -103,3 +103,38 @@ def test_models(mock_base_model):
     models = mock_base_model.models()
     assert isinstance(models, list)
     assert "mock_model" in models
+
+# Mock class to test the decorator
+
+
+class MockModelClass:
+    def __init__(self, model=None):
+        self.model = model
+
+    @check_model_loaded
+    def some_method(self):
+        return "Method called"
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+def test_method_with_model_loaded():
+    mock_instance = MockModelClass(model="Dummy Model")
+    result = mock_instance.some_method()
+    assert result == "Method called"
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+def test_method_without_model_loaded():
+    mock_instance = MockModelClass(model=None)
+    with pytest.raises(ValueError, match="Model is not loaded."):
+        mock_instance.some_method()
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+def test_method_with_custom_model():
+    mock_instance = MockModelClass(model="Custom Model")
+    result = mock_instance.some_method()
+    assert result == "Method called"

@@ -1,4 +1,5 @@
 import io
+import logging
 import pickle
 import random
 from collections import defaultdict
@@ -13,6 +14,8 @@ from torchvision import transforms
 from torchvision.datasets import VisionDataset as TorchDataset
 
 from advsecurenet.datasets.base_dataset import DatasetWrapper
+
+logger = logging.getLogger(__name__)
 
 
 class AdversarialTargetGenerator:
@@ -83,8 +86,8 @@ class AdversarialTargetGenerator:
                 # Step 3: Validate paired images
                 self._validate_paired_images(paired_images)
             except Exception as e:
-                print(
-                    f"Failed to validate paired images. Trying again... {num_tries}/{total_tries}")
+                logger.warning(
+                    'Could not generate target images. Retrying...')
                 # Retry a few times if validation fails
                 num_tries += 1
                 if num_tries <= total_tries:
@@ -92,6 +95,8 @@ class AdversarialTargetGenerator:
                         class_to_images)
                     self._validate_paired_images(paired_images)
                 else:
+                    logger.error(
+                        'Could not generate target images after multiple tries.')
                     raise ValueError(
                         'Could not generate target images. Maybe you forgot to shuffle the data? Detailed error: ' + str(e)) from e
 
@@ -175,7 +180,8 @@ class AdversarialTargetGenerator:
             file_stream = io.BytesIO(response.content)
             return pickle.load(file_stream)
         else:
-            raise Exception(f"Failed to download file from {url}")
+            raise ValueError(
+                f"Failed to download the mappings from {url}. Please check the URL and try again.")
 
     def _get_existing_indices_map(self, data_type: str) -> Union[dict, None]:
         """Checks if the indices map already exists."""
@@ -188,8 +194,9 @@ class AdversarialTargetGenerator:
                 if mapping:
                     return mapping
             return None
-        except Exception as e:
-            print("An error occurred while loading the indices map: " + str(e))
+        except ValueError as e:
+            logger.warning(
+                "Could not load the existing indices map. Detailed error: %s", str(e))
             return None
 
     def _extract_targets(self, data: Union[TorchDataset, DatasetWrapper, zip]) -> list:
@@ -220,13 +227,10 @@ class AdversarialTargetGenerator:
         try:
             # Check if the map already exists
             if not overwrite:
-                try:
-                    existing_map = self._get_existing_indices_map(
-                        train_data.name)
-                    if existing_map:
-                        return existing_map
-                except:
-                    pass
+                existing_map = self._get_existing_indices_map(
+                    train_data.name)
+                if existing_map:
+                    return existing_map
 
             # Extract targets from the train_data
             if targets is None:

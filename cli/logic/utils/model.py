@@ -40,7 +40,7 @@ def cli_available_weights(model_name: str):
             click.echo(f"\t{weight.name}")
     except ValueError as e:
         raise click.ClickException(
-            "Could not find available weights for the specified model!")
+            "Could not find available weights for the specified model!") from e
 
 
 def cli_model_layers(model_name: str, add_normalization: bool = False):
@@ -84,14 +84,14 @@ def cli_download_weights(model_name: str, dataset_name: str, filename: str, save
         click.echo(
             f"Downloaded weights to {save_path_print}. You can now use them for training or evaluation!")
     except FileExistsError as e:
-        print(
-            f"Model weights for {model_name} trained on {dataset_name} already exist at {save_path_print}!")
+        raise click.ClickException(
+            f"File {filename} already exists in the specified directory!") from e
     except HTTPError as e:
-        print(
-            f"Model weights for {model_name} trained on {dataset_name} not found on remote server!")
+        raise click.ClickException(
+            f"Could not download weights for {model_name} trained on {dataset_name}!") from e
     except Exception as e:
-        print(
-            f"Error downloading model weights for {model_name} trained on {dataset_name}!")
+        raise click.ClickException(
+            "An error occurred while downloading the weights!") from e
 
 
 def _get_models(model_type: str) -> list[str]:

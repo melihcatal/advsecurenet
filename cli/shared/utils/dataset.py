@@ -64,9 +64,10 @@ def _validate_dataset_name(dataset_name: str) -> str:
         ValueError: If the dataset name is not supported.
     """
     dataset_name = dataset_name.upper()
-    # TODO: Better way to validate dataset name
-    # pylint: disable=protected-access
-    if dataset_name not in DatasetType._value2member_map_:
+    try:
+        DatasetType(dataset_name)
+    except ValueError as e:
         raise ValueError("Unsupported dataset name! Choose from: " +
-                         ", ".join([e.value for e in DatasetType]))
+                         ", ".join([e.value for e in DatasetType])) from e
+
     return dataset_name

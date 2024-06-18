@@ -1,6 +1,7 @@
 """
 This module contains utility functions for working with configuration data through the CLI.
 """
+import logging
 import os
 from dataclasses import fields
 from typing import Any, Dict, List, Type, TypeVar, Union
@@ -14,8 +15,10 @@ from advsecurenet.shared.types.configs.configs import ConfigType
 from advsecurenet.utils.dataclass import recursive_dataclass_instantiation
 
 config_path = pkg_resources.resource_filename("cli", "configs")
+CONFIG_FILE_ENDING = "_config.yml"
 # This will represent the specific class type of `config_class`
 T = TypeVar('T')
+logger = logging.getLogger(__name__)
 
 
 def build_config(config_data: Dict,
@@ -199,15 +202,16 @@ def get_available_configs() -> list:
                         'INCLUDE_IN_CLI_CONFIGS', include_in_cli)
             if include_in_cli:
                 config_files = [
-                    file for file in files if file.endswith("_config.yml")]
+                    file for file in files if file.endswith(CONFIG_FILE_ENDING)]
                 for config_file in config_files:
                     configs.append({
                         "title": title,
                         "description": description,
                         "config_file": config_file
                     })
-        except:
-            pass
+        except Exception as e:
+            logger.error(
+                "Error occurred while reading configuration files: %s", e)
 
     return configs
 
@@ -227,8 +231,8 @@ def generate_default_config_yaml(config_name: str, output_path: str, save=False,
         raise ValueError(
             "config_name and output_path must be specified and not None!")
 
-    if not config_name.endswith("_config.yml"):
-        config_name = config_name + "_config.yml"
+    if not config_name.endswith(CONFIG_FILE_ENDING):
+        config_name = config_name + CONFIG_FILE_ENDING
 
     default_config_path = get_default_config_yml(config_name, config_subdir)
     # if the file does not exist, raise an error
@@ -275,10 +279,10 @@ def _include_yaml(loader: yaml.Loader, node: yaml.Node) -> Union[None, Dict]:
         with open(included_file, 'r', encoding='utf-8') as f:
             return yaml.load(f, Loader=yaml.FullLoader)
     except FileNotFoundError:
-        print(f"File not found: {included_file}")
+        logger.error("File not found: %s", included_file)
         return None
     except Exception as e:
-        print(f"Error reading {included_file}: {e}")
+        logger.error("Error loading file: %s", str(e))
         return None
 
 

@@ -1,3 +1,4 @@
+import logging
 from dataclasses import asdict
 
 import click
@@ -13,6 +14,8 @@ from cli.shared.types.train import TrainingCliConfigType
 from cli.shared.utils.dataloader import get_dataloader
 from cli.shared.utils.dataset import get_datasets
 from cli.shared.utils.model import create_model
+
+logger = logging.getLogger(__name__)
 
 
 class CLITrainer:
@@ -43,6 +46,7 @@ class CLITrainer:
                 self._execute_training()
 
         except Exception as e:
+            logger.error(f"Error occurred during training: {e}")
             raise e
 
     def _execute_ddp_training(self) -> None:

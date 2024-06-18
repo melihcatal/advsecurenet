@@ -4,8 +4,10 @@ from typing import Optional
 
 from torch import nn
 
-from advsecurenet.models import *
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.models.custom_model import CustomModel
+from advsecurenet.models.external_model import ExternalModel
+from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.shared.types.configs.model_config import (
     CreateModelConfig, CustomModelConfig, ExternalModelConfig,
     StandardModelConfig)
@@ -122,7 +124,7 @@ class ModelFactory:
         except Exception as e:
             err = f"Error creating model. Please check the model_name and other arguments. Error: {str(e)}"
             logger.error(err)
-            raise Exception(err) from e
+            raise ValueError(err) from e
 
     @staticmethod
     def _validate_create_model_config(

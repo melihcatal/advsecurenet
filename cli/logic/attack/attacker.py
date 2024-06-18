@@ -152,7 +152,7 @@ class CLIAttacker:
         attack_config = self._config.attack_config.attack_parameters
         try:
             attack_config.targeted = self._config.attack_config.target_parameters.targeted or False
-        except:
+        except AttributeError:
             attack_config.targeted = False
 
         # Set the device for the attack. This is a workaround for now until we refactor the device handling
@@ -163,7 +163,6 @@ class CLIAttacker:
         return attack
 
     def _create_dataloader_config(self):
-        # dataset = self._prepare_dataset()
         dataloader_config = DataLoaderConfig(
             dataset=self._dataset,
             batch_size=self._config.dataloader.default.batch_size,
@@ -183,40 +182,55 @@ class CLIAttacker:
             torch.utils.data.TensorDataset: The dataset.
         """
         target_parameters = self._get_target_parameters()
+        target_labels = self._get_target_labels_if_available(target_parameters)
+
+        train_data, test_data = get_datasets(self._config.dataset)
+
+        all_data = self._select_data_partition(train_data, test_data)
+
+        all_data = self._sample_data_if_required(all_data)
+
+        all_data = self._generate_or_assign_target_labels(
+            all_data, target_parameters, target_labels)
+
+        return all_data
+
+    def _get_target_labels_if_available(self, target_parameters):
+        """
+        Check if target labels are available and return them if they are.
+
+        """
         if target_parameters and (target_parameters.target_labels_config.target_labels_path or target_parameters.target_labels_config.target_labels):
-            target_labels = self._get_target_labels()
+            return self._get_target_labels()
+        return None
 
-        train_data, test_data = get_datasets(
-            self._config.dataset)
-
-        # first check if the user wants to use only the train or test data
-        if self._config.dataset.dataset_part == "train":
-            all_data = self._validate_dataset_availability(
-                train_data, "train")
-        elif self._config.dataset.dataset_part == "test":
-            all_data = self._validate_dataset_availability(
-                test_data, "test")
+    def _select_data_partition(self, train_data, test_data):
+        dataset_part = self._config.dataset.dataset_part
+        if dataset_part == "train":
+            return self._validate_dataset_availability(train_data, "train")
+        elif dataset_part == "test":
+            return self._validate_dataset_availability(test_data, "test")
         else:
-            # if no dataset part is specified, use all the available data
-            all_data = train_data + test_data if train_data and test_data else train_data or test_data
+            return train_data + test_data if train_data and test_data else train_data or test_data
 
-        # finally, sample the data if required
-        if self._config.dataset.random_sample_size is not None and self._config.dataset.random_sample_size > 0:
-            all_data = self._sample_data(
-                all_data, self._config.dataset.random_sample_size)
+    def _sample_data_if_required(self, all_data):
+        sample_size = self._config.dataset.random_sample_size
+        if sample_size is not None and sample_size > 0:
+            return self._sample_data(all_data, sample_size)
+        return all_data
 
-        if target_parameters and target_parameters.targeted and target_parameters.auto_generate_target:
-            logger.info("Generating target labels and images.")
-            all_data = self._generate_target(all_data)
-            logger.info(
-                "Target labels and images generated successfully. Total length of the dataset: %s", len(all_data))
-        elif target_parameters and target_parameters.targeted and target_labels:
-            all_data = AdversarialDataset(
-                base_dataset=all_data,
-                target_labels=target_labels)
-            logger.info(
-                "Target labels are provided. Total length of the dataset: %s", len(all_data))
-
+    def _generate_or_assign_target_labels(self, all_data, target_parameters, target_labels):
+        if target_parameters and target_parameters.targeted:
+            if target_parameters.auto_generate_target:
+                logger.info("Generating target labels and images.")
+                all_data = self._generate_target(all_data)
+                logger.info(
+                    "Target labels and images generated successfully. Total length of the dataset: %s", len(all_data))
+            elif target_labels:
+                all_data = AdversarialDataset(
+                    base_dataset=all_data, target_labels=target_labels)
+                logger.info(
+                    "Target labels are provided. Total length of the dataset: %s", len(all_data))
         return all_data
 
     def _generate_target(self, data: DatasetWrapper) -> AdversarialDataset:

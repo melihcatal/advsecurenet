@@ -185,8 +185,6 @@ class LOTS(AdversarialAttack):
         logits = model(x)
         pred_classes = torch.argmax(logits, dim=-1)
         pred_classes = self.device_manager.to_device(pred_classes)
-        success_distances = torch.zeros(
-            x.size(0), dtype=torch.bool, device=x.device)
 
         if y is not None:
             y = self.device_manager.to_device(y)

@@ -31,6 +31,7 @@ examples/*/**_config.yml
 # coverage files
 .coverage.*
 .coverage
+coverage.xml
 
 # ide settings
 .vscode/
@@ -40,3 +41,6 @@ examples/*/**_config.yml
 
 # results
 examples/*/**.csv
+
+# sonarqube
+.scannerwork/

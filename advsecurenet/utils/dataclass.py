@@ -51,7 +51,7 @@ def filter_for_dataclass(data: Union[dict, object], dataclass_type: type, conver
 
 
 def recursive_dataclass_instantiation(cls: Type[T], data: dict) -> T:
-    """ 
+    """
     Recursively instantiate a dataclass from a dictionary. Recursion is used to instantiate nested dataclasses.
 
     Args:
@@ -61,59 +61,63 @@ def recursive_dataclass_instantiation(cls: Type[T], data: dict) -> T:
     Returns:
         T: The instantiated dataclass.
     """
-
     if not is_dataclass(cls):
         return data
 
     field_types = {f.name: f.type for f in fields(cls)}
-    new_data = {}
-
-    for key, value in data.items():
-        if key not in field_types:
-            continue
-        field_type = field_types[key]
-        origin = get_origin(field_type)
-        args = get_args(field_type)
-        try:
-            if origin is Union and type(None) in args:
-                actual_type = next(
-                    arg for arg in args if arg is not type(None))
-                if is_dataclass(actual_type) and isinstance(value, dict):
-                    new_data[key] = recursive_dataclass_instantiation(
-                        actual_type, value)
-                else:
-                    new_data[key] = value
-            elif is_dataclass(field_type) and isinstance(value, dict):
-                new_data[key] = recursive_dataclass_instantiation(
-                    field_type, value)
-            elif origin is list and is_dataclass(args[0]) and isinstance(value, list):
-                new_data[key] = [recursive_dataclass_instantiation(
-                    args[0], item) for item in value]
-            # This is for generic types
-            elif origin and args and is_dataclass(args[0]) and isinstance(value, dict):
-                # Dynamically determine the generic type and assign the key
-                additional_fields = {
-                    field.name: arg for field, arg in zip(fields(origin), args)}
-
-                # Inject additional fields into the value
-                for additional_key, additional_type in additional_fields.items():
-                    if additional_key in value and isinstance(value[additional_key], dict):
-                        value[additional_key] = recursive_dataclass_instantiation(
-                            additional_type, value[additional_key])
-                    else:
-                        value[additional_key] = value.get(additional_key)
-
-                new_data[key] = recursive_dataclass_instantiation(
-                    origin, value)
-            elif is_dataclass(origin):
-                new_data[key] = recursive_dataclass_instantiation(
-                    origin, value)
-            else:
-                new_data[key] = value
-        except Exception:
-            new_data[key] = value
+    new_data = {key: process_field(
+        field_types[key], value) for key, value in data.items() if key in field_types}
 
     return cls(**new_data)
+
+
+def process_field(field_type: Type, value):
+    origin = get_origin(field_type)
+    args = get_args(field_type)
+
+    if is_optional_type(field_type):
+        return process_optional_field(args, value)
+    elif is_dataclass(field_type) and isinstance(value, dict):
+        return recursive_dataclass_instantiation(field_type, value)
+    elif is_list_of_dataclass(field_type, value):
+        return [recursive_dataclass_instantiation(args[0], item) for item in value]
+    elif origin and args and is_dataclass(args[0]) and isinstance(value, dict):
+        return process_generic_type(origin, args, value)
+    elif is_dataclass(origin):
+        return recursive_dataclass_instantiation(origin, value)
+    else:
+        return value
+
+
+def is_optional_type(field_type: Type) -> bool:
+    origin = get_origin(field_type)
+    args = get_args(field_type)
+    return origin is Union and type(None) in args
+
+
+def process_optional_field(args, value):
+    actual_type = next(arg for arg in args if arg is not type(None))
+    if is_dataclass(actual_type) and isinstance(value, dict):
+        return recursive_dataclass_instantiation(actual_type, value)
+    return value
+
+
+def is_list_of_dataclass(field_type: Type, value) -> bool:
+    origin = get_origin(field_type)
+    args = get_args(field_type)
+    return origin is list and is_dataclass(args[0]) and isinstance(value, list)
+
+
+def process_generic_type(origin, args, value):
+    additional_fields = {field.name: arg for field,
+                         arg in zip(fields(origin), args)}
+    for additional_key, additional_type in additional_fields.items():
+        if additional_key in value and isinstance(value[additional_key], dict):
+            value[additional_key] = recursive_dataclass_instantiation(
+                additional_type, value[additional_key])
+        else:
+            value[additional_key] = value.get(additional_key)
+    return recursive_dataclass_instantiation(origin, value)
 
 
 def merge_dataclasses(*dataclasses: object) -> object:

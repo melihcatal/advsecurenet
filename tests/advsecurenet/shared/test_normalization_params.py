@@ -35,8 +35,8 @@ def test_get_params_mnist():
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 def test_get_params_invalid_string():
-    params = NormalizationParameters.get_params("INVALID")
-    assert params is None
+    with pytest.raises(KeyError):
+        NormalizationParameters.get_params("INVALID")
 
 
 @pytest.mark.advsecurenet

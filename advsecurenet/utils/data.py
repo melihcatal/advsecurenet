@@ -42,21 +42,21 @@ def unnormalize_data(data: torch.Tensor, mean: torch.Tensor, std: torch.Tensor) 
     return data * torch.tensor(std, device=device).view(1, -1, 1, 1) + torch.tensor(mean, device=device).view(1, -1, 1, 1)
 
 
-def split_data(X, y, test_size=0.2, val_size=0.25, random_state=None):
+def split_data(x, y, test_size=0.2, val_size=0.25, random_state=None):
     """
     Splits data into train, validation and test sets with the given ratios.
 
     Args:
-        X (list): List of features.
+        x (list): List of features.
         y (list): List of targets.
         test_size (float): Ratio of test samples.
         val_size (float): Ratio of validation samples.
         random_state (int): Random seed for reproducibility.
 
     Returns:
-        X_train (list): List of training features.
-        X_val (list): List of validation features.
-        X_test (list): List of test features.
+        x_train (list): List of training features.
+        x_val (list): List of validation features.
+        x_test (list): List of test features.
         y_train (list): List of training targets.
         y_val (list): List of validation targets.
         y_test (list): List of test targets.
@@ -67,12 +67,12 @@ def split_data(X, y, test_size=0.2, val_size=0.25, random_state=None):
         torch.manual_seed(random_state)
 
     # Convert arrays to torch tensors
-    X_tensor = torch.tensor(X)
+    x_tensor = torch.tensor(x)
     y_tensor = torch.tensor(y)
-    dataset = TensorDataset(X_tensor, y_tensor)
+    dataset = TensorDataset(x_tensor, y_tensor)
 
     # Calculate split sizes
-    total_samples = len(X)
+    total_samples = len(x)
     test_samples = int(test_size * total_samples)
     val_samples = int(val_size * (total_samples - test_samples))
     train_samples = total_samples - test_samples - val_samples
@@ -82,13 +82,13 @@ def split_data(X, y, test_size=0.2, val_size=0.25, random_state=None):
         dataset, [train_samples, val_samples, test_samples])
 
     # Separate features and targets for each split
-    X_train = [x[0] for x in train_dataset]
+    x_train = [x[0] for x in train_dataset]
     y_train = [x[1] for x in train_dataset]
 
-    X_val = [x[0] for x in val_dataset]
+    x_val = [x[0] for x in val_dataset]
     y_val = [x[1] for x in val_dataset]
 
-    X_test = [x[0] for x in test_dataset]
+    x_test = [x[0] for x in test_dataset]
     y_test = [x[1] for x in test_dataset]
 
-    return X_train, X_val, X_test, y_train, y_val, y_test
+    return x_train, x_val, x_test, y_train, y_val, y_test

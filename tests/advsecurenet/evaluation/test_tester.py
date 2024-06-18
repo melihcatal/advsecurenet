@@ -63,30 +63,6 @@ def test_tester_test_method(mock_config, mock_model):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-def test_get_loss_function_with_string():
-    tester = Tester.__new__(Tester)
-    loss_fn = tester._get_loss_function("cross_entropy")
-    assert isinstance(loss_fn, nn.CrossEntropyLoss)
-
-
-@pytest.mark.advsecurenet
-@pytest.mark.essential
-def test_get_loss_function_with_module():
-    tester = Tester.__new__(Tester)
-    loss_fn = tester._get_loss_function(nn.CrossEntropyLoss())
-    assert isinstance(loss_fn, nn.CrossEntropyLoss)
-
-
-@pytest.mark.advsecurenet
-@pytest.mark.essential
-def test_get_loss_function_invalid_string():
-    tester = Tester.__new__(Tester)
-    with pytest.raises(ValueError, match="Unsupported loss function!"):
-        tester._get_loss_function("invalid_loss")
-
-
-@pytest.mark.advsecurenet
-@pytest.mark.essential
 def test_validate_topk(mock_config, mock_model):
     mock_model.num_classes = 10
     mock_config.topk = 5

@@ -15,14 +15,18 @@ class BaseEvaluator(ABC):
     """
 
     def __init__(self, *args, **kwargs):
-        pass
+        """
+        Base constructor for all evaluators.
+        """
 
     def __enter__(self):
         self.reset()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        pass
+        """
+        Exits the context manager.
+        """
 
     @abstractmethod
     def reset(self):
@@ -50,14 +54,12 @@ class BaseEvaluator(ABC):
             is_targeted (bool, optional): Whether the attack is targeted.
             target_labels (Optional[torch.Tensor], optional): Target labels for the adversarial images if the attack is targeted.
         """
-        pass
 
     @abstractmethod
     def get_results(self):
         """
         Calculates the results for the streaming session.
         """
-        pass
 
     def save_results_to_csv(self,
                             evaluation_results: dict,

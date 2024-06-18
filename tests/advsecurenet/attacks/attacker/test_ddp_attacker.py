@@ -60,7 +60,8 @@ def attacker_config(processor):
 
 @pytest.fixture
 @patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model')
-def ddp_attacker(mock_model, attacker_config):
+@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_device')
+def ddp_attacker(mock_device, mock_model, attacker_config):
     rank = 0
     world_size = 2
     return DDPAttacker(config=attacker_config, rank=rank, world_size=world_size)
@@ -78,7 +79,8 @@ def test_ddp_attacker_initialization(ddp_attacker):
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 @patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model')
-def test_execute_attack(mock_setup_model, attacker_config):
+@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_device')
+def test_execute_attack(mock_device, mock_setup_model, attacker_config):
     attacker_config.return_adversarial_images = True
 
     ddp_attacker = DDPAttacker(config=attacker_config, rank=0, world_size=2)

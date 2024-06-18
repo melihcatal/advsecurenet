@@ -178,8 +178,12 @@ class AdversarialTraining(Trainer):
         self._log_loss(epoch, total_loss)
 
     def _get_train_loader(self, epoch: int):
-        return tqdm(self.config.train_loader, desc="Adversarial Training",
-                    leave=False, position=1, unit="batch", colour="blue")
+        return tqdm(self.config.train_loader,
+                    desc="Adversarial Training",
+                    leave=False,
+                    position=1,
+                    unit="batch",
+                    colour="blue")
 
     def _prepare_data(self, source, targets):
         source = source.to(self._device)

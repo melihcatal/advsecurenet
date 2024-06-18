@@ -48,7 +48,7 @@ class NormalizationParameters:
     def get_params(dataset_name: Union[DatasetType, str]
                    ) -> DotDict:
         """
-        Retrieve normalization parameters for a specified dataset. Supported datasets are "CIFAR-10", "ImageNet", and "MNIST".
+        Retrieve normalization parameters for a specified dataset. The parameters are the mean and standard deviation values for each channel of the dataset.
         Args:
             dataset_name (DatasetType or str): The name of the dataset to retrieve parameters for, either as an enum or string.
 
@@ -59,8 +59,9 @@ class NormalizationParameters:
             try:
                 # Convert string to DatasetType enum
                 dataset_name = DatasetType[dataset_name]
-            except KeyError:
-                return None  # Return None if the string does not match any DatasetType
+            except KeyError as e:
+                raise KeyError(
+                    f"Dataset '{dataset_name}' is not supported. Supported datasets are: {NormalizationParameters.list_datasets()}") from e
         params_dict = NormalizationParameters.DATASETS.get(dataset_name)
         return DotDict(params_dict) if params_dict else None
 

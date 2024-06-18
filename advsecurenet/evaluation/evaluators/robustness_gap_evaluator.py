@@ -76,6 +76,5 @@ class RobustnessGapEvaluator(BaseEvaluator):
 
             clean_correct_predictions = torch.sum(
                 clean_predict_labels == labels)
-            # TODO: Add an option to filter out the initially misclassified images
             adv_correct_predictions = torch.sum(adv_predict_labels == labels)
         return clean_correct_predictions.item(), adv_correct_predictions.item()

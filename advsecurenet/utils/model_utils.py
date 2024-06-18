@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -7,6 +8,8 @@ import requests
 import torch
 from torch import nn
 from tqdm.auto import tqdm
+
+logger = logging.getLogger(__name__)
 
 
 def save_model(model: nn.Module,
@@ -63,7 +66,6 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
     # add .pth extension if not present
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
-    # TODO: add support for loading distributed models and also improve the efficiency
     model.load_state_dict(torch.load(os.path.join(
         filepath, filename), map_location=device))
     return model
@@ -72,7 +74,9 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
 def download_weights(model_name: Optional[str] = None,
                      dataset_name: Optional[str] = None,
                      filename: Optional[str] = None,
-                     save_path: Optional[str] = None):
+                     save_path: Optional[str] = pkg_resources.resource_filename(
+                         "advsecurenet", "weights")
+                     ) -> None:
     """
     Downloads model weights from a remote source based on the model and dataset names.
 
@@ -102,9 +106,6 @@ def download_weights(model_name: Optional[str] = None,
 
     remote_url = os.path.join(base_url, filename)
 
-    if save_path is None:
-        save_path = pkg_resources.resource_filename("advsecurenet", "weights")
-
     # Ensure directory exists
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -115,7 +116,7 @@ def download_weights(model_name: Optional[str] = None,
     if not os.path.exists(local_file_path):
         progress_bar = None
         try:
-            response = requests.get(remote_url, stream=True)
+            response = requests.get(remote_url, stream=True, timeout=10)
             response.raise_for_status()  # Raise an error for bad responses
 
             total_size = int(response.headers.get('content-length', 0))
@@ -131,20 +132,12 @@ def download_weights(model_name: Optional[str] = None,
 
             progress_bar.close()
 
-            if total_size not in (0, progress_bar.n):
-                raise Exception(
-                    "Error, something went wrong while downloading.")
-
-            print(f"Downloaded weights to {local_file_path}")
+            logger.info("Successfully downloaded weights to %s",
+                        local_file_path)
         except (Exception, KeyboardInterrupt) as e:
-            # If any error occurs, delete the file and re-raise the exception
-            if os.path.exists(local_file_path):
-                os.remove(local_file_path)
-            if progress_bar is not None:
-                progress_bar.close()
+            os.remove(local_file_path)
+            logger.error("Error occurred while downloading weights: %s", e)
             raise e
 
     else:
-        print(f"File {local_file_path} already exists. Skipping download.")
-
-    return local_file_path
+        logger.info("Weights file already exists. Skipping download.")

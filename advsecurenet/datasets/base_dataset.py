@@ -148,7 +148,7 @@ class BaseDataset(TorchDataset, ABC):
         available_transforms = self._available_transforms()
         if name not in available_transforms:
             raise ValueError(
-                f"Transform {name} is not available. Available transforms are: {list(available_transforms.keys())}")
+                f"Transform {name} is not available. Available transforms are: {list(available_transforms)}")
         return getattr(transforms, name)
 
     def _convert_param(self, value):

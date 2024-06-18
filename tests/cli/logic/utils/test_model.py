@@ -146,34 +146,39 @@ def test_cli_download_weights(mock_download_weights, mock_echo):
 @pytest.mark.cli
 @pytest.mark.essential
 @patch("cli.logic.utils.model.download_weights", side_effect=FileExistsError)
-def test_cli_download_weights_file_exists_error(mock_download_weights):
-    with patch("builtins.print") as mock_print:
+def test_cli_download_weights_file_exists_error(mock_download_weights, capsys):
+    with pytest.raises(click.ClickException) as excinfo:
         cli_download_weights("model1", "dataset1", "filename", "save_path")
-        mock_print.assert_called_once_with(
-            "Model weights for model1 trained on dataset1 already exist at save_path!"
-        )
+    assert str(
+        excinfo.value) == "File filename already exists in the specified directory!"
 
 
 @pytest.mark.cli
 @pytest.mark.essential
 @patch("cli.logic.utils.model.download_weights", side_effect=HTTPError)
-def test_cli_download_weights_http_error(mock_download_weights):
-    with patch("builtins.print") as mock_print:
+def test_cli_download_weights_http_error(mock_download_weights, capsys):
+    with pytest.raises(click.ClickException) as excinfo:
         cli_download_weights("model1", "dataset1", "filename", "save_path")
-        mock_print.assert_called_once_with(
-            "Model weights for model1 trained on dataset1 not found on remote server!"
-        )
+    assert str(
+        excinfo.value) == "Could not download weights for model1 trained on dataset1!"
 
 
 @pytest.mark.cli
 @pytest.mark.essential
 @patch("cli.logic.utils.model.download_weights", side_effect=Exception("General error"))
-def test_cli_download_weights_general_error(mock_download_weights):
-    with patch("builtins.print") as mock_print:
+def test_cli_download_weights_general_error(mock_download_weights, capsys):
+    with pytest.raises(click.ClickException) as excinfo:
         cli_download_weights("model1", "dataset1", "filename", "save_path")
-        mock_print.assert_called_once_with(
-            "Error downloading model weights for model1 trained on dataset1!"
-        )
+    assert str(excinfo.value) == "An error occurred while downloading the weights!"
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.utils.model.download_weights")
+def test_cli_download_weights_success(mock_download_weights, capsys):
+    cli_download_weights("model1", "dataset1", "filename", "save_path")
+    captured = capsys.readouterr()
+    assert "Downloaded weights to save_path. You can now use them for training or evaluation!" in captured.out
 
 
 @pytest.mark.cli

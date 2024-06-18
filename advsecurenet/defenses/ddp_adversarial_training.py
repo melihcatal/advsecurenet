@@ -27,7 +27,7 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
             sampler, DistributedSampler), "Sampler must be a DistributedSampler"
         sampler.set_epoch(epoch)
 
-        if self.rank == 0:
+        if self._rank == 0:
             return tqdm(self.config.train_loader,
                         desc="Adversarial Training",
                         leave=False,
@@ -38,4 +38,4 @@ class DDPAdversarialTraining(DDPTrainer, AdversarialTraining):
             return self.config.train_loader
 
     def _get_loss_divisor(self):
-        return len(self.config.train_loader) * self.world_size
+        return len(self.config.train_loader) * self._world_size

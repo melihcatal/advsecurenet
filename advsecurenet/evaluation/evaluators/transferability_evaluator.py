@@ -40,9 +40,6 @@ class TransferabilityEvaluator(BaseEvaluator):
         self.reset()
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
-
     def update(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor, is_targeted: bool = False, target_labels: Optional[torch.Tensor] = None) -> None:
         """
         Update the transferability evaluator with new data.
@@ -205,7 +202,8 @@ class TransferabilityEvaluator(BaseEvaluator):
             str: The unique name for the target model.
         """
         model_name = target_model._model_name
-        model_names_count[model_name] = model_names_count.get(model_name, 0) + 1
+        model_names_count[model_name] = model_names_count.get(
+            model_name, 0) + 1
         if model_names_count[model_name] == 1:
             return model_name
         else:
