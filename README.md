@@ -12,9 +12,8 @@ The library provides a set of tools to generate adversarial examples and to eval
 
 The library currently supports the following attacks:
 
-- [FGSM](https://arxiv.org/abs/1412.6572)
-- [FGSM Targeted](https://arxiv.org/abs/1412.6572)
-- [PGD](https://arxiv.org/abs/1706.06083)
+- [FGSM - FGSM Targeted](https://arxiv.org/abs/1412.6572)
+- [PGD - PGD Targeted](https://arxiv.org/abs/1706.06083)
 - [DeepFool](https://arxiv.org/abs/1511.04599)
 - [CW](https://arxiv.org/abs/1608.04644)
 - [LOTS](https://arxiv.org/abs/1611.06179)
@@ -45,6 +44,18 @@ cd advsecurenet
 pip install -e .
 ```
 
+## Why AdvSecureNet?
+
+- **Research-Oriented**: The library is designed to be research-oriented. It provides a set of tools to generate adversarial examples, evaluate the robustness of machine learning models against adversarial attacks, and train robust machine learning models. You can easily run experiments with different configurations using the yml configuration files. This helps you to run different experiments and compare the results with minimal effort. Additionally, you can easily share your experiments with others which helps to reproduce the results.
+
+- **Supports Various Attacks and Defenses**: The library supports various adversarial attacks and defenses. You can easily run experiments with different attacks and defenses.
+
+- **Supports Any PyTorch Model**: The library supports any model that is implemented in PyTorch. You can use pre-trained models or create custom models. You can also use your own models and datasets.
+
+- **Supports Various Evaluation Metrics**: The library supports various evaluation metrics to evaluate the robustness of machine learning models against adversarial attacks, the performance of adversarial attacks, and the performance of adversarial defenses.
+
+- **Native Multi-GPU Support**: Adversarial attacks, training, defenses, and evaluation can be computationally expensive. The library supports multi-GPU adversarial attacks, training, and evaluation. This allows you to run large-scale experiments with minimal effort, utilizing the computational resources efficiently.
+
 ## Usage
 
 The library can be used as a command line tool or as an importable Python package.
@@ -52,18 +63,6 @@ The library can be used as a command line tool or as an importable Python packag
 ### Command Line Tool
 
 `advsecurenet` command can be used to interact with the library. You can use `advsecurenet --help` to see the available commands and options. Available commands are:
-
-- `attack` Command to execute attacks.
-- `config-default` Generate a default configuration file based on the name...
-- `configs` Return the list of available configuration files.
-- `defense` Command to execute defenses.
-- `model-layers` Command to list the layers of a model.
-- `models` Command to list available models.
-- `test` Command to evaluate a model.
-- `train` Command to train a model.
-- `weights` Command to model weights.
-
-You can use `advsecurenet <command> --help` to see the available options for a command. For example, you can use `advsecurenet attack --help` to see the available options for the `attack` command. The CLI supports both config yml files and arguments.
 
 ### Python Package
 
@@ -75,12 +74,9 @@ You can find various examples in the [examples](./examples/) directory. The exam
 
 ## Architecture
 
-
-
 The high-level architecture of the library is shown in the figure below.
 
 ![advsecurenet_arch-2](https://github.com/melihcatal/advsecurenet/assets/46859098/cd3823b7-1402-4711-a1ab-e13b270de5d4)
-
 
 ## License
 
