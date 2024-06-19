@@ -42,7 +42,7 @@ class DDPTrainer(DDPBaseTask, Trainer):
 
     def _get_model_state_dict(self) -> dict:
         # Returns the model state dict.
-        return sel._model.module.state_dict()
+        return self._model.module.state_dict()
 
     def _assign_device_to_optimizer_state(self):
         for state in self._optimizer.state.values():

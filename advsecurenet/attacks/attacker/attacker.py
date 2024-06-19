@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Optional, Union
 
 import click
 import torch
@@ -31,20 +31,50 @@ class Attacker:
         """
         return self._execute_attack()
 
-    def _execute_attack(self):
+    def _setup_device(self) -> torch.device:
+        """
+        Setup the device.
+        """
+        if self._config.device.processor:
+            device = torch.device(self._config.device.processor)
+        else:
+            if torch.cuda.is_available():
+                device = torch.device("cuda")
+            else:
+                device = torch.device("cpu")
+        return device
+
+    def _create_dataloader(self):
+        """
+        It is possible to pass a DataLoader object directly to the AttackerConfig. If not, we create a DataLoader object from the DataLoaderConfig.
+        """
+        if isinstance(self._config.dataloader, torch.utils.data.DataLoader):
+            return self._config.dataloader
+        return DataLoaderFactory.create_dataloader(self._config.dataloader)
+
+    def _setup_model(self) -> torch.nn.Module:
+        """
+        Initializes the model and moves it to the device.
+        """
+        return self._config.model.to(self._device)
+
+    def _execute_attack(self) -> Union[None, list[torch.Tensor]]:
+        """
+        Executes the attack and returns the adversarial images if required.
+        """
         adversarial_images = []
 
         with AdversarialEvaluator(evaluators=self._config.evaluators,
-                                  target_models=self._kwargs.get(
-                                      "target_models", [])
-                                  ) as evaluator:
+                                    target_models=self._kwargs.get(
+                                        "target_models", [])
+                                    ) as evaluator:
             data_iterator = self._get_iterator()
 
             self._model.eval()
             for data in data_iterator:
                 if self._config.attack.targeted and len(data) == 4:
-                    # Dataset returns (images, true_labels, target_labels, target_images)
-                    images, true_labels, target_labels, target_images = data
+                    # Dataset returns (images, true_labels, target_images, target_labels) i.e. LOTS
+                    images, true_labels, target_images, target_labels = data
                 else:
                     # Dataset returns (images, labels)
                     images, true_labels = data
@@ -60,11 +90,11 @@ class Attacker:
                     target_images
                 )
                 evaluator.update(model=self._model,
-                                 original_images=images,
-                                 true_labels=true_labels,
-                                 adversarial_images=adv_images,
-                                 is_targeted=self._config.attack.targeted,
-                                 target_labels=target_labels)
+                                    original_images=images,
+                                    true_labels=true_labels,
+                                    adversarial_images=adv_images,
+                                    is_targeted=self._config.attack.targeted,
+                                    target_labels=target_labels)
 
                 if torch.cuda.is_available() and self._device.type == "cuda":
                     # Free up memory
@@ -81,7 +111,7 @@ class Attacker:
             results = evaluator.get_results()
             self._summarize_results(results)
 
-        return adversarial_images
+        return adversarial_images if self._config.return_adversarial_images else None
 
     def _prepare_data(self, *args):
         """
@@ -129,27 +159,5 @@ class Attacker:
         click.secho(
             f"{name.replace('_', ' ').title()}: {local_results.item():.4f}", fg='green')
 
-    def _create_dataloader(self):
-        return DataLoaderFactory.create_dataloader(self._config.dataloader)
-
     def _get_iterator(self):
         return tqdm(self._dataloader, leave=False, position=1, unit="batch", desc="Generating adversarial samples", colour="red")
-
-    def _setup_device(self) -> torch.device:
-        """
-        Setup the device.
-        """
-        if self._config.device.processor:
-            device = torch.device(self._config.device.processor)
-        else:
-            if torch.cuda.is_available():
-                device = torch.device("cuda")
-            else:
-                device = torch.device("cpu")
-        return device
-
-    def _setup_model(self) -> torch.nn.Module:
-        """
-        Initializes the model and moves it to the device.
-        """
-        return self._config.model.to(self._device)

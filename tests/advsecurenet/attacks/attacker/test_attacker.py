@@ -45,7 +45,8 @@ def config(device):
             dataset=DatasetFactory.create_dataset(
                 dataset_type="MNIST", return_loaded=True)[1]
         ),
-        device=device_cfg
+        device=device_cfg,
+        return_adversarial_images=True
     )
 
 
@@ -56,12 +57,21 @@ def kwargs():
 
 @pytest.mark.advsecurenet
 @pytest.mark.comprehensive
-def test_execute(config, kwargs):
+def test_execute_return_adv_images(config, kwargs):
     attacker = Attacker(config, **kwargs)
     adversarial_images = attacker.execute()
     assert isinstance(adversarial_images, list)
     for image in adversarial_images:
         assert isinstance(image, torch.Tensor)
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.comprehensive
+def test_execute_dont_return_adv_images(config, kwargs):
+    config.return_adversarial_images = False
+    attacker = Attacker(config, **kwargs)
+    adversarial_images = attacker.execute()
+    assert adversarial_images is None
 
 
 @pytest.mark.advsecurenet

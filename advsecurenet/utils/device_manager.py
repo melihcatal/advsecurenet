@@ -36,5 +36,4 @@ class DeviceManager:
         device = self.get_current_device()
         processed_args = [
             arg.to(device) if arg is not None else None for arg in args]
-        # print(f"processed args: {processed_args}")
         return processed_args[0] if len(processed_args) == 1 else processed_args

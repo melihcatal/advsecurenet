@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Union
 
 import torch
+from torch.utils.data import DataLoader
 
 from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.shared.types.configs.dataloader_config import \
@@ -16,7 +17,7 @@ class AttackerConfig:
     """
     model: torch.nn.Module
     attack: AdversarialAttack
-    dataloader: DataLoaderConfig
+    dataloader: Union[DataLoader, DataLoaderConfig]
     device: DeviceConfig
     return_adversarial_images: Optional[bool] = False
     evaluators: Optional[list[str]] = field(

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple, Union
 
 import pkg_resources
 import torch
@@ -7,8 +7,8 @@ from torch.utils.data import Dataset as TorchDataset
 from torchvision import datasets
 from torchvision.transforms import v2 as transforms
 
-from advsecurenet.shared.types.configs.preprocess_config import \
-    PreprocessConfig
+from advsecurenet.shared.types.configs.preprocess_config import (
+    PreprocessConfig, PreprocessStep)
 from advsecurenet.shared.types.dataset import DataType
 
 
@@ -160,15 +160,35 @@ class BaseDataset(TorchDataset, ABC):
                 raise ValueError(f'Invalid torch parameter: {value}') from exc
         return value
 
-    def _construct_transforms(self, preprocess_steps):
+    def _construct_transforms(self, preprocess_steps: List[Union[PreprocessStep, dict]]) -> List[Union[transforms.Compose, transforms.Transform]]:
         """Construct a list of transforms based on configuration steps."""
+
+        preprocess_steps: List[PreprocessStep] = self._to_preprocess_step(
+            preprocess_steps)
+
         transform_steps = []
         for step in preprocess_steps:
-            transform = self._get_transform(step['name'])
+            transform = self._get_transform(step.name)
             params = {k: self._convert_param(
-                v) for k, v in step.get('params', {}).items() if v is not None} if step.get('params') else {}
+                v) for k, v in step.params.items() if v is not None} if step.params else {}
             transform_steps.append(transform(**params))
         return transform_steps
+
+    def _to_preprocess_step(self, preprocess_steps: List[Union[PreprocessStep, dict]]) -> List[PreprocessStep]:
+        """
+        Converts a list of steps to a PreprocessStep object.
+
+        Args:
+            preprocess_steps (List[Union[PreprocessStep, dict]]): The list of preprocess steps.
+
+        Returns:
+            List[PreprocessStep]: The list of preprocess steps as PreprocessStep objects.
+        """
+        if any(isinstance(step, dict) for step in preprocess_steps):
+            preprocess_steps = [PreprocessStep(**step) if isinstance(
+                step, dict) else step for step in preprocess_steps]
+
+        return preprocess_steps
 
     def _create_dataset(self,
                         dataset_class: datasets,

@@ -27,11 +27,11 @@ class AdversarialDataset(BaseDataset):
         self.target_images = target_images
 
         # if target labels and base dataset have different lengths, raise an error
-        if target_labels and len(target_labels) != len(base_dataset):
+        if target_labels is not None and len(target_labels) != len(base_dataset):
             raise ValueError(
                 f"The target labels and the base dataset must have the same length. Target labels: {len(target_labels)}, Base dataset: {len(base_dataset)}"
             )
-        if target_images and target_labels and len(target_images) != len(target_labels):
+        if target_images is not None and target_labels is not None and len(target_images) != len(target_labels):
             raise ValueError(
                 f"The target images and target labels must have the same length. Target images: {len(target_images)}, Target labels: {len(target_labels)}"
             )
@@ -50,10 +50,10 @@ class AdversarialDataset(BaseDataset):
             Tuple[Any, int, int, Optional[torch.Tensor]]: A tuple containing the input data,
             the true label, the target label, and the target image (if available).
         """
-        input_data, true_label = self.base_dataset[idx]
-        target_label = self.target_labels[idx] if self.target_labels else true_label
-        target_image = self.target_images[idx] if self.target_images else input_data
-        return input_data, true_label, target_label, target_image
+        images, true_labels = self.base_dataset[idx]
+        target_labels = self.target_labels[idx] if self.target_labels else true_labels
+        target_images = self.target_images[idx] if self.target_images is not None else images
+        return images, true_labels, target_images, target_labels
 
     def get_dataset_class(self):
         return self.base_dataset.get_dataset_class()

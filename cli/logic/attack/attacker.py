@@ -236,16 +236,8 @@ class CLIAttacker:
     def _generate_target(self, data: DatasetWrapper) -> AdversarialDataset:
         # if the attack is lots and targeted and auto_generate_target is set to True, generate target labels and target images
         if self._attack_type == AttackType.LOTS:
-            logger.info("Generating target labels and images for LOTS attack.")
-            paired = self._adv_target_generator.generate_target_images(
-                train_data=data,
-                total_tries=3)
-            logger.info("Successfully paired target labels and images.")
-
-            _, _, target_images, target_labels = self._adv_target_generator.extract_images_and_labels(
-                paired=paired,
-                dataset=data,
-            )
+            target_images, target_labels = self._adv_target_generator.generate_target_images_and_labels(
+                data=data)
             logger.info("Successfully extracted target labels and images.")
 
             adv_data = AdversarialDataset(
