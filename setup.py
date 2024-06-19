@@ -6,16 +6,9 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8'
     long_description = f.read()
 
 
-def read_version():
-    with open("cli/__init__.py") as f:
-        for line in f:
-            if line.startswith("__version__"):
-                return line.split("=")[1].strip().strip("\"'")
-
-
 setup(
     name="advsecurenet",
-    version=read_version(),
+    version=0.1.8,
     description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
     long_description=long_description,
     long_description_content_type='text/markdown',
