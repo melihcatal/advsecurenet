@@ -39,6 +39,7 @@ class MockModel(BaseModel):
 class MockAttack(AdversarialAttack):
     def __init__(self):
         self.name = "MockAttack"
+        self.targeted = False
 
     def attack(self, model, data, target):
         return data  # Return a single tensor

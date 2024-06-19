@@ -9,8 +9,6 @@ from advsecurenet.defenses.adversarial_training import AdversarialTraining
 from advsecurenet.defenses.ddp_adversarial_training import \
     DDPAdversarialTraining
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.attacks import \
-    AttackType as AdversarialAttackType
 from advsecurenet.shared.types.configs.attack_configs.attack_config import \
     AttackConfig
 from advsecurenet.shared.types.configs.configs import ConfigType
@@ -71,12 +69,8 @@ class ATCLITrainer(CLITrainer):
                 attack_config.device = self.config.device
                 attack_type, _ = attack_cli_mapping[attack_name]
 
-                # if the attack is LOTS, we need to use the custom lots wrapper
-                if attack_type == AdversarialAttackType.LOTS:
-                    pass
-                else:
-                    attack_class = attack_type.value
-                    attack = attack_class(attack_config)
+                attack_class = attack_type.value
+                attack = attack_class(attack_config)
 
                 attacks.append(attack)
         return attacks
