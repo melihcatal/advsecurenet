@@ -31,7 +31,8 @@ setup(
         "matplotlib",
         "scikit-image",
         "einops",
-        "filetype"
+        "filetype",
+        "requests"
     ],
     entry_points={
         'console_scripts': [
