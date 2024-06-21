@@ -1,11 +1,14 @@
-name: Unit Tests and Style Checks
+name: CI - Quality Assurance
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    types: [opened, synchronize, reopened]
 
 jobs:
-  test-and-lint:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,7 +32,31 @@ jobs:
         run: |
           pytest
 
-      - name: Lint with pylint
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Install pylint
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+          pip install -e .
+
+      - name: Run pylint
         run: |
           pylint advsecurenet cli
 
@@ -55,7 +82,27 @@ jobs:
         run: |
           radon cc -s -a . > radon_output.txt
           AVERAGE_COMPLEXITY=$(awk '/Average complexity/ {print $3}' radon_output.txt)
+          echo "Average complexity: $AVERAGE_COMPLEXITY"
           if [ "$AVERAGE_COMPLEXITY" != "A" ]; then
             echo "Average complexity is not A. It is $AVERAGE_COMPLEXITY."
             exit 1
           fi
+
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
+          path: .
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

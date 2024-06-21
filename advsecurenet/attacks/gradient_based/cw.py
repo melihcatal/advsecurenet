@@ -95,8 +95,6 @@ class CWAttack(AdversarialAttack):
             adv_images = self._run_attack(model, image, label)
             successful_mask = self._is_successful(model, adv_images, label)
 
-            print(
-                f"adv images type: {type(adv_images)} image type: {type(image)} adv element type: {type(adv_images[0])} image element type: {type(image[0])} dtype: {adv_images.dtype} image dtype: {image.dtype}")
             # Calculate L2 perturbations
             perturbations = torch.norm(adv_images - image, dim=[1, 2, 3], p=2)
 
