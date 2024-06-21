@@ -1,17 +1,17 @@
 advsecurenet.datasets package
 =============================
 
-Subpackages
 -----------
 
 .. toctree::
    :maxdepth: 4
 
    advsecurenet.datasets.Cifar10
+   advsecurenet.datasets.Custom
    advsecurenet.datasets.ImageNet
    advsecurenet.datasets.MNIST
+   advsecurenet.datasets.svhn
 
-Submodules
 ----------
 
 advsecurenet.datasets.base\_dataset module
@@ -30,7 +30,14 @@ advsecurenet.datasets.dataset\_factory module
    :undoc-members:
    :show-inheritance:
 
-Module contents
+advsecurenet.datasets.targeted\_adv\_dataset module
+---------------------------------------------------
+
+.. automodule:: advsecurenet.datasets.targeted_adv_dataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ---------------
 
 .. automodule:: advsecurenet.datasets

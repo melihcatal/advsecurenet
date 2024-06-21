@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cli.shared.types package &mdash; advsecurenet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cli.shared.types.attack package" href="cli.shared.types.attack.html" />
+    <link rel="prev" title="cli.shared.messages package" href="cli.shared.messages.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            advsecurenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cli.html">cli package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cli.commands.html">cli.commands package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.configs.html">cli.configs package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.html">cli.logic package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cli.shared.html">cli.shared package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.messages.html">cli.shared.messages package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cli.shared.types package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html">cli.shared.types.attack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html">cli.shared.types.defense package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html">cli.shared.types.evaluation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html">cli.shared.types.train package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html">cli.shared.types.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.utils.html">cli.shared.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#module-cli.cli">cli.cli module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">advsecurenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cli.html">cli package</a></li>
+          <li class="breadcrumb-item"><a href="cli.shared.html">cli.shared package</a></li>
+      <li class="breadcrumb-item active">cli.shared.types package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.shared.types.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cli-shared-types-package">
+<h1>cli.shared.types package<a class="headerlink" href="#cli-shared-types-package" title="Link to this heading"></a></h1>
+<hr class="docutils" />
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.shared.types.attack.html">cli.shared.types.attack package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.attack.attacks.html">cli.shared.types.attack.attacks package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.attacks.html#module-cli.shared.types.attack.attacks.cw">cli.shared.types.attack.attacks.cw module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.attacks.html#cli.shared.types.attack.attacks.cw.CwAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">CwAttackCLIConfigType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.attacks.html#module-cli.shared.types.attack.attacks.decision_boundary">cli.shared.types.attack.attacks.decision_boundary module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.attacks.html#cli.shared.types.attack.attacks.decision_boundary.DecisionBoundaryAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">DecisionBoundaryAttackCLIConfigType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.attacks.html#module-cli.shared.types.attack.attacks.deepfool">cli.shared.types.attack.attacks.deepfool module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.attacks.html#cli.shared.types.attack.attacks.deepfool.DeepFoolAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">DeepFoolAttackCLIConfigType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.attacks.html#module-cli.shared.types.attack.attacks.fgsm">cli.shared.types.attack.attacks.fgsm module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.attacks.html#cli.shared.types.attack.attacks.fgsm.FgsmAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">FgsmAttackCLIConfigType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.attacks.html#module-cli.shared.types.attack.attacks.lots">cli.shared.types.attack.attacks.lots module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.attacks.html#cli.shared.types.attack.attacks.lots.LotsAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">LotsAttackCLIConfigType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.attacks.html#module-cli.shared.types.attack.attacks.pgd">cli.shared.types.attack.attacks.pgd module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.attacks.html#cli.shared.types.attack.attacks.pgd.PgdAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">PgdAttackCLIConfigType</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.attack.html#module-cli.shared.types.attack.attack">cli.shared.types.attack.attack module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">AttackCLIConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackCLIConfigType.attack_parameters"><code class="docutils literal notranslate"><span class="pre">AttackCLIConfigType.attack_parameters</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackProcedureCliConfigType"><code class="docutils literal notranslate"><span class="pre">AttackProcedureCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackProcedureCliConfigType.result_images_dir"><code class="docutils literal notranslate"><span class="pre">AttackProcedureCliConfigType.result_images_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackProcedureCliConfigType.result_images_prefix"><code class="docutils literal notranslate"><span class="pre">AttackProcedureCliConfigType.result_images_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackProcedureCliConfigType.save_result_images"><code class="docutils literal notranslate"><span class="pre">AttackProcedureCliConfigType.save_result_images</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackProcedureCliConfigType.verbose"><code class="docutils literal notranslate"><span class="pre">AttackProcedureCliConfigType.verbose</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackWithNameConfigDict"><code class="docutils literal notranslate"><span class="pre">AttackWithNameConfigDict</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackWithNameConfigDict.config"><code class="docutils literal notranslate"><span class="pre">AttackWithNameConfigDict.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.AttackWithNameConfigDict.name"><code class="docutils literal notranslate"><span class="pre">AttackWithNameConfigDict.name</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType.attack_config"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType.attack_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType.attack_procedure"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType.attack_procedure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType.dataloader"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType.dataloader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType.dataset"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType.dataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType.device"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.BaseAttackCLIConfigType.model"><code class="docutils literal notranslate"><span class="pre">BaseAttackCLIConfigType.model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.TargetedAttackCLIConfigType"><code class="docutils literal notranslate"><span class="pre">TargetedAttackCLIConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.attack.html#cli.shared.types.attack.attack.TargetedAttackCLIConfigType.target_parameters"><code class="docutils literal notranslate"><span class="pre">TargetedAttackCLIConfigType.target_parameters</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.shared.types.defense.html">cli.shared.types.defense package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.defense.html#module-cli.shared.types.defense.adversarial_training">cli.shared.types.defense.adversarial_training module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.ATCliConfigType"><code class="docutils literal notranslate"><span class="pre">ATCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.ATCliConfigType.adversarial_training"><code class="docutils literal notranslate"><span class="pre">ATCliConfigType.adversarial_training</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.ATCliConfigType.training"><code class="docutils literal notranslate"><span class="pre">ATCliConfigType.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.AdversarialTrainingConfig"><code class="docutils literal notranslate"><span class="pre">AdversarialTrainingConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.AdversarialTrainingConfig.attacks"><code class="docutils literal notranslate"><span class="pre">AdversarialTrainingConfig.attacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.AdversarialTrainingConfig.models"><code class="docutils literal notranslate"><span class="pre">AdversarialTrainingConfig.models</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.AttackConfigDict"><code class="docutils literal notranslate"><span class="pre">AttackConfigDict</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.AttackConfigDict.attack"><code class="docutils literal notranslate"><span class="pre">AttackConfigDict.attack</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.ModelWithConfigDict"><code class="docutils literal notranslate"><span class="pre">ModelWithConfigDict</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.defense.html#cli.shared.types.defense.adversarial_training.ModelWithConfigDict.config"><code class="docutils literal notranslate"><span class="pre">ModelWithConfigDict.config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.shared.types.evaluation.html">cli.shared.types.evaluation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.evaluation.html#module-cli.shared.types.evaluation.evaluation">cli.shared.types.evaluation.evaluation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.evaluation.AdversarialEvaluationCliConfigType"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluationCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.evaluation.AdversarialEvaluationCliConfigType.evaluation_config"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluationCliConfigType.evaluation_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.evaluation.AdversarialEvaluationConfigType"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluationConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.evaluation.AdversarialEvaluationConfigType.attack"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluationConfigType.attack</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.evaluation.AdversarialEvaluationConfigType.evaluators"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluationConfigType.evaluators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.evaluation.AdversarialEvaluationConfigType.target_models"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluationConfigType.target_models</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.evaluation.html#module-cli.shared.types.evaluation.testing">cli.shared.types.evaluation.testing module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.Testing"><code class="docutils literal notranslate"><span class="pre">Testing</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.Testing.criterion"><code class="docutils literal notranslate"><span class="pre">Testing.criterion</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.Testing.topk"><code class="docutils literal notranslate"><span class="pre">Testing.topk</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.TestingCliConfigType"><code class="docutils literal notranslate"><span class="pre">TestingCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.TestingCliConfigType.dataloader"><code class="docutils literal notranslate"><span class="pre">TestingCliConfigType.dataloader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.TestingCliConfigType.dataset"><code class="docutils literal notranslate"><span class="pre">TestingCliConfigType.dataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.TestingCliConfigType.device"><code class="docutils literal notranslate"><span class="pre">TestingCliConfigType.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.TestingCliConfigType.model"><code class="docutils literal notranslate"><span class="pre">TestingCliConfigType.model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.evaluation.html#cli.shared.types.evaluation.testing.TestingCliConfigType.testing"><code class="docutils literal notranslate"><span class="pre">TestingCliConfigType.testing</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.shared.types.train.html">cli.shared.types.train package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.train.html#module-cli.shared.types.train.training">cli.shared.types.train.training module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training"><code class="docutils literal notranslate"><span class="pre">Training</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.checkpoint_interval"><code class="docutils literal notranslate"><span class="pre">Training.checkpoint_interval</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.criterion"><code class="docutils literal notranslate"><span class="pre">Training.criterion</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.epochs"><code class="docutils literal notranslate"><span class="pre">Training.epochs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.learning_rate"><code class="docutils literal notranslate"><span class="pre">Training.learning_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.load_checkpoint"><code class="docutils literal notranslate"><span class="pre">Training.load_checkpoint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.load_checkpoint_path"><code class="docutils literal notranslate"><span class="pre">Training.load_checkpoint_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.optimizer"><code class="docutils literal notranslate"><span class="pre">Training.optimizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.optimizer_kwargs"><code class="docutils literal notranslate"><span class="pre">Training.optimizer_kwargs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.save_checkpoint"><code class="docutils literal notranslate"><span class="pre">Training.save_checkpoint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.save_checkpoint_name"><code class="docutils literal notranslate"><span class="pre">Training.save_checkpoint_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.save_checkpoint_path"><code class="docutils literal notranslate"><span class="pre">Training.save_checkpoint_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.save_final_model"><code class="docutils literal notranslate"><span class="pre">Training.save_final_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.save_model_name"><code class="docutils literal notranslate"><span class="pre">Training.save_model_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.save_model_path"><code class="docutils literal notranslate"><span class="pre">Training.save_model_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.scheduler"><code class="docutils literal notranslate"><span class="pre">Training.scheduler</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.scheduler_kwargs"><code class="docutils literal notranslate"><span class="pre">Training.scheduler_kwargs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.Training.verbose"><code class="docutils literal notranslate"><span class="pre">Training.verbose</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.TrainingCliConfigType"><code class="docutils literal notranslate"><span class="pre">TrainingCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.TrainingCliConfigType.dataloader"><code class="docutils literal notranslate"><span class="pre">TrainingCliConfigType.dataloader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.TrainingCliConfigType.dataset"><code class="docutils literal notranslate"><span class="pre">TrainingCliConfigType.dataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.TrainingCliConfigType.device"><code class="docutils literal notranslate"><span class="pre">TrainingCliConfigType.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.TrainingCliConfigType.model"><code class="docutils literal notranslate"><span class="pre">TrainingCliConfigType.model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.train.html#cli.shared.types.train.training.TrainingCliConfigType.training"><code class="docutils literal notranslate"><span class="pre">TrainingCliConfigType.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.shared.types.utils.html">cli.shared.types.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.utils.html#module-cli.shared.types.utils.dataloader">cli.shared.types.utils.dataloader module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderCliConfigType"><code class="docutils literal notranslate"><span class="pre">DataLoaderCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderCliConfigType.default"><code class="docutils literal notranslate"><span class="pre">DataLoaderCliConfigType.default</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderCliConfigType.test"><code class="docutils literal notranslate"><span class="pre">DataLoaderCliConfigType.test</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderCliConfigType.train"><code class="docutils literal notranslate"><span class="pre">DataLoaderCliConfigType.train</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderConfig"><code class="docutils literal notranslate"><span class="pre">DataLoaderConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">DataLoaderConfig.batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderConfig.drop_last"><code class="docutils literal notranslate"><span class="pre">DataLoaderConfig.drop_last</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderConfig.num_workers"><code class="docutils literal notranslate"><span class="pre">DataLoaderConfig.num_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderConfig.pin_memory"><code class="docutils literal notranslate"><span class="pre">DataLoaderConfig.pin_memory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderConfig.shuffle"><code class="docutils literal notranslate"><span class="pre">DataLoaderConfig.shuffle</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.utils.html#module-cli.shared.types.utils.dataset">cli.shared.types.utils.dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.AttacksDatasetCliConfigType"><code class="docutils literal notranslate"><span class="pre">AttacksDatasetCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.AttacksDatasetCliConfigType.dataset_part"><code class="docutils literal notranslate"><span class="pre">AttacksDatasetCliConfigType.dataset_part</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.AttacksDatasetCliConfigType.random_sample_size"><code class="docutils literal notranslate"><span class="pre">AttacksDatasetCliConfigType.random_sample_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#id0"><code class="docutils literal notranslate"><span class="pre">AttacksDatasetCliConfigType.dataset_part</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#id1"><code class="docutils literal notranslate"><span class="pre">AttacksDatasetCliConfigType.random_sample_size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType.dataset_name"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType.dataset_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType.download"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType.download</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType.num_classes"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType.num_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType.preprocessing"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType.preprocessing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType.test_dataset_path"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType.test_dataset_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType.train_dataset_path"><code class="docutils literal notranslate"><span class="pre">DatasetCliConfigType.train_dataset_path</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.utils.html#module-cli.shared.types.utils.device">cli.shared.types.utils.device module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.device.DeviceConfig"><code class="docutils literal notranslate"><span class="pre">DeviceConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.device.DeviceConfig.gpu_ids"><code class="docutils literal notranslate"><span class="pre">DeviceConfig.gpu_ids</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.device.DeviceConfig.processor"><code class="docutils literal notranslate"><span class="pre">DeviceConfig.processor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.device.DeviceConfig.use_ddp"><code class="docutils literal notranslate"><span class="pre">DeviceConfig.use_ddp</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.utils.html#module-cli.shared.types.utils.model">cli.shared.types.utils.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.is_external"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.is_external</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.model_name"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.model_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.norm_config"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.norm_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.num_classes"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.num_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.num_input_channels"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.num_input_channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.path_configs"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.path_configs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.pretrained"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.pretrained</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.random_seed"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.random_seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType.weights"><code class="docutils literal notranslate"><span class="pre">ModelCliConfigType.weights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelNormConfig"><code class="docutils literal notranslate"><span class="pre">ModelNormConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelNormConfig.add_norm_layer"><code class="docutils literal notranslate"><span class="pre">ModelNormConfig.add_norm_layer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelNormConfig.norm_mean"><code class="docutils literal notranslate"><span class="pre">ModelNormConfig.norm_mean</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelNormConfig.norm_std"><code class="docutils literal notranslate"><span class="pre">ModelNormConfig.norm_std</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelPathConfig"><code class="docutils literal notranslate"><span class="pre">ModelPathConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelPathConfig.model_arch_path"><code class="docutils literal notranslate"><span class="pre">ModelPathConfig.model_arch_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelPathConfig.model_weights_path"><code class="docutils literal notranslate"><span class="pre">ModelPathConfig.model_weights_path</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.types.utils.html#module-cli.shared.types.utils.target">cli.shared.types.utils.target module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetCLIConfigType"><code class="docutils literal notranslate"><span class="pre">TargetCLIConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetCLIConfigType.auto_generate_target"><code class="docutils literal notranslate"><span class="pre">TargetCLIConfigType.auto_generate_target</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetCLIConfigType.target_images_config"><code class="docutils literal notranslate"><span class="pre">TargetCLIConfigType.target_images_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetCLIConfigType.target_labels_config"><code class="docutils literal notranslate"><span class="pre">TargetCLIConfigType.target_labels_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetCLIConfigType.targeted"><code class="docutils literal notranslate"><span class="pre">TargetCLIConfigType.targeted</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetImageCLIConfigType"><code class="docutils literal notranslate"><span class="pre">TargetImageCLIConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetImageCLIConfigType.target_images_dir"><code class="docutils literal notranslate"><span class="pre">TargetImageCLIConfigType.target_images_dir</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetLabelCLIConfigType"><code class="docutils literal notranslate"><span class="pre">TargetLabelCLIConfigType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetLabelCLIConfigType.target_labels"><code class="docutils literal notranslate"><span class="pre">TargetLabelCLIConfigType.target_labels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetLabelCLIConfigType.target_labels_path"><code class="docutils literal notranslate"><span class="pre">TargetLabelCLIConfigType.target_labels_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.target.TargetLabelCLIConfigType.target_labels_separator"><code class="docutils literal notranslate"><span class="pre">TargetLabelCLIConfigType.target_labels_separator</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr class="docutils" />
+<span class="target" id="module-cli.shared.types"></span></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.shared.messages.html" class="btn btn-neutral float-left" title="cli.shared.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.shared.types.attack.html" class="btn btn-neutral float-right" title="cli.shared.types.attack package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

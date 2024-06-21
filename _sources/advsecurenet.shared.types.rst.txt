@@ -1,7 +1,6 @@
 advsecurenet.shared.types package
 =================================
 
-Subpackages
 -----------
 
 .. toctree::
@@ -9,7 +8,6 @@ Subpackages
 
    advsecurenet.shared.types.configs
 
-Submodules
 ----------
 
 advsecurenet.shared.types.attacks module
@@ -36,7 +34,6 @@ advsecurenet.shared.types.model module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.shared.types

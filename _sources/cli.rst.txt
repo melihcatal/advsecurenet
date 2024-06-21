@@ -1,21 +1,29 @@
-Command Line Interface
+cli package
 ===========
 
-Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 6
 
-   cli.attacks
-   cli.types
-   cli.utils
+   cli.commands
+   cli.configs
+   cli.logic
+   cli.shared
 
+----------
 
 cli.cli module
 --------------
 
 .. automodule:: cli.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+---------------
+
+.. automodule:: cli
    :members:
    :undoc-members:
    :show-inheritance:

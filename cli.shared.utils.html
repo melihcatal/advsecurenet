@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cli.shared.utils package &mdash; advsecurenet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="cli.shared.types.utils package" href="cli.shared.types.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            advsecurenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cli.html">cli package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cli.commands.html">cli.commands package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.configs.html">cli.configs package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.html">cli.logic package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cli.shared.html">cli.shared package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.messages.html">cli.shared.messages package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.shared.types.html">cli.shared.types package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cli.shared.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-cli.shared.utils.attack_mappings">cli.shared.utils.attack_mappings module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cli.shared.utils.config">cli.shared.utils.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cli.shared.utils.dataloader">cli.shared.utils.dataloader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cli.shared.utils.dataset">cli.shared.utils.dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cli.shared.utils.helpers">cli.shared.utils.helpers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cli.shared.utils.model">cli.shared.utils.model module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#module-cli.cli">cli.cli module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">advsecurenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cli.html">cli package</a></li>
+          <li class="breadcrumb-item"><a href="cli.shared.html">cli.shared package</a></li>
+      <li class="breadcrumb-item active">cli.shared.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.shared.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cli-shared-utils-package">
+<h1>cli.shared.utils package<a class="headerlink" href="#cli-shared-utils-package" title="Link to this heading"></a></h1>
+<hr class="docutils" />
+<section id="module-cli.shared.utils.attack_mappings">
+<span id="cli-shared-utils-attack-mappings-module"></span><h2>cli.shared.utils.attack_mappings module<a class="headerlink" href="#module-cli.shared.utils.attack_mappings" title="Link to this heading"></a></h2>
+</section>
+<section id="module-cli.shared.utils.config">
+<span id="cli-shared-utils-config-module"></span><h2>cli.shared.utils.config module<a class="headerlink" href="#module-cli.shared.utils.config" title="Link to this heading"></a></h2>
+<p>This module contains utility functions for working with configuration data through the CLI.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.attack_config_check">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">attack_config_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cli.shared.utils.config.attack_config_check" title="Link to this definition"></a></dt>
+<dd><p>Checks the configuration for the attack command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>overrides</strong> (<em>Dict</em>) – The overrides provided through the CLI.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the dataset name is not ‘custom’ when specifying a custom data directory.</p></li>
+<li><p><strong>ValueError</strong> – If the dataset name is ‘custom’ when not specifying a custom data directory.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.build_config">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">build_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#cli.shared.utils.config.build_config" title="Link to this definition"></a></dt>
+<dd><p>Build a configuration object from the provided configuration data.</p>
+<p>Parameters:
+- config_data (Dict): The configuration data.
+- config_type (Type[T]): The type of configuration object to build.</p>
+<p>Returns:
+- T: The configuration object of the specified type.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.deep_update">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">deep_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#cli.shared.utils.config.deep_update" title="Link to this definition"></a></dt>
+<dd><p>Recursively update a dictionary by overriding its keys.</p>
+<p>Parameters:
+- source (Dict): The original dictionary with the base values.
+- overrides (Dict): The dictionary with overrides, where the keys might be nested.</p>
+<p>Returns:
+- Dict: The updated dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.generate_default_config_yaml">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">generate_default_config_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#cli.shared.utils.config.generate_default_config_yaml" title="Link to this definition"></a></dt>
+<dd><p>Generate a default configuration YAML based on the name of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_name</strong> (<em>str</em>) – The name of the configuration yml file (e.g., “cw_attack_config.yml”).</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path where the YAML file should be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The default configuration YAML as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.get_available_configs">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">get_available_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#cli.shared.utils.config.get_available_configs" title="Link to this definition"></a></dt>
+<dd><p>Get a list of all available configuration settings, including those in subdirectories,
+based on attributes defined in each module’s __init__.py file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_path</strong> (<em>str</em>) – The base directory path where the configuration files are stored.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries with the configuration settings including custom title, description,
+and config file name, filtered by the INCLUDE_IN_CLI_CONFIGS attribute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">advsecurenet.utils.config_utils</span> <span class="kn">import</span> <span class="n">get_available_configs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_available_configs</span><span class="p">(</span><span class="s1">&#39;/path/to/configs&#39;</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go">    {&#39;title&#39;: &#39;Example Configuration Module&#39;, &#39;description&#39;: &#39;Configuration for attack types.&#39;, &#39;config_file&#39;: &#39;lots_attack_config.yml&#39;},</span>
+<span class="go">    {&#39;title&#39;: &#39;Example Configuration Module&#39;, &#39;description&#39;: &#39;Configuration for defense mechanisms.&#39;, &#39;config_file&#39;: &#39;cw_attack_config.yml&#39;}</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.get_default_config_yml">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">get_default_config_yml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_subdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cli.shared.utils.config.get_default_config_yml" title="Link to this definition"></a></dt>
+<dd><p>Get the default configuration YAML based on the name of the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_name</strong> (<em>str</em>) – The name of the configuration (e.g., “cw_attack”).</p></li>
+<li><p><strong>config_subdir</strong> (<em>str</em><em>, </em><em>optional</em>) – The sub-directory to search in. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The path to the configuration YAML file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.load_and_instantiate_config">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">load_and_instantiate_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.configs.ConfigType" title="advsecurenet.shared.types.configs.configs.ConfigType"><span class="pre">ConfigType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#cli.shared.utils.config.load_and_instantiate_config" title="Link to this definition"></a></dt>
+<dd><p>Utility function to load and instantiate configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>str</em>) – The path to the configuration file.</p></li>
+<li><p><strong>default_config_file</strong> (<em>str</em>) – The default configuration file name.</p></li>
+<li><p><strong>config_type</strong> (<a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.configs.ConfigType" title="advsecurenet.shared.types.configs.configs.ConfigType"><em>ConfigType</em></a>) – The type of configuration.</p></li>
+<li><p><strong>config_class</strong> (<em>Type</em><em>[</em><em>T</em><em>]</em>) – The dataclass type for configuration instantiation.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments. If provided, they will override the configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instantiated configuration data class of the type specified by <cite>config_class</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>T</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.load_configuration">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">load_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.configs.ConfigType" title="advsecurenet.shared.types.configs.configs.ConfigType"><span class="pre">ConfigType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#cli.shared.utils.config.load_configuration" title="Link to this definition"></a></dt>
+<dd><p>Loads and overrides the configuration.</p>
+<p>Parameters:
+- config_type (ConfigType): The type of configuration.
+- config_file (str): The path to the configuration file.
+- <a href="#id1"><span class="problematic" id="id2">**</span></a>overrides (Dict): The overrides to apply to the configuration.</p>
+<p>Returns:
+- Dict: The configuration data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.make_paths_absolute">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">make_paths_absolute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#cli.shared.utils.config.make_paths_absolute" title="Link to this definition"></a></dt>
+<dd><p>Recursively update the paths in the configuration dictionary or list to be absolute paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_path</strong> (<em>str</em>) – The base directory path.</p></li>
+<li><p><strong>config</strong> (<em>Union</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>List</em><em>[</em><em>Any</em><em>]</em><em>]</em>) – The configuration data to update.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.config.read_yml_file">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.config.</span></span><span class="sig-name descname"><span class="pre">read_yml_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#cli.shared.utils.config.read_yml_file" title="Link to this definition"></a></dt>
+<dd><p>Read a YAML file and return the data as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The path to the YAML file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data from the YAML file as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cli.shared.utils.dataloader">
+<span id="cli-shared-utils-dataloader-module"></span><h2>cli.shared.utils.dataloader module<a class="headerlink" href="#module-cli.shared.utils.dataloader" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.dataloader.get_dataloader">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.dataloader.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config:</span> <span class="pre">~cli.shared.types.utils.dataloader.DataLoaderCliConfigType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset:</span> <span class="pre">~advsecurenet.datasets.base_dataset.BaseDataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_type:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ddp:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler:</span> <span class="pre">~torch.utils.data.distributed.DistributedSampler</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'torch.utils.data.distributed.DistributedSampler'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataLoader</span></span></span><a class="headerlink" href="#cli.shared.utils.dataloader.get_dataloader" title="Link to this definition"></a></dt>
+<dd><p>Get the dataloader based on the provided configuration and dataset type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataloader.DataLoaderCliConfigType" title="cli.shared.types.utils.dataloader.DataLoaderCliConfigType"><em>DataLoaderCliConfigType</em></a>) – The dataloader configuration object.</p></li>
+<li><p><strong>dataset_type</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The type of the dataset (‘train’, ‘test’, or other).</p></li>
+<li><p><strong>dataset</strong> (<em>Optional</em><em>[</em><em>torch.utils.data.Dataset</em><em>]</em>) – The dataset to be loaded.</p></li>
+<li><p><strong>use_ddp</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – Whether to use Distributed Data Parallel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The configured DataLoader instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.utils.data.DataLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cli.shared.utils.dataset">
+<span id="cli-shared-utils-dataset-module"></span><h2>cli.shared.utils.dataset module<a class="headerlink" href="#module-cli.shared.utils.dataset" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.dataset.get_datasets">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.dataset.</span></span><span class="sig-name descname"><span class="pre">get_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType" title="cli.shared.types.utils.dataset.DatasetCliConfigType"><span class="pre">DatasetCliConfigType</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dataset</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cli.shared.utils.dataset.get_datasets" title="Link to this definition"></a></dt>
+<dd><p>Load the datasets conditionally based on provided paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.dataset.DatasetCliConfigType" title="cli.shared.types.utils.dataset.DatasetCliConfigType"><em>DatasetCliConfigType</em></a>) – Configuration for datasets.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing the training dataset (if requested)
+and the testing dataset (if requested).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[Optional[TorchDataset], Optional[TorchDataset]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cli.shared.utils.helpers">
+<span id="cli-shared-utils-helpers-module"></span><h2>cli.shared.utils.helpers module<a class="headerlink" href="#module-cli.shared.utils.helpers" title="Link to this heading"></a></h2>
+<p>This helpers module contans more general helper functions that are not specific to a command type.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.helpers.get_device_from_cfg">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">get_device_from_cfg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">device</span></span></span><a class="headerlink" href="#cli.shared.utils.helpers.get_device_from_cfg" title="Link to this definition"></a></dt>
+<dd><p>Returns the device to use from the config. If the device is not specified or is invalid, the device is set to “cpu”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>any</em>) – The config object to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.helpers.read_data_from_file">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">read_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cast_type:</span> <span class="pre">~typing.Type</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type:</span> <span class="pre">~typing.Type</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'/n'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">set</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tensor</span></span></span><a class="headerlink" href="#cli.shared.utils.helpers.read_data_from_file" title="Link to this definition"></a></dt>
+<dd><p>Reads data from a file and returns it in the specified format. The function supports text, CSV, and JSON files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The path to the file.</p></li>
+<li><p><strong>cast_type</strong> (<em>Type</em>) – The type to cast the items to. Default is str.</p></li>
+<li><p><strong>return_type</strong> (<em>Type</em>) – The type of collection to return. Default is list. Other options are set and tuple.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – The delimiter to use for text and CSV files. Default is ‘/n’ (newline).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data read from the file in the specified format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[List[Any], set, tuple, torch.Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.helpers.save_images">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">save_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'image'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#cli.shared.utils.helpers.save_images" title="Link to this definition"></a></dt>
+<dd><p>Save each image tensor in a batch or a list of batches to the given path. If no path is provided, the images are saved to the current directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>images</strong> (<em>torch.Tensor</em><em> or </em><em>list</em><em>[</em><em>torch.Tensor</em><em>]</em>) – A tensor of images or a list of tensors, where each tensor is a batch of images.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The path to save the images to. If None, the images are saved to the current directory.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – The prefix to add to the image name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.helpers.to_bchw_format">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">to_bchw_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cli.shared.utils.helpers.to_bchw_format" title="Link to this definition"></a></dt>
+<dd><p>Converts a tensor from BHWC (batch, height, width, channels) format to BCHW (batch, channels, height, width) format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tensor in BCHW format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([10, 32, 32, 3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span> <span class="o">=</span> <span class="n">to_bchw_format</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([10, 3, 32, 32])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-cli.shared.utils.model">
+<span id="cli-shared-utils-model-module"></span><h2>cli.shared.utils.model module<a class="headerlink" href="#module-cli.shared.utils.model" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.shared.utils.model.create_model">
+<span class="sig-prename descclassname"><span class="pre">cli.shared.utils.model.</span></span><span class="sig-name descname"><span class="pre">create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="cli.shared.types.utils.html#cli.shared.types.utils.model.ModelCliConfigType" title="cli.shared.types.utils.model.ModelCliConfigType"><span class="pre">ModelCliConfigType</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></span><a class="headerlink" href="#cli.shared.utils.model.create_model" title="Link to this definition"></a></dt>
+<dd><p>Creates a model based on the provided configuration.
+:param config: The model configuration.
+:type config: ModelCliConfigType</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The created model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel">BaseModel</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-cli.shared.utils"></span></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.shared.types.utils.html" class="btn btn-neutral float-left" title="cli.shared.types.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

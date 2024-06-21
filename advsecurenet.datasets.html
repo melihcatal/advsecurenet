@@ -16,7 +16,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -44,40 +44,44 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html">AdvSecureNet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#usage">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#examples">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#architecture">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#license">License</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">Python Package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="advsecurenet.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.configs.html">advsecurenet.configs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">advsecurenet.datasets package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.datasets.base_dataset">advsecurenet.datasets.base_dataset module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.datasets.dataset_factory">advsecurenet.datasets.dataset_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.datasets">Module contents</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">advsecurenet.datasets package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html">advsecurenet.datasets.Cifar10 package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.Custom.html">advsecurenet.datasets.Custom package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html">advsecurenet.datasets.ImageNet package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.MNIST.html">advsecurenet.datasets.MNIST package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.svhn.html">advsecurenet.datasets.svhn package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.datasets.base_dataset">advsecurenet.datasets.base_dataset module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset"><code class="docutils literal notranslate"><span class="pre">BaseDataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.DatasetWrapper"><code class="docutils literal notranslate"><span class="pre">DatasetWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.ImageFolderBaseDataset"><code class="docutils literal notranslate"><span class="pre">ImageFolderBaseDataset</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.evaluation.html">advsecurenet.evaluation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.datasets.dataset_factory">advsecurenet.datasets.dataset_factory module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.datasets.dataset_factory.DatasetFactory"><code class="docutils literal notranslate"><span class="pre">DatasetFactory</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.datasets.targeted_adv_dataset">advsecurenet.datasets.targeted_adv_dataset module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.datasets.targeted_adv_dataset.AdversarialDataset"><code class="docutils literal notranslate"><span class="pre">AdversarialDataset</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.distributed.html">advsecurenet.distributed package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.evaluation.html">advsecurenet.evaluation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.trainer.html">advsecurenet.trainer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli package</a></li>
 </ul>
 
         </div>
@@ -94,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="advsecurenet.html">Python Package</a></li>
+          <li class="breadcrumb-item"><a href="advsecurenet.html">advsecurenet package</a></li>
       <li class="breadcrumb-item active">advsecurenet.datasets package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/advsecurenet.datasets.rst.txt" rel="nofollow"> View page source</a>
@@ -107,13 +111,21 @@
              
   <section id="advsecurenet-datasets-package">
 <h1>advsecurenet.datasets package<a class="headerlink" href="#advsecurenet-datasets-package" title="Link to this heading"></a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html">advsecurenet.datasets.Cifar10 package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#module-advsecurenet.datasets.Cifar10.cifar10_dataset">advsecurenet.datasets.Cifar10.cifar10_dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.mean"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.mean</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.std"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.std</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.input_size"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.input_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.name"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.num_classes"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.num_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.num_input_channels"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.num_input_channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR100Dataset.get_dataset_class"><code class="docutils literal notranslate"><span class="pre">CIFAR100Dataset.get_dataset_class()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.mean"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.mean</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.std"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.std</span></code></a></li>
@@ -121,16 +133,21 @@
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.name"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.num_classes"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.num_classes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.num_input_channels"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.num_input_channels</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.load_dataset"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.load_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#advsecurenet.datasets.Cifar10.cifar10_dataset.CIFAR10Dataset.get_dataset_class"><code class="docutils literal notranslate"><span class="pre">CIFAR10Dataset.get_dataset_class()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.Cifar10.html#module-advsecurenet.datasets.Cifar10">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advsecurenet.datasets.Custom.html">advsecurenet.datasets.Custom package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.Custom.html#module-advsecurenet.datasets.Custom.CustomDataset">advsecurenet.datasets.Custom.CustomDataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.Custom.html#advsecurenet.datasets.Custom.CustomDataset.CustomDataset"><code class="docutils literal notranslate"><span class="pre">CustomDataset</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html">advsecurenet.datasets.ImageNet package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#module-advsecurenet.datasets.ImageNet.imagenet_dataset">advsecurenet.datasets.ImageNet.imagenet_dataset module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.mean"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.mean</span></code></a></li>
@@ -139,45 +156,66 @@
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.name"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_classes"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.num_classes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.num_input_channels"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.num_input_channels</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.ImageNetDataset.load_dataset"><code class="docutils literal notranslate"><span class="pre">ImageNetDataset.load_dataset()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#advsecurenet.datasets.ImageNet.imagenet_dataset.NamedImageFolder"><code class="docutils literal notranslate"><span class="pre">NamedImageFolder</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.ImageNet.html#module-advsecurenet.datasets.ImageNet">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advsecurenet.datasets.MNIST.html">advsecurenet.datasets.MNIST package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#module-advsecurenet.datasets.MNIST.mnist_dataset">advsecurenet.datasets.MNIST.mnist_dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset.mean"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset.mean</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset.std"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset.std</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset.input_size"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset.input_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset.name"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset.num_classes"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset.num_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.FashionMNISTDataset.get_dataset_class"><code class="docutils literal notranslate"><span class="pre">FashionMNISTDataset.get_dataset_class()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset"><code class="docutils literal notranslate"><span class="pre">MNISTDataset</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.mean"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.mean</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.std"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.std</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.input_size"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.input_size</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.name"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.num_classes"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.num_classes</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.load_dataset"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.load_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#advsecurenet.datasets.MNIST.mnist_dataset.MNISTDataset.get_dataset_class"><code class="docutils literal notranslate"><span class="pre">MNISTDataset.get_dataset_class()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.MNIST.html#module-advsecurenet.datasets.MNIST">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advsecurenet.datasets.svhn.html">advsecurenet.datasets.svhn package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.svhn.html#module-advsecurenet.datasets.svhn.svhn_dataset">advsecurenet.datasets.svhn.svhn_dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset"><code class="docutils literal notranslate"><span class="pre">SVHNDataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset.mean"><code class="docutils literal notranslate"><span class="pre">SVHNDataset.mean</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset.std"><code class="docutils literal notranslate"><span class="pre">SVHNDataset.std</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset.input_size"><code class="docutils literal notranslate"><span class="pre">SVHNDataset.input_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset.name"><code class="docutils literal notranslate"><span class="pre">SVHNDataset.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset.num_classes"><code class="docutils literal notranslate"><span class="pre">SVHNDataset.num_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="advsecurenet.datasets.svhn.html#advsecurenet.datasets.svhn.svhn_dataset.SVHNDataset.get_dataset_class"><code class="docutils literal notranslate"><span class="pre">SVHNDataset.get_dataset_class()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
-</section>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
-</section>
+<hr class="docutils" />
 <section id="module-advsecurenet.datasets.base_dataset">
 <span id="advsecurenet-datasets-base-dataset-module"></span><h2>advsecurenet.datasets.base_dataset module<a class="headerlink" href="#module-advsecurenet.datasets.base_dataset" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.BaseDataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.datasets.base_dataset.</span></span><span class="sig-name descname"><span class="pre">BaseDataset</span></span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.datasets.base_dataset.</span></span><span class="sig-name descname"><span class="pre">BaseDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preprocess_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.preprocess_config.PreprocessConfig" title="advsecurenet.shared.types.configs.preprocess_config.PreprocessConfig"><span class="pre">PreprocessConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>A base class for PyTorch datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>preprocess_config</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.preprocess_config.PreprocessConfig" title="advsecurenet.shared.types.configs.preprocess_config.PreprocessConfig"><em>PreprocessConfig</em></a><em>]</em><em>, </em><em>optional</em>) – The preprocessing configuration for the dataset. Defaults to None.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.BaseDataset._dataset">
 <span class="sig-name descname"><span class="pre">_dataset</span></span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset._dataset" title="Link to this definition"></a></dt>
@@ -266,27 +304,40 @@
 </dl>
 </dd></dl>
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module uses v2 of the torchvision transforms. Please refer to the official PyTorch documentation for more information about the possible transforms.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.BaseDataset.get_dataset_class">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_dataset_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset.get_dataset_class" title="Link to this definition"></a></dt>
+<dd><p>Returns the dataset class.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.BaseDataset.get_transforms">
-<span class="sig-name descname"><span class="pre">get_transforms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Compose</span></span></span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset.get_transforms" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_transforms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset.get_transforms" title="Link to this definition"></a></dt>
 <dd><p>Returns the data transforms to be applied to the dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The data transforms.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>transforms.Compose</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.BaseDataset.load_dataset">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.DatasetWrapper" title="advsecurenet.datasets.base_dataset.DatasetWrapper"><span class="pre">DatasetWrapper</span></a></span></span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset.load_dataset" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.DatasetWrapper" title="advsecurenet.datasets.base_dataset.DatasetWrapper"><span class="pre">DatasetWrapper</span></a></span></span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.BaseDataset.load_dataset" title="Link to this definition"></a></dt>
 <dd><p>Loads the dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>NotImplementedError</strong> – If the method is not implemented in the child class.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em>, </em><em>optional</em>) – The root directory where the dataset should be stored. Defaults to ‘./data’.</p></li>
+<li><p><strong>train</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, loads the training data. Otherwise, loads the test data. Defaults to True.</p></li>
+<li><p><strong>download</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, downloads the dataset from the internet. Defaults to True.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataset loaded into memory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#advsecurenet.datasets.base_dataset.DatasetWrapper" title="advsecurenet.datasets.base_dataset.DatasetWrapper">DatasetWrapper</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,6 +351,19 @@
 <p>A wrapper class for PyTorch datasets that allows for easy access to the underlying dataset and having customized parameters.</p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.ImageFolderBaseDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.datasets.base_dataset.</span></span><span class="sig-name descname"><span class="pre">ImageFolderBaseDataset</span></span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.ImageFolderBaseDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A mixin class for datasets that use the ImageFolder format.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.datasets.base_dataset.ImageFolderBaseDataset.get_dataset_class">
+<span class="sig-name descname"><span class="pre">get_dataset_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.datasets.base_dataset.ImageFolderBaseDataset.get_dataset_class" title="Link to this definition"></a></dt>
+<dd><p>Returns the dataset class.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-advsecurenet.datasets.dataset_factory">
 <span id="advsecurenet-datasets-dataset-factory-module"></span><h2>advsecurenet.datasets.dataset_factory module<a class="headerlink" href="#module-advsecurenet.datasets.dataset_factory" title="Link to this heading"></a></h2>
@@ -307,6 +371,7 @@
 <dt class="sig sig-object py" id="advsecurenet.datasets.dataset_factory.DatasetFactory">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.datasets.dataset_factory.</span></span><span class="sig-name descname"><span class="pre">DatasetFactory</span></span><a class="headerlink" href="#advsecurenet.datasets.dataset_factory.DatasetFactory" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A factory class to create datasets.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.datasets.dataset_factory.DatasetFactory.available_datasets">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#advsecurenet.datasets.dataset_factory.DatasetFactory.available_datasets" title="Link to this definition"></a></dt>
@@ -323,13 +388,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.datasets.dataset_factory.DatasetFactory.create_dataset">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType" title="advsecurenet.shared.types.dataset.DatasetType"><span class="pre">DatasetType</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><span class="pre">BaseDataset</span></a></span></span><a class="headerlink" href="#advsecurenet.datasets.dataset_factory.DatasetFactory.create_dataset" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType" title="advsecurenet.shared.types.dataset.DatasetType"><span class="pre">DatasetType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.preprocess_config.PreprocessConfig" title="advsecurenet.shared.types.configs.preprocess_config.PreprocessConfig"><span class="pre">PreprocessConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_loaded</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><span class="pre">BaseDataset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><span class="pre">BaseDataset</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><span class="pre">BaseDataset</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.datasets.dataset_factory.DatasetFactory.create_dataset" title="Link to this definition"></a></dt>
 <dd><p>Returns a dataset for the given dataset type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset_type</strong> (<a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType" title="advsecurenet.shared.types.dataset.DatasetType"><em>DatasetType</em></a>) – The type of the dataset to return.</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em>) – The keyword arguments to pass to the dataset class.</p></li>
+<li><p><strong>dataset_type</strong> (<em>Union</em><em>[</em><a class="reference internal" href="advsecurenet.shared.types.html#advsecurenet.shared.types.dataset.DatasetType" title="advsecurenet.shared.types.dataset.DatasetType"><em>DatasetType</em></a><em>, </em><em>str</em><em>]</em>) – The dataset type to create.</p></li>
+<li><p><strong>return_loaded</strong> (<em>bool</em>) – Whether to load the train and test datasets and return them immediately. Default is False.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments to be passed to the dataset class.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -338,18 +404,38 @@
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset">BaseDataset</a></p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If the dataset_type is not of type DatasetType.</p>
-</dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="module-advsecurenet.datasets">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.datasets" title="Link to this heading"></a></h2>
-</section>
+<section id="module-advsecurenet.datasets.targeted_adv_dataset">
+<span id="advsecurenet-datasets-targeted-adv-dataset-module"></span><h2>advsecurenet.datasets.targeted_adv_dataset module<a class="headerlink" href="#module-advsecurenet.datasets.targeted_adv_dataset" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.datasets.targeted_adv_dataset.AdversarialDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.datasets.targeted_adv_dataset.</span></span><span class="sig-name descname"><span class="pre">AdversarialDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><span class="pre">BaseDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.datasets.targeted_adv_dataset.AdversarialDataset" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#advsecurenet.datasets.base_dataset.BaseDataset" title="advsecurenet.datasets.base_dataset.BaseDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataset</span></code></a></p>
+<p>A dataset class that wraps a base dataset and allows for targeted adversarial attacks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_dataset</strong> (<em>Dataset</em>) – The base dataset to wrap.</p></li>
+<li><p><strong>target_labels</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The target labels for the adversarial attack. Defaults to None.</p></li>
+<li><p><strong>target_images</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>torch.Tensor</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The target images for the adversarial attack. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.datasets.targeted_adv_dataset.AdversarialDataset.get_dataset_class">
+<span class="sig-name descname"><span class="pre">get_dataset_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.datasets.targeted_adv_dataset.AdversarialDataset.get_dataset_class" title="Link to this definition"></a></dt>
+<dd><p>Returns the dataset class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-advsecurenet.datasets"></span></section>
 </section>
 
 

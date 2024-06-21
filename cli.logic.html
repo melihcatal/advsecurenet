@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cli.logic package &mdash; advsecurenet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cli.logic.attack package" href="cli.logic.attack.html" />
+    <link rel="prev" title="cli.configs.train_test package" href="cli.configs.train_test.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            advsecurenet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cli.html">cli package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cli.commands.html">cli.commands package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.configs.html">cli.configs package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">cli.logic package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.attack.html">cli.logic.attack package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.defense.html">cli.logic.defense package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.evaluation.html">cli.logic.evaluation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.train.html">cli.logic.train package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html">cli.logic.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.shared.html">cli.shared package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#module-cli.cli">cli.cli module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">advsecurenet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cli.html">cli package</a></li>
+      <li class="breadcrumb-item active">cli.logic package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.logic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cli-logic-package">
+<h1>cli.logic package<a class="headerlink" href="#cli-logic-package" title="Link to this heading"></a></h1>
+<hr class="docutils" />
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.logic.attack.html">cli.logic.attack package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.attack.html#module-cli.logic.attack.attack">cli.logic.attack.attack module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.attack.html#cli.logic.attack.attack.cli_attack"><code class="docutils literal notranslate"><span class="pre">cli_attack()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.attack.html#module-cli.logic.attack.attacker">cli.logic.attack.attacker module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.attack.html#cli.logic.attack.attacker.CLIAttacker"><code class="docutils literal notranslate"><span class="pre">CLIAttacker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.attack.html#cli.logic.attack.attacker.CLIAttacker.execute"><code class="docutils literal notranslate"><span class="pre">CLIAttacker.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.logic.defense.html">cli.logic.defense package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.defense.adversarial_training.html">cli.logic.defense.adversarial_training package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.defense.adversarial_training.html#module-cli.logic.defense.adversarial_training.adversarial_training_cli">cli.logic.defense.adversarial_training.adversarial_training_cli module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.defense.adversarial_training.html#cli.logic.defense.adversarial_training.adversarial_training_cli.ATCLITrainer"><code class="docutils literal notranslate"><span class="pre">ATCLITrainer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.defense.html#module-cli.logic.defense.defense">cli.logic.defense.defense module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.defense.html#cli.logic.defense.defense.cli_adversarial_training"><code class="docutils literal notranslate"><span class="pre">cli_adversarial_training()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.logic.evaluation.html">cli.logic.evaluation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.evaluation.adversarial_evaluation.html">cli.logic.evaluation.adversarial_evaluation package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.evaluation.adversarial_evaluation.html#module-cli.logic.evaluation.adversarial_evaluation.adversarial_evaluator">cli.logic.evaluation.adversarial_evaluation.adversarial_evaluator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.evaluation.adversarial_evaluation.html#cli.logic.evaluation.adversarial_evaluation.adversarial_evaluator.CLIAdversarialEvaluator"><code class="docutils literal notranslate"><span class="pre">CLIAdversarialEvaluator</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.evaluation.test.html">cli.logic.evaluation.test package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.evaluation.test.html#module-cli.logic.evaluation.test.test">cli.logic.evaluation.test.test module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.evaluation.test.html#cli.logic.evaluation.test.test.cli_test"><code class="docutils literal notranslate"><span class="pre">cli_test()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.evaluation.test.html#module-cli.logic.evaluation.test.tester">cli.logic.evaluation.test.tester module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.evaluation.test.html#cli.logic.evaluation.test.tester.CLITester"><code class="docutils literal notranslate"><span class="pre">CLITester</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.evaluation.html#module-cli.logic.evaluation.evaluation">cli.logic.evaluation.evaluation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.evaluation.html#cli.logic.evaluation.evaluation.cli_adversarial_evaluation"><code class="docutils literal notranslate"><span class="pre">cli_adversarial_evaluation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.evaluation.html#cli.logic.evaluation.evaluation.cli_list_adversarial_evaluations"><code class="docutils literal notranslate"><span class="pre">cli_list_adversarial_evaluations()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.logic.train.html">cli.logic.train package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.train.html#module-cli.logic.train.train">cli.logic.train.train module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.train.html#cli.logic.train.train.cli_train"><code class="docutils literal notranslate"><span class="pre">cli_train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.train.html#module-cli.logic.train.trainer">cli.logic.train.trainer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.train.html#cli.logic.train.trainer.CLITrainer"><code class="docutils literal notranslate"><span class="pre">CLITrainer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.train.html#cli.logic.train.trainer.CLITrainer.config"><code class="docutils literal notranslate"><span class="pre">CLITrainer.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cli.logic.train.html#cli.logic.train.trainer.CLITrainer.train"><code class="docutils literal notranslate"><span class="pre">CLITrainer.train()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.logic.utils.html">cli.logic.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.utils.html#module-cli.logic.utils.config">cli.logic.utils.config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.config.cli_config_default"><code class="docutils literal notranslate"><span class="pre">cli_config_default()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.config.cli_configs"><code class="docutils literal notranslate"><span class="pre">cli_configs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.utils.html#module-cli.logic.utils.model">cli.logic.utils.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.model.cli_available_weights"><code class="docutils literal notranslate"><span class="pre">cli_available_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.model.cli_download_weights"><code class="docutils literal notranslate"><span class="pre">cli_download_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.model.cli_model_layers"><code class="docutils literal notranslate"><span class="pre">cli_model_layers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.model.cli_models"><code class="docutils literal notranslate"><span class="pre">cli_models()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cli.logic.utils.html#module-cli.logic.utils.normalization_params">cli.logic.utils.normalization_params module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.logic.utils.html#cli.logic.utils.normalization_params.cli_normalization_params"><code class="docutils literal notranslate"><span class="pre">cli_normalization_params()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr class="docutils" />
+<span class="target" id="module-cli.logic"></span></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.configs.train_test.html" class="btn btn-neutral float-left" title="cli.configs.train_test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.logic.attack.html" class="btn btn-neutral float-right" title="cli.logic.attack package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

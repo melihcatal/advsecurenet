@@ -1,29 +1,12 @@
 advsecurenet.utils package
 ==========================
 
-Submodules
 ----------
 
 advsecurenet.utils.adversarial\_target\_generator module
 --------------------------------------------------------
 
 .. automodule:: advsecurenet.utils.adversarial_target_generator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.utils.config\_loader module
-----------------------------------------
-
-.. automodule:: advsecurenet.utils.config_loader
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.utils.config\_utils module
----------------------------------------
-
-.. automodule:: advsecurenet.utils.config_utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,26 +19,18 @@ advsecurenet.utils.data module
    :undoc-members:
    :show-inheritance:
 
-advsecurenet.utils.data\_splitter module
-----------------------------------------
+advsecurenet.utils.dataclass module
+-----------------------------------
 
-.. automodule:: advsecurenet.utils.data_splitter
+.. automodule:: advsecurenet.utils.dataclass
    :members:
    :undoc-members:
    :show-inheritance:
 
-advsecurenet.utils.ddp\_trainer module
---------------------------------------
+advsecurenet.utils.ddp module
+-----------------------------
 
-.. automodule:: advsecurenet.utils.ddp_trainer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.utils.ddp\_training\_coordinator module
-----------------------------------------------------
-
-.. automodule:: advsecurenet.utils.ddp_training_coordinator
+.. automodule:: advsecurenet.utils.ddp
    :members:
    :undoc-members:
    :show-inheritance:
@@ -68,10 +43,26 @@ advsecurenet.utils.device\_manager module
    :undoc-members:
    :show-inheritance:
 
-advsecurenet.utils.evaluation module
-------------------------------------
+advsecurenet.utils.dot\_dict module
+-----------------------------------
 
-.. automodule:: advsecurenet.utils.evaluation
+.. automodule:: advsecurenet.utils.dot_dict
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+advsecurenet.utils.logging module
+---------------------------------
+
+.. automodule:: advsecurenet.utils.logging
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+advsecurenet.utils.loss module
+------------------------------
+
+.. automodule:: advsecurenet.utils.loss
    :members:
    :undoc-members:
    :show-inheritance:
@@ -92,33 +83,22 @@ advsecurenet.utils.network module
    :undoc-members:
    :show-inheritance:
 
-advsecurenet.utils.tester module
---------------------------------
+advsecurenet.utils.normalization\_layer module
+----------------------------------------------
 
-.. automodule:: advsecurenet.utils.tester
+.. automodule:: advsecurenet.utils.normalization_layer
    :members:
    :undoc-members:
    :show-inheritance:
 
-advsecurenet.utils.trainer module
----------------------------------
-
-.. automodule:: advsecurenet.utils.trainer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-advsecurenet.utils.reproducibility_utils module
----------------------------------
+advsecurenet.utils.reproducibility\_utils module
+------------------------------------------------
 
 .. automodule:: advsecurenet.utils.reproducibility_utils
    :members:
    :undoc-members:
    :show-inheritance:
 
-
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.utils

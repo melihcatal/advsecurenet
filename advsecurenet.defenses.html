@@ -16,13 +16,13 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="advsecurenet.models package" href="advsecurenet.models.html" />
-    <link rel="prev" title="advsecurenet.datasets.MNIST package" href="advsecurenet.datasets.MNIST.html" /> 
+    <link rel="next" title="advsecurenet.distributed package" href="advsecurenet.distributed.html" />
+    <link rel="prev" title="advsecurenet.datasets.svhn package" href="advsecurenet.datasets.svhn.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,39 +44,33 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html">AdvSecureNet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#usage">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#examples">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#architecture">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#license">License</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">Python Package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="advsecurenet.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.configs.html">advsecurenet.configs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">advsecurenet.defenses package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.defenses.adversarial_training">advsecurenet.defenses.adversarial_training module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.defenses.ddp_adversarial_training">advsecurenet.defenses.ddp_adversarial_training module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.defenses">Module contents</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">advsecurenet.defenses package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.defenses.adversarial_training">advsecurenet.defenses.adversarial_training module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.defenses.adversarial_training.AdversarialTraining"><code class="docutils literal notranslate"><span class="pre">AdversarialTraining</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.evaluation.html">advsecurenet.evaluation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.defenses.ddp_adversarial_training">advsecurenet.defenses.ddp_adversarial_training module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.defenses.ddp_adversarial_training.DDPAdversarialTraining"><code class="docutils literal notranslate"><span class="pre">DDPAdversarialTraining</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.distributed.html">advsecurenet.distributed package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.evaluation.html">advsecurenet.evaluation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.trainer.html">advsecurenet.trainer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli package</a></li>
 </ul>
 
         </div>
@@ -93,7 +87,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="advsecurenet.html">Python Package</a></li>
+          <li class="breadcrumb-item"><a href="advsecurenet.html">advsecurenet package</a></li>
       <li class="breadcrumb-item active">advsecurenet.defenses package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/advsecurenet.defenses.rst.txt" rel="nofollow"> View page source</a>
@@ -106,15 +100,13 @@
              
   <section id="advsecurenet-defenses-package">
 <h1>advsecurenet.defenses package<a class="headerlink" href="#advsecurenet-defenses-package" title="Link to this heading"></a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
-</section>
+<hr class="docutils" />
 <section id="module-advsecurenet.defenses.adversarial_training">
 <span id="advsecurenet-defenses-adversarial-training-module"></span><h2>advsecurenet.defenses.adversarial_training module<a class="headerlink" href="#module-advsecurenet.defenses.adversarial_training" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.defenses.adversarial_training.AdversarialTraining">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.defenses.adversarial_training.</span></span><span class="sig-name descname"><span class="pre">AdversarialTraining</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.defense_configs.html#advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig" title="advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig"><span class="pre">AdversarialTrainingConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.defenses.adversarial_training.AdversarialTraining" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="advsecurenet.utils.html#advsecurenet.utils.trainer.Trainer" title="advsecurenet.utils.trainer.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trainer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="advsecurenet.trainer.html#advsecurenet.trainer.trainer.Trainer" title="advsecurenet.trainer.trainer.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trainer</span></code></a></p>
 <p>Adversarial Training class. This module implements the Adversarial Training defense.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -129,7 +121,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.defenses.ddp_adversarial_training.DDPAdversarialTraining">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.defenses.ddp_adversarial_training.</span></span><span class="sig-name descname"><span class="pre">DDPAdversarialTraining</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.defense_configs.html#advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig" title="advsecurenet.shared.types.configs.defense_configs.adversarial_training_config.AdversarialTrainingConfig"><span class="pre">AdversarialTrainingConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.defenses.ddp_adversarial_training.DDPAdversarialTraining" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="advsecurenet.utils.html#advsecurenet.utils.ddp_trainer.DDPTrainer" title="advsecurenet.utils.ddp_trainer.DDPTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DDPTrainer</span></code></a>, <a class="reference internal" href="#advsecurenet.defenses.adversarial_training.AdversarialTraining" title="advsecurenet.defenses.adversarial_training.AdversarialTraining"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialTraining</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="advsecurenet.trainer.html#advsecurenet.trainer.ddp_trainer.DDPTrainer" title="advsecurenet.trainer.ddp_trainer.DDPTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DDPTrainer</span></code></a>, <a class="reference internal" href="#advsecurenet.defenses.adversarial_training.AdversarialTraining" title="advsecurenet.defenses.adversarial_training.AdversarialTraining"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdversarialTraining</span></code></a></p>
 <p>Adversarial Training class. This class is used to train a model using adversarial training.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -137,18 +129,16 @@
 </div>
 </dd></dl>
 
-</section>
-<section id="module-advsecurenet.defenses">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.defenses" title="Link to this heading"></a></h2>
-</section>
+<hr class="docutils" />
+<span class="target" id="module-advsecurenet.defenses"></span></section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="advsecurenet.datasets.MNIST.html" class="btn btn-neutral float-left" title="advsecurenet.datasets.MNIST package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="advsecurenet.models.html" class="btn btn-neutral float-right" title="advsecurenet.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="advsecurenet.datasets.svhn.html" class="btn btn-neutral float-left" title="advsecurenet.datasets.svhn package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advsecurenet.distributed.html" class="btn btn-neutral float-right" title="advsecurenet.distributed package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

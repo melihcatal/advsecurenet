@@ -16,13 +16,13 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="advsecurenet.evaluation.evaluators package" href="advsecurenet.evaluation.evaluators.html" />
-    <link rel="prev" title="advsecurenet.utils package" href="advsecurenet.utils.html" /> 
+    <link rel="prev" title="advsecurenet.distributed package" href="advsecurenet.distributed.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,40 +44,38 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html">AdvSecureNet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#usage">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#examples">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#architecture">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Introduction.html#license">License</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.distributed.html">advsecurenet.distributed package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">advsecurenet.evaluation package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html">advsecurenet.evaluation.evaluators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.evaluation.adversarial_evaluator">advsecurenet.evaluation.adversarial_evaluator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator"><code class="docutils literal notranslate"><span class="pre">AdversarialEvaluator</span></code></a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">Python Package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="advsecurenet.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.configs.html">advsecurenet.configs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">advsecurenet.evaluation package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.evaluation.adversarial_evaluator">advsecurenet.evaluation.adversarial_evaluator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.evaluation.base_evaluator">advsecurenet.evaluation.base_evaluator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-advsecurenet.evaluation">Module contents</a></li>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.evaluation.base_evaluator">advsecurenet.evaluation.base_evaluator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.evaluation.base_evaluator.BaseEvaluator"><code class="docutils literal notranslate"><span class="pre">BaseEvaluator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.evaluation.tester">advsecurenet.evaluation.tester module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.evaluation.tester.Tester"><code class="docutils literal notranslate"><span class="pre">Tester</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.trainer.html">advsecurenet.trainer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advsecurenet.utils.html">advsecurenet.utils package</a></li>
 </ul>
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli package</a></li>
 </ul>
 
         </div>
@@ -94,7 +92,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="advsecurenet.html">Python Package</a></li>
+          <li class="breadcrumb-item"><a href="advsecurenet.html">advsecurenet package</a></li>
       <li class="breadcrumb-item active">advsecurenet.evaluation package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/advsecurenet.evaluation.rst.txt" rel="nofollow"> View page source</a>
@@ -107,12 +105,10 @@
              
   <section id="advsecurenet-evaluation-package">
 <h1>advsecurenet.evaluation package<a class="headerlink" href="#advsecurenet-evaluation-package" title="Link to this heading"></a></h1>
-<section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html">advsecurenet.evaluation.evaluators package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators.attack_success_rate_evaluator">advsecurenet.evaluation.evaluators.attack_success_rate_evaluator module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator"><code class="docutils literal notranslate"><span class="pre">AttackSuccessRateEvaluator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html#advsecurenet.evaluation.evaluators.attack_success_rate_evaluator.AttackSuccessRateEvaluator.get_results"><code class="docutils literal notranslate"><span class="pre">AttackSuccessRateEvaluator.get_results()</span></code></a></li>
@@ -181,28 +177,22 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.evaluation.evaluators.html#module-advsecurenet.evaluation.evaluators">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
-</section>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
-</section>
+<hr class="docutils" />
 <section id="module-advsecurenet.evaluation.adversarial_evaluator">
 <span id="advsecurenet-evaluation-adversarial-evaluator-module"></span><h2>advsecurenet.evaluation.adversarial_evaluator module<a class="headerlink" href="#module-advsecurenet.evaluation.adversarial_evaluator" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.adversarial_evaluator.</span></span><span class="sig-name descname"><span class="pre">AdversarialEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.adversarial_evaluator.</span></span><span class="sig-name descname"><span class="pre">AdversarialEvaluator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">evaluators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#advsecurenet.evaluation.base_evaluator.BaseEvaluator" title="advsecurenet.evaluation.base_evaluator.BaseEvaluator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEvaluator</span></code></a></p>
 <p>Composite evaluator that can be used to evaluate multiple metrics at once.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>evaluators</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – List of evaluators to use. If None, all evaluators will be used. Defaults to None.</p></li>
-<li><p><strong>mean</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Mean of the dataset. Defaults to None. Needed for evaluators that need to unnormalize the data.</p></li>
-<li><p><strong>std</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Standard deviation of the dataset. Defaults to None. Needed for evaluators that need to unnormalize the data.</p></li>
+<li><p><strong>evaluators</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – List of evaluators to use. If None, all evaluators will be used. Defaults to None. .</p></li>
 <li><p><strong>**kwargs</strong> – Arbitrary keyword arguments for the evaluators.</p></li>
 </ul>
 </dd>
@@ -215,19 +205,6 @@ It’s also possible to provide a distance metric to evaluate the perturbation e
 - L2
 - Linf
 Default distance metric is L0.</p>
-<p>Some metrics expect the adversarial examples to be normalized. Similarity metrics expect the unnormalized data.
-The metrics that need to feed the model expect the data to be normalized since the model has been trained on normalized data.
-The complete list of metrics and their expected data format is:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>SimilarityEvaluator: Expects unnormalized data.</p></li>
-<li><p>PerturbationDistanceEvaluator: Expects unnormalized data.</p></li>
-<li><p>PerturbationEffectivenessEvaluator: Expects unnormalized data.</p></li>
-<li><p>RobustnessGapEvaluator: Expects normalized data.</p></li>
-<li><p>AttackSuccessRateEvaluator: Expects normalized data.</p></li>
-<li><p>TransferabilityEvaluator: Expects normalized data.</p></li>
-</ul>
-</div></blockquote>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.get_results">
@@ -243,8 +220,20 @@ The complete list of metrics and their expected data format is:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adv_img</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.update" title="Link to this definition"></a></dt>
-<dd><p>Updates the evaluator with new data for streaming mode. Expects normalized data. If needed, the data will be unnormalized before calculating the metrics.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.evaluation.adversarial_evaluator.AdversarialEvaluator.update" title="Link to this definition"></a></dt>
+<dd><p>Updates the evaluator with new data for streaming mode.
+:param model: The model to evaluate.
+:type model: BaseModel
+:param original_images: The original images.
+:type original_images: torch.Tensor
+:param true_labels: The true labels of the original images.
+:type true_labels: torch.Tensor
+:param adversarial_images: The adversarial images.
+:type adversarial_images: torch.Tensor
+:param is_targeted: Whether the attack is targeted or not. Defaults to False.
+:type is_targeted: bool, optional
+:param target_labels: The target labels for the targeted attack. Defaults to None.
+:type target_labels: Optional[torch.Tensor], optional</p>
 </dd></dl>
 
 </dd></dl>
@@ -287,23 +276,62 @@ The complete list of metrics and their expected data format is:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="advsecurenet.evaluation.base_evaluator.BaseEvaluator.update">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.base_evaluator.BaseEvaluator.update" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><span class="pre">BaseModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adversarial_images</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_targeted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span></span><a class="headerlink" href="#advsecurenet.evaluation.base_evaluator.BaseEvaluator.update" title="Link to this definition"></a></dt>
 <dd><p>Updates the evaluator with new data for streaming mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="advsecurenet.models.html#advsecurenet.models.base_model.BaseModel" title="advsecurenet.models.base_model.BaseModel"><em>BaseModel</em></a>) – The model being evaluated.</p></li>
+<li><p><strong>original_images</strong> (<em>torch.Tensor</em>) – The original images.</p></li>
+<li><p><strong>original_labels</strong> (<em>torch.Tensor</em>) – The true labels for the original images.</p></li>
+<li><p><strong>adversarial_images</strong> (<em>torch.Tensor</em>) – The adversarial images.</p></li>
+<li><p><strong>is_targeted</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the attack is targeted.</p></li>
+<li><p><strong>target_labels</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – Target labels for the adversarial images if the attack is targeted.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="module-advsecurenet.evaluation">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-advsecurenet.evaluation" title="Link to this heading"></a></h2>
-</section>
+<section id="module-advsecurenet.evaluation.tester">
+<span id="advsecurenet-evaluation-tester-module"></span><h2>advsecurenet.evaluation.tester module<a class="headerlink" href="#module-advsecurenet.evaluation.tester" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="advsecurenet.evaluation.tester.Tester">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.evaluation.tester.</span></span><span class="sig-name descname"><span class="pre">Tester</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.test_config.TestConfig" title="advsecurenet.shared.types.configs.test_config.TestConfig"><span class="pre">TestConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.evaluation.tester.Tester" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base tester module for testing a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="advsecurenet.shared.types.configs.html#advsecurenet.shared.types.configs.test_config.TestConfig" title="advsecurenet.shared.types.configs.test_config.TestConfig"><em>TestConfig</em></a>) – The configuration for testing.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="advsecurenet.evaluation.tester.Tester.test">
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#advsecurenet.evaluation.tester.Tester.test" title="Link to this definition"></a></dt>
+<dd><p>Tests the model on the given test_loader. Prints the average loss and accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the average loss and accuracy.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<hr class="docutils" />
+<span class="target" id="module-advsecurenet.evaluation"></span></section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="advsecurenet.utils.html" class="btn btn-neutral float-left" title="advsecurenet.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advsecurenet.distributed.html" class="btn btn-neutral float-left" title="advsecurenet.distributed package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="advsecurenet.evaluation.evaluators.html" class="btn btn-neutral float-right" title="advsecurenet.evaluation.evaluators package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
