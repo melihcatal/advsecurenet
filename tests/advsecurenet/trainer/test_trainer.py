@@ -157,3 +157,17 @@ def test_log_loss(train_config, tmp_path):
     with open(tmp_path / "loss.log", "r") as f:
         assert f.readline() == "epoch,loss\n"
         assert f.readline() == "1,0.61\n"
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+@patch('advsecurenet.trainer.trainer.Trainer._setup_device')
+@patch('advsecurenet.trainer.trainer.Trainer._setup_model')
+@patch('advsecurenet.trainer.trainer.get_loss_function')
+@patch('advsecurenet.trainer.trainer.Trainer._load_checkpoint_if_any')
+@patch('advsecurenet.trainer.trainer.Trainer._setup_scheduler')
+def test_missing_model_parameter(mock_setup_scheduler, mock_load_checkpoint_if_any, mock_get_loss_function,
+                                 mock_setup_model, mock_setup_device, train_config):
+    train_config.model.parameters = None
+    with pytest.raises(ValueError):
+        Trainer(train_config)
