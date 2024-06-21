@@ -135,9 +135,9 @@ class Trainer:
                 "Model must be provided if optimizer is a string.")
 
         if optimizer is None:
-            if model.parameters() is None:
+            if model is None:
                 raise ValueError(
-                    "Model parameters must be provided if optimizer is None.")
+                    "Model must be provided if optimizer is None.")
             optimizer = optim.Adam(model.parameters(), lr=learning_rate)
         else:
             if isinstance(optimizer, str):

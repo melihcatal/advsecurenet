@@ -168,6 +168,6 @@ def test_log_loss(train_config, tmp_path):
 @patch('advsecurenet.trainer.trainer.Trainer._setup_scheduler')
 def test_missing_model_parameter(mock_setup_scheduler, mock_load_checkpoint_if_any, mock_get_loss_function,
                                  mock_setup_model, mock_setup_device, train_config):
-    train_config.model.parameters = None
+    train_config.model = None
     with pytest.raises(ValueError):
         Trainer(train_config)
