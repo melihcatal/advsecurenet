@@ -1,5 +1,16 @@
 # AdvSecureNet
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=bugs)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=coverage)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
 [![Unit Tests and Style Checks](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml/badge.svg?branch=develop)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml)
 [![Build and Deploy Sphinx Documentation](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml)
 [![Upload Python Package](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml)
