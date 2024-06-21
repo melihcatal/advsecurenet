@@ -1,7 +1,6 @@
 advsecurenet.defenses package
 =============================
 
-Submodules
 ----------
 
 advsecurenet.defenses.adversarial\_training module
@@ -20,7 +19,6 @@ advsecurenet.defenses.ddp\_adversarial\_training module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.defenses

@@ -1,5 +1,3 @@
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
 from advsecurenet.shared.types.configs.attack_configs.cw_attack_config import \
     CWAttackConfig
 from advsecurenet.shared.types.configs.attack_configs.decision_boundary_attack_config import \
@@ -14,7 +12,6 @@ from advsecurenet.shared.types.configs.attack_configs.pgd_attack_config import \
     PgdAttackConfig
 
 __all__ = [
-    "AttackConfig",
     "CWAttackConfig",
     "DeepFoolAttackConfig",
     "FgsmAttackConfig",

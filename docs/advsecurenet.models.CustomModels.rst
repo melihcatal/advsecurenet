@@ -1,7 +1,6 @@
 advsecurenet.models.CustomModels package
 ========================================
 
-Submodules
 ----------
 
 advsecurenet.models.CustomModels.CustomCifar10Model module
@@ -20,7 +19,6 @@ advsecurenet.models.CustomModels.CustomMnistModel module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.models.CustomModels

@@ -14,37 +14,52 @@ class BaseEvaluator(ABC):
     Base class for all evaluators.
     """
 
-    @abstractmethod
     def __init__(self, *args, **kwargs):
-        pass
+        """
+        Base constructor for all evaluators.
+        """
 
     def __enter__(self):
         self.reset()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        pass
+        """
+        Exits the context manager.
+        """
 
     @abstractmethod
     def reset(self):
         """
         Resets the evaluator for a new streaming session.
         """
-        pass
 
     @abstractmethod
-    def update(self, *args, **kwargs):
+    def update(self,
+               model: BaseModel,
+               original_images: torch.Tensor,
+               true_labels: torch.Tensor,
+               adversarial_images: torch.Tensor,
+               is_targeted: Optional[bool] = False,
+               target_labels: Optional[torch.Tensor] = None
+               ) -> None:
         """
         Updates the evaluator with new data for streaming mode.
+
+        Args:
+            model (BaseModel): The model being evaluated.
+            original_images (torch.Tensor): The original images.
+            original_labels (torch.Tensor): The true labels for the original images.
+            adversarial_images (torch.Tensor): The adversarial images.
+            is_targeted (bool, optional): Whether the attack is targeted.
+            target_labels (Optional[torch.Tensor], optional): Target labels for the adversarial images if the attack is targeted.
         """
-        pass
 
     @abstractmethod
     def get_results(self):
         """
         Calculates the results for the streaming session.
         """
-        pass
 
     def save_results_to_csv(self,
                             evaluation_results: dict,
@@ -77,7 +92,7 @@ class BaseEvaluator(ABC):
 
         file_exists = os.path.exists(file_path)
 
-        with open(file_path, mode='a', newline='') as file:
+        with open(file_path, mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
 
             # Write the experiment info and headers if file doesn't exist
@@ -98,14 +113,3 @@ class BaseEvaluator(ABC):
             values = [str(value)
                       for value in evaluation_results.values()]
             writer.writerow(values)
-
-    def _calculate_accuracy(self, model: BaseModel, images: torch.Tensor, labels: torch.Tensor) -> float:
-        """
-        Calculates the accuracy of the model on the given images.
-        """
-        model.eval()
-        predictions = model(images)
-        predicted_labels = torch.argmax(predictions, dim=1)
-        correct_predictions = torch.sum(predicted_labels == labels)
-        accuracy = correct_predictions.item() / len(labels)
-        return accuracy

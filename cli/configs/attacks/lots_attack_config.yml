@@ -1,0 +1,11 @@
+# Description: Configuration file for the LOTS attack.
+
+model: !include ../shared/model_config.yml
+dataset: !include ./shared/attack_dataset_config.yml
+dataloader: 
+  default: !include ../shared/dataloader_config.yml
+device: !include ../shared/device_config.yml
+attack_procedure: !include ./shared/attack_procedure_config.yml
+
+# Attack Specific Configuration
+attack_config: !include ./base/lots_attack_base_config.yml

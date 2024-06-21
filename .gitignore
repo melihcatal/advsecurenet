@@ -21,8 +21,6 @@ docs/_build/
 # DS_Store files
 **/.DS_Store
 
-# weights
-weights/
 
 # checkpoints
 checkpoints/ 
@@ -33,6 +31,7 @@ examples/*/**_config.yml
 # coverage files
 .coverage.*
 .coverage
+coverage.xml
 
 # ide settings
 .vscode/
@@ -42,3 +41,6 @@ examples/*/**_config.yml
 
 # results
 examples/*/**.csv
+
+# sonarqube
+.scannerwork/

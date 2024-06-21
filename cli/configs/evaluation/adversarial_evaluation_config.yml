@@ -1,0 +1,9 @@
+# Description: Configuration file for the evaluation
+evaluation_config:
+  attack:  
+    name: # Name of the attack.
+    config: # Path to the attack configuration file.
+  evaluators: # list of strings
+    - "attack_success_rate"
+  target_models: # needed to evaluate the transferability of the attack
+    - # Path to the target model configuration file.

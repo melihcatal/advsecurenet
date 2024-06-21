@@ -1,0 +1,5 @@
+# Attack Execution Configuration
+verbose: True # Whether to print progress of the attack. Defaults to True.
+save_result_images: True # Whether to save the result images. Defaults to True.
+result_images_dir: attack # The path to the directory where the result images will be saved. 
+result_images_prefix: adv # The prefix to use for the result images. If null, uses {attack_name}_{model_name}_{trained_on}_{dataset_name}_{dataset_part}.

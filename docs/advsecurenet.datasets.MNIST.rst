@@ -1,7 +1,6 @@
 advsecurenet.datasets.MNIST package
 ===================================
 
-Submodules
 ----------
 
 advsecurenet.datasets.MNIST.mnist\_dataset module
@@ -12,7 +11,6 @@ advsecurenet.datasets.MNIST.mnist\_dataset module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.datasets.MNIST

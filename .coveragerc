@@ -1,4 +1,3 @@
 [run]
 omit =
-    advsecurenet/datasets/*
-    advsecurenet/models/CustomModels/*
+    */__init__.py 

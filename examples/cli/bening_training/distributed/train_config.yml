@@ -1,0 +1,71 @@
+model:
+  model_name: vgg16
+  num_input_channels: 3
+  num_classes: 100
+  pretrained: true
+  weights: IMAGENET1K_V1
+  is_external: false
+  random_seed:
+  path_configs:
+    model_arch_path:
+    model_weights_path:
+  norm_config:
+    add_norm_layer: false
+    norm_mean:
+    - 0.5
+    - 0.5
+    - 0.5
+    norm_std:
+    - 0.5
+    - 0.5
+    - 0.5
+dataset:
+  dataset_name: cifar100
+  num_classes: 100
+  train_dataset_path:
+  test_dataset_path:
+  preprocessing:
+    steps:
+    - name: ToImage
+      params:
+    - name: ToDtype
+      params:
+        dtype: torch.float32
+        scale: true
+  download: true
+dataloader:
+  train:
+    num_workers: 4
+    shuffle: true
+    drop_last: false
+    pin_memory: true
+    batch_size: 64
+  test:
+    num_workers: 4
+    shuffle: true
+    drop_last: false
+    pin_memory: true
+    batch_size: 32
+device:
+  use_ddp: true
+  processor: cuda
+  gpu_ids: [1,2,4]
+training:
+  epochs: 1
+  learning_rate: 0.01
+  optimizer: adam
+  optimizer_kwargs:
+    weight_decay: 0.0001
+  scheduler: LINEAR_LR
+  scheduler_kwargs:
+  criterion: cross_entropy
+  save_final_model: true
+  save_model_path: ./
+  save_model_name:
+  save_checkpoint: false
+  save_checkpoint_path:
+  save_checkpoint_name:
+  checkpoint_interval: 1
+  load_checkpoint: false
+  load_checkpoint_path:
+  verbose: true

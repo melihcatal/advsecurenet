@@ -1,7 +1,8 @@
-from colored import fg, attr
 """
 This file contains the colors that are used in the project for printing messages on the console.
 """
+
+from colored import attr, fg
 
 # Defining some colors
 red = fg('red')

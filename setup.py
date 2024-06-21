@@ -5,9 +5,10 @@ from setuptools import find_packages, setup
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+
 setup(
     name="advsecurenet",
-    version="0.1.7",
+    version="0.1.8",
     description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -29,7 +30,9 @@ setup(
         "ruamel.yaml",
         "matplotlib",
         "scikit-image",
-        "einops"
+        "einops",
+        "filetype",
+        "requests"
     ],
     entry_points={
         'console_scripts': [

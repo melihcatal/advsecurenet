@@ -2,52 +2,22 @@ import importlib
 import os
 
 from advsecurenet.models.base_model import BaseModel
+from advsecurenet.shared.types.configs.model_config import CustomModelConfig
 
 
 class CustomModel(BaseModel):
     """
     This class is used to load a custom model. It is a subclass of BaseModel. 
-
-    Parameters
-    ----------
-    model_name : str
-        The name of the custom model. This should be the same as the name of the file in the CustomModels directory.
-    custom_models_path : str, optional
-        The path to the CustomModels directory, by default "CustomModels"
-
-    Raises
-    ------
-    ValueError
-        If the model class is not found in the custom model file.
-
-    Examples
-    --------
-    >>> from advsecurenet.models.custom_model import CustomModel
-    >>> model = CustomModel("CustomMnistModel")
-    >>> model
-    CustomMnistModel(
-        (model): Sequential(
-            (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
-            (1): ReLU()
-            (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1))
-            (3): ReLU()
-            (4): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
-            (5): Dropout(p=0.25, inplace=False)
-            (6): Flatten(start_dim=1, end_dim=-1)
-            (7): Linear(in_features=9216, out_features=128, bias=True)
-            (8): ReLU()
-            (9): Dropout(p=0.5, inplace=False)
-            (10): Linear(in_features=128, out_features=10, bias=True)
-        )
-    )
     """
 
-    def __init__(self, model_name: str, num_classes: int, num_input_channels: int, custom_models_path: str = "CustomModels", **kwargs):
-        self.custom_models_path = custom_models_path
-        self.model_name = model_name
-        self.num_classes = num_classes
-        self.num_input_channels = num_input_channels
-        self.kwargs = kwargs
+    def __init__(self,
+                 config: CustomModelConfig,
+                 **kwargs):
+        self._custom_models_path = config.custom_models_path
+        self._model_name = config.model_name
+        self._num_classes = config.num_classes
+        self._num_input_channels = config.num_input_channels
+        self._kwargs = kwargs
 
         # Initialize the BaseModel
         super().__init__()
@@ -65,18 +35,18 @@ class CustomModel(BaseModel):
         """
 
         # Dynamically import the custom model based on its name
-        custom_module_name = f"advsecurenet.models.{self.custom_models_path}.{self.model_name}"
+        custom_module_name = f"advsecurenet.models.{self._custom_models_path}.{self._model_name}"
         custom_module = importlib.import_module(custom_module_name)
 
         # Assume the model class inside the custom model file has the same name as the file
-        if not hasattr(custom_module, self.model_name):
+        if not hasattr(custom_module, self._model_name):
             raise ValueError(
-                f"Model class {self.model_name} not found in module {custom_module_name}")
+                f"Model class {self._model_name} not found in module {custom_module_name}")
 
-        model_class = getattr(custom_module, self.model_name)
+        model_class = getattr(custom_module, self._model_name)
 
         self.model = model_class(
-            num_classes=self.num_classes, num_input_channels=self.num_input_channels, **self.kwargs)
+            num_classes=self._num_classes, num_input_channels=self._num_input_channels, **self._kwargs)
 
         # Perform necessary modifications after model load
         self.modify_model()

@@ -1,19 +1,25 @@
-Python Package
+advsecurenet package
 ====================
 
-Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 6
 
    advsecurenet.attacks
-   advsecurenet.configs
    advsecurenet.dataloader
    advsecurenet.datasets
    advsecurenet.defenses
+   advsecurenet.distributed
+   advsecurenet.evaluation
    advsecurenet.models
    advsecurenet.shared
+   advsecurenet.trainer
    advsecurenet.utils
-   advsecurenet.evaluation
 
+---------------
+
+.. automodule:: advsecurenet
+   :members:
+   :undoc-members:
+   :show-inheritance:

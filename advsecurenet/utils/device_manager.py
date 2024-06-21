@@ -1,5 +1,6 @@
-import torch
 from typing import Union
+
+import torch
 
 
 class DeviceManager:
@@ -17,10 +18,14 @@ class DeviceManager:
         Returns the current device. In distributed mode, it returns the device of the current process.
         In single mode, it returns the initialized device.
         """
+
         if self.distributed_mode:
             return torch.device(f'cuda:{torch.cuda.current_device()}')
-        else:
-            return self.initial_device
+
+        if isinstance(self.initial_device, str):
+            return torch.device(self.initial_device)
+
+        return self.initial_device
 
     def to_device(self, *args):
         """

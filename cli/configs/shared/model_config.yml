@@ -1,0 +1,24 @@
+# --- Model Configurations ---
+model_name: resnet18
+num_input_channels: 3 # Number of input channels for the model.
+num_classes: 10 # Number of classes for the model.
+pretrained: true # Whether the model is pretrained.
+weights: "IMAGENET1K_V1" # Weights to use for the model. Required if pretrained is true for a standard model.
+is_external: false # Whether the model is external. If true, the model will be loaded from the external model path.
+
+random_seed: null # Random seed for the model. If null, uses the default random seed.
+
+path_configs:
+  model_arch_path: null # Path to the model architecture file. Required if is_external is false.
+  model_weights_path: null # Path to the model weights file. Required if is_external is false and pretrained is true.
+
+norm_config:
+  add_norm_layer: false # Whether to add a normalization layer to the model.
+  norm_mean:  # Mean value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+    - 0.5
+    - 0.5
+    - 0.5
+  norm_std:   # Standard deviation value for normalization. Required if add_norm_layer is true. Should be a list of size num_input_channels.
+    - 0.5
+    - 0.5
+    - 0.5

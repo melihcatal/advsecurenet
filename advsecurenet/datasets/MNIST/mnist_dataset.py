@@ -1,16 +1,19 @@
 from typing import Optional
 
-import pkg_resources
-from torch.utils.data import Dataset as TorchDataset
 from torchvision import datasets
 
-from advsecurenet.datasets.base_dataset import BaseDataset, DatasetWrapper
-from advsecurenet.shared.types import DataType
+from advsecurenet.datasets.base_dataset import BaseDataset
+from advsecurenet.shared.normalization_params import NormalizationParameters
+from advsecurenet.shared.types.configs.preprocess_config import \
+    PreprocessConfig
 
 
 class MNISTDataset(BaseDataset):
     """
     The MNISTDataset class that loads the MNIST dataset.
+
+    Args:
+        preprocess_config (Optional[PreprocessConfig], optional): The preprocessing configuration for the MNIST dataset. Defaults to None.
 
     Attributes:
         mean (List[float]): Mean of the MNIST dataset.
@@ -20,48 +23,39 @@ class MNISTDataset(BaseDataset):
         num_classes (int): Number of classes in the MNIST dataset.
     """
 
-    def __init__(self):
-        super().__init__()
-        self.mean = [0.1307]  # mean of MNIST
-        self.std = [0.3081]   # std of MNIST
+    def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
+        super().__init__(preprocess_config)
+        self.mean = NormalizationParameters.get_params("MNIST").mean
+        self.std = NormalizationParameters.get_params("MNIST").std
         self.input_size = (28, 28)
         self.crop_size = (28, 28)
         self.name = "mnist"
         self.num_classes = 10
 
-    def load_dataset(self,
-                     root: Optional[str] = None,
-                     train: Optional[bool] = True,
-                     download: Optional[bool] = True,
-                     **kwargs) -> DatasetWrapper:
-        """
-        Loads the MNIST dataset.
+    def get_dataset_class(self):
+        return datasets.MNIST
 
-        Args:
-            root (str, optional): The root directory where the dataset should be stored. Defaults to './data'.
-            train (bool, optional): If True, loads the training data. Otherwise, loads the test data. Defaults to True.
-            download (bool, optional): If True, downloads the dataset from the internet. Defaults to True.
-            **kwargs: Arbitrary keyword arguments for the MNIST dataset.
 
-        Returns:
-            DatasetWrapper: The MNIST dataset loaded into memory.
-        """
+class FashionMNISTDataset(MNISTDataset):
+    """
+    The FashionMNISTDataset class that loads the Fashion-MNIST dataset.
 
-        # If root is not given, use the default data directory
-        if root is None:
-            root = pkg_resources.resource_filename("advsecurenet", "data")
+    Args:
+        preprocess_config (Optional[PreprocessConfig], optional): The preprocessing configuration for the Fashion-MNIST dataset. Defaults to None.
 
-        transform = self.get_transforms()
-        mnist_dataset = datasets.MNIST(
-            root=root,
-            train=train,
-            transform=transform,
-            download=download,
-            **kwargs)
-        self._dataset = DatasetWrapper(
-            dataset=mnist_dataset,
-            name=self.name,
-            **kwargs)
+    Attributes:
+        mean (List[float]): Mean of the Fashion-MNIST dataset.
+        std (List[float]): Standard deviation of the Fashion-MNIST dataset.
+        input_size (Tuple[int, int]): Input size of the Fashion-MNIST images.
+        name (str): Name of the dataset.
+        num_classes (int): Number of classes in the Fashion-MNIST dataset.
+    """
 
-        self.data_type = DataType.TRAIN if train else DataType.TEST
-        return self._dataset
+    def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
+        super().__init__(preprocess_config)
+        self.mean = NormalizationParameters.get_params("FASHION_MNIST").mean
+        self.std = NormalizationParameters.get_params("FASHION_MNIST").std
+        self.name = "fashion_mnist"
+
+    def get_dataset_class(self):
+        return datasets.FashionMNIST

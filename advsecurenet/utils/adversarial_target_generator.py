@@ -1,18 +1,21 @@
 import io
+import logging
 import pickle
 import random
 from collections import defaultdict
-from typing import Optional, Union
+from typing import List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import pkg_resources
 import requests
 import torch
-import torchvision.transforms as transforms
 from PIL import Image
+from torchvision import transforms
 from torchvision.datasets import VisionDataset as TorchDataset
 
 from advsecurenet.datasets.base_dataset import DatasetWrapper
+
+logger = logging.getLogger(__name__)
 
 
 class AdversarialTargetGenerator:
@@ -21,15 +24,81 @@ class AdversarialTargetGenerator:
     The example can be found in `examples/attacks/targeted_attacks.ipynb`.
     """
 
-    def __init__(self, maps_path: Optional[str] = None):
-        self.maps_path = self._setup_maps_path(maps_path)
+    def __init__(self, maps_path: Optional[str] = pkg_resources.resource_filename(
+            "advsecurenet", "data")):
+        self.maps_path = maps_path
 
-    def generate_target_images(self, train_data, targets: list = None, overwrite=False, show_images=False, save_images=False, save_path=None, total_tries=3):
+    def generate_target_labels(self, data, targets: list = None, overwrite=False):
         """
-        Generates target images for the given train_data.
+        Generates target labels for the given data.
 
         Args:
-            train_data (torch.utils.data.Dataset): The training data.
+            data (torch.utils.data.Dataset): The training data.
+            targets (list, optional): The list of target labels. Defaults to None.
+            overwrite (bool, optional): If True, overwrites the existing indices map. Defaults to False.
+
+        Returns:
+            list: The list of target labels.
+        """
+        try:
+            # Step 1: Generate class to image indices map
+            class_to_images = self._generate_class_to_image_indices_map(
+                data, targets, overwrite)
+
+            # Step 2: Shuffle and pair images across classes
+            paired_images = self._shuffle_and_pair_images_across_classes(
+                class_to_images)
+
+            # Step 3: Extract target labels
+            target_labels = [d['target_label'] for d in paired_images]
+
+            return target_labels
+        except Exception as e:
+            raise ValueError(
+                'Could not generate target labels. Please try again. Detailed error: ' + str(e)) from e
+
+    def generate_target_images_and_labels(self, data: TorchDataset, targets: Optional[List] = None, overwrite: Optional[bool] = False) -> Tuple[List[torch.Tensor], List[int]]:
+        """
+        Generates target images and labels for the given data.
+
+        Args:
+            data (TorchDataset): The dataset to generate target images and labels from.
+            targets (Optional[List]): The list of target labels. Defaults to None.
+            overwrite (Optional[bool]): If True, overwrites the existing indices map. Defaults to False.
+
+        Returns:
+            Tuple[List[torch.Tensor], List[int]]: The list of target images and target labels.
+        """
+        try:
+            # Step 1: Generate class to image indices map
+            class_to_images = self._generate_class_to_image_indices_map(
+                data, targets, overwrite)
+
+            # Step 2: Shuffle and pair images across classes
+            paired_images = self._shuffle_and_pair_images_across_classes(
+                class_to_images)
+
+            # Step 3: Extract target labels
+            target_labels = [d['target_label'] for d in paired_images]
+
+            # Step 4: Extract target images
+            target_img_indices = [x['target_image'] for x in paired_images]
+
+            target_images_list = [data[idx][0].clone().detach()
+                                  for idx in target_img_indices]
+            target_images = torch.stack(target_images_list)
+
+            return target_images, target_labels
+        except Exception as e:
+            raise ValueError(
+                'Could not generate target labels. Please try again. Detailed error: ' + str(e)) from e
+
+    def generate_target_images(self, data, targets: list = None, overwrite=False, show_images=False, save_images=False, save_path=None, total_tries=3):
+        """
+        Generates target images for the given data.
+
+        Args:
+            data (torch.utils.data.Dataset): The training data.
             targets (list, optional): The list of target labels. Defaults to None.
             overwrite (bool, optional): If True, overwrites the existing indices map. Defaults to False.
             show_images (bool, optional): If True, shows the generated target images. Defaults to False.
@@ -42,7 +111,7 @@ class AdversarialTargetGenerator:
         try:
             # Step 1: Generate class to image indices map
             class_to_images = self._generate_class_to_image_indices_map(
-                train_data, targets, overwrite)
+                data, targets, overwrite)
 
             # Step 2: Shuffle and pair images across classes
             paired_images = self._shuffle_and_pair_images_across_classes(
@@ -53,8 +122,8 @@ class AdversarialTargetGenerator:
                 # Step 3: Validate paired images
                 self._validate_paired_images(paired_images)
             except Exception as e:
-                print(
-                    f"Failed to validate paired images. Trying again... {num_tries}/{total_tries}")
+                logger.warning(
+                    'Could not generate target images. Retrying...')
                 # Retry a few times if validation fails
                 num_tries += 1
                 if num_tries <= total_tries:
@@ -62,23 +131,28 @@ class AdversarialTargetGenerator:
                         class_to_images)
                     self._validate_paired_images(paired_images)
                 else:
+                    logger.error(
+                        'Could not generate target images after multiple tries.')
                     raise ValueError(
-                        "Could not generate target images. Maybe you forgot to shuffle the data? Detailed error: " + str(e))
+                        'Could not generate target images. Maybe you forgot to shuffle the data? Detailed error: ' + str(e)) from e
 
             # Step 4: Show images if specified
             if show_images:
-                self._show_image_pair(paired_images[0], train_data)
+                self._show_image_pair(paired_images[0], data)
 
             # Step 5: Save images if specified
             if save_images:
-                self._save_images(paired_images, train_data, save_path)
+                self._save_images(paired_images, data, save_path)
 
             return paired_images
         except Exception as e:
             raise ValueError(
-                "Could not generate target images. Please try again. Detailed error: " + str(e))
+                'Could not generate target images. Please try again. Detailed error: ' + str(e)) from e
 
-    def extract_images_and_labels(self, paired: list, images: torch.Tensor, device: Optional[torch.device] = None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    def extract_images_and_labels(self,
+                                  paired: list,
+                                  dataset: DatasetWrapper,
+                                  device: Optional[torch.device] = None) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         Extracts and stacks original and target images and labels from paired data.
 
@@ -99,11 +173,17 @@ class AdversarialTargetGenerator:
         original_labels = [x['original_label'] for x in paired]
         target_labels = [x['target_label'] for x in paired]
 
-        # Stack images and labels into tensors
-        original_images = torch.stack([images[idx]
-                                      for idx in original_img_indices])
-        target_images = torch.stack([images[idx]
-                                    for idx in target_img_indices])
+        # Convert generator to a list of tensors
+        original_images_list = [dataset[idx][0].clone().detach()
+                                for idx in original_img_indices]
+
+        # Stack images into a single tensor
+        original_images = torch.stack(original_images_list)
+
+        # Similarly for target images if needed
+        target_images_list = [dataset[idx][0].clone().detach()
+                              for idx in target_img_indices]
+        target_images = torch.stack(target_images_list)
 
         original_labels_tensor = torch.tensor(original_labels)
         target_labels_tensor = torch.tensor(target_labels)
@@ -115,43 +195,34 @@ class AdversarialTargetGenerator:
             original_labels_tensor = original_labels_tensor.to(device)
             target_labels_tensor = target_labels_tensor.to(device)
 
-        return original_images, original_labels_tensor, target_images, target_labels_tensor
+        return original_images, original_labels_tensor, target_images_list, target_labels
 
-    def _save_images(self, paired_images, train_data, save_path):
+    def _save_images(self, paired_images, data, save_path):
         """Saves the generated target images."""
         if save_path is None:
             save_path = self.maps_path
         for i, pair in enumerate(paired_images):
             original_image, target_image = self._get_image_from_pair(
-                pair, train_data)
+                pair, data)
             original_image.save(
                 f"{save_path}/original_image_{i}.png")
             target_image.save(
                 f"{save_path}/target_image_{i}.png")
 
-    def _setup_maps_path(self, maps_path: Optional[str] = None):
-        """Sets up the path to the maps."""
-        if maps_path is None:
-            self.maps_path = pkg_resources.resource_filename(
-                "advsecurenet", "data")
-        else:
-            self.maps_path = maps_path
-
     def _load_mappings(self, url):
         """Downloads and loads a pickle file from the provided URL."""
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
         if response.status_code == 200:
             file_stream = io.BytesIO(response.content)
             return pickle.load(file_stream)
         else:
-            raise Exception(f"Failed to download file from {url}")
+            raise ValueError(
+                f"Failed to download the mappings from {url}. Please check the URL and try again.")
 
     def _get_existing_indices_map(self, data_type: str) -> Union[dict, None]:
         """Checks if the indices map already exists."""
-        # TODO: Better way to access the maps
         available_maps = {
             "imagenet": "https://advsecurenet.s3.eu-central-1.amazonaws.com/maps/imagenet_class_idx_to_img_indices.pkl",
-            # TODO: Add more maps here
         }
         try:
             if data_type in available_maps:
@@ -159,12 +230,13 @@ class AdversarialTargetGenerator:
                 if mapping:
                     return mapping
             return None
-        except Exception as e:
-            print("An error occurred while loading the indices map: " + str(e))
+        except ValueError as e:
+            logger.warning(
+                "Could not load the existing indices map. Detailed error: %s", str(e))
             return None
 
     def _extract_targets(self, data: Union[TorchDataset, DatasetWrapper, zip]) -> list:
-        """Extracts the targets from the train_data."""
+        """Extracts the targets from the data."""
 
         # Helper function to attempt attribute access
         def get_attribute(dataset, attr):
@@ -184,29 +256,24 @@ class AdversarialTargetGenerator:
             return [label for _, label in data]
         except Exception as e:
             raise ValueError(
-                f"Could not extract targets from the train_data: {e}")
+                f'Could not extract targets from the data: {e}') from e
 
-    def _generate_class_to_image_indices_map(self, train_data, targets: list = None, overwrite=False) -> dict:
+    def _generate_class_to_image_indices_map(self, data, targets: list = None, overwrite=False) -> dict:
         """Generates a map of class to images."""
         try:
             # Check if the map already exists
             if not overwrite:
-                try:
-                    existing_map = self._get_existing_indices_map(
-                        train_data.name)
-                    if existing_map:
-                        print("Using existing class to image indices map.")
-                        return existing_map
-                except:
-                    pass
+                existing_map = self._get_existing_indices_map(
+                    data.name)
+                if existing_map:
+                    return existing_map
 
-            # Extract targets from the train_data
+            # Extract targets from the data
             if targets is None:
-                targets = self._extract_targets(train_data)
+                targets = self._extract_targets(data)
 
             class_idx_to_img_indices = defaultdict(list)
             for i, target in enumerate(targets):
-                # print(f"image i = {i}, target = {target}")
                 if isinstance(target, torch.Tensor):
                     target = target.item()
                 target = int(target)
@@ -214,7 +281,7 @@ class AdversarialTargetGenerator:
             return class_idx_to_img_indices
         except Exception as e:
             raise ValueError(
-                "Could not generate class to image indices map. Detailed error: " + str(e))
+                'Could not generate class to image indices map. Detailed error: ' + str(e)) from e
 
     def _shuffle_and_pair_images_across_classes(self, class_to_images):
         """Pairs images from consecutive classes in a circular fashion and then shuffles the target pairs to break the circular pattern."""
@@ -289,9 +356,9 @@ class AdversarialTargetGenerator:
                 assert d['original_label'] == d[
                     'target_label'], f"Error: Original and target images are the same but labels are different: {d}"
 
-    def _get_image_from_pair(self, pair, train_data):
-        original_image = train_data[pair['original_image']][0]
-        target_image = train_data[pair['target_image']][0]
+    def _get_image_from_pair(self, pair, data):
+        original_image = data[pair['original_image']][0]
+        target_image = data[pair['target_image']][0]
 
         # Check if the images are already in PIL format, if not, convert
         if not isinstance(original_image, Image.Image):
@@ -301,9 +368,9 @@ class AdversarialTargetGenerator:
 
         return original_image, target_image
 
-    def _show_image_pair(self, pair, train_data, labels=None):
+    def _show_image_pair(self, pair, data, labels=None):
         original_image, target_image = self._get_image_from_pair(
-            pair, train_data)
+            pair, data)
 
         plt.subplot(1, 2, 1)
         # Assuming MNIST images, which are grayscale

@@ -1,0 +1,10 @@
+# --- Preprocessing Configs ---
+
+# Preprocessing Configs
+steps:
+  - name: ToImage
+    params: 
+  - name: ToDtype
+    params:
+      dtype: torch.float32
+      scale: True

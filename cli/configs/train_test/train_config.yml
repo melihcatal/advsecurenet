@@ -1,0 +1,10 @@
+# Description: Configuration file for training the model
+
+# Inherits shared configurations
+model: !include ../shared/model_config.yml
+dataset: !include ../shared/dataset_config.yml
+dataloader:
+  train: !include ../shared/dataloader_config.yml 
+  test: !include ../shared/dataloader_config.yml
+device: !include ../shared/device_config.yml
+training: !include ../shared/training_config.yml

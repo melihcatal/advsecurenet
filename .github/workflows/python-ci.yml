@@ -1,8 +1,6 @@
 name: Unit Tests and Style Checks
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -11,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10']
+        python-version: ["3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -34,3 +32,30 @@ jobs:
       - name: Lint with pylint
         run: |
           pylint advsecurenet cli
+
+  radon:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Install Radon
+        run: |
+          python -m pip install --upgrade pip
+          pip install radon
+
+      - name: Run Radon and enforce complexity
+        id: radon
+        run: |
+          radon cc -s -a . > radon_output.txt
+          AVERAGE_COMPLEXITY=$(awk '/Average complexity/ {print $3}' radon_output.txt)
+          if [ "$AVERAGE_COMPLEXITY" != "A" ]; then
+            echo "Average complexity is not A. It is $AVERAGE_COMPLEXITY."
+            exit 1
+          fi

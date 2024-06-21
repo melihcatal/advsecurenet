@@ -1,7 +1,6 @@
 advsecurenet.shared.types.configs.attack\_configs package
 =========================================================
 
-Submodules
 ----------
 
 advsecurenet.shared.types.configs.attack\_configs.attack\_config module
@@ -12,10 +11,26 @@ advsecurenet.shared.types.configs.attack\_configs.attack\_config module
    :undoc-members:
    :show-inheritance:
 
+advsecurenet.shared.types.configs.attack\_configs.attacker\_config module
+-------------------------------------------------------------------------
+
+.. automodule:: advsecurenet.shared.types.configs.attack_configs.attacker_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 advsecurenet.shared.types.configs.attack\_configs.cw\_attack\_config module
 ---------------------------------------------------------------------------
 
 .. automodule:: advsecurenet.shared.types.configs.attack_configs.cw_attack_config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+advsecurenet.shared.types.configs.attack\_configs.decision\_boundary\_attack\_config module
+-------------------------------------------------------------------------------------------
+
+.. automodule:: advsecurenet.shared.types.configs.attack_configs.decision_boundary_attack_config
    :members:
    :undoc-members:
    :show-inheritance:
@@ -52,7 +67,6 @@ advsecurenet.shared.types.configs.attack\_configs.pgd\_attack\_config module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.shared.types.configs.attack_configs

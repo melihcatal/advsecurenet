@@ -1,7 +1,6 @@
 advsecurenet.datasets.ImageNet package
 ======================================
 
-Submodules
 ----------
 
 advsecurenet.datasets.ImageNet.imagenet\_dataset module
@@ -12,7 +11,6 @@ advsecurenet.datasets.ImageNet.imagenet\_dataset module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.datasets.ImageNet

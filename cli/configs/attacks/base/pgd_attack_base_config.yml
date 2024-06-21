@@ -1,0 +1,6 @@
+# Description: Base configuration file for the PGD attack
+target_parameters: !include ../shared/attack_target_config.yml # Targeted attack configs
+attack_parameters:
+  epsilon: 0.3 # The epsilon value to be used for the PGD attack. The higher the value, the more the perturbation
+  alpha: 0.008 # The alpha value to be used for the PGD attack. The higher the value, the more the perturbation
+  num_iter: 40 # The number of iterations to be used for the PGD attack. The higher the value, the more the perturbation

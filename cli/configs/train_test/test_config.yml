@@ -1,0 +1,11 @@
+# Description: Configuration file for testing the model
+
+# Inherits shared configurations
+model: !include ../shared/model_config.yml
+dataset: !include ../shared/dataset_config.yml
+dataloader: 
+  test: !include ../shared/dataloader_config.yml
+device: !include ../shared/device_config.yml
+testing: 
+  criterion: cross_entropy  # Loss function
+  topk: 1  # Top k accuracy

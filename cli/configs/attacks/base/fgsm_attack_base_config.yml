@@ -1,0 +1,4 @@
+# Description: Base configuration file for the FGSM attack
+target_parameters: !include ../shared/attack_target_config.yml # Targeted attack configs
+attack_parameters:
+  epsilon: 0.3 # The epsilon value to be used for the FGSM attack. The higher the value, the more the perturbation

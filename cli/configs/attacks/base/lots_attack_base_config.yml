@@ -1,0 +1,8 @@
+# Description: Base configuration file for the LOTS attack
+target_parameters: !include ../shared/attack_target_config.yml # Targeted attack configs
+attack_parameters:
+  deep_feature_layer: model.fc # [REQUIRED] The name of the layer to use for the attack. You can inspect the model to find the layers.
+  mode: iterative # The mode to use for the attack. Default is iterative. Options are [iterative, single]
+  epsilon: 0.1 # The epsilon value to use for the attack. Defaults to 0.1.
+  learning_rate: 0.004 # The learning rate to use for the attack. Defaults to 1./255.
+  max_iterations: 1000 # The maximum number of iterations to use for the attack. Defaults to 1000. This is only valid if the attack mode is iterative.

@@ -1,10 +1,10 @@
 [MASTER]
-fail-under=7.0
+fail-under=8.0
 jobs=2
 
 [MESSAGES CONTROL]
 enable=W
-disable=line-too-long, import-outside-toplevel, missing-module-docstring
+disable=line-too-long, import-outside-toplevel, missing-module-docstring, too-few-public-methods, redefined-builtin, no-else-return
 
 [REPORTS]
 score=y
@@ -12,3 +12,8 @@ reports=n
 
 [TYPECHECK]
 generated-members=numpy.*, torch.*
+
+[DESIGN]
+max-attributes=25
+max-args=10
+max-locals=20
