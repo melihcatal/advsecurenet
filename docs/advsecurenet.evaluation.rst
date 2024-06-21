@@ -1,7 +1,6 @@
 advsecurenet.evaluation package
 ===============================
 
-Subpackages
 -----------
 
 .. toctree::
@@ -9,7 +8,6 @@ Subpackages
 
    advsecurenet.evaluation.evaluators
 
-Submodules
 ----------
 
 advsecurenet.evaluation.adversarial\_evaluator module
@@ -28,7 +26,14 @@ advsecurenet.evaluation.base\_evaluator module
    :undoc-members:
    :show-inheritance:
 
-Module contents
+advsecurenet.evaluation.tester module
+-------------------------------------
+
+.. automodule:: advsecurenet.evaluation.tester
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ---------------
 
 .. automodule:: advsecurenet.evaluation

@@ -1,7 +1,6 @@
 advsecurenet.dataloader package
 ===============================
 
-Submodules
 ----------
 
 advsecurenet.dataloader.data\_loader\_factory module
@@ -12,7 +11,14 @@ advsecurenet.dataloader.data\_loader\_factory module
    :undoc-members:
    :show-inheritance:
 
-Module contents
+advsecurenet.dataloader.distributed\_eval\_sampler module
+---------------------------------------------------------
+
+.. automodule:: advsecurenet.dataloader.distributed_eval_sampler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ---------------
 
 .. automodule:: advsecurenet.dataloader

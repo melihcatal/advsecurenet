@@ -1,7 +1,6 @@
 advsecurenet.shared package
 ===========================
 
-Subpackages
 -----------
 
 .. toctree::
@@ -9,8 +8,15 @@ Subpackages
 
    advsecurenet.shared.types
 
-Submodules
 ----------
+
+advsecurenet.shared.adversarial\_evaluators module
+--------------------------------------------------
+
+.. automodule:: advsecurenet.shared.adversarial_evaluators
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 advsecurenet.shared.colors module
 ---------------------------------
@@ -28,6 +34,14 @@ advsecurenet.shared.loss module
    :undoc-members:
    :show-inheritance:
 
+advsecurenet.shared.normalization\_params module
+------------------------------------------------
+
+.. automodule:: advsecurenet.shared.normalization_params
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 advsecurenet.shared.optimizer module
 ------------------------------------
 
@@ -36,7 +50,14 @@ advsecurenet.shared.optimizer module
    :undoc-members:
    :show-inheritance:
 
-Module contents
+advsecurenet.shared.scheduler module
+------------------------------------
+
+.. automodule:: advsecurenet.shared.scheduler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 ---------------
 
 .. automodule:: advsecurenet.shared

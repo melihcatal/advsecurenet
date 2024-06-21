@@ -1,58 +1,16 @@
 advsecurenet.attacks package
 ============================
 
-Submodules
-----------
+-----------
 
-advsecurenet.attacks.adversarial\_attack module
------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: advsecurenet.attacks.adversarial_attack
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   advsecurenet.attacks.attacker
+   advsecurenet.attacks.base
+   advsecurenet.attacks.decision_based
+   advsecurenet.attacks.gradient_based
 
-advsecurenet.attacks.cw module
-------------------------------
-
-.. automodule:: advsecurenet.attacks.cw
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.attacks.deepfool module
-------------------------------------
-
-.. automodule:: advsecurenet.attacks.deepfool
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.attacks.fgsm module
---------------------------------
-
-.. automodule:: advsecurenet.attacks.fgsm
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.attacks.lots module
---------------------------------
-
-.. automodule:: advsecurenet.attacks.lots
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-advsecurenet.attacks.pgd module
--------------------------------
-
-.. automodule:: advsecurenet.attacks.pgd
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.attacks

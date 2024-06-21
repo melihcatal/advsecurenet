@@ -1,7 +1,6 @@
 advsecurenet.evaluation.evaluators package
 ==========================================
 
-Submodules
 ----------
 
 advsecurenet.evaluation.evaluators.attack\_success\_rate\_evaluator module
@@ -52,7 +51,6 @@ advsecurenet.evaluation.evaluators.transferability\_evaluator module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.evaluation.evaluators

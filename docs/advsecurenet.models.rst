@@ -1,7 +1,6 @@
 advsecurenet.models package
 ===========================
 
-Subpackages
 -----------
 
 .. toctree::
@@ -9,7 +8,6 @@ Subpackages
 
    advsecurenet.models.CustomModels
 
-Submodules
 ----------
 
 advsecurenet.models.base\_model module
@@ -24,6 +22,14 @@ advsecurenet.models.custom\_model module
 ----------------------------------------
 
 .. automodule:: advsecurenet.models.custom_model
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+advsecurenet.models.external\_model module
+------------------------------------------
+
+.. automodule:: advsecurenet.models.external_model
    :members:
    :undoc-members:
    :show-inheritance:
@@ -44,7 +50,6 @@ advsecurenet.models.standard\_model module
    :undoc-members:
    :show-inheritance:
 
-Module contents
 ---------------
 
 .. automodule:: advsecurenet.models

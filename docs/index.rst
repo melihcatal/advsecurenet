@@ -1,10 +1,9 @@
-.. include:: Introduction.rst
-
+.. include:: introduction.rst
 
 .. toctree::
     :maxdepth: 4
     
-    Introduction
+    introduction
     
 .. toctree::
     :maxdepth: 6
@@ -15,7 +14,3 @@
     :maxdepth: 6
     
     cli
-
-
-
-
