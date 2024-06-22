@@ -247,7 +247,7 @@ class CLIAttacker:
             )
         else:
             target_labels = self._adv_target_generator.generate_target_labels(
-                data, overwrite=True)
+                data=data, overwrite=True)
             adv_data = AdversarialDataset(
                 base_dataset=data,
                 target_labels=target_labels)

@@ -31,6 +31,7 @@ class SVHNDataset(BaseDataset):
         self.crop_size = (32, 32)
         self.name = "svhn"
         self.num_classes = 10
+        self.num_input_channels = 3
 
     def get_dataset_class(self):
         return datasets.SVHN

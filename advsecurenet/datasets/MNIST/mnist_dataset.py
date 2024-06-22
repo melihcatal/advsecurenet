@@ -31,6 +31,7 @@ class MNISTDataset(BaseDataset):
         self.crop_size = (28, 28)
         self.name = "mnist"
         self.num_classes = 10
+        self.num_input_channels = 1
 
     def get_dataset_class(self):
         return datasets.MNIST

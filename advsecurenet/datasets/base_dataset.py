@@ -27,6 +27,8 @@ class ImageFolderBaseDataset():
                         dataset_class: datasets,
                         transform: transforms.Compose,
                         root: Optional[str] = None,
+                        # (kwargs is needed for the consistency of the method signature)
+                        **kwargs
                         ):
         """ 
         Creates the dataset.

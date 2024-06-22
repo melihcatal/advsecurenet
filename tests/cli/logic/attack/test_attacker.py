@@ -6,6 +6,7 @@ import torch
 from torch.utils.data import Subset
 
 from advsecurenet.attacks.attacker.ddp_attacker import DDPAttacker
+from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
 from advsecurenet.shared.types.attacks import AttackType
 from cli.logic.attack.attacker import CLIAttacker
 
@@ -166,3 +167,144 @@ def test_cli_attacker_sample_data(mock_random_split, mock_prepare_dataset, attac
 
     sampled_data = attacker._sample_data(mock_dataset, sample_size=3)
     assert len(sampled_data) == 3
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+def test_get_target_parameters(attacker_config):
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    target_parameters = attacker._get_target_parameters()
+    assert target_parameters == attacker_config.attack_config.target_parameters
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+def test_get_target_parameters_none(attacker_config):
+    del attacker_config.attack_config.target_parameters
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    target_parameters = attacker._get_target_parameters()
+    assert target_parameters is None
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.CLIAttacker._validate_dataset_availability")
+@pytest.mark.parametrize("dataset_part", ["train", "test"])
+def test_select_data_partition(mock_validate_dataset, mock_prepare_dataset, attacker_config, dataset_part):
+    attacker_config.dataset.dataset_part = dataset_part
+    train_data = MagicMock()
+    test_data = MagicMock()
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+    mock_validate_dataset.return_value = train_data if dataset_part == "train" else test_data
+
+    returned_data = attacker._select_data_partition(train_data, test_data)
+
+    mock_validate_dataset.assert_called_once_with(
+        train_data if dataset_part == "train" else test_data, dataset_part)
+
+    assert returned_data == (
+        train_data if dataset_part == "train" else test_data)
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.CLIAttacker._validate_dataset_availability")
+def test_select_data_partition_only_test(mock_validate_dataset, mock_prepare_dataset, attacker_config):
+    attacker_config.dataset.dataset_part = "all"
+    test_data = MagicMock()
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    returned_data = attacker._select_data_partition(
+        test_data=test_data, train_data=None)
+
+    assert returned_data == test_data
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.CLIAttacker._validate_dataset_availability")
+@pytest.mark.parametrize("sample_size", [None, 0, -1])
+def test_sample_data_if_required_no_sampling(mock_validate_dataset, mock_prepare_dataset, attacker_config, sample_size):
+    attacker_config.dataset.random_sample_size = sample_size
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    data = MagicMock()
+    sampled_data = attacker._sample_data_if_required(data)
+
+    assert sampled_data == data
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.CLIAttacker._validate_dataset_availability")
+@patch("cli.logic.attack.attacker.CLIAttacker._sample_data")
+@pytest.mark.parametrize("sample_size", [1, 10, 100])
+def test_sample_data_if_required(mock_sample_data, mock_validate_dataset, mock_prepare_dataset, attacker_config, sample_size):
+    attacker_config.dataset.random_sample_size = sample_size
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    data = MagicMock()
+    sampled_data = attacker._sample_data_if_required(data)
+
+    mock_sample_data.assert_called_once_with(data, sample_size)
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.AdversarialTargetGenerator.generate_target_images_and_labels", return_value=([torch.randn(1, 3, 32, 32)], torch.tensor([1])))
+def test_generate_target_lots(mock_generate_target_images, mock_prepare_dataset, attacker_config):
+    # Create the CLIAttacker instance
+    attacker = CLIAttacker(attacker_config, AttackType.LOTS)
+
+    # Mock data to be passed to _generate_target
+    data = MagicMock()
+    data.__len__.return_value = 1
+
+    # Call the method
+    returned_data = attacker._generate_target(data)
+
+    # Check if generate_target_images_and_labels was called once with the correct data
+    mock_generate_target_images.assert_called_once_with(data=data)
+
+    # Check the returned data
+    assert isinstance(returned_data, AdversarialDataset)
+    assert hasattr(returned_data, "target_images")
+    assert hasattr(returned_data, "target_labels")
+    assert len(returned_data.target_images) == 1
+    assert returned_data.target_labels == torch.tensor([1])
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.AdversarialTargetGenerator.generate_target_labels", return_value=torch.tensor([1]))
+def test_generate_target_fgsm(mock_generate_target_labels, mock_prepare_dataset, attacker_config):
+    # Create the CLIAttacker instance
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    # Mock data to be passed to _generate_target
+    data = MagicMock()
+    data.__len__.return_value = 1
+
+    # Call the method
+    returned_data = attacker._generate_target(data)
+
+    # Check if generate_target_images_and_labels was called once with the correct data
+    mock_generate_target_labels.assert_called_once_with(
+        data=data, overwrite=True)
+
+    # Check the returned data
+    assert isinstance(returned_data, AdversarialDataset)
+    assert hasattr(returned_data, "target_labels")
+    assert hasattr(returned_data, "target_images")
+    assert returned_data.target_labels == torch.tensor([1])
+    assert returned_data.target_images is None

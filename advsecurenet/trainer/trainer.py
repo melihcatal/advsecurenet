@@ -8,7 +8,6 @@ import torch
 from torch import nn, optim
 from tqdm.auto import tqdm, trange
 
-from advsecurenet.shared.loss import Loss
 from advsecurenet.shared.optimizer import Optimizer
 from advsecurenet.shared.scheduler import Scheduler
 from advsecurenet.shared.types.configs.train_config import TrainConfig
@@ -70,8 +69,14 @@ class Trainer:
         Returns:
             optim.Optimizer: The optimizer. I.e. Adam, SGD, etc.
         """
+        kwargs = self._config.optimizer_kwargs if self._config.optimizer_kwargs else {}
         optimizer = self._get_optimizer(
-            self._config.optimizer, self._model, self._config.learning_rate)
+            self._config.optimizer,
+            self._model,
+            self._config.learning_rate,
+            **kwargs
+        )
+
         return optimizer
 
     def _setup_scheduler(self) -> torch.optim.lr_scheduler._LRScheduler:
@@ -112,7 +117,11 @@ class Trainer:
                 "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler.")
         return cast(torch.optim.lr_scheduler._LRScheduler, scheduler)
 
-    def _get_optimizer(self, optimizer: Union[str, optim.Optimizer], model: nn.Module, learning_rate: float = 0.001) -> optim.Optimizer:
+    def _get_optimizer(self, optimizer: Union[str, optim.Optimizer],
+                       model: nn.Module,
+                       learning_rate: float = 0.001,
+                       **kwargs
+                       ) -> optim.Optimizer:
         """
         Returns the optimizer based on the given optimizer string or optim.Optimizer.
 
@@ -130,31 +139,33 @@ class Trainer:
             >>> _get_optimizer(optim.Adam(model.parameters(), lr=0.001))
 
         """
+
+        # if the optimizer is already an instance of optim.Optimizer, return it
+        if isinstance(optimizer, optim.Optimizer):
+            return optimizer
+
         if model is None and isinstance(optimizer, str):
             raise ValueError(
                 "Model must be provided if optimizer is a string.")
 
-        if optimizer is None:
-            if model is None:
-                raise ValueError(
-                    "Model must be provided if optimizer is None.")
+        # if the model is provided but the optimizer not, initialize the default optimizer
+        if model is not None and optimizer is None:
             optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-        else:
-            if isinstance(optimizer, str):
-                if optimizer.upper() not in Optimizer.__members__:
-                    raise ValueError(
-                        "Unsupported optimizer! Choose from: " + ", ".join([e.name for e in Optimizer]))
 
-                optimizer_class = Optimizer[optimizer.upper()].value
-                optimizer = optimizer_class(
-                    model.parameters(),
-                    lr=learning_rate,
-                    **self._config.optimizer_kwargs if self._config.optimizer_kwargs else {}
-                )
-
-            elif not isinstance(optimizer, optim.Optimizer):
+        #  if the model is provided and the optimizer is a string, initialize the optimizer based on the string
+        if model is not None and isinstance(optimizer, str):
+            if optimizer.upper() not in Optimizer.__members__:
                 raise ValueError(
-                    "Optimizer must be a string or an instance of optim.Optimizer.")
+                    "Unsupported optimizer! Choose from: " + ", ".join([e.name for e in Optimizer]))
+
+            optimizer_class = Optimizer[optimizer.upper()].value
+            optimizer = optimizer_class(
+                model.parameters(),
+                lr=learning_rate,
+                **kwargs
+
+            )
+
         return cast(optim.Optimizer, optimizer)
 
     def _load_checkpoint_if_any(self) -> int:
