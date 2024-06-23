@@ -113,7 +113,7 @@
 <dd><p>Run the evaluation.</p>
 <dl>
 <dt>try:</dt><dd><dl class="simple">
-<dt>logging.info(“Starting adversarial evaluation with the following evaluators: %s”,</dt><dd><p>self.config.evaluation.evaluators)</p>
+<dt>logger.info(“Starting adversarial evaluation with the following evaluators: %s”,</dt><dd><p>self.config.evaluation.evaluators)</p>
 </dd>
 </dl>
 <p>model, data_loader, attack, target_models = self._prepare_evaluation_env()
@@ -121,10 +121,10 @@ self._execute_evaluation(</p>
 <blockquote>
 <div><p>model, data_loader, attack, target_models)</p>
 </div></blockquote>
-<p>logging.info(“Adversarial evaluation completed successfully.”)</p>
+<p>logger.info(“Adversarial evaluation completed successfully.”)</p>
 </dd>
 <dt>except Exception as e:</dt><dd><p>click.secho(“Evaluation failed.”, fg=”red”)
-logging.error(“Failed to evaluate adversarial examples: %s”, e)
+logger.error(“Failed to evaluate adversarial examples: %s”, e)
 raise e</p>
 </dd>
 </dl>
