@@ -1,4 +1,5 @@
 import logging
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -7,7 +8,7 @@ from advsecurenet.shared.types.configs.configs import ConfigType
 from cli.logic.defense.defense import cli_adversarial_training
 from cli.shared.types.defense.adversarial_training import ATCliConfigType
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("cli.logic.defense.defense")
 
 
 @pytest.mark.cli
@@ -44,7 +45,7 @@ def test_cli_adversarial_training_train_failure(mock_ATCLITrainer, mock_load_and
     training_error = Exception("Training error")
     mock_trainer_instance.train.side_effect = training_error
 
-    with patch("logging.error") as mock_logging_error:
+    with mock.patch.object(logger, 'error') as mock_logging_error:
         with pytest.raises(Exception, match="Training error"):
             cli_adversarial_training("config_path", extra_arg="value")
 

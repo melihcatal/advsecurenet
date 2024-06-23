@@ -137,6 +137,17 @@ def test_get_device_from_cfg_invalid():
 
 @pytest.mark.cli
 @pytest.mark.essential
+@patch("torch.cuda.is_available", return_value=False)
+def test_get_device_from_cfg_exception(mock_is_available):
+    config = MagicMock()
+    config.device = "cuda"
+    with pytest.raises(Exception):
+        device = get_device_from_cfg(config)
+        assert device.type == "cpu"
+
+
+@pytest.mark.cli
+@pytest.mark.essential
 @patch("builtins.open", new_callable=mock_open, read_data="line1\nline2\n")
 def test_read_data_from_file_text(mock_open):
     data = read_data_from_file(
@@ -166,3 +177,51 @@ def test_read_data_from_file_json(mock_open):
 def test_read_data_from_file_invalid_extension():
     with pytest.raises(ValueError):
         read_data_from_file("test.invalid", cast_type=str, return_type=list)
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", new_callable=mock_open, read_data="line1\nline2\n")
+def test_read_data_from_file_text_set(mock_open):
+    data = read_data_from_file(
+        "test.txt", cast_type=str, return_type=set, separator='\n')
+    assert data == {"line1", "line2"}
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", new_callable=mock_open, read_data="line1\nline2\n")
+def test_read_data_from_file_text_tuple(mock_open):
+    data = read_data_from_file(
+        "test.txt", cast_type=str, return_type=tuple, separator='\n')
+    assert data == ("line1", "line2")
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", new_callable=mock_open, read_data="line1\nline2\n")
+def test_read_data_from_file_text_tensor_str(mock_open):
+    # pytorch tensor with string values is not supported
+    with pytest.raises(ValueError):
+        read_data_from_file("test.txt", cast_type=str,
+                            return_type=torch.Tensor, separator='\n')
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", new_callable=mock_open, read_data="1\n2\n")
+def test_read_data_from_file_text_tensor_int(mock_open):
+    data = read_data_from_file(
+        "test.txt", cast_type=int, return_type=torch.Tensor, separator='\n')
+    assert torch.equal(data, torch.tensor([1, 2]))
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", new_callable=mock_open, read_data="line1\nline2\n")
+def test_read_data_from_file_text_invalid_return_type(mock_open):
+    with pytest.raises(ValueError) as exc_info:
+        read_data_from_file("test.txt", cast_type=str,
+                            return_type=int, separator='\n')
+
+    assert "Unsupported return type" in str(exc_info.value)

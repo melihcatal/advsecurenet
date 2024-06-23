@@ -27,15 +27,15 @@ class CLIAdversarialEvaluator():
 
 
         try:
-            logging.info("Starting adversarial evaluation with the following evaluators: %s",
+            logger.info("Starting adversarial evaluation with the following evaluators: %s",
                          self.config.evaluation.evaluators)
             model, data_loader, attack, target_models = self._prepare_evaluation_env()
             self._execute_evaluation(
                 model, data_loader, attack, target_models)
-            logging.info("Adversarial evaluation completed successfully.")
+            logger.info("Adversarial evaluation completed successfully.")
         except Exception as e:
             click.secho("Evaluation failed.", fg="red")
-            logging.error("Failed to evaluate adversarial examples: %s", e)
+            logger.error("Failed to evaluate adversarial examples: %s", e)
             raise e
         """
         attack_name = self.config.evaluation_config.attack.name.upper()

@@ -25,11 +25,11 @@ def cli_adversarial_training(config: str, **kwargs) -> None:
         config_class=ATCliConfigType,
         **kwargs
     )
-    logging.info("Loaded adversarial training configuration: %s", config_data)
+    logger.info("Loaded adversarial training configuration: %s", config_data)
     try:
         adversarial_training = ATCLITrainer(config_data)
         adversarial_training.train()
-        logging.info("Adversarial training completed successfully")
+        logger.info("Adversarial training completed successfully")
     except Exception as e:
-        logging.error("Failed to execute adversarial training: %s", e)
+        logger.error("Failed to execute adversarial training: %s", e)
         raise e

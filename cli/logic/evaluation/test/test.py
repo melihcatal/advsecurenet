@@ -23,11 +23,11 @@ def cli_test(config: str, **kwargs) -> None:
         **kwargs
     )
 
-    logging.info("Loaded test configuration: %s", config_data)
+    logger.info("Loaded test configuration: %s", config_data)
     try:
         tester = CLITester(config_data)
         tester.test()
-        logging.info("Model testing completed successfully")
+        logger.info("Model testing completed successfully")
     except Exception as e:
-        logging.error("Failed to test model: %s", e)
+        logger.error("Failed to test model: %s", e)
         raise e

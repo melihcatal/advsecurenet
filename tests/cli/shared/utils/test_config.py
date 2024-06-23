@@ -1,15 +1,28 @@
+import logging
+import os
 from dataclasses import dataclass
+from unittest import mock
 from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
 from advsecurenet.shared.types.configs.configs import ConfigType
-from cli.shared.utils.config import (attack_config_check, build_config,
-                                     deep_update, generate_default_config_yaml,
+from cli.shared.utils.config import (_include_yaml, attack_config_check,
+                                     build_config, deep_update,
+                                     generate_default_config_yaml,
                                      get_available_configs,
                                      get_default_config_yml,
                                      load_and_instantiate_config,
-                                     load_configuration, read_yml_file)
+                                     load_configuration, make_paths_absolute,
+                                     read_yml_file)
+
+logger = logging.getLogger('cli.shared.utils.config')
+
+
+# Mock data for tests
+yaml_content = """
+key: value
+"""
 
 
 @dataclass
@@ -86,6 +99,21 @@ def test_load_and_instantiate_config(mock_recursive_instantiation, mock_load_con
 @pytest.mark.cli
 @pytest.mark.essential
 @patch("cli.shared.utils.config.os.walk")
+@patch("cli.shared.utils.config.os.path.exists", side_effect=Exception("Test Exception"))
+@patch("builtins.open", new_callable=mock_open, read_data="MODULE_TITLE = 'Title'\nMODULE_DESCRIPTION = 'Description'\nINCLUDE_IN_CLI_CONFIGS = True")
+def test_get_available_configs_exception(mock_open, mock_path_exists, mock_os_walk):
+    mock_os_walk.return_value = [
+        ("dirpath", None, ["file1_config.yml", "file2_config.yml"])]
+
+    with mock.patch.object(logger, 'error') as mock_logging_error:
+        result = get_available_configs()
+        mock_logging_error.assert_called_once()
+        assert result == []
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.shared.utils.config.os.walk")
 @patch("cli.shared.utils.config.os.path.exists", return_value=True)
 @patch("builtins.open", new_callable=mock_open, read_data="MODULE_TITLE = 'Title'\nMODULE_DESCRIPTION = 'Description'\nINCLUDE_IN_CLI_CONFIGS = True")
 def test_get_available_configs(mock_open, mock_path_exists, mock_os_walk):
@@ -135,3 +163,117 @@ def test_get_default_config_yml(mock_os_walk, mock_path_exists):
     config_name = "test_config.yml"
     result = get_default_config_yml(config_name)
     assert result == "dirpath/test_config.yml"
+
+
+@pytest.fixture
+def loader():
+    loader = MagicMock()
+    loader.name = '/path/to/current/file.yaml'
+    return loader
+
+
+@pytest.fixture
+def node():
+    node = MagicMock()
+    node.value = 'included.yaml'
+    return node
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", new_callable=mock_open, read_data=yaml_content)
+@patch("yaml.load", return_value={"key": "value"})
+def test_include_yaml_success(mock_yaml_load, mock_file_open, loader, node):
+    result = _include_yaml(loader, node)
+
+    mock_file_open.assert_called_once_with(
+        '/path/to/current/included.yaml', 'r', encoding='utf-8')
+    mock_yaml_load.assert_called_once()
+    assert result == {"key": "value"}
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", side_effect=FileNotFoundError)
+def test_include_yaml_file_not_found(mock_file_open, loader, node):
+    with mock.patch.object(logger, 'error') as mock_logging_error:
+        result = _include_yaml(loader, node)
+
+        mock_file_open.assert_called_once_with(
+            '/path/to/current/included.yaml', 'r', encoding='utf-8')
+        mock_logging_error.assert_called_once()
+        assert result is None
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("builtins.open", side_effect=Exception("Test Exception"))
+def test_include_yaml_general_exception(mock_file_open, loader, node):
+    with mock.patch.object(logger, 'error') as mock_logging_error:
+        result = _include_yaml(loader, node)
+
+        mock_file_open.assert_called_once_with(
+            '/path/to/current/included.yaml', 'r', encoding='utf-8')
+        mock_logging_error.assert_called_once_with(
+            "Error loading file: %s", "Test Exception")
+        assert result is None
+
+
+@pytest.fixture
+def base_path():
+    return '/base/path'
+
+
+@pytest.fixture
+def config_dict():
+    return {
+        "relative_path": "relative/path/to/file",
+        "absolute_path": "/absolute/path/to/file",
+        "nested": {
+            "relative_dir": "relative/path/to/dir",
+            "not_a_path": "just_a_string"
+        }
+    }
+
+
+@pytest.fixture
+def config_list():
+    return [
+        {"relative_path": "relative/path/to/file"},
+        {"absolute_path": "/absolute/path/to/file"},
+        {"nested": {"relative_dir": "relative/path/to/dir"}}
+    ]
+
+
+@patch("os.path.exists", return_value=True)
+@patch("os.path.abspath", side_effect=lambda x: os.path.join('/absolute', x.strip('/')))
+def test_make_paths_absolute_dict(mock_abspath, mock_exists, base_path, config_dict):
+    make_paths_absolute(base_path, config_dict)
+
+    assert config_dict["relative_path"] == "/absolute/base/path/relative/path/to/file"
+    assert config_dict["absolute_path"] == "/absolute/path/to/file"
+    assert config_dict["nested"]["relative_dir"] == "/absolute/base/path/relative/path/to/dir"
+
+
+@patch("os.path.exists", return_value=True)
+@patch("os.path.abspath", side_effect=lambda x: os.path.join('/absolute', x.strip('/')))
+def test_make_paths_absolute_list(mock_abspath, mock_exists, base_path, config_list):
+    make_paths_absolute(base_path, config_list)
+
+    assert config_list[0]["relative_path"] == "/absolute/base/path/relative/path/to/file"
+    assert config_list[1]["absolute_path"] == "/absolute/path/to/file"
+    assert config_list[2]["nested"]["relative_dir"] == "/absolute/base/path/relative/path/to/dir"
+
+
+@patch("os.path.exists", side_effect=lambda x: x.endswith("file"))
+@patch("os.path.abspath", side_effect=lambda x: os.path.join('/absolute', x.strip('/')))
+def test_make_paths_absolute_mixed(mock_abspath, mock_exists, base_path, config_dict):
+    config_dict["file_check"] = "relative/path/to/file"
+    config_dict["dir_check"] = "relative/path/to/dir"
+    config_dict["should_not_fix"] = "should_not_fix"
+
+    make_paths_absolute(base_path, config_dict)
+
+    assert config_dict["file_check"] == "/absolute/base/path/relative/path/to/file"
+    assert config_dict["dir_check"] == "/absolute/base/path/relative/path/to/dir"
+    assert config_dict["should_not_fix"] == "should_not_fix"

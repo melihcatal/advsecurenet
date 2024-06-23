@@ -24,7 +24,7 @@ def cli_attack(attack_name: str, config: str, **kwargs) -> None:
         ValueError: If the attack type is unknown.
     """
     if attack_name not in attack_cli_mapping:
-        logging.error("Unknown attack type %s", attack_name)
+        logger.error("Unknown attack type %s", attack_name)
         raise ValueError(f"Unknown attack type: {attack_name}")
 
     attack_type, attack_config_class = attack_cli_mapping[attack_name]
@@ -36,11 +36,11 @@ def cli_attack(attack_name: str, config: str, **kwargs) -> None:
         config_class=attack_config_class,
         **kwargs
     )
-    logging.info("Loaded attack configuration: %s", config_data)
+    logger.info("Loaded attack configuration: %s", config_data)
     try:
         attacker = CLIAttacker(config_data, attack_type, **kwargs)
         attacker.execute()
-        logging.info("Attack completed successfully")
+        logger.info("Attack completed successfully")
     except Exception as e:
-        logging.error("Failed to execute attack: %s", e)
+        logger.error("Failed to execute attack: %s", e)
         raise e

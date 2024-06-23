@@ -1,3 +1,4 @@
+import logging
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
@@ -6,16 +7,34 @@ import torch
 from torch.utils.data import Subset
 
 from advsecurenet.attacks.attacker.ddp_attacker import DDPAttacker
+from advsecurenet.attacks.gradient_based.fgsm import FGSM
 from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
 from advsecurenet.shared.types.attacks import AttackType
+from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
+    AttackerConfig
+from advsecurenet.shared.types.configs.device_config import DeviceConfig
 from cli.logic.attack.attacker import CLIAttacker
+from cli.shared.types.attack import BaseAttackCLIConfigType
+
+logger = logging.getLogger("cli.logic.attack.attacker")
 
 
 @pytest.fixture
-def attacker_config():
-    config = MagicMock()
-    config.attack_config.target_parameters.targeted = False
-    return config
+def device(request):
+    device_arg = request.config.getoption("--device")
+    return torch.device(device_arg if device_arg else "cpu")
+
+
+@pytest.fixture
+def attacker_config(device):
+    device_config = DeviceConfig(
+        processor=device,
+        use_ddp=False
+    )
+    attacker_config = MagicMock()
+    attacker_config.attack_config.target_parameters.targeted = False
+    attacker_config.device = device_config
+    return attacker_config
 
 
 @pytest.fixture
@@ -33,6 +52,12 @@ def ddp_attacker(mock_prepare_dataset, attacker_config):
         return CLIAttacker(attacker_config, AttackType.FGSM)
 
 
+@pytest.fixture
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+def attacker(mock_prepare_dataset, attacker_config):
+    return CLIAttacker(attacker_config, AttackType.FGSM)
+
+
 @pytest.mark.cli
 @pytest.mark.essential
 @patch("cli.logic.attack.attacker.get_datasets")
@@ -44,7 +69,7 @@ def ddp_attacker(mock_prepare_dataset, attacker_config):
 @patch("cli.logic.attack.attacker.AdversarialTargetGenerator")
 @patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
 def test_cli_attacker_execute_single_gpu(mock_prepare_dataset, mock_adv_target_gen, mock_attacker, mock_ddp_attacker, mock_save_images, mock_read_data, mock_create_model, mock_get_datasets, attacker_config):
-    # Setup
+    # attacker
     attacker_config.device.use_ddp = False
     attacker_config.device.gpu_ids = [0]
     attacker_config.attack_procedure.save_result_images = True
@@ -66,13 +91,33 @@ def test_cli_attacker_execute_single_gpu(mock_prepare_dataset, mock_adv_target_g
         attacker.execute()
 
     # Verify
-    # mock_create_model.assert_called_once_with(config.model)
+    # mock_create_model.assert_called_once_with(attacker_config.model)
     mock_attacker.assert_called_once_with(config=mock_config)
     mock_attacker_instance.execute.assert_called_once()
     mock_save_images.assert_called_once_with(
         images=["image1", "image2"], path="results", prefix="adv")
     mock_click_secho.assert_called_once_with(
         "Attack completed successfully.", fg="green")
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.AdversarialTargetGenerator")
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch("cli.logic.attack.attacker.CLIAttacker._execute_ddp_attack")
+def test_cli_attacker_execute_multi_gpus(mock_execute_ddp_attack, mock_prepare_dataset, mock_adv_target_gen, attacker_config):
+    # attacker
+    attacker_config.device.use_ddp = True
+    attacker_config.device.gpu_ids = [0, 1]
+
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    with mock.patch.object(attacker, '_execute_ddp_attack') as mock_execute_ddp_attack, \
+            mock.patch.object(logger, 'info') as mock_logger_info:
+        attacker.execute()
+
+        mock_execute_ddp_attack.assert_called_once()
+        mock_logger_info.assert_called()
 
 
 @pytest.mark.cli
@@ -308,3 +353,225 @@ def test_generate_target_fgsm(mock_generate_target_labels, mock_prepare_dataset,
     assert hasattr(returned_data, "target_images")
     assert returned_data.target_labels == torch.tensor([1])
     assert returned_data.target_images is None
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch('cli.logic.attack.attacker.AdversarialDataset')
+def test_generate_target_labels_auto_generate(mock_adversarial_dataset, mock_prepare_dataset, attacker_config):
+    attacker_config.attack_config.target_parameters.targeted = True
+    attacker_config.attack_config.target_parameters.auto_generate_target = True
+    attacker = CLIAttacker(attacker_config, AttackType.FGSM)
+
+    all_data = MagicMock()
+    target_parameters = MagicMock(targeted=True, auto_generate_target=True)
+    target_labels = None
+
+    with patch.object(attacker, '_generate_target', return_value=all_data) as mock_generate_target:
+        result = attacker._generate_or_assign_target_labels(
+            all_data, target_parameters, target_labels)
+        mock_generate_target.assert_called_once_with(all_data)
+        assert result == all_data
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch('cli.logic.attack.attacker.AdversarialDataset')
+def test_generate_target_labels_with_labels(mock_adversarial_dataset, mock_prepare_dataset, attacker):
+    all_data = MagicMock()
+    target_parameters = MagicMock(targeted=True, auto_generate_target=False)
+    target_labels = MagicMock()
+
+    result = attacker._generate_or_assign_target_labels(
+        all_data, target_parameters, target_labels)
+    mock_adversarial_dataset.assert_called_once_with(
+        base_dataset=all_data, target_labels=target_labels)
+    assert result == mock_adversarial_dataset.return_value
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch('cli.logic.attack.attacker.AdversarialDataset')
+def test_generate_target_labels_no_target_parameters(mock_adversarial_dataset, mock_prepare_dataset, attacker):
+    all_data = MagicMock()
+    target_parameters = None
+    target_labels = None
+
+    result = attacker._generate_or_assign_target_labels(
+        all_data, target_parameters, target_labels)
+    assert result == all_data
+    mock_adversarial_dataset.assert_not_called()
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_dataset")
+@patch('cli.logic.attack.attacker.AdversarialDataset')
+def test_generate_target_labels_not_targeted(mock_adversarial_dataset, mock_prepare_dataset, attacker):
+    all_data = MagicMock()
+    target_parameters = MagicMock(targeted=False)
+    target_labels = None
+
+    result = attacker._generate_or_assign_target_labels(
+        all_data, target_parameters, target_labels)
+    assert result == all_data
+    mock_adversarial_dataset.assert_not_called()
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch('cli.logic.attack.attacker.get_datasets', return_value=(MagicMock(), MagicMock()))
+def test_prepare_dataset(mock_get_datasets, attacker):
+
+    with patch.object(attacker, '_get_target_parameters', return_value=MagicMock()) as mock_get_target_parameters, \
+            patch.object(attacker, '_get_target_labels_if_available', return_value=MagicMock()) as mock_get_target_labels_if_available, \
+            patch.object(attacker, '_select_data_partition', return_value=MagicMock()) as mock_select_data_partition, \
+            patch.object(attacker, '_sample_data_if_required', return_value=MagicMock()) as mock_sample_data_if_required, \
+            patch.object(attacker, '_generate_or_assign_target_labels', return_value=MagicMock()) as mock_generate_or_assign_target_labels:
+
+        dataset = attacker._prepare_dataset()
+
+        mock_get_target_parameters.assert_called_once()
+        mock_get_target_labels_if_available.assert_called_once_with(
+            mock_get_target_parameters.return_value)
+        mock_select_data_partition.assert_called_once()
+        mock_sample_data_if_required.assert_called_once_with(
+            mock_select_data_partition.return_value)
+        mock_generate_or_assign_target_labels.assert_called_once_with(
+            mock_sample_data_if_required.return_value, mock_get_target_parameters.return_value, mock_get_target_labels_if_available.return_value)
+        assert dataset == mock_generate_or_assign_target_labels.return_value
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+def test_get_target_labels_if_available_with_labels(attacker):
+    target_parameters = MagicMock()
+    target_parameters.target_labels_config.target_labels_path = "some_path"
+    target_parameters.target_labels_config.target_labels = None
+
+    with patch.object(attacker, '_get_target_labels', return_value=MagicMock()) as mock_get_target_labels:
+        target_labels = attacker._get_target_labels_if_available(
+            target_parameters)
+        mock_get_target_labels.assert_called_once()
+        assert target_labels == mock_get_target_labels.return_value
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+def test_get_target_labels_if_available_without_labels(attacker):
+    target_parameters = MagicMock()
+    target_parameters.target_labels_config.target_labels_path = None
+    target_parameters.target_labels_config.target_labels = None
+
+    target_labels = attacker._get_target_labels_if_available(
+        target_parameters)
+    assert target_labels is None
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+def test_create_attack_targeted(attacker, attacker_config):
+    attack_parameters = MagicMock()
+    target_parameters = MagicMock(targeted=True)
+    attacker._config.attack_config.attack_parameters = attack_parameters
+    attacker._config.attack_config.target_parameters = target_parameters
+
+    attack = attacker._create_attack()
+
+    assert attack_parameters.targeted is True
+    assert attack_parameters.device == attacker_config.device
+    assert isinstance(attack, FGSM)
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+def test_create_attack_non_targeted(attacker, attacker_config):
+    attack_parameters = MagicMock()
+    target_parameters = MagicMock(targeted=None)
+    attacker._config.attack_config.attack_parameters = attack_parameters
+    attacker._config.attack_config.target_parameters = target_parameters
+
+    attack = attacker._create_attack()
+
+    assert attack_parameters.targeted is False
+    assert attack_parameters.device == attacker_config.device
+    assert isinstance(attack, FGSM)
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+def test_create_attack_missing_target_parameters(attacker, attacker_config):
+    attack_parameters = MagicMock()
+    attacker._config.attack_config.attack_parameters = attack_parameters
+    attacker._config.attack_config.target_parameters = None
+
+    attack = attacker._create_attack()
+
+    assert attack_parameters.targeted is False
+    assert attack_parameters.device == attacker_config.device
+    assert isinstance(attack, FGSM)
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker.__init__", return_value=None)
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_attack_config")
+@patch("cli.logic.attack.attacker.DDPAttacker")
+def test_ddp_attack_fn(mock_ddp_attacker, mock_prepare_attack_config, mock_init, attacker):
+    mock_prepare_attack_config.return_value = MagicMock()
+    mock_ddp_attacker.return_value = MagicMock()
+    attacker._ddp_attack_fn(0, 2)
+
+    mock_prepare_attack_config.assert_called_once()
+    mock_ddp_attacker.assert_called_once()
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.CLIAttacker.__init__", return_value=None)
+@patch("cli.logic.attack.attacker.CLIAttacker._prepare_attack_config")
+@patch("cli.logic.attack.attacker.DDPAttacker")
+def test_ddp_attack_fn(mock_ddp_attacker, mock_prepare_attack_config, mock_init, attacker):
+    mock_prepare_attack_config.return_value = MagicMock()
+    mock_ddp_attacker.return_value = MagicMock()
+    attacker._ddp_attack_fn(0, 2)
+
+    mock_prepare_attack_config.assert_called_once()
+    mock_ddp_attacker.assert_called_once()
+
+
+@pytest.mark.cli
+@pytest.mark.essential
+@patch("cli.logic.attack.attacker.create_model")
+@patch.object(CLIAttacker, '_create_attack')
+@patch.object(CLIAttacker, '_create_dataloader_config')
+def test_prepare_attack_config(mock_create_dataloader_config, mock_create_attack, mock_create_model, attacker, attacker_config):
+    # Mock the return values of the methods
+    mock_create_attack.return_value = "mock_attack"
+    mock_create_model.return_value = "mock_model"
+    mock_create_dataloader_config.return_value = "mock_dataloader_config"
+
+    # Set up attacker_config attributes
+    attacker_config.model = "mock_model_config"
+    attacker_config.device = "mock_device"
+    attacker_config.attack_procedure.save_result_images = True
+
+    # Call the method to test
+    result = attacker._prepare_attack_config()
+
+    # Assert the correct creation of AttackerConfig
+    assert isinstance(result, AttackerConfig)
+    assert result.model == "mock_model"
+    assert result.attack == "mock_attack"
+    assert result.dataloader == "mock_dataloader_config"
+    assert result.device == "mock_device"
+    assert result.return_adversarial_images is True
+    assert result.evaluators == ["attack_success_rate"]
+
+    # Verify the mocks were called correctly
+    mock_create_attack.assert_called_once()
+    mock_create_model.assert_called_once_with("mock_model_config")
+    mock_create_dataloader_config.assert_called_once()

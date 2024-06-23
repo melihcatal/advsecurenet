@@ -187,8 +187,12 @@ class TransferabilityEvaluator(BaseEvaluator):
             self.transferability_data[model_name]['successful_on_source'] += successful_on_source_mask.sum().item()
 
             # Move tensors to CPU to avoid memory leaks and GPU memory overflow
-            self._move_tensors_to_cpu(
-                adversarial_images, true_labels, successful_on_source_mask, is_targeted, target_labels)
+            if is_targeted and target_labels is not None:
+                adversarial_images, true_labels, successful_on_source_mask, target_labels = self._move_tensors_to_cpu(
+                    adversarial_images, true_labels, successful_on_source_mask, target_labels)
+            else:
+                adversarial_images, true_labels, successful_on_source_mask = self._move_tensors_to_cpu(
+                    adversarial_images, true_labels, successful_on_source_mask)
 
     def _get_model_name(self, target_model, model_names_count):
         """
@@ -246,29 +250,18 @@ class TransferabilityEvaluator(BaseEvaluator):
 
         return successful_transfer
 
-    def _move_tensors_to_cpu(self,
-                             adversarial_images: torch.Tensor,
-                             true_labels: torch.Tensor,
-                             successful_on_source_mask: torch.Tensor,
-                             is_targeted: bool,
-                             target_labels: Optional[torch.Tensor]) -> None:
+    def _move_tensors_to_cpu(self, *args) -> List[torch.Tensor]:
         """
         Moves tensors to CPU to avoid memory leaks and GPU memory overflow.
 
         Args:
-            adversarial_images (torch.Tensor): The adversarial images.
-            true_labels (torch.Tensor): The true labels of the original images.
-            successful_on_source_mask (torch.Tensor): Mask identifying successful adversarial examples on the source model.
-            is_targeted (bool): Whether the attack is targeted.
-            target_labels (Optional[torch.Tensor]): The target labels for the targeted attack.
+            args (List[torch.Tensor]): List of tensors to move to CPU.
+
+        Returns:
+            List[torch.Tensor]: List of tensors moved to CPU.
 
         """
-
-        adversarial_images = adversarial_images.cpu()
-        true_labels = true_labels.cpu()
-        successful_on_source_mask = successful_on_source_mask.cpu()
-        if is_targeted and target_labels is not None:
-            target_labels = target_labels.cpu()
+        return [arg.to("cpu") for arg in args if arg is not None]
 
     def get_results(self) -> dict:
         """

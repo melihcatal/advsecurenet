@@ -1,4 +1,6 @@
+import logging
 import os
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -9,6 +11,8 @@ from torch.utils.data import DataLoader, TensorDataset
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types.configs.train_config import TrainConfig
 from advsecurenet.trainer.trainer import Trainer
+
+logger = logging.getLogger("advsecurenet.trainer.trainer")
 
 
 @pytest.fixture
@@ -369,3 +373,69 @@ def test_train(mock_setup_scheduler, mock_load_checkpoint_if_any, mock_get_loss_
         for epoch in range(2, train_config.epochs + 1, 2):
             mock_save_checkpoint.assert_any_call(epoch, mock_optimizer)
         mock_post_training.assert_called_once()
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+@patch('os.path.isfile', return_value=True)
+@patch('torch.load')
+@patch.object(Trainer, '_load_model_state_dict')
+@patch.object(Trainer, '_assign_device_to_optimizer_state')
+def test_load_checkpoint_if_exists(mock_assign_device, mock_load_state_dict, mock_torch_load, mock_isfile, train_config):
+    train_config.load_checkpoint = True
+    train_config.load_checkpoint_path = '/path/to/checkpoint'
+    mock_torch_load.return_value = {
+        'model_state_dict': 'mock_model_state_dict',
+        'optimizer_state_dict': 'mock_optimizer_state_dict',
+        'epoch': 10
+    }
+    trainer = Trainer(train_config)
+
+    with mock.patch.object(logger, 'info') as mock_logger, \
+            mock.patch.object(trainer._optimizer, 'load_state_dict') as mock_load_optimizer_dict:
+        start_epoch = trainer._load_checkpoint_if_any()
+
+        assert start_epoch == 11
+        mock_isfile.assert_called_with('/path/to/checkpoint')
+        mock_torch_load.assert_called_with('/path/to/checkpoint')
+        mock_load_state_dict.assert_called_with('mock_model_state_dict')
+        mock_load_optimizer_dict.assert_called_with(
+            'mock_optimizer_state_dict')
+        mock_assign_device.assert_called()
+        mock_logger.assert_called_with(
+            "Loading checkpoint from %s", '/path/to/checkpoint')
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+@patch('os.path.isfile', return_value=False)
+def test_load_checkpoint_if_not_exists(mock_isfile, train_config):
+    train_config.load_checkpoint = True
+    train_config.load_checkpoint_path = '/path/to/checkpoint'
+
+    trainer = Trainer(train_config)
+    with mock.patch.object(logger, 'warning') as mock_warning:
+        start_epoch = trainer._load_checkpoint_if_any()
+
+        assert start_epoch == 1
+        mock_isfile.assert_called_with('/path/to/checkpoint')
+        mock_warning.assert_called_with(
+            "Checkpoint file not found at %s", '/path/to/checkpoint')
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+@patch('os.path.isfile', return_value=True)
+@patch('torch.load', side_effect=FileNotFoundError)
+def test_load_checkpoint_load_error(mock_torch_load, mock_isfile, train_config):
+    train_config.load_checkpoint = True
+    train_config.load_checkpoint_path = '/path/to/checkpoint'
+
+    trainer = Trainer(train_config)
+
+    with mock.patch.object(logger, 'error') as mock_error:
+        start_epoch = trainer._load_checkpoint_if_any()
+
+        assert start_epoch == 1
+        mock_isfile.assert_called_with('/path/to/checkpoint')
+        mock_error.assert_called()

@@ -6,13 +6,13 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from advsecurenet.attacks import AdversarialAttack
+from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
     AdversarialTrainingConfig
 from advsecurenet.trainer.trainer import Trainer
 from advsecurenet.utils.adversarial_target_generator import \
     AdversarialTargetGenerator
-from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
 
 
 class AdversarialTraining(Trainer):
@@ -217,9 +217,7 @@ class AdversarialTraining(Trainer):
         """
         Move the required data to the device.
         """
-        if args is None:
-            return None
-        return [arg.to(self._device) for arg in args]
+        return [arg.to(self._device) for arg in args if arg is not None]
 
     def _get_loss_divisor(self):
         return len(self.config.train_loader)

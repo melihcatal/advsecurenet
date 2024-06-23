@@ -1,4 +1,5 @@
 import logging
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -6,8 +7,9 @@ import pytest
 from advsecurenet.shared.types.configs.configs import ConfigType
 from cli.logic.train.train import cli_train
 from cli.shared.types.train import TrainingCliConfigType
+from cli.shared.utils.config import make_paths_absolute
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("cli.logic.train.train")
 
 
 @pytest.mark.cli
@@ -40,7 +42,7 @@ def test_cli_train_train_failure(mock_CLITrainer, mock_load_and_instantiate_conf
     training_error = Exception("Training error")
     mock_trainer_instance.train.side_effect = training_error
 
-    with patch("logging.error") as mock_logging_error:
+    with mock.patch.object(logger, 'error') as mock_logging_error:
         with pytest.raises(Exception, match="Training error"):
             cli_train("config_path", extra_arg="value")
 

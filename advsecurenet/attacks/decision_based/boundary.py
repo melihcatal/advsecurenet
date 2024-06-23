@@ -19,6 +19,7 @@ class DecisionBoundary(AdversarialAttack):
     """
 
     def __init__(self, config: AttackConfigs.DecisionBoundaryAttackConfig) -> None:
+        super().__init__(config)
         self.initial_delta = config.initial_delta
         self.initial_epsilon = config.initial_epsilon
         self.max_delta_trials = config.max_delta_trials
@@ -30,7 +31,6 @@ class DecisionBoundary(AdversarialAttack):
         self.early_stopping = config.early_stopping
         self.early_stopping_threshold = config.early_stopping_threshold
         self.early_stopping_patience = config.early_stopping_patience
-        super().__init__(config)
 
     @typing.no_type_check
     def attack(self,
@@ -246,18 +246,23 @@ class DecisionBoundary(AdversarialAttack):
             return predictions != y
 
     def _adjust_delta(self, success: torch.Tensor, delta: float) -> float:
+        if len(success) == 0:
+            return delta
         success_rate = success.float().mean().item()
-        if success_rate < 0.2:
+        if success_rate < 0.5:
             delta *= self.step_adapt
-        elif success_rate > 0.5:
+        elif success_rate >= 0.5:
             delta /= self.step_adapt
         return delta
 
     def _adjust_epsilon(self, success: torch.Tensor, epsilon: float) -> float:
+        if len(success) == 0:
+            return epsilon
         success_rate = success.float().mean().item()
-        if success_rate < 0.2:
+
+        if success_rate < 0.5:
             epsilon *= self.step_adapt
-        elif success_rate > 0.5:
+        elif success_rate >= 0.5:
             epsilon /= self.step_adapt
         return epsilon
 
@@ -280,6 +285,8 @@ class DecisionBoundary(AdversarialAttack):
         if iteration >= self.early_stopping_patience:
             improvement = recent_improvements[0] - best_distances.mean().item()
             recent_improvements.append(best_distances.mean().item())
+            print(
+                f"Improvement: {improvement} , early stopping threshold: {self.early_stopping_threshold}")
             if improvement < self.early_stopping_threshold:
                 if self.verbose:
                     click.echo(click.style("Early stopping", fg="yellow"))

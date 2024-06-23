@@ -17,11 +17,11 @@ def cli_train(config: str, **kwargs) -> None:
     """
     config_data: TrainingCliConfigType = load_and_instantiate_config(
         config, "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, **kwargs)
-    logging.info("Loaded training configuration: %s", config_data)
+    logger.info("Loaded training configuration: %s", config_data)
     try:
         trainer = CLITrainer(config_data)
         trainer.train()
-        logging.info("Training completed successfully")
+        logger.info("Training completed successfully")
     except Exception as e:
-        logging.error("Failed to train model: %s", e)
+        logger.error("Failed to train model: %s", e)
         raise e

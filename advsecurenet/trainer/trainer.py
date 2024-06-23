@@ -117,7 +117,8 @@ class Trainer:
                 "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler.")
         return cast(torch.optim.lr_scheduler._LRScheduler, scheduler)
 
-    def _get_optimizer(self, optimizer: Union[str, optim.Optimizer],
+    def _get_optimizer(self,
+                       optimizer: Union[str, optim.Optimizer],
                        model: nn.Module,
                        learning_rate: float = 0.001,
                        **kwargs
@@ -175,21 +176,25 @@ class Trainer:
         Returns:
             int: The start epoch.
         """
-        start_epoch = 1
-        if self._config.load_checkpoint and self._config.load_checkpoint_path:
-            if os.path.isfile(self._config.load_checkpoint_path):
-                logger.info(
-                    "loading checkpoint from %s", self._config.load_checkpoint_path)
-                checkpoint = torch.load(self._config.load_checkpoint_path)
-                self._load_model_state_dict(checkpoint['model_state_dict'])
-                self._optimizer.load_state_dict(
-                    checkpoint['optimizer_state_dict'])
-                self._assign_device_to_optimizer_state()
-                start_epoch = checkpoint['epoch'] + 1
-            else:
-                logger.warning(
-                    "Checkpoint file not found at %s", self._config.load_checkpoint_path)
-        return start_epoch
+        try:
+            start_epoch = 1
+            if self._config.load_checkpoint and self._config.load_checkpoint_path:
+                if os.path.isfile(self._config.load_checkpoint_path):
+                    logger.info(
+                        "Loading checkpoint from %s", self._config.load_checkpoint_path)
+                    checkpoint = torch.load(self._config.load_checkpoint_path)
+                    self._load_model_state_dict(checkpoint['model_state_dict'])
+                    self._optimizer.load_state_dict(
+                        checkpoint['optimizer_state_dict'])
+                    self._assign_device_to_optimizer_state()
+                    start_epoch = checkpoint['epoch'] + 1
+                else:
+                    logger.warning(
+                        "Checkpoint file not found at %s", self._config.load_checkpoint_path)
+            return start_epoch
+        except Exception as e:
+            logger.error("Failed to load checkpoint: %s", e)
+            return 1
 
     def _load_model_state_dict(self, state_dict):
         # Loads the given model state dict.

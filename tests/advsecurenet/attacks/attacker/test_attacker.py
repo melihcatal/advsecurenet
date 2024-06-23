@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 import torch
@@ -150,3 +150,25 @@ def test_get_iterator(config, kwargs):
     attacker = Attacker(config, **kwargs)
     iterator = attacker._get_iterator()
     assert iterator is not None
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+@patch("torch.cuda.is_available", return_value=True)
+@patch("advsecurenet.attacks.attacker.attacker.Attacker._setup_model")
+@patch("advsecurenet.attacks.attacker.attacker.Attacker._create_dataloader")
+def test_setup_device_default_cuda(mock_dataloader, mock_model, mock_cuda, config, kwargs):
+    config.device.processor = None
+    attacker = Attacker(config, **kwargs)
+    assert attacker._device == torch.device("cuda")
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
+@patch("torch.cuda.is_available", return_value=False)
+@patch("advsecurenet.attacks.attacker.attacker.Attacker._setup_model")
+@patch("advsecurenet.attacks.attacker.attacker.Attacker._create_dataloader")
+def test_setup_device_default_cpu(mock_dataloader, mock_model, mock_cuda, config, kwargs):
+    config.device.processor = None
+    attacker = Attacker(config, **kwargs)
+    assert attacker._device == torch.device("cpu")

@@ -113,23 +113,59 @@ CHECK_HANDLERS = {
 }
 
 
+def is_path_to_update(key: str, value: str, base_path: str) -> bool:
+    """
+    Determine if the path needs to be updated to an absolute path.
+    Args:
+        key (str): The key in the configuration dictionary.
+        value (str): The value to check.
+        base_path (str): The base directory path.
+    Returns:
+        bool: True if the path should be updated, False otherwise.
+    """
+    return (
+        isinstance(value, str) and not os.path.isabs(value) and
+        (os.path.exists(os.path.join(base_path, value))
+         or "dir" in key or "path" in key)
+    )
+
+
+def update_dict_paths(base_path: str, config: Dict[str, Any]) -> None:
+    """
+    Update paths in a dictionary configuration.
+    Args:
+        base_path (str): The base directory path.
+        config (Dict[str, Any]): The dictionary configuration data to update.
+    """
+    for key, value in config.items():
+        if is_path_to_update(key, value, base_path):
+            config[key] = os.path.abspath(os.path.join(base_path, value))
+        elif isinstance(value, (dict, list)):
+            make_paths_absolute(base_path, value)
+
+
+def update_list_paths(base_path: str, config: List[Any]) -> None:
+    """
+    Update paths in a list configuration.
+    Args:
+        base_path (str): The base directory path.
+        config (List[Any]): The list configuration data to update.
+    """
+    for item in config:
+        make_paths_absolute(base_path, item)
+
+
 def make_paths_absolute(base_path: str, config: Union[Dict[str, Any], List[Any]]) -> None:
     """
     Recursively update the paths in the configuration dictionary or list to be absolute paths.
-
     Args:
         base_path (str): The base directory path.
         config (Union[Dict[str, Any], List[Any]]): The configuration data to update.
     """
     if isinstance(config, dict):
-        for key, value in config.items():
-            if isinstance(value, str) and (os.path.exists(os.path.join(base_path, value)) or "dir" in key or "path" in key):
-                config[key] = os.path.abspath(os.path.join(base_path, value))
-            elif isinstance(value, (dict, list)):
-                make_paths_absolute(base_path, value)
+        update_dict_paths(base_path, config)
     elif isinstance(config, list):
-        for item in config:
-            make_paths_absolute(base_path, item)
+        update_list_paths(base_path, config)
 
 
 def load_and_instantiate_config(config: str, default_config_file: str, config_type: ConfigType, config_class: Type[T], **kwargs: Dict[str, Any]) -> T:
@@ -212,6 +248,7 @@ def get_available_configs() -> list:
         except Exception as e:
             logger.error(
                 "Error occurred while reading configuration files: %s", e)
+            return []
 
     return configs
 

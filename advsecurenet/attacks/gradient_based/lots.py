@@ -193,6 +193,8 @@ class LOTS(AdversarialAttack):
         if self._epsilon is not None:
             distances = torch.norm(
                 x_deep_features - x_target_deep_features, dim=1)
+            print(distances)
+
             success_distances = distances < self._epsilon
             return success_indices | success_distances
 
