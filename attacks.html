@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adversarial Attacks &mdash; AdvSecureNet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Adversarial Defenses" href="defenses.html" />
+    <link rel="prev" title="AdvSecureNet" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            AdvSecureNet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">AdvSecureNet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adversarial Attacks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adversarial-attacks-overview">Adversarial Attacks Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fgsm">FGSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-w">C&amp;W</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pgd">PGD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deepfool">DeepFool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#decision-boundary">Decision Boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lots">LOTS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="defenses.html">Adversarial Defenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluations.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AdvSecureNet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Adversarial Attacks</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/attacks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="adversarial-attacks">
+<h1>Adversarial Attacks<a class="headerlink" href="#adversarial-attacks" title="Link to this heading"></a></h1>
+<p>AdvSecureNet supports various adversarial attacks, including:</p>
+<ul class="simple">
+<li><p>Fast Gradient Sign Method (FGSM)</p></li>
+<li><p>Carlini and Wagner (C&amp;W)</p></li>
+<li><p>Projected Gradient Descent (PGD)</p></li>
+<li><p>DeepFool</p></li>
+<li><p>Decision Boundary</p></li>
+<li><p>Layerwise Origin-Target Synthesis (LOTS)</p></li>
+</ul>
+<p>Some of these attacks are targeted, while others are untargeted.
+AdvSecureNet provides a simple way to use targeted adversarial attacks
+by having an automatic target generation mechanism. This mechanism
+generates a target label that is different from the original label of
+the input image. The target label is chosen randomly from the set of
+possible labels, excluding the original label. This ensures that the
+attack is targeted, as the goal is to mislead the model into predicting
+the target label instead of the correct one without being explicitly
+specified by the user. This feature is particularly useful for the large
+datasets where manually specifying target labels for each input image is
+impractical. However, users can also specify the target label manually
+if they would like to do so.</p>
+<p>Below, we provide a brief overview of each adversarial attack supported
+by AdvSecureNet, including its characteristics, purpose, and potential
+applications.</p>
+<section id="adversarial-attacks-overview">
+<h2>Adversarial Attacks Overview<a class="headerlink" href="#adversarial-attacks-overview" title="Link to this heading"></a></h2>
+<p>Adversarial attacks can be categorized in different ways. One way to
+categorize them is based on the <strong>information</strong> they use. Broadly, these
+attacks fall into two categories: <strong>white-box</strong> and <strong>black-box</strong>
+attacks <a class="footnote-reference brackets" href="#id23" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id24" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. White-box attacks necessitate access to the model’s
+parameters, making them intrinsically reliant on detailed knowledge of
+the model’s internals <a class="footnote-reference brackets" href="#id25" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id26" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. In contrast, black-box attacks operate
+without requiring access to the model’s parameters <a class="footnote-reference brackets" href="#id27" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#id28" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>. Among
+black-box attack methods, one prevalent approach involves training a
+substitute model to exploit the transferability of adversarial
+attacks <a class="footnote-reference brackets" href="#id29" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, targeting the victim model indirectly <a class="footnote-reference brackets" href="#id30" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. Additionally,
+there are other black-box attack methods such as decision boundary
+attacks <a class="footnote-reference brackets" href="#id31" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a> and zeroth order optimization based attacks such as
+ZOO <a class="footnote-reference brackets" href="#id32" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>. These methods, distinct from the substitute model approach,
+rely solely on the output of the model, further reinforcing their
+classification as black-box attacks.</p>
+<p>Adversarial attacks can also be differentiated based on the <strong>number of
+steps</strong> involved in generating adversarial perturbations. This
+categorization divides them into <strong>single-step</strong> and <strong>iterative</strong>
+attacks <a class="footnote-reference brackets" href="#id33" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>. Single-step attacks are characterized by their speed, as
+they require only one step to calculate the adversarial perturbation. On
+the other hand, iterative attacks are more time-consuming, involving
+multiple steps to incrementally compute the adversarial
+perturbation <a class="footnote-reference brackets" href="#id34" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>.</p>
+<p>Additionally, another classification of adversarial attacks hinges on
+the <strong>objective of the attack</strong>. In this context, attacks are grouped
+into <strong>targeted</strong> and <strong>untargeted</strong> categories <a class="footnote-reference brackets" href="#id35" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>. Targeted attacks
+are designed with the specific goal of manipulating the model’s output
+to a predetermined class. In contrast, untargeted attacks are aimed at
+causing the model to incorrectly classify the input into any class,
+provided it is not the correct one <a class="footnote-reference brackets" href="#id36" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>.</p>
+<hr class="docutils" />
+<section id="fgsm">
+<h3>FGSM<a class="headerlink" href="#fgsm" title="Link to this heading"></a></h3>
+<p>FGSM, short for Fast Gradient Sign Method, is a type of adversarial
+attack that was introduced by Goodfellow et al. <a class="footnote-reference brackets" href="#id37" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a> in 2015. It is a
+single-step, white box attack. Initially, the attack is designed as an
+untargeted attack. However, it can be modified to be a targeted attack.
+The idea of the FGSM attack is to compute the adversarial perturbation
+by taking the sign of the gradient of the loss function with respect to
+the input. The FGSM attack is a fast attack since it only requires one
+step to compute the adversarial perturbation. This makes it a popular
+attack in the adversarial robustness literature. However, it has been
+shown that the FGSM attack is not effective against the adversarial
+defenses. This is because the FGSM attack is a weak attack and it can be
+easily defended by the adversarial defenses such as adversarial
+training.</p>
+<p>If the attack is untargeted, the formula tries to maximize the loss
+function with respect to the input and correct label. If the attack is
+targeted, the formula tries to minimize the loss function with respect
+to the input and target label since the purpose of the targeted attack
+is to get closer to the target label. The untargeted FGSM attack is
+given in the equation below, and the targeted FGSM attack is given in
+the subsequent equation.</p>
+<div class="math notranslate nohighlight">
+\[\text{adv}_x = x + \epsilon \cdot \text{sign}(\nabla_x J(\theta, x, y))\]</div>
+<div class="math notranslate nohighlight">
+\[\text{adv}_x = x - \epsilon \cdot \text{sign}(\nabla_x J(\theta, x, y))\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\text{adv}_x\)</span> is the adversarial image.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x\)</span> is the original input image.</p></li>
+<li><p><span class="math notranslate nohighlight">\(y\)</span> is the original label for <strong>untargeted</strong> attacks, or the
+target label for <strong>targeted</strong> attacks.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon\)</span> is a multiplier to ensure the perturbations are
+small.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\theta\)</span> represents the model parameters.</p></li>
+<li><p><span class="math notranslate nohighlight">\(J(\theta, x, y)\)</span> is the loss function used by the model.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="c-w">
+<h3>C&amp;W<a class="headerlink" href="#c-w" title="Link to this heading"></a></h3>
+<p>The Carlini and Wagner (C&amp;W) attack <a class="footnote-reference brackets" href="#id38" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a>, introduced by Nicholas
+Carlini and David Wagner in 2017, is a sophisticated method of
+adversarial attack aimed at machine learning models, particularly those
+used in computer vision. As an iterative, white-box attack, it requires
+access to the model’s architecture and parameters. The core of the C&amp;W
+attack involves formulating and solving an optimization problem that
+minimally perturbs the input image in a way that leads to incorrect
+model predictions. This is done while maintaining the perturbations
+imperceptible to the human eye, thus preserving the image’s visual
+integrity. The optimization process often employs techniques like binary
+search to find the smallest possible perturbation that can deceive the
+model. The C&amp;W attack is versatile, capable of being deployed as both
+untargeted and targeted attacks. The attack can also use different
+distance metrics when computing the perturbation, such as the L0, L2,
+and L-infinity norms. The choice of distance metric can affect the
+attack’s effectiveness and the perturbation’s perceptibility.</p>
+<p>The attack’s effectiveness lies in its ability to subtly manipulate the
+input data, challenging the robustness and security of machine learning
+models, and it has become a benchmark for testing the vulnerability of
+these models to adversarial examples. However, the biggest drawback of
+the C&amp;W attack is its computational complexity, which stems from the
+iterative nature of the attack and the optimization problem that needs
+to be solved. This makes the C&amp;W attack less practical for real-world
+applications.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+&amp; \text{minimize} \quad \|\delta\|_p + c \cdot f(x + \delta) \\
+&amp; \text{such that} \quad x + \delta \in [0,1]^n
+\end{aligned}\end{split}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\delta\)</span> is the perturbation added to the input image
+<span class="math notranslate nohighlight">\(x\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\|\delta\|_p\)</span> is the p-norm of the perturbation, which
+measures the size of the perturbation.</p></li>
+<li><p><span class="math notranslate nohighlight">\(c\)</span> is a constant that balances the perturbation magnitude and
+the success of the attack.</p></li>
+<li><p><span class="math notranslate nohighlight">\(f(x + \delta)\)</span> is the objective function, designed to mislead
+the model into making incorrect predictions.</p></li>
+<li><p><span class="math notranslate nohighlight">\(x + \delta \in [0,1]^n\)</span> ensures that the perturbed input
+remains within the valid input range for the model.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="pgd">
+<h3>PGD<a class="headerlink" href="#pgd" title="Link to this heading"></a></h3>
+<p>The Projected Gradient Descent (PGD) attack <a class="footnote-reference brackets" href="#id39" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a> is a prominent
+adversarial attack method in the field of machine learning, particularly
+for evaluating the robustness of models against adversarial examples.
+Introduced by Madry et al. <a class="footnote-reference brackets" href="#id40" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>, the PGD attack is an iterative method
+that generates adversarial examples by repeatedly applying a small
+perturbation and projecting this perturbation onto an
+<span class="math notranslate nohighlight">\(\varepsilon\)</span>-ball around the original input within a specified
+norm. This process is repeated for a fixed number of steps or until a
+successful adversarial example is found. The PGD attack operates under a
+white-box setting, where the attacker has full knowledge of the model,
+including its architecture and parameters. The strength of the PGD
+attack lies in its simplicity and effectiveness in finding adversarial
+examples within a constrained space, making it a standard benchmark in
+adversarial robustness research. According to cite here, the PGD attack
+is one of the most used attacks in adversarial training. However,
+similar to other adversarial attacks like the C&amp;W attack, the PGD attack
+can be computationally intensive, particularly when dealing with complex
+models and high-dimensional input spaces, which may limit its
+practicality in real-world scenarios.</p>
+</section>
+<hr class="docutils" />
+<section id="deepfool">
+<h3>DeepFool<a class="headerlink" href="#deepfool" title="Link to this heading"></a></h3>
+<p>The DeepFool attack, introduced by Moosavi-Dezfooli et al. <a class="footnote-reference brackets" href="#id41" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a> in
+2016, is a type of adversarial attack that aims to generate adversarial
+examples that are close to the original input but mislead the model. It
+is an iterative, white-box attack. The algorithm works by linearizing
+the decision boundaries of the model and then applying a small
+perturbation that pushes the input just across this boundary. This
+process is repeated iteratively until the input is misclassified,
+ensuring that the resulting adversarial example is as close to the
+original input as possible. One of the key strengths of DeepFool is its
+ability to compute these minimal perturbations with relatively low
+computational overhead compared to other methods because of its
+linearization approach. Despite its efficiency, the attack assumes a
+somewhat idealized linear model, which may not always accurately reflect
+the complex decision boundaries in more advanced, non-linear models.
+Nonetheless, DeepFool has become a valuable tool in the adversarial
+machine learning toolkit for its ability to provide insights into model
+vulnerabilities with minimal perturbations.</p>
+</section>
+<hr class="docutils" />
+<section id="decision-boundary">
+<h3>Decision Boundary<a class="headerlink" href="#decision-boundary" title="Link to this heading"></a></h3>
+<p>The Decision Boundary attack is a black-box attack that was introduced
+by Brendel et al. <a class="footnote-reference brackets" href="#id42" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a> in 2017. The idea of the Decision Boundary
+attack is to find the decision boundary of the model and then apply a
+small perturbation that pushes the input just across this boundary. The
+Decision Boundary attack is an iterative attack and can be both targeted
+and untargeted. The attack starts with a random input that is initially
+adversarial and then iteratively updates the input to get closer to the
+decision boundary and minimize the perturbation. The advantage of the
+attack is that it does not require any information about the model. This
+makes it more suitable for real-world applications where the model’s
+information is not available. However, the drawback of the attack is
+that it is computationally expensive since it requires iteratively
+updating the input to get closer to the decision boundary.</p>
+</section>
+<hr class="docutils" />
+<section id="lots">
+<h3>LOTS<a class="headerlink" href="#lots" title="Link to this heading"></a></h3>
+<p>LOTS, Layerwise Origin-Target Synthesis <a class="footnote-reference brackets" href="#id43" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>21<span class="fn-bracket">]</span></a>, is a type of adversarial
+attack that was introduced by Rozsa et al. in 2017. It is a versatile,
+white-box attack that can be used as both targeted and untargeted
+attacks, single-step and iterative. The idea of the LOTS attack is to
+compute the adversarial perturbation by using the deep feature layers of
+the model. The purpose of the attack algorithm is to adjust the deep
+feature representation of the input to match the deep feature
+representation of the target class. Utilizing deep feature
+representations makes the LOTS attack suitable for systems that use deep
+feature representations, such as face recognition systems. The results
+show that the Iterative LOTS attack is highly successful against the VGG
+Face network with success rates between 98.28% to 100% <a class="footnote-reference brackets" href="#id44" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>22<span class="fn-bracket">]</span></a>. However,
+the drawback of the LOTS attack is that it needs to know the deep
+feature representation of the target class.</p>
+</section>
+<hr class="docutils" />
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id23" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id24" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Chakraborty, A., Alam, M., Dey, V., Chattopadhyay, A., &amp;
+Mukhopadhyay, D. (2018). Adversarial Attacks and Defences: A Survey.
+arXiv preprint arXiv:1810.00069.</p>
+</aside>
+<aside class="footnote brackets" id="id25" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id26" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>Chakraborty, A., Alam, M., Dey, V., Chattopadhyay, A., &amp;
+Mukhopadhyay, D. (2018). Adversarial Attacks and Defences: A Survey.
+arXiv preprint arXiv:1810.00069.</p>
+</aside>
+<aside class="footnote brackets" id="id27" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id28" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
+<p>Chakraborty, A., Alam, M., Dey, V., Chattopadhyay, A., &amp;
+Mukhopadhyay, D. (2018). Adversarial Attacks and Defences: A Survey.
+arXiv preprint arXiv:1810.00069.</p>
+</aside>
+<aside class="footnote brackets" id="id29" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">7</a><span class="fn-bracket">]</span></span>
+<p>Papernot, N., Mcdaniel, P., &amp; Goodfellow, I. J. (2016).
+Transferability in Machine Learning: from Phenomena to Black-Box
+Attacks using Adversarial Samples. arXiv preprint arXiv:1605.07277.
+Retrieved from https://api.semanticscholar.org/CorpusID:17362994</p>
+</aside>
+<aside class="footnote brackets" id="id30" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">8</a><span class="fn-bracket">]</span></span>
+<p>Papernot, N., McDaniel, P., Goodfellow, I., Jha, S., Celik, Z. B., &amp;
+Swami, A. (2017). Practical Black-Box Attacks against Machine
+Learning. arXiv preprint arXiv:1602.02697.</p>
+</aside>
+<aside class="footnote brackets" id="id31" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">9</a><span class="fn-bracket">]</span></span>
+<p>Brendel, W., Rauber, J., &amp; Bethge, M. (2017). Decision-Based
+Adversarial Attacks: Reliable Attacks Against Black-Box Machine
+Learning Models. arXiv preprint arXiv:1712.04248. Retrieved from
+https://api.semanticscholar.org/CorpusID:2410333</p>
+</aside>
+<aside class="footnote brackets" id="id32" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">10</a><span class="fn-bracket">]</span></span>
+<p>Chen, P.-Y., Zhang, H., Sharma, Y., Yi, J., &amp; Hsieh, C.-J. (2017).
+ZOO: Zeroth Order Optimization Based Black-Box Attacks to Deep Neural
+Networks without Training Substitute Models. In <em>Proceedings of the
+10th ACM Workshop on Artificial Intelligence and Security</em>
+(pp. 15-26). New York, NY, USA: Association for Computing Machinery.
+doi:
+<a class="reference external" href="https://doi.org/10.1145/3128572.3140448">10.1145/3128572.3140448</a></p>
+</aside>
+<aside class="footnote brackets" id="id33" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">11</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id34" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">12</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id35" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">13</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id36" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">14</a><span class="fn-bracket">]</span></span>
+<p>Khalid, F., Hanif, M. A., &amp; Shafique, M. (2021). Exploiting
+Vulnerabilities in Deep Neural Networks: Adversarial and
+Fault-Injection Attacks. arXiv preprint arXiv:2105.03251.</p>
+</aside>
+<aside class="footnote brackets" id="id37" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">15</a><span class="fn-bracket">]</span></span>
+<p>Goodfellow, I. J., Shlens, J., &amp; Szegedy, C. (2015). Explaining and
+Harnessing Adversarial Examples. arXiv preprint arXiv:1412.6572.</p>
+</aside>
+<aside class="footnote brackets" id="id38" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">16</a><span class="fn-bracket">]</span></span>
+<p>Carlini, N., &amp; Wagner, D. (2017). “Towards Evaluating the Robustness
+of Neural Networks.” Available at:
+<a class="reference external" href="https://arxiv.org/abs/1702.04267">arXiv:1702.04267</a></p>
+</aside>
+<aside class="footnote brackets" id="id39" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">17</a><span class="fn-bracket">]</span></span>
+<p>Madry, A., Makelov, A., Schmidt, L., Tsipras, D., &amp; Vladu, A. (2017).
+“Towards Deep Learning Models Resistant to Adversarial Attacks.”
+Available at: <a class="reference external" href="https://arxiv.org/abs/1706.06083">arXiv:1706.06083</a></p>
+</aside>
+<aside class="footnote brackets" id="id40" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">18</a><span class="fn-bracket">]</span></span>
+<p>Madry, A., Makelov, A., Schmidt, L., Tsipras, D., &amp; Vladu, A. (2017).
+“Towards Deep Learning Models Resistant to Adversarial Attacks.”
+Available at: <a class="reference external" href="https://arxiv.org/abs/1706.06083">arXiv:1706.06083</a></p>
+</aside>
+<aside class="footnote brackets" id="id41" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">19</a><span class="fn-bracket">]</span></span>
+<p>Moosavi-Dezfooli, S.-M., Fawzi, A., &amp; Frossard, P. (2016). “DeepFool:
+A Simple and Accurate Method to Fool Deep Neural Networks.” Available
+at: <a class="reference external" href="https://arxiv.org/abs/1511.04599">arXiv:1511.04599</a></p>
+</aside>
+<aside class="footnote brackets" id="id42" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">20</a><span class="fn-bracket">]</span></span>
+<p>Brendel, W., Rauber, J., &amp; Bethge, M. (2017). “Decision-Based
+Adversarial Attacks: Reliable Attacks Against Black-Box Machine
+Learning Models.” Available at:
+<a class="reference external" href="https://arxiv.org/abs/1712.04248">arXiv:1712.04248</a></p>
+</aside>
+<aside class="footnote brackets" id="id43" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">21</a><span class="fn-bracket">]</span></span>
+<p>Rozsa, A., Rudd, E. M., &amp; Boult, T. E. (2017). “LOTS: Layerwise
+Origin-Target Synthesis for Adversarial Attack.” Available at:
+<a class="reference external" href="https://arxiv.org/abs/1611.06503">arXiv:1611.06503</a></p>
+</aside>
+<aside class="footnote brackets" id="id44" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">22</a><span class="fn-bracket">]</span></span>
+<p>Rozsa, A., Rudd, E. M., &amp; Boult, T. E. (2017). “LOTS: Layerwise
+Origin-Target Synthesis for Adversarial Attack.” Available at:
+<a class="reference external" href="https://arxiv.org/abs/1611.06503">arXiv:1611.06503</a></p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="AdvSecureNet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="defenses.html" class="btn btn-neutral float-right" title="Adversarial Defenses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

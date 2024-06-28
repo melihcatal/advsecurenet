@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluation &mdash; AdvSecureNet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="api.html" />
+    <link rel="prev" title="Adversarial Defenses" href="defenses.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            AdvSecureNet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">AdvSecureNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attacks.html">Adversarial Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defenses.html">Adversarial Defenses</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#attack-success-rate">Attack Success Rate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adversarial-transferability-evaluation">Adversarial Transferability Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#robustness-gap">Robustness Gap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#perturbation-effectiveness">Perturbation Effectiveness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#similarity-metrics">Similarity Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#psnr">PSNR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ssim">SSIM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AdvSecureNet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Evaluation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/evaluations.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="evaluation">
+<h1>Evaluation<a class="headerlink" href="#evaluation" title="Link to this heading"></a></h1>
+<section id="attack-success-rate">
+<h2>Attack Success Rate<a class="headerlink" href="#attack-success-rate" title="Link to this heading"></a></h2>
+<p>Attack Success Rate (ASR) is the fundamental metric for evaluating the adversarial robustness of the model. It is the percentage of the adversarial examples that are successfully misclassified by the model. In the context of adversarial attacks, success can be defined differently for targeted and untargeted attacks. For targeted attacks, success means that the adversarial example is classified as a specific target class. For untargeted attacks, success means that the adversarial example is classified as any class other than the true class. The higher the ASR, the more vulnerable the model is to adversarial attacks. The ASR is given by the equation below.</p>
+<div class="math notranslate nohighlight">
+\[ASR = \frac{\text{Number of Successful Adversarial Examples}}{\text{Total Number of Adversarial Examples}}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><strong>Number of Successful Adversarial Examples</strong> refers to the count of adversarial examples that lead to a successful attack, where success is defined as:
+- In targeted attacks, the adversarial example is classified as the target class, <em>y:sub:`target`</em>.
+- In untargeted attacks, the adversarial example is classified as any class other than the true class, <em>y:sub:`true`</em>.</p></li>
+<li><p><strong>Total Number of Adversarial Examples</strong> is the total number of adversarial examples generated from inputs where the model initially makes a correct prediction.</p></li>
+</ul>
+</section>
+<section id="adversarial-transferability-evaluation">
+<h2>Adversarial Transferability Evaluation<a class="headerlink" href="#adversarial-transferability-evaluation" title="Link to this heading"></a></h2>
+<p>The evaluation of adversarial transferability is facilitated by the <code class="docutils literal notranslate"><span class="pre">transferability_evaluator</span></code> class within the <code class="docutils literal notranslate"><span class="pre">advsecurenet.evaluation.evaluators</span></code> module. This evaluator is designed to assess the effectiveness of adversarial examples, originally generated for a source model, in deceiving various target models.</p>
+<p>The evaluator is initialized with a list of target models. During the evaluation phase, the <code class="docutils literal notranslate"><span class="pre">update</span></code> method calculates whether the adversarial examples successfully mislead both the source and the target models. Success in targeted attacks is determined by the adversarial example being classified as the target class, while in untargeted attacks, success is achieved if the example is classified as any class other than its true class.</p>
+<p>The evaluator maintains a tally of successful deceptions for each target model, as well as the total count of adversarial examples that successfully deceive the source model. The transferability rate for each target model is calculated as follows:</p>
+<div class="math notranslate nohighlight">
+\[Transferability\ Rate = \frac{\text{Number of Successful Transfers to Target Model}}{\text{Total Number of Successful Adversarial Examples on Source Model}}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><strong>Number of Successful Transfers to Target Model</strong> is the count of adversarial examples that successfully deceive the target model.</p></li>
+<li><p><strong>Total Number of Successful Adversarial Examples on Source Model</strong> refers to the count of adversarial examples that initially misled the source model.</p></li>
+</ul>
+<p>This evaluation method provides a thorough analysis of the transferability of adversarial examples across different models, shedding light on the robustness of each model against such attacks.</p>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<p>Consider a scenario with a source model, Model_A, and two target models, Model_B and Model_C. Suppose Model_A generates 100 adversarial examples, out of which 80 successfully deceive Model_A. When these 80 adversarial examples are tested against Model_B, 50 are successful, and against Model_C, 30 are successful.</p>
+<p>Using the transferability rate formula:</p>
+<p>For Model_B:</p>
+<div class="math notranslate nohighlight">
+\[Transferability\ Rate_{Model_B} = \frac{50}{80} = 0.625\]</div>
+<p>For Model_C:</p>
+<div class="math notranslate nohighlight">
+\[Transferability\ Rate_{Model_C} = \frac{30}{80} = 0.375\]</div>
+<p>This indicates that adversarial examples from Model_A are more transferable to Model_B than to Model_C.</p>
+</div>
+</section>
+<section id="robustness-gap">
+<h2>Robustness Gap<a class="headerlink" href="#robustness-gap" title="Link to this heading"></a></h2>
+<p>Robustness Gap is a metric that measures the difference between the accuracy on clean examples and the accuracy on adversarial examples. The higher the robustness gap is, the more vulnerable the model is to adversarial attacks. Possible values for the robustness gap are between 0 and 1. 0 means that the model performs the same on clean and adversarial examples. 1 means that the model performs perfectly on clean examples but completely fails on adversarial examples.</p>
+<p><strong>Clean Accuracy</strong> (A<sub>clean</sub>) is calculated as the ratio of the total number of correctly classified clean images (N<sub>correct_clean</sub>) to the total number of samples (N<sub>total</sub>):</p>
+<div class="math notranslate nohighlight">
+\[A_{\text{clean}} = \frac{N_{\text{correct_clean}}}{N_{\text{total}}}\]</div>
+<p><strong>Adversarial Accuracy</strong> (A<sub>adv</sub>) is the ratio of the total number of correctly classified adversarial images (N<sub>correct_adv</sub>) to the total number of samples (N<sub>total</sub>):</p>
+<div class="math notranslate nohighlight">
+\[A_{\text{adv}} = \frac{N_{\text{correct_adv}}}{N_{\text{total}}}\]</div>
+<p><strong>The Robustness Gap</strong> (G<sub>robust</sub>) is the difference between Clean Accuracy and Adversarial Accuracy:</p>
+<div class="math notranslate nohighlight">
+\[G_{\text{robust}} = A_{\text{clean}} - A_{\text{adv}}\]</div>
+<p>Evaluator for the perturbation effectiveness. The effectiveness score is the attack success rate divided by the perturbation distance. The higher the score, the more effective the attack.</p>
+<div class="admonition-example admonition">
+<p class="admonition-title">Example</p>
+<p>Suppose we have a model tested on a dataset of 1000 images. Out of these, the model correctly classifies 950 clean images, giving us N<sub>correct_clean</sub> = 950 and N<sub>total</sub> = 1000. When exposed to adversarial examples, the model correctly classifies only 700 of these images, thus N<sub>correct_adv</sub> = 700.</p>
+<p>Using the provided formulas, we can calculate the Clean Accuracy (A<sub>clean</sub>) and the Adversarial Accuracy (A<sub>adv</sub>):</p>
+<div class="math notranslate nohighlight">
+\[A_{\text{clean}} = \frac{950}{1000} = 0.95\]</div>
+<div class="math notranslate nohighlight">
+\[A_{\text{adv}} = \frac{700}{1000} = 0.70\]</div>
+<p>Then, the Robustness Gap (G<sub>robust</sub>) is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[G_{\text{robust}} = A_{\text{clean}} - A_{\text{adv}} = 0.95 - 0.70 = 0.25\]</div>
+<p>This Robustness Gap of 0.25 indicates that the model’s performance significantly degrades when exposed to adversarial examples, revealing a vulnerability to such attacks.</p>
+</div>
+</section>
+<section id="perturbation-effectiveness">
+<h2>Perturbation Effectiveness<a class="headerlink" href="#perturbation-effectiveness" title="Link to this heading"></a></h2>
+<p>Perturbation Effectiveness is a metric for evaluating the effectiveness of the adversarial perturbation. It is the percentage of the adversarial perturbation that is effective in changing the model’s prediction. The higher the perturbation effectiveness is, the more effective the adversarial perturbation is. The purpose of this metric is to distinguish between attacks that have a high success rate but require a large perturbation magnitude, and attacks that have a lower success rate but require a smaller perturbation magnitude. The perturbation effectiveness is given by the equation below.</p>
+<div class="math notranslate nohighlight">
+\[PE = \frac{\text{Attack Success Rate}}{\text{Perturbation}}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><strong>Attack Success Rate</strong> is the percentage of the adversarial examples that are successfully misclassified by the model.</p></li>
+<li><p><strong>Perturbation</strong> is the perturbation magnitude of the adversarial examples. It can be measured using different norms, such as L1, L2, or Linf.</p></li>
+</ul>
+</section>
+<section id="similarity-metrics">
+<h2>Similarity Metrics<a class="headerlink" href="#similarity-metrics" title="Link to this heading"></a></h2>
+<section id="psnr">
+<h3>PSNR<a class="headerlink" href="#psnr" title="Link to this heading"></a></h3>
+<p>The Peak Signal-to-Noise Ratio (PSNR) metric is a standard used in the field of image processing for assessing the quality of reconstructed or compressed images in relation to the original ones. The PSNR is derived from the mean squared error (MSE) between the original image and the reconstructed one. It is typically expressed in decibels (dB), indicating the ratio of the maximum possible power of a signal to the power of corrupting noise.</p>
+<p>The formula for PSNR is given by:</p>
+<div class="math notranslate nohighlight">
+\[\text{PSNR} = 10 \cdot \log_{10} \left( \frac{\text{MAX}_I^2}{\text{MSE}} \right)\]</div>
+<p>where MAX_I represents the maximum possible pixel value of the image (e.g., 255 for 8-bit images), and MSE is the mean squared error between the original and reconstructed images.</p>
+<p>The range of PSNR is typically between 0 dB to infinity, with higher values indicating a smaller difference between the original and reconstructed image, and thus, better quality. In cases where the original and reconstructed images are identical, the MSE becomes zero, leading to an undefined PSNR in the logarithmic scale, which can be theoretically considered as infinite. A higher PSNR value generally suggests that the reconstructed image closely resembles the original image in quality.</p>
+</section>
+<section id="ssim">
+<h3>SSIM<a class="headerlink" href="#ssim" title="Link to this heading"></a></h3>
+<p>The Structural Similarity Index Measure (SSIM) is a metric used for measuring the similarity between two images. Unlike traditional methods like PSNR that focus on pixel-level differences, SSIM considers changes in structural information, luminance, and contrast, providing a more perceptually relevant assessment of image quality.</p>
+<p>The formula for SSIM is given by:</p>
+<div class="math notranslate nohighlight">
+\[\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + C_1)(2\sigma_{xy} + C_2)}{(\mu_x^2 + \mu_y^2 + C_1)(\sigma_x^2 + \sigma_y^2 + C_2)}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are the two images being compared, <span class="math notranslate nohighlight">\(\mu_x\)</span>, <span class="math notranslate nohighlight">\(\mu_y\)</span> are the average pixel values, <span class="math notranslate nohighlight">\(\sigma_x^2\)</span>, <span class="math notranslate nohighlight">\(\sigma_y^2\)</span> are the variances, <span class="math notranslate nohighlight">\(\sigma_{xy}\)</span> is the covariance of the images, and <span class="math notranslate nohighlight">\(C_1\)</span>, <span class="math notranslate nohighlight">\(C_2\)</span> are constants used to stabilize the division.</p>
+<p>The SSIM index is a decimal value between -1 and 1, where a value of 1 for SSIM implies no difference between the compared images. As the value decreases, the differences between the images increase. SSIM is particularly useful in contexts where a human observer’s assessment of quality is important, as it aligns more closely with human visual perception than metrics based solely on pixel differences, which makes it suitable for adversarial robustness evaluation.</p>
+<p><img alt="ssim_psnr" src="https://github.com/melihcatal/advsecurenet/assets/46859098/ac7344d0-cef0-4ec3-b784-9aec32a0c80d" /> <em>Comparison of SSIM and PSNR Metrics vs. Epsilon in FGSM Attack</em></p>
+<p><img alt="ssim_psnr_example" src="https://github.com/melihcatal/advsecurenet/assets/46859098/b8e3d753-5bf5-4963-9f1b-b36df3acae5d" /> <em>SSIM and PSNR Example. Taken from https://medium.com/&#64;datamonsters/a-quick-overview-of-methods-to-measure-the-similarity-between-images-f907166694ee</em></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="defenses.html" class="btn btn-neutral float-left" title="Adversarial Defenses" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

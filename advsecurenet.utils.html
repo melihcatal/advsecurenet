@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>advsecurenet.utils package &mdash; advsecurenet  documentation</title>
+  <title>advsecurenet.utils package &mdash; AdvSecureNet  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="cli package" href="cli.html" />
+    <link rel="next" title="CLI Package" href="cli.html" />
     <link rel="prev" title="advsecurenet.trainer package" href="advsecurenet.trainer.html" /> 
 </head>
 
@@ -34,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            advsecurenet
+            AdvSecureNet
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -44,96 +44,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="advsecurenet.html">advsecurenet package</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.attacks.html">advsecurenet.attacks package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.dataloader.html">advsecurenet.dataloader package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.datasets.html">advsecurenet.datasets package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.defenses.html">advsecurenet.defenses package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.distributed.html">advsecurenet.distributed package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.evaluation.html">advsecurenet.evaluation package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.models.html">advsecurenet.models package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.shared.html">advsecurenet.shared package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advsecurenet.trainer.html">advsecurenet.trainer package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">advsecurenet.utils package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.adversarial_target_generator">advsecurenet.utils.adversarial_target_generator module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator"><code class="docutils literal notranslate"><span class="pre">AdversarialTargetGenerator</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.data">advsecurenet.utils.data module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.data.get_subset_data"><code class="docutils literal notranslate"><span class="pre">get_subset_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.data.split_data"><code class="docutils literal notranslate"><span class="pre">split_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.data.unnormalize_data"><code class="docutils literal notranslate"><span class="pre">unnormalize_data()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.dataclass">advsecurenet.utils.dataclass module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.filter_for_dataclass"><code class="docutils literal notranslate"><span class="pre">filter_for_dataclass()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.flatten_dataclass"><code class="docutils literal notranslate"><span class="pre">flatten_dataclass()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.is_list_of_dataclass"><code class="docutils literal notranslate"><span class="pre">is_list_of_dataclass()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.is_optional_type"><code class="docutils literal notranslate"><span class="pre">is_optional_type()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.merge_dataclasses"><code class="docutils literal notranslate"><span class="pre">merge_dataclasses()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.process_field"><code class="docutils literal notranslate"><span class="pre">process_field()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.process_generic_type"><code class="docutils literal notranslate"><span class="pre">process_generic_type()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.process_optional_field"><code class="docutils literal notranslate"><span class="pre">process_optional_field()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dataclass.recursive_dataclass_instantiation"><code class="docutils literal notranslate"><span class="pre">recursive_dataclass_instantiation()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.ddp">advsecurenet.utils.ddp module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.ddp.set_visible_gpus"><code class="docutils literal notranslate"><span class="pre">set_visible_gpus()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.device_manager">advsecurenet.utils.device_manager module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.device_manager.DeviceManager"><code class="docutils literal notranslate"><span class="pre">DeviceManager</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.dot_dict">advsecurenet.utils.dot_dict module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.dot_dict.DotDict"><code class="docutils literal notranslate"><span class="pre">DotDict</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.logging">advsecurenet.utils.logging module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.logging.LoggingConfig"><code class="docutils literal notranslate"><span class="pre">LoggingConfig</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.logging.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.loss">advsecurenet.utils.loss module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.loss.get_loss_function"><code class="docutils literal notranslate"><span class="pre">get_loss_function()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.model_utils">advsecurenet.utils.model_utils module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.model_utils.download_weights"><code class="docutils literal notranslate"><span class="pre">download_weights()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.model_utils.load_model"><code class="docutils literal notranslate"><span class="pre">load_model()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.model_utils.save_model"><code class="docutils literal notranslate"><span class="pre">save_model()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.network">advsecurenet.utils.network module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.network.find_free_port"><code class="docutils literal notranslate"><span class="pre">find_free_port()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.normalization_layer">advsecurenet.utils.normalization_layer module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.normalization_layer.NormalizationLayer"><code class="docutils literal notranslate"><span class="pre">NormalizationLayer</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-advsecurenet.utils.reproducibility_utils">advsecurenet.utils.reproducibility_utils module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.numpy_random_seed"><code class="docutils literal notranslate"><span class="pre">numpy_random_seed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.numpy_unseed"><code class="docutils literal notranslate"><span class="pre">numpy_unseed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.python_random_seed"><code class="docutils literal notranslate"><span class="pre">python_random_seed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.python_unseed"><code class="docutils literal notranslate"><span class="pre">python_unseed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.set_deterministic"><code class="docutils literal notranslate"><span class="pre">set_deterministic()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.set_nondeterministic"><code class="docutils literal notranslate"><span class="pre">set_nondeterministic()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.set_seed"><code class="docutils literal notranslate"><span class="pre">set_seed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.torch_random_seed"><code class="docutils literal notranslate"><span class="pre">torch_random_seed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.torch_unseed"><code class="docutils literal notranslate"><span class="pre">torch_unseed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.unique_seed"><code class="docutils literal notranslate"><span class="pre">unique_seed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#advsecurenet.utils.reproducibility_utils.unseed"><code class="docutils literal notranslate"><span class="pre">unseed()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">cli package</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">AdvSecureNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attacks.html">Adversarial Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defenses.html">Adversarial Defenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluations.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
 </ul>
 
         </div>
@@ -142,7 +58,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">advsecurenet</a>
+          <a href="index.html">AdvSecureNet</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -150,7 +66,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="advsecurenet.html">advsecurenet package</a></li>
+          <li class="breadcrumb-item"><a href="api.html">API Documentation</a></li>
+          <li class="breadcrumb-item"><a href="advsecurenet.html">AdvSecureNet Package</a></li>
       <li class="breadcrumb-item active">advsecurenet.utils package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/advsecurenet.utils.rst.txt" rel="nofollow"> View page source</a>
@@ -168,7 +85,7 @@
 <span id="advsecurenet-utils-adversarial-target-generator-module"></span><h2>advsecurenet.utils.adversarial_target_generator module<a class="headerlink" href="#module-advsecurenet.utils.adversarial_target_generator" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.adversarial_target_generator.</span></span><span class="sig-name descname"><span class="pre">AdversarialTargetGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maps_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="advsecurenet.dataloader.html#advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None" title="advsecurenet.dataloader.data_loader_factory.DataLoaderFactory.None"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/runner/work/advsecurenet/advsecurenet/advsecurenet/data'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">advsecurenet.utils.adversarial_target_generator.</span></span><span class="sig-name descname"><span class="pre">AdversarialTargetGenerator</span></span><a class="headerlink" href="#advsecurenet.utils.adversarial_target_generator.AdversarialTargetGenerator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This module is responsible for generating target images. This is specially useful for targeted attacks and when the client doesn’t provide a target image.
 The example can be found in <cite>examples/attacks/targeted_attacks.ipynb</cite>.</p>
@@ -796,7 +713,7 @@ W: Width of the image</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="advsecurenet.trainer.html" class="btn btn-neutral float-left" title="advsecurenet.trainer package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cli.html" class="btn btn-neutral float-right" title="cli package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="CLI Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
