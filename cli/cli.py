@@ -1,6 +1,7 @@
 """
 Command line interface for AdvSecureNet.
 """
+
 import click
 
 from .commands.attack import attack
@@ -11,7 +12,7 @@ from .commands.utils import utils
 
 
 @click.group()
-@click.version_option(version='0.2.0')
+@click.version_option(version="0.2.0")
 def main():
     """
     Welcome to AdvSecureNet CLI!

@@ -12,7 +12,7 @@ from cli.shared.utils.model import create_model
 logger = logging.getLogger(__name__)
 
 
-class CLIAdversarialEvaluator():
+class CLIAdversarialEvaluator:
     """
     Base class for the adversarial evaluation CLI.
     """
@@ -41,13 +41,15 @@ class CLIAdversarialEvaluator():
         attack_name = self.config.evaluation_config.attack.name.upper()
         attack_config = self.config.evaluation_config.attack.config
         target_models = self._prepare_target_models()
-        cli_attack(attack_name,
-                   attack_config,
-                   target_models=target_models,
-                   evaluators=self.config.evaluation_config.evaluators)
+        cli_attack(
+            attack_name,
+            attack_config,
+            target_models=target_models,
+            evaluators=self.config.evaluation_config.evaluators,
+        )
 
     def _prepare_target_models(self) -> List[BaseModel]:
-        """ 
+        """
         Prepare the models that will be used as the target models for the transferability evaluation.
 
         Returns:
@@ -55,17 +57,19 @@ class CLIAdversarialEvaluator():
 
         """
 
-        if not self.config.evaluation_config.target_models or not any(self.config.evaluation_config.target_models):
+        if not self.config.evaluation_config.target_models or not any(
+            self.config.evaluation_config.target_models
+        ):
             return []
 
         # Load and initialize each model based on its configuration
         models = [
             create_model(
                 load_and_instantiate_config(
-                    config=model_config.get('config'),
+                    config=model_config.get("config"),
                     default_config_file="model_config.yml",
                     config_type=ConfigType.MODEL,
-                    config_class=ModelCliConfigType
+                    config_class=ModelCliConfigType,
                 )
             )
             for model_config in self.config.evaluation_config.target_models

@@ -9,6 +9,7 @@ class IntListParamType(click.ParamType):
     """
     Custom parameter type for a list of integers using the click library.
     """
+
     name = "intlist"
 
     def convert(self, value, param, ctx):
@@ -16,7 +17,7 @@ class IntListParamType(click.ParamType):
         Convert the value to a list of integers.
         """
         try:
-            return [int(i) for i in value.split(',')]
+            return [int(i) for i in value.split(",")]
         except ValueError:
             self.fail(f"{value} is not a valid list of integers", param, ctx)
 
@@ -25,29 +26,118 @@ INT_LIST = IntListParamType()
 
 
 @click.command()
-@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the training configuration yml file.')
-@click.option('-m', '--model-name', default=None, help='Name of the model to train (e.g. "resnet18").')
-@click.option('-d', '--dataset-name', default=None, help='Name of the dataset to train on (e.g. "cifar10").')
-@click.option('-e', '--epochs', default=None, type=click.INT, help='Number of epochs to train for. Defaults to 1.')
-@click.option('-b', '--batch-size', default=None, type=click.INT, help='Batch size for training.')
-@click.option('--lr', default=None, type=click.FLOAT, help='Learning rate for training.')
-@click.option('--optimizer', default=None, help='Optimizer to use for training.')
-@click.option('--loss', default=None, help='Loss function to use for training.')
+@click.option(
+    "-c",
+    "--config",
+    type=click.Path(exists=True),
+    default=None,
+    help="Path to the training configuration yml file.",
+)
+@click.option(
+    "-m",
+    "--model-name",
+    default=None,
+    help='Name of the model to train (e.g. "resnet18").',
+)
+@click.option(
+    "-d",
+    "--dataset-name",
+    default=None,
+    help='Name of the dataset to train on (e.g. "cifar10").',
+)
+@click.option(
+    "-e",
+    "--epochs",
+    default=None,
+    type=click.INT,
+    help="Number of epochs to train for. Defaults to 1.",
+)
+@click.option(
+    "-b", "--batch-size", default=None, type=click.INT, help="Batch size for training."
+)
+@click.option(
+    "--lr", default=None, type=click.FLOAT, help="Learning rate for training."
+)
+@click.option("--optimizer", default=None, help="Optimizer to use for training.")
+@click.option("--loss", default=None, help="Loss function to use for training.")
 # @click.option('--optimizer', default=None, help='Optimizer to use for training. Available options: ' + ', '.join([e.name for e in Optimizer]))
 # @click.option('--loss', default=None, help='Loss function to use for training. Available options: ' + ', '.join([e.name for e in Loss]))
-@click.option('-s', '--save', type=click.BOOL, is_flag=True, default=None, help='Whether to save the model after training. Defaults to False.')
-@click.option('--save-path', default=None, help='The directory to save the model to. If not specified, defaults to the weights directory.')
-@click.option('--save-name', default=None, help='The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.')
-@click.option('-p', '--processor', default=None, help='The processor to train on. Defaults to CPU')
-@click.option('--save-checkpoint', type=click.BOOL, is_flag=True, default=None, help='Whether to save model checkpoints during training. Defaults to False.')
-@click.option('--checkpoint_interval', default=None, type=click.INT, help='The interval at which to save model checkpoints. Defaults to 1.')
-@click.option('--save-checkpoint-path', default=None, help='The directory to save model checkpoints to. If not specified, defaults to the checkpoints directory.')
-@click.option('--save-checkpoint-name', default=None, help='The name to save the model checkpoints as. If not specified, defaults to the {model_name}_{dataset_name}_checkpoint_{epoch}.pth.')
-@click.option('--load-checkpoint', type=click.BOOL, is_flag=True, default=None, help='Whether to load model checkpoints before training. Defaults to False.')
-@click.option('--load-checkpoint-path', default=None, help='The file path to load model checkpoint.')
-@click.option('--use-ddp', type=click.BOOL, is_flag=True, default=None, help='Whether to use DistributedDataParallel for training. Defaults to False.')
-@click.option('--gpu-ids', default=None, type=INT_LIST, help='Comma-separated list of GPU ids to use for training. Defaults to all available GPUs. E.g., 0,1,2,3')
-@click.option('--pin-memory', type=click.BOOL, is_flag=True, default=None, help='Whether to pin memory for training. Defaults to False.')
+@click.option(
+    "-s",
+    "--save",
+    type=click.BOOL,
+    is_flag=True,
+    default=None,
+    help="Whether to save the model after training. Defaults to False.",
+)
+@click.option(
+    "--save-path",
+    default=None,
+    help="The directory to save the model to. If not specified, defaults to the weights directory.",
+)
+@click.option(
+    "--save-name",
+    default=None,
+    help="The name to save the model as. If not specified, defaults to the {model_name}_{dataset_name}_weights.pth.",
+)
+@click.option(
+    "-p", "--processor", default=None, help="The processor to train on. Defaults to CPU"
+)
+@click.option(
+    "--save-checkpoint",
+    type=click.BOOL,
+    is_flag=True,
+    default=None,
+    help="Whether to save model checkpoints during training. Defaults to False.",
+)
+@click.option(
+    "--checkpoint_interval",
+    default=None,
+    type=click.INT,
+    help="The interval at which to save model checkpoints. Defaults to 1.",
+)
+@click.option(
+    "--save-checkpoint-path",
+    default=None,
+    help="The directory to save model checkpoints to. If not specified, defaults to the checkpoints directory.",
+)
+@click.option(
+    "--save-checkpoint-name",
+    default=None,
+    help="The name to save the model checkpoints as. If not specified, defaults to the {model_name}_{dataset_name}_checkpoint_{epoch}.pth.",
+)
+@click.option(
+    "--load-checkpoint",
+    type=click.BOOL,
+    is_flag=True,
+    default=None,
+    help="Whether to load model checkpoints before training. Defaults to False.",
+)
+@click.option(
+    "--load-checkpoint-path",
+    default=None,
+    help="The file path to load model checkpoint.",
+)
+@click.option(
+    "--use-ddp",
+    type=click.BOOL,
+    is_flag=True,
+    default=None,
+    help="Whether to use DistributedDataParallel for training. Defaults to False.",
+)
+@click.option(
+    "--gpu-ids",
+    default=None,
+    type=INT_LIST,
+    help="Comma-separated list of GPU ids to use for training. Defaults to all available GPUs. E.g., 0,1,2,3",
+)
+@click.option(
+    "--pin-memory",
+    type=click.BOOL,
+    is_flag=True,
+    default=None,
+    help="Whether to pin memory for training. Defaults to False.",
+)
 def train(config: str, **kwargs):
     """Command to train a model.
 

@@ -1,8 +1,7 @@
 import logging
 
 from advsecurenet.shared.types.configs import ConfigType
-from cli.logic.defense.adversarial_training.adversarial_training_cli import \
-    ATCLITrainer
+from cli.logic.defense.adversarial_training.adversarial_training_cli import ATCLITrainer
 from cli.shared.types.defense.adversarial_training import ATCliConfigType
 from cli.shared.utils.config import load_and_instantiate_config
 

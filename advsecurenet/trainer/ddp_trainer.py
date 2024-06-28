@@ -26,12 +26,7 @@ class DDPTrainer(DDPBaseTask, Trainer):
     def __init__(self, config: TrainConfig, rank: int, world_size: int) -> None:
         self._rank = rank
         self._world_size = world_size
-        DDPBaseTask.__init__(
-            self,
-            model=config.model,
-            rank=rank,
-            world_size=world_size
-        )
+        DDPBaseTask.__init__(self, model=config.model, rank=rank, world_size=world_size)
         Trainer.__init__(self, config)
 
     def _load_model_state_dict(self, state_dict):
@@ -72,9 +67,14 @@ class DDPTrainer(DDPBaseTask, Trainer):
         Args:
             epoch (int): The current epoch.
         Returns:
-            bool: True if a checkpoint should be saved, False otherwise.  
+            bool: True if a checkpoint should be saved, False otherwise.
         """
-        return self._rank == 0 and self._config.save_checkpoint and self._config.checkpoint_interval > 0 and epoch % self._config.checkpoint_interval == 0
+        return (
+            self._rank == 0
+            and self._config.save_checkpoint
+            and self._config.checkpoint_interval > 0
+            and epoch % self._config.checkpoint_interval == 0
+        )
 
     def _should_save_final_model(self) -> bool:
         """
@@ -91,18 +91,17 @@ class DDPTrainer(DDPBaseTask, Trainer):
         total_loss = 0.0
         sampler = self._config.train_loader.sampler
         assert isinstance(
-            sampler, DistributedSampler), "Sampler must be of type DistributedSampler"
+            sampler, DistributedSampler
+        ), "Sampler must be of type DistributedSampler"
         sampler.set_epoch(epoch)
 
         if self._rank == 0:
             # Only initialize tqdm in the master process
-            data_iterator = tqdm(self._config.train_loader,
-                                 leave=False, position=1)
+            data_iterator = tqdm(self._config.train_loader, leave=False, position=1)
         else:
             data_iterator = self._config.train_loader
         for source, targets in data_iterator:
-            source, targets = source.to(
-                self._device), targets.to(self._device)
+            source, targets = source.to(self._device), targets.to(self._device)
             loss = self._run_batch(source, targets)
             total_loss += loss
 

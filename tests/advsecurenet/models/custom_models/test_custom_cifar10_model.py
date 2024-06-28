@@ -2,8 +2,7 @@ import pytest
 import torch
 import torch.nn as nn
 
-from advsecurenet.models.CustomModels.CustomCifar10Model import \
-    CustomCifar10Model
+from advsecurenet.models.CustomModels.CustomCifar10Model import CustomCifar10Model
 
 
 @pytest.mark.advsecurenet

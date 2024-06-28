@@ -1,2 +1,1 @@
-from advsecurenet.datasets.MNIST.mnist_dataset import (FashionMNISTDataset,
-                                                       MNISTDataset)
+from advsecurenet.datasets.MNIST.mnist_dataset import FashionMNISTDataset, MNISTDataset

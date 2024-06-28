@@ -40,10 +40,12 @@ class PerturbationEffectivenessEvaluator(BaseEvaluator):
         except ZeroDivisionError:
             return 0
 
-    def calculate_perturbation_effectiveness_score(self, attack_success_rate: float, perturbation_distance: float) -> float:
-        """ 
-        Calculates the perturbation effectiveness score for the attack. The effectiveness score is the attack success rate divided by the perturbation distance. The higher the score, the more effective the attack. 
-        The purpose of this metric is to distinguish between attacks that have a high success rate but require a large perturbation magnitude, 
+    def calculate_perturbation_effectiveness_score(
+        self, attack_success_rate: float, perturbation_distance: float
+    ) -> float:
+        """
+        Calculates the perturbation effectiveness score for the attack. The effectiveness score is the attack success rate divided by the perturbation distance. The higher the score, the more effective the attack.
+        The purpose of this metric is to distinguish between attacks that have a high success rate but require a large perturbation magnitude,
         and attacks that have a lower success rate but require a smaller perturbation magnitude.
         Args:
             attack_success_rate (float): The attack success rate.

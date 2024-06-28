@@ -25,9 +25,7 @@ class AdversarialEvaluator(BaseEvaluator):
 
     """
 
-    def __init__(self,
-                 evaluators: Optional[list[str]] = None,
-                 **kwargs):
+    def __init__(self, evaluators: Optional[list[str]] = None, **kwargs):
         self.kwargs = kwargs
 
         # Dictionary to store evaluator instances
@@ -36,14 +34,14 @@ class AdversarialEvaluator(BaseEvaluator):
         # update target models for transferability evaluator
         if "transferability" in self.evaluators:
             self.evaluators["transferability"].target_models = kwargs.get(
-                "target_models", [])
+                "target_models", []
+            )
 
         # Filter evaluators based on the provided list
         if evaluators is None:
             self.selected_evaluators = self.evaluators
         else:
-            self.selected_evaluators = {
-                key: self.evaluators[key] for key in evaluators}
+            self.selected_evaluators = {key: self.evaluators[key] for key in evaluators}
 
     def reset(self):
         """
@@ -52,15 +50,17 @@ class AdversarialEvaluator(BaseEvaluator):
         for key in self.selected_evaluators:
             self.evaluators[key].reset()
 
-    def update(self,
-               model: BaseModel,
-               original_images: torch.Tensor,
-               true_labels: torch.Tensor,
-               adversarial_images: torch.Tensor,
-               is_targeted: bool = False,
-               target_labels: Optional[torch.Tensor] = None) -> None:
+    def update(
+        self,
+        model: BaseModel,
+        original_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+        is_targeted: bool = False,
+        target_labels: Optional[torch.Tensor] = None,
+    ) -> None:
         """
-        Updates the evaluator with new data for streaming mode. 
+        Updates the evaluator with new data for streaming mode.
         Args:
             model (BaseModel): The model to evaluate.
             original_images (torch.Tensor): The original images.
@@ -75,9 +75,21 @@ class AdversarialEvaluator(BaseEvaluator):
         evaluators_to_update = {
             "similarity": [original_images, adversarial_images],
             "robustness_gap": [model, original_images, true_labels, adversarial_images],
-            "attack_success_rate": [model, original_images, true_labels, adversarial_images, is_targeted, target_labels],
+            "attack_success_rate": [
+                model,
+                original_images,
+                true_labels,
+                adversarial_images,
+                is_targeted,
+                target_labels,
+            ],
             "perturbation_distance": [original_images, adversarial_images],
-            "transferability": [model, original_images, true_labels, adversarial_images]
+            "transferability": [
+                model,
+                original_images,
+                true_labels,
+                adversarial_images,
+            ],
         }
 
         for evaluator, args in evaluators_to_update.items():
@@ -87,8 +99,7 @@ class AdversarialEvaluator(BaseEvaluator):
         if "perturbation_effectiveness" in self.selected_evaluators:
             asr = self.evaluators["attack_success_rate"].get_results()
             distance_metric = self.kwargs.get("distance_metric", "L0")
-            pd = self.evaluators["perturbation_distance"].get_results()[
-                distance_metric]
+            pd = self.evaluators["perturbation_distance"].get_results()[distance_metric]
             self.evaluators["perturbation_effectiveness"].update(asr, pd)
 
     def get_results(self) -> dict:

@@ -8,5 +8,6 @@ class AttackConfig:
     """
     This dataclass is used to store the base configuration of the attacks.
     """
+
     device: DeviceConfig = field(default_factory=DeviceConfig)
     targeted: bool = False

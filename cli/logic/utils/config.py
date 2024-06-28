@@ -9,8 +9,7 @@ from typing import Optional
 
 import click
 
-from cli.shared.utils.config import (generate_default_config_yaml,
-                                     get_available_configs)
+from cli.shared.utils.config import generate_default_config_yaml, get_available_configs
 
 
 def cli_configs():
@@ -26,30 +25,36 @@ def cli_configs():
     # Group configurations by title and description
     grouped_configs = defaultdict(list)
     for config in config_list:
-        grouped_configs[(config['title'], config['description'])
-                        ].append(config['config_file'])
+        grouped_configs[(config["title"], config["description"])].append(
+            config["config_file"]
+        )
     # Add an additional space at the beginning for better readability
     click.echo("")
     click.secho("Available configuration files:\n", bold=True, fg="magenta")
-    for idx, ((title, description), config_files) in enumerate(grouped_configs.items(), start=1):
+    for idx, ((title, description), config_files) in enumerate(
+        grouped_configs.items(), start=1
+    ):
         click.secho(f"{idx}. Title: {title} ", bold=True, fg="blue")
         click.secho(
-            f"   Description: {description if description else 'No description available.'}", fg="green")
+            f"   Description: {description if description else 'No description available.'}",
+            fg="green",
+        )
         click.secho("   Config Files:", fg="red", bold=True)
         for file_idx, file in enumerate(config_files, start=1):
             click.secho(f"       {file_idx}. {file}")
         # Separator for better visual distinction between categories
-        click.secho("\n" + "="*60 + "\n", bold=True, fg="cyan")
+        click.secho("\n" + "=" * 60 + "\n", bold=True, fg="cyan")
 
     # Adds an additional space at the end for better readability
     click.echo("")
 
 
-def cli_config_default(config_name: str,
-                       save: Optional[bool] = False,
-                       print_output: Optional[bool] = False,
-                       output_path: Optional[str] = None
-                       ):
+def cli_config_default(
+    config_name: str,
+    save: Optional[bool] = False,
+    print_output: Optional[bool] = False,
+    output_path: Optional[str] = None,
+):
     """
     Save or print default configuration file.
 
@@ -65,7 +70,9 @@ def cli_config_default(config_name: str,
 
     if not save and not print_output:
         click.secho(
-            "Please provide either the --save or --print-output flag to save or print the configuration file!", fg="red")
+            "Please provide either the --save or --print-output flag to save or print the configuration file!",
+            fg="red",
+        )
         return
 
     if config_name is None:
@@ -76,21 +83,29 @@ def cli_config_default(config_name: str,
 
     try:
         default_config = generate_default_config_yaml(
-            config_name, output_path, save=save)
+            config_name, output_path, save=save
+        )
 
         if print_output:
-            click.secho("*"*50, fg='blue', bold=True)
+            click.secho("*" * 50, fg="blue", bold=True)
             click.secho(
-                f"Default configuration file for the {config_name}:\n", fg='red', bold=True)
+                f"Default configuration file for the {config_name}:\n",
+                fg="red",
+                bold=True,
+            )
             formatted_config = json.dumps(default_config, indent=4)
 
-            click.secho(formatted_config, fg='green')
-            click.secho("*"*50, fg='blue', bold=True)
+            click.secho(formatted_config, fg="green")
+            click.secho("*" * 50, fg="blue", bold=True)
         if save:
             click.echo(f"Generated default configuration file {config_name}!")
     except FileNotFoundError:
         click.echo(
-            f"Configuration file {config_name} not found! You can use the 'configs' command to list available configuration files.", err=True)
+            f"Configuration file {config_name} not found! You can use the 'configs' command to list available configuration files.",
+            err=True,
+        )
     except Exception as e:
         click.echo(
-            f"Error generating default configuration file {config_name}! Details: {e}", err=True)
+            f"Error generating default configuration file {config_name}! Details: {e}",
+            err=True,
+        )

@@ -36,13 +36,15 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
             return self.total_successful_attacks / self.total_samples
         return 0.0
 
-    def update(self,
-               model: BaseModel,
-               original_images: torch.Tensor,
-               true_labels: torch.Tensor,
-               adversarial_images: torch.Tensor,
-               is_targeted: Optional[bool] = False,
-               target_labels: Optional[torch.Tensor] = None):
+    def update(
+        self,
+        model: BaseModel,
+        original_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+        is_targeted: Optional[bool] = False,
+        target_labels: Optional[torch.Tensor] = None,
+    ):
         """
         Updates the evaluator with new data for streaming mode.
 
@@ -62,14 +64,18 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
 
         clean_prediction_labels = self._predict(model, original_images)
         correct_initial_predictions_mask = self._get_correct_predictions_mask(
-            clean_prediction_labels, true_labels)
+            clean_prediction_labels, true_labels
+        )
         total_correct_initial = correct_initial_predictions_mask.sum().item()
         # If there are no correct initial predictions, no need to evaluate
         if total_correct_initial == 0:
             return
 
-        correct_true_labels, correct_adversarial_images = self._filter_correct_predictions(
-            correct_initial_predictions_mask, true_labels, adversarial_images)
+        correct_true_labels, correct_adversarial_images = (
+            self._filter_correct_predictions(
+                correct_initial_predictions_mask, true_labels, adversarial_images
+            )
+        )
 
         if is_targeted:
             self._validate_targeted_attack(target_labels)
@@ -78,14 +84,16 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         adversarial_labels = self._predict(model, correct_adversarial_images)
 
         successful_attacks = self._calculate_success(
-            adversarial_labels, correct_true_labels, is_targeted, correct_target_labels if is_targeted else None)
+            adversarial_labels,
+            correct_true_labels,
+            is_targeted,
+            correct_target_labels if is_targeted else None,
+        )
 
         self._update_metrics(successful_attacks, total_correct_initial)
 
-    def _predict(self,
-                 model: BaseModel,
-                 images: torch.Tensor) -> torch.Tensor:
-        """ 
+    def _predict(self, model: BaseModel, images: torch.Tensor) -> torch.Tensor:
+        """
         Predicts the labels for the given images using the model.
 
         Args:
@@ -99,7 +107,9 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         prediction_labels = torch.argmax(predictions, dim=1)
         return prediction_labels
 
-    def _get_correct_predictions_mask(self, prediction_labels: torch.Tensor, true_labels: torch.Tensor) -> torch.Tensor:
+    def _get_correct_predictions_mask(
+        self, prediction_labels: torch.Tensor, true_labels: torch.Tensor
+    ) -> torch.Tensor:
         """
         Returns a mask for the samples where the model's initial prediction is correct. The mask is True for correct predictions and False for incorrect predictions.
 
@@ -112,9 +122,14 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         """
         return prediction_labels == true_labels
 
-    def _filter_correct_predictions(self, mask: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def _filter_correct_predictions(
+        self,
+        mask: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Filters the correct predictions from the given samples using the mask. 
+        Filters the correct predictions from the given samples using the mask.
 
         Args:
             mask (torch.Tensor): A mask for the samples where the model's initial prediction is correct.
@@ -129,7 +144,7 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         return correct_true_labels, correct_adversarial_images
 
     def _validate_targeted_attack(self, target_labels: Optional[torch.Tensor]) -> None:
-        """ 
+        """
         Validates if the target labels are provided for targeted attacks.
 
         Args:
@@ -139,11 +154,16 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
             ValueError: If the target labels are not provided for targeted attacks.
         """
         if target_labels is None:
-            raise ValueError(
-                "Target labels must be provided for targeted attacks.")
+            raise ValueError("Target labels must be provided for targeted attacks.")
 
-    def _calculate_success(self, adversarial_labels: torch.Tensor, true_labels: torch.Tensor, is_targeted: Optional[bool] = False, target_labels: Optional[torch.Tensor] = None) -> torch.Tensor:
-        """ 
+    def _calculate_success(
+        self,
+        adversarial_labels: torch.Tensor,
+        true_labels: torch.Tensor,
+        is_targeted: Optional[bool] = False,
+        target_labels: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        """
         Calculates the number of successful attacks. If the attack is targeted, the function calculates the number of samples where the adversarial labels are equal to the target labels. If the attack is untargeted, the function calculates the number of samples where the adversarial labels are not equal to the true labels.
 
         Args:
@@ -160,8 +180,10 @@ class AttackSuccessRateEvaluator(BaseEvaluator):
         else:
             return torch.sum(adversarial_labels != true_labels, dtype=torch.int)
 
-    def _update_metrics(self, successful_attacks: torch.Tensor, total_correct_initial: int) -> None:
-        """ 
+    def _update_metrics(
+        self, successful_attacks: torch.Tensor, total_correct_initial: int
+    ) -> None:
+        """
         Update the evaluator metrics with the results of the current batch.
 
         Args:

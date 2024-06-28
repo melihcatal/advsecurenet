@@ -8,11 +8,11 @@ from tqdm.auto import tqdm
 from advsecurenet.attacks import AdversarialAttack
 from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
-    AdversarialTrainingConfig
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import (
+    AdversarialTrainingConfig,
+)
 from advsecurenet.trainer.trainer import Trainer
-from advsecurenet.utils.adversarial_target_generator import \
-    AdversarialTargetGenerator
+from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 
 
 class AdversarialTraining(Trainer):
@@ -32,7 +32,9 @@ class AdversarialTraining(Trainer):
 
     # Helper function to shuffle the combined clean and adversarial data
 
-    def _shuffle_data(self, data: torch.Tensor, target: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    def _shuffle_data(
+        self, data: torch.Tensor, target: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         permutation = torch.randperm(data.size(0))
         return data[permutation], target[permutation]
 
@@ -43,30 +45,43 @@ class AdversarialTraining(Trainer):
         if not all(isinstance(model, BaseModel) for model in config.models):
             raise ValueError("All models must be a subclass of BaseModel!")
         if not all(isinstance(attack, AdversarialAttack) for attack in config.attacks):
-            raise ValueError(
-                "All attacks must be a subclass of AdversarialAttack!")
+            raise ValueError("All attacks must be a subclass of AdversarialAttack!")
         if not isinstance(config.train_loader, DataLoader):
             raise ValueError("train_dataloader must be a DataLoader!")
 
         # check if any of the attacks are targeted and if so, check if the dataloader dataset is an instance of AdversarialDataset
-        if any(attack.targeted for attack in config.attacks) and not isinstance(config.train_loader.dataset, AdversarialDataset):
+        if any(attack.targeted for attack in config.attacks) and not isinstance(
+            config.train_loader.dataset, AdversarialDataset
+        ):
             raise ValueError(
                 "If any of the attacks are targeted, the train_loader dataset must be an instance of AdversarialDataset!"
             )
         # if any of the attacks is LOTS, check if the dataset contains target images and target labels
-        if any(attack.name == "LOTS" for attack in config.attacks) and not isinstance(config.train_loader.dataset, AdversarialDataset) and len(config.train_loader) != 4:
+        if (
+            any(attack.name == "LOTS" for attack in config.attacks)
+            and not isinstance(config.train_loader.dataset, AdversarialDataset)
+            and len(config.train_loader) != 4
+        ):
             raise ValueError(
                 "If the LOTS attack is used, the train_loader dataset must be an instance of AdversarialDataset and must contain target images and target labels!"
             )
 
-    def _combine_clean_and_adversarial_data(self, images: torch.Tensor, adv_source: torch.Tensor, true_labels: torch.Tensor, adv_targets: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    def _combine_clean_and_adversarial_data(
+        self,
+        images: torch.Tensor,
+        adv_source: torch.Tensor,
+        true_labels: torch.Tensor,
+        adv_targets: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         # make sure that images and adv_source have the same shape and same normalization
-        assert images.shape == adv_source.shape, "images and adv_source must have the same shape"
+        assert (
+            images.shape == adv_source.shape
+        ), "images and adv_source must have the same shape"
 
         # Combine clean and adversarial examples
         combined_data, combined_target = self._shuffle_data(
             torch.cat([images, adv_source], dim=0),
-            torch.cat([true_labels, adv_targets], dim=0)
+            torch.cat([true_labels, adv_targets], dim=0),
         )
         return combined_data, combined_target
 
@@ -79,8 +94,7 @@ class AdversarialTraining(Trainer):
         self.config.models = [model.train() for model in self.config.models]
 
         # move each model to device
-        self.config.models = [model.to(self._device)
-                              for model in self.config.models]
+        self.config.models = [model.to(self._device) for model in self.config.models]
 
     def _generate_adversarial_batch(
         self,
@@ -112,10 +126,17 @@ class AdversarialTraining(Trainer):
         random_model.eval()
 
         attack_result = self._perform_attack(
-            random_attack, random_model, images, true_labels, target_images, target_labels
+            random_attack,
+            random_model,
+            images,
+            true_labels,
+            target_images,
+            target_labels,
         )
 
-        assert attack_result.shape == images.shape, "adversarial image and the clean image must have the same shape"
+        assert (
+            attack_result.shape == images.shape
+        ), "adversarial image and the clean image must have the same shape"
 
         adv_source.append(attack_result)
         adv_targets.append(true_labels)
@@ -129,14 +150,15 @@ class AdversarialTraining(Trainer):
     def _move_to_device(self, images, true_labels):
         return images.to(self._device), true_labels.to(self._device)
 
-    def _perform_attack(self,
-                        attack: AdversarialAttack,
-                        model: BaseModel,
-                        images: torch.Tensor,
-                        true_labels: torch.Tensor,
-                        target_images: Optional[torch.Tensor] = None,
-                        target_labels: Optional[torch.Tensor] = None
-                        ) -> torch.Tensor:
+    def _perform_attack(
+        self,
+        attack: AdversarialAttack,
+        model: BaseModel,
+        images: torch.Tensor,
+        true_labels: torch.Tensor,
+        target_images: Optional[torch.Tensor] = None,
+        target_labels: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
         """
         Performs the attack on the specified model and input.
 
@@ -178,7 +200,8 @@ class AdversarialTraining(Trainer):
             if len(data) == 4:
                 images, true_labels, target_images, target_labels = data
                 images, true_labels, target_images, target_labels = self._prepare_data(
-                    images, true_labels, target_images, target_labels)
+                    images, true_labels, target_images, target_labels
+                )
 
             else:
                 images, true_labels = data
@@ -187,14 +210,9 @@ class AdversarialTraining(Trainer):
                 images, true_labels = self._prepare_data(images, true_labels)
 
             adv_source, adv_targets = self._generate_adversarial_batch(
-                images,
-                true_labels,
-                target_images,
-                target_labels
-
+                images, true_labels, target_images, target_labels
             )
-            adv_source, adv_targets = self._prepare_data(
-                adv_source, adv_targets)
+            adv_source, adv_targets = self._prepare_data(adv_source, adv_targets)
 
             combined_data, combined_targets = self._combine_clean_and_adversarial_data(
                 images, adv_source, true_labels, adv_targets
@@ -207,12 +225,14 @@ class AdversarialTraining(Trainer):
         self._log_loss(epoch, total_loss)
 
     def _get_train_loader(self, epoch: int):
-        return tqdm(self.config.train_loader,
-                    desc="Adversarial Training",
-                    leave=False,
-                    position=1,
-                    unit="batch",
-                    colour="blue")
+        return tqdm(
+            self.config.train_loader,
+            desc="Adversarial Training",
+            leave=False,
+            position=1,
+            unit="batch",
+            colour="blue",
+        )
 
     def _prepare_data(self, *args):
         """

@@ -11,6 +11,7 @@ class DataLoaderConfig:
     """
     This dataclass is used to store the configuration of the data loader.
     """
+
     dataset: BaseDataset
     batch_size: Optional[int] = 16
     num_workers: Optional[int] = 4

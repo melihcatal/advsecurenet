@@ -34,7 +34,7 @@ def cli_attack(attack_name: str, config: str, **kwargs) -> None:
         default_config_file=f"{attack_name.lower()}_attack_config.yml",
         config_type=ConfigType.ATTACK,
         config_class=attack_config_class,
-        **kwargs
+        **kwargs,
     )
     logger.info("Loaded attack configuration: %s", config_data)
     try:

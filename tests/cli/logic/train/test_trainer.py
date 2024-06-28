@@ -30,7 +30,12 @@ def test_cli_trainer_init(mock_prepare_dataset, mock_create_model, mock_get_data
 @patch("cli.logic.train.trainer.set_visible_gpus")
 @patch("cli.logic.train.trainer.DDPCoordinator")
 @patch("cli.logic.train.trainer.DDPTrainer")
-def test_cli_trainer_execute_ddp_training(mock_ddp_trainer, mock_ddp_training_coordinator, mock_set_visible_gpus, mock_prepare_dataset):
+def test_cli_trainer_execute_ddp_training(
+    mock_ddp_trainer,
+    mock_ddp_training_coordinator,
+    mock_set_visible_gpus,
+    mock_prepare_dataset,
+):
     # Setup
     mock_config = MagicMock()
     mock_config.device.use_ddp = True
@@ -45,17 +50,21 @@ def test_cli_trainer_execute_ddp_training(mock_ddp_trainer, mock_ddp_training_co
 
     # Verify
     mock_set_visible_gpus.assert_called_once_with([0, 1])
-    mock_ddp_training_coordinator.assert_called_once_with(
-        trainer._ddp_training_fn, 2)
+    mock_ddp_training_coordinator.assert_called_once_with(trainer._ddp_training_fn, 2)
     mock_ddp_training_coordinator.return_value.run.assert_called_once()
 
 
 @pytest.mark.cli
 @pytest.mark.essential
-@patch("cli.logic.train.trainer.CLITrainer._prepare_training_environment", return_value=MagicMock(spec=TrainingCliConfigType))
+@patch(
+    "cli.logic.train.trainer.CLITrainer._prepare_training_environment",
+    return_value=MagicMock(spec=TrainingCliConfigType),
+)
 @patch("cli.logic.train.trainer.CLITrainer._prepare_dataset", return_value=MagicMock())
 @patch("cli.logic.train.trainer.Trainer")
-def test_cli_trainer_execute_training(mock_trainer, mock_prepare_dataset, mock_prepare_training_environment):
+def test_cli_trainer_execute_training(
+    mock_trainer, mock_prepare_dataset, mock_prepare_training_environment
+):
     # Setup
     mock_config = MagicMock()
     mock_config.device.use_ddp = False
@@ -63,8 +72,7 @@ def test_cli_trainer_execute_training(mock_trainer, mock_prepare_dataset, mock_p
 
     # Mock methods
     mock_train_config = MagicMock()
-    trainer._prepare_training_environment = MagicMock(
-        return_value=mock_train_config)
+    trainer._prepare_training_environment = MagicMock(return_value=mock_train_config)
 
     # Execute training
     trainer._execute_training()
@@ -108,8 +116,8 @@ def test_cli_trainer_prepare_dataloader(mock_get_datasets, mock_get_dataloader):
     mock_get_dataloader.assert_called_once_with(
         config=mock_config.dataloader,
         dataset=mock_train_data,
-        dataset_type='train',
-        use_ddp=mock_config.device.use_ddp
+        dataset_type="train",
+        use_ddp=mock_config.device.use_ddp,
     )
     assert dataloader == mock_get_dataloader.return_value
 
@@ -125,8 +133,7 @@ def test_cli_trainer_ddp_training_fn(mock_ddp_trainer, mock_prepare_dataset):
 
     # Mock methods
     mock_train_config = MagicMock()
-    trainer._prepare_training_environment = MagicMock(
-        return_value=mock_train_config)
+    trainer._prepare_training_environment = MagicMock(return_value=mock_train_config)
 
     # Execute
     trainer._ddp_training_fn(0, 2)
@@ -146,8 +153,7 @@ def test_cli_trainer_execute_with_exception(mock_prepare_dataset):
     trainer = CLITrainer(mock_config)
 
     # Mock methods
-    trainer._execute_training = MagicMock(
-        side_effect=Exception("Training error"))
+    trainer._execute_training = MagicMock(side_effect=Exception("Training error"))
 
     # Execute and verify exception
     with pytest.raises(Exception, match="Training error"):

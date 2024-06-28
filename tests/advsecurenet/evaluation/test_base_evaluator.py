@@ -29,7 +29,15 @@ class ConcreteEvaluator(BaseEvaluator):
     def reset(self):
         self.results = []
 
-    def update(self, model, original_images, true_labels, adversarial_images, is_targeted=False, target_labels=None):
+    def update(
+        self,
+        model,
+        original_images,
+        true_labels,
+        adversarial_images,
+        is_targeted=False,
+        target_labels=None,
+    ):
         self.results.append((original_images, adversarial_images))
 
     def get_results(self):
@@ -78,24 +86,26 @@ def test_save_results_to_csv(mock_makedirs, mock_open, evaluator):
     path = "test_dir"
     file_name = "test_file.csv"
 
-    evaluator.save_results_to_csv(
-        evaluation_results, experiment_info, path, file_name)
+    evaluator.save_results_to_csv(evaluation_results, experiment_info, path, file_name)
 
     mock_makedirs.assert_called_once_with(path, exist_ok=True)
-    mock_open.assert_called_once_with(os.path.join(
-        path, file_name), mode='a', newline='', encoding='utf-8')
+    mock_open.assert_called_once_with(
+        os.path.join(path, file_name), mode="a", newline="", encoding="utf-8"
+    )
 
     handle = mock_open()
     writer = csv.writer(handle)
 
     writer.writerow.assert_any_call(
-        ["Experiment conducted on " + datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
+        ["Experiment conducted on " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")]
+    )
     for key, value in experiment_info.items():
         writer.writerow.assert_any_call([key, value])
     writer.writerow.assert_any_call(["-" * 10, "-" * 10])
     writer.writerow.assert_any_call(list(evaluation_results.keys()))
-    writer.writerow.assert_any_call([str(value)
-                                    for value in evaluation_results.values()])
+    writer.writerow.assert_any_call(
+        [str(value) for value in evaluation_results.values()]
+    )
 
 
 @pytest.mark.advsecurenet
@@ -106,9 +116,8 @@ def test_save_results_to_csv(mock_makedirs, mock_open, evaluator):
     evaluation_results = {"accuracy": 0.95, "robustness": 0.85}
     evaluator.save_results_to_csv(evaluation_results)
 
-    file_name = datetime.now().strftime('%Y%m%d_%H%M%S') + "_experiment.csv"
-    mock_open.assert_called_once_with(
-        file_name, mode='a', newline='', encoding='utf-8')
+    file_name = datetime.now().strftime("%Y%m%d_%H%M%S") + "_experiment.csv"
+    mock_open.assert_called_once_with(file_name, mode="a", newline="", encoding="utf-8")
 
 
 @pytest.mark.advsecurenet

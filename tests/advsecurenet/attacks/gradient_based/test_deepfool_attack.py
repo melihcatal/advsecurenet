@@ -3,18 +3,17 @@ import torch
 from torch import nn
 
 from advsecurenet.attacks import DeepFool
-from advsecurenet.shared.types.configs.attack_configs import \
-    DeepFoolAttackConfig
+from advsecurenet.shared.types.configs.attack_configs import DeepFoolAttackConfig
 from advsecurenet.shared.types.configs.device_config import DeviceConfig
 
 
 class SimpleModel(nn.Module):
     def __init__(self):
         super(SimpleModel, self).__init__()
-        self.fc = nn.Linear(28*28, 10)
+        self.fc = nn.Linear(28 * 28, 10)
 
     def forward(self, x):
-        return self.fc(x.view(-1, 28*28))
+        return self.fc(x.view(-1, 28 * 28))
 
 
 @pytest.fixture
@@ -66,9 +65,9 @@ def test_deepfool_device_configuration_cpu():
 def test_deepfool_attack_outcome(mock_model, setup_attack):
     attack = DeepFool(setup_attack)
     sample_image = torch.rand(
-        (1, 1, 28, 28), requires_grad=True, device=attack.device_manager.initial_device)
-    sample_label = torch.tensor(
-        [7], device=attack.device_manager.initial_device)
+        (1, 1, 28, 28), requires_grad=True, device=attack.device_manager.initial_device
+    )
+    sample_label = torch.tensor([7], device=attack.device_manager.initial_device)
     x_adv = attack.attack(mock_model, sample_image, sample_label)
     assert not torch.equal(x_adv, sample_image)
 
@@ -79,9 +78,9 @@ def test_deepfool_attack_termination(mock_model, setup_attack):
     setup_attack.max_iterations = 5
     attack = DeepFool(setup_attack)
     sample_image = torch.rand(
-        (1, 1, 28, 28), requires_grad=True, device=attack.device_manager.initial_device)
-    sample_label = torch.tensor(
-        [7], device=attack.device_manager.initial_device)
+        (1, 1, 28, 28), requires_grad=True, device=attack.device_manager.initial_device
+    )
+    sample_label = torch.tensor([7], device=attack.device_manager.initial_device)
     x_adv = attack.attack(mock_model, sample_image, sample_label)
     assert (x_adv - sample_image).abs().sum() > 0
 
@@ -90,8 +89,9 @@ def test_deepfool_attack_termination(mock_model, setup_attack):
 @pytest.mark.comprehensive
 def test_deepfool_batch_attack(mock_model, setup_attack):
     attack = DeepFool(setup_attack)
-    x = torch.rand((2, 1, 28, 28), requires_grad=True,
-                   device=attack.device_manager.initial_device)
+    x = torch.rand(
+        (2, 1, 28, 28), requires_grad=True, device=attack.device_manager.initial_device
+    )
     y = torch.tensor([7, 2], device=attack.device_manager.initial_device)
     x_adv = attack.attack(mock_model, x, y)
     assert not torch.equal(x_adv, x)

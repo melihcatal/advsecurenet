@@ -13,10 +13,8 @@ def test_normalization_layer_initialization():
     std = [0.5, 0.5, 0.5]
     norm_layer = NormalizationLayer(mean, std)
 
-    assert torch.equal(norm_layer.mean, torch.tensor(
-        mean).view(1, -1, 1, 1).float())
-    assert torch.equal(norm_layer.std, torch.tensor(
-        std).view(1, -1, 1, 1).float())
+    assert torch.equal(norm_layer.mean, torch.tensor(mean).view(1, -1, 1, 1).float())
+    assert torch.equal(norm_layer.std, torch.tensor(std).view(1, -1, 1, 1).float())
 
 
 @pytest.mark.advsecurenet
@@ -26,13 +24,13 @@ def test_normalization_layer_forward():
     std = [0.5, 0.5, 0.5]
     norm_layer = NormalizationLayer(mean, std)
 
-    input_tensor = torch.tensor([[[[1.0, 1.0], [1.0, 1.0]],
-                                  [[1.0, 1.0], [1.0, 1.0]],
-                                  [[1.0, 1.0], [1.0, 1.0]]]])
+    input_tensor = torch.tensor(
+        [[[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]]]]
+    )
 
-    expected_output = torch.tensor([[[[1.0, 1.0], [1.0, 1.0]],
-                                     [[1.0, 1.0], [1.0, 1.0]],
-                                     [[1.0, 1.0], [1.0, 1.0]]]])
+    expected_output = torch.tensor(
+        [[[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]]]]
+    )
 
     output = norm_layer(input_tensor)
 
@@ -46,13 +44,19 @@ def test_normalization_layer_different_means_and_stds():
     std = [0.1, 0.2, 0.3]
     norm_layer = NormalizationLayer(mean, std)
 
-    input_tensor = torch.tensor([[[[1.0, 1.0], [1.0, 1.0]],
-                                  [[1.0, 1.0], [1.0, 1.0]],
-                                  [[1.0, 1.0], [1.0, 1.0]]]])
+    input_tensor = torch.tensor(
+        [[[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]]]]
+    )
 
-    expected_output = torch.tensor([[[[5.0, 5.0], [5.0, 5.0]],
-                                     [[2.5, 2.5], [2.5, 2.5]],
-                                     [[1.6667, 1.6667], [1.6667, 1.6667]]]])
+    expected_output = torch.tensor(
+        [
+            [
+                [[5.0, 5.0], [5.0, 5.0]],
+                [[2.5, 2.5], [2.5, 2.5]],
+                [[1.6667, 1.6667], [1.6667, 1.6667]],
+            ]
+        ]
+    )
 
     output = norm_layer(input_tensor)
 
@@ -64,7 +68,9 @@ def test_normalization_layer_different_means_and_stds():
 @patch("torch.cuda.is_available", return_value=True)
 @patch("torch.cuda.current_device", return_value=0)
 @patch("torch.tensor")
-def test_normalization_layer_different_device(mock_tensor, mock_current_device, mock_cuda_available):
+def test_normalization_layer_different_device(
+    mock_tensor, mock_current_device, mock_cuda_available
+):
     mean = [0.5, 0.5, 0.5]
     std = [0.5, 0.5, 0.5]
     norm_layer = NormalizationLayer(mean, std)
@@ -84,17 +90,19 @@ def test_normalization_layer_different_device(mock_tensor, mock_current_device, 
     mock_input_tensor.device = torch.device("cuda:0")
     mock_expected_output.device = torch.device("cuda:0")
 
-    input_tensor = torch.tensor([[[[1.0, 1.0], [1.0, 1.0]],
-                                  [[1.0, 1.0], [1.0, 1.0]],
-                                  [[1.0, 1.0], [1.0, 1.0]]]]).cuda()
+    input_tensor = torch.tensor(
+        [[[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]]]]
+    ).cuda()
 
-    expected_output = torch.tensor([[[[1.0, 1.0], [1.0, 1.0]],
-                                     [[1.0, 1.0], [1.0, 1.0]],
-                                     [[1.0, 1.0], [1.0, 1.0]]]]).cuda()
+    expected_output = torch.tensor(
+        [[[[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]], [[1.0, 1.0], [1.0, 1.0]]]]
+    ).cuda()
 
     norm_layer = norm_layer.cuda()
 
-    with patch.object(norm_layer, 'forward', return_value=mock_expected_output) as mock_forward:
+    with patch.object(
+        norm_layer, "forward", return_value=mock_expected_output
+    ) as mock_forward:
         output = norm_layer(input_tensor)
 
         mock_forward.assert_called_once_with(mock_input_tensor)

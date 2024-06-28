@@ -18,17 +18,20 @@ class LoggingConfig:
         formatters (dict): The log formatters.
         version (int): The logging configuration version.
     """
+
     log_dir: str = field(
-        default_factory=lambda: os.path.join(os.path.expanduser('~'), 'logs')
+        default_factory=lambda: os.path.join(os.path.expanduser("~"), "logs")
     )
-    log_file: str = 'advsecurenet.log'
-    level: str = 'INFO'
+    log_file: str = "advsecurenet.log"
+    level: str = "INFO"
     disable_existing_loggers: bool = False
-    formatters: dict = field(default_factory=lambda: {
-        'standard': {
-            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    formatters: dict = field(
+        default_factory=lambda: {
+            "standard": {
+                "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            }
         }
-    })
+    )
     version: int = 1
 
 
@@ -46,23 +49,23 @@ def setup_logging(config: Optional[LoggingConfig] = None) -> None:
 
     # Define the logging configuration
     logging_config = {
-        'version': config.version,
-        'disable_existing_loggers': config.disable_existing_loggers,
-        'formatters': config.formatters,
-        'handlers': {
-            'file_handler': {
-                'class': 'logging.FileHandler',
-                'filename': os.path.join(config.log_dir, config.log_file),
-                'formatter': 'standard',
+        "version": config.version,
+        "disable_existing_loggers": config.disable_existing_loggers,
+        "formatters": config.formatters,
+        "handlers": {
+            "file_handler": {
+                "class": "logging.FileHandler",
+                "filename": os.path.join(config.log_dir, config.log_file),
+                "formatter": "standard",
             },
         },
-        'loggers': {
-            '': {
-                'handlers': ['file_handler'],
-                'level': config.level,
-                'propagate': True
+        "loggers": {
+            "": {
+                "handlers": ["file_handler"],
+                "level": config.level,
+                "propagate": True,
             },
-        }
+        },
     }
 
     # Apply the logging configuration

@@ -1,4 +1,3 @@
-
 import logging
 import os
 from typing import Union, cast
@@ -42,7 +41,9 @@ class Trainer:
         Public method for training the model.
         """
         self._pre_training()
-        for epoch in trange(self._start_epoch, self._config.epochs + 1, leave=True, position=0):
+        for epoch in trange(
+            self._start_epoch, self._config.epochs + 1, leave=True, position=0
+        ):
             self._run_epoch(epoch)
             if self._should_save_checkpoint(epoch):
                 self._save_checkpoint(epoch, self._optimizer)
@@ -53,7 +54,8 @@ class Trainer:
         Setup the device.
         """
         device = self._config.processor or torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu")
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
         return device
 
     def _setup_model(self) -> torch.nn.Module:
@@ -71,10 +73,7 @@ class Trainer:
         """
         kwargs = self._config.optimizer_kwargs if self._config.optimizer_kwargs else {}
         optimizer = self._get_optimizer(
-            self._config.optimizer,
-            self._model,
-            self._config.learning_rate,
-            **kwargs
+            self._config.optimizer, self._model, self._config.learning_rate, **kwargs
         )
 
         return optimizer
@@ -86,17 +85,20 @@ class Trainer:
         Returns:
             torch.optim.lr_scheduler._LRScheduler: The scheduler. I.e. ReduceLROnPlateau, etc.
         """
-        scheduler = self._get_scheduler(
-            self._config.scheduler, self._optimizer)
+        scheduler = self._get_scheduler(self._config.scheduler, self._optimizer)
         return scheduler
 
-    def _get_scheduler(self, scheduler: Union[str, torch.optim.lr_scheduler._LRScheduler], optimizer: optim.Optimizer) -> torch.optim.lr_scheduler._LRScheduler:
+    def _get_scheduler(
+        self,
+        scheduler: Union[str, torch.optim.lr_scheduler._LRScheduler],
+        optimizer: optim.Optimizer,
+    ) -> torch.optim.lr_scheduler._LRScheduler:
         """
         Returns the scheduler based on the given scheduler string or torch.optim.lr_scheduler._LRScheduler.
 
         Args:
             scheduler (str or torch.optim.lr_scheduler._LRScheduler, optional): The scheduler. Defaults to None.
-            optimizer (optim.Optimizer, optional): The optimizer. Required if scheduler is a string.   
+            optimizer (optim.Optimizer, optional): The optimizer. Required if scheduler is a string.
 
         Returns:
             torch.optim.lr_scheduler._LRScheduler: The scheduler. I.e. ReduceLROnPlateau, etc.
@@ -106,23 +108,31 @@ class Trainer:
         if isinstance(scheduler, str):
             if scheduler.upper() not in Scheduler.__members__:
                 raise ValueError(
-                    "Unsupported scheduler! Choose from: " + ", ".join([e.name for e in Scheduler]))
+                    "Unsupported scheduler! Choose from: "
+                    + ", ".join([e.name for e in Scheduler])
+                )
             scheduler_function_class = Scheduler[scheduler.upper()].value
             scheduler = scheduler_function_class(
                 optimizer,
-                **self._config.scheduler_kwargs if self._config.scheduler_kwargs else {}
+                **(
+                    self._config.scheduler_kwargs
+                    if self._config.scheduler_kwargs
+                    else {}
+                ),
             )
         elif not isinstance(scheduler, torch.optim.lr_scheduler._LRScheduler):
             raise ValueError(
-                "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler.")
+                "Scheduler must be a string or an instance of torch.optim.lr_scheduler._LRScheduler."
+            )
         return cast(torch.optim.lr_scheduler._LRScheduler, scheduler)
 
-    def _get_optimizer(self,
-                       optimizer: Union[str, optim.Optimizer],
-                       model: nn.Module,
-                       learning_rate: float = 0.001,
-                       **kwargs
-                       ) -> optim.Optimizer:
+    def _get_optimizer(
+        self,
+        optimizer: Union[str, optim.Optimizer],
+        model: nn.Module,
+        learning_rate: float = 0.001,
+        **kwargs,
+    ) -> optim.Optimizer:
         """
         Returns the optimizer based on the given optimizer string or optim.Optimizer.
 
@@ -146,8 +156,7 @@ class Trainer:
             return optimizer
 
         if model is None and isinstance(optimizer, str):
-            raise ValueError(
-                "Model must be provided if optimizer is a string.")
+            raise ValueError("Model must be provided if optimizer is a string.")
 
         # if the model is provided but the optimizer not, initialize the default optimizer
         if model is not None and optimizer is None:
@@ -157,15 +166,12 @@ class Trainer:
         if model is not None and isinstance(optimizer, str):
             if optimizer.upper() not in Optimizer.__members__:
                 raise ValueError(
-                    "Unsupported optimizer! Choose from: " + ", ".join([e.name for e in Optimizer]))
+                    "Unsupported optimizer! Choose from: "
+                    + ", ".join([e.name for e in Optimizer])
+                )
 
             optimizer_class = Optimizer[optimizer.upper()].value
-            optimizer = optimizer_class(
-                model.parameters(),
-                lr=learning_rate,
-                **kwargs
-
-            )
+            optimizer = optimizer_class(model.parameters(), lr=learning_rate, **kwargs)
 
         return cast(optim.Optimizer, optimizer)
 
@@ -181,16 +187,18 @@ class Trainer:
             if self._config.load_checkpoint and self._config.load_checkpoint_path:
                 if os.path.isfile(self._config.load_checkpoint_path):
                     logger.info(
-                        "Loading checkpoint from %s", self._config.load_checkpoint_path)
+                        "Loading checkpoint from %s", self._config.load_checkpoint_path
+                    )
                     checkpoint = torch.load(self._config.load_checkpoint_path)
-                    self._load_model_state_dict(checkpoint['model_state_dict'])
-                    self._optimizer.load_state_dict(
-                        checkpoint['optimizer_state_dict'])
+                    self._load_model_state_dict(checkpoint["model_state_dict"])
+                    self._optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
                     self._assign_device_to_optimizer_state()
-                    start_epoch = checkpoint['epoch'] + 1
+                    start_epoch = checkpoint["epoch"] + 1
                 else:
                     logger.warning(
-                        "Checkpoint file not found at %s", self._config.load_checkpoint_path)
+                        "Checkpoint file not found at %s",
+                        self._config.load_checkpoint_path,
+                    )
             return start_epoch
         except Exception as e:
             logger.error("Failed to load checkpoint: %s", e)
@@ -237,7 +245,8 @@ class Trainer:
         """
         checkpoint_sub_dir = "training"
         checkpoint_dir = self._config.save_checkpoint_path or os.path.join(
-            os.getcwd(), f"checkpoints/{checkpoint_sub_dir}")
+            os.getcwd(), f"checkpoints/{checkpoint_sub_dir}"
+        )
 
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
@@ -246,13 +255,15 @@ class Trainer:
         checkpoint_filename = f"{save_checkpoint_prefix}_epoch_{epoch}.pth"
         checkpoint_path = os.path.join(checkpoint_dir, checkpoint_filename)
 
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': self._get_model_state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-        }, checkpoint_path)
-        click.echo(click.style(
-            f"Saved checkpoint to {checkpoint_path}", fg="green"))
+        torch.save(
+            {
+                "epoch": epoch,
+                "model_state_dict": self._get_model_state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+            },
+            checkpoint_path,
+        )
+        click.echo(click.style(f"Saved checkpoint to {checkpoint_path}", fg="green"))
 
     def _should_save_checkpoint(self, epoch: int) -> bool:
         """
@@ -260,9 +271,13 @@ class Trainer:
         Args:
             epoch (int): The current epoch.
         Returns:
-            bool: True if a checkpoint should be saved, False otherwise.  
+            bool: True if a checkpoint should be saved, False otherwise.
         """
-        return self._config.save_checkpoint and self._config.checkpoint_interval > 0 and epoch % self._config.checkpoint_interval == 0
+        return (
+            self._config.save_checkpoint
+            and self._config.checkpoint_interval > 0
+            and epoch % self._config.checkpoint_interval == 0
+        )
 
     def _should_save_final_model(self) -> bool:
         """
@@ -277,10 +292,16 @@ class Trainer:
         if not self._config.save_model_path:
             self._config.save_model_path = os.getcwd()
 
-        model_name = self._config.model._model_name if hasattr(
-            self._config.model, "_model_name") else "model"
-        dataset_name = self._config.train_loader.dataset.name if hasattr(
-            self._config.train_loader.dataset, "name") else "dataset"
+        model_name = (
+            self._config.model._model_name
+            if hasattr(self._config.model, "_model_name")
+            else "model"
+        )
+        dataset_name = (
+            self._config.train_loader.dataset.name
+            if hasattr(self._config.train_loader.dataset, "name")
+            else "dataset"
+        )
 
         if not self._config.save_model_name:
             self._config.save_model_name = f"{model_name}_{dataset_name}_final.pth"
@@ -289,13 +310,15 @@ class Trainer:
         index = 0
         while os.path.isfile(self._config.save_model_name):
             index += 1
-            self._config.save_model_name = f"{model_name}_{dataset_name}_final_{index}.pth"
+            self._config.save_model_name = (
+                f"{model_name}_{dataset_name}_final_{index}.pth"
+            )
 
         save_model(
             model=self._model,
             filename=self._config.save_model_name,
             filepath=self._config.save_model_path,
-            distributed=self._config.use_ddp
+            distributed=self._config.use_ddp,
         )
 
     def _run_batch(self, source: torch.Tensor, targets: torch.Tensor) -> float:
@@ -324,15 +347,17 @@ class Trainer:
         Runs the given epoch.
         """
         total_loss = 0.0
-        for _, (source, targets) in enumerate(tqdm(self._config.train_loader, leave=False)):
-            source, targets = source.to(
-                self._device), targets.to(self._device)
+        for _, (source, targets) in enumerate(
+            tqdm(self._config.train_loader, leave=False)
+        ):
+            source, targets = source.to(self._device), targets.to(self._device)
             loss = self._run_batch(source, targets)
             total_loss += loss
 
         total_loss /= len(self._config.train_loader)
         click.echo(
-            click.style(f"Epoch {epoch} - Average loss: {total_loss:.4f}", fg="blue"))
+            click.style(f"Epoch {epoch} - Average loss: {total_loss:.4f}", fg="blue")
+        )
         self._log_loss(epoch, total_loss)
 
     def _pre_training(self) -> None:
@@ -344,9 +369,12 @@ class Trainer:
         if self._should_save_final_model():
             self._save_final_model()
 
-    def _log_loss(self, epoch: int, loss: float, dir: str = None, filename: str = "loss.log") -> None:
-        path = os.path.join(dir, filename) if dir else os.path.join(
-            os.getcwd(), filename)
+    def _log_loss(
+        self, epoch: int, loss: float, dir: str = None, filename: str = "loss.log"
+    ) -> None:
+        path = (
+            os.path.join(dir, filename) if dir else os.path.join(os.getcwd(), filename)
+        )
         # Save the loss to the log file. If the log file does not exist, create it in the current directory.
         if not os.path.exists(path):
             with open(path, "w", encoding="utf-8") as f:

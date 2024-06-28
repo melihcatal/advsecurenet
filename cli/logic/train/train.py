@@ -16,7 +16,8 @@ def cli_train(config: str, **kwargs) -> None:
         **kwargs: Additional keyword arguments.
     """
     config_data: TrainingCliConfigType = load_and_instantiate_config(
-        config, "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, **kwargs)
+        config, "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, **kwargs
+    )
     logger.info("Loaded training configuration: %s", config_data)
     try:
         trainer = CLITrainer(config_data)

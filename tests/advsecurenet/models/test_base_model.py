@@ -13,7 +13,7 @@ class MockBaseModel(BaseModel):
             nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.Flatten(),
-            nn.Linear(16 * 32 * 32, 10)
+            nn.Linear(16 * 32 * 32, 10),
         )
 
     def models(self):
@@ -56,7 +56,10 @@ def test_save_model(mock_base_model, tmp_path):
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 def test_get_layer_names(mock_base_model):
-    with patch('advsecurenet.models.base_model.get_graph_node_names', return_value=([], ["layer1", "layer2"])):
+    with patch(
+        "advsecurenet.models.base_model.get_graph_node_names",
+        return_value=([], ["layer1", "layer2"]),
+    ):
         layer_names = mock_base_model.get_layer_names()
         assert isinstance(layer_names, list)
         assert "layer1" in layer_names
@@ -103,6 +106,7 @@ def test_models(mock_base_model):
     models = mock_base_model.models()
     assert isinstance(models, list)
     assert "mock_model" in models
+
 
 # Mock class to test the decorator
 

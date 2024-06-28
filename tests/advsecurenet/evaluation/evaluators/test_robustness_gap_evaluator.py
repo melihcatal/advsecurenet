@@ -3,8 +3,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 import torch
 
-from advsecurenet.evaluation.evaluators.robustness_gap_evaluator import \
-    RobustnessGapEvaluator
+from advsecurenet.evaluation.evaluators.robustness_gap_evaluator import (
+    RobustnessGapEvaluator,
+)
 from advsecurenet.models.base_model import BaseModel
 
 
@@ -41,14 +42,16 @@ def test_reset(evaluator):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator._calculate_acc', return_value=(5, 3))
+@patch(
+    "advsecurenet.evaluation.evaluators.robustness_gap_evaluator.RobustnessGapEvaluator._calculate_acc",
+    return_value=(5, 3),
+)
 def test_update(mock_calculate_acc, evaluator, mock_model):
     original_images = torch.zeros((10, 3, 32, 32))
     true_labels = torch.tensor([1] * 10)
     adversarial_images = torch.ones((10, 3, 32, 32))
 
-    evaluator.update(mock_model, original_images,
-                     true_labels, adversarial_images)
+    evaluator.update(mock_model, original_images, true_labels, adversarial_images)
 
     assert evaluator.total_correct_clean == 5
     assert evaluator.total_correct_adv == 3
@@ -85,7 +88,8 @@ def test_calculate_acc(evaluator, mock_model):
     mock_model.return_value = torch.randn((10, 10))  # Simulating logits output
 
     clean_correct, adv_correct = evaluator._calculate_acc(
-        mock_model, clean_images, adv_images, labels)
+        mock_model, clean_images, adv_images, labels
+    )
 
     assert isinstance(clean_correct, int)
     assert isinstance(adv_correct, int)

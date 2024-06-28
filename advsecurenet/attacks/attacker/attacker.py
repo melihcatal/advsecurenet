@@ -7,8 +7,9 @@ from tqdm.auto import tqdm
 
 from advsecurenet.dataloader import DataLoaderFactory
 from advsecurenet.evaluation.adversarial_evaluator import AdversarialEvaluator
-from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
-    AttackerConfig
+from advsecurenet.shared.types.configs.attack_configs.attacker_config import (
+    AttackerConfig,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,7 @@ class Attacker:
     Attacker module is specialized module for attacking a model.
     """
 
-    def __init__(self, config: AttackerConfig,  **kwargs):
+    def __init__(self, config: AttackerConfig, **kwargs):
         self._config = config
         self._device = self._setup_device()
         self._model = self._setup_model()
@@ -64,10 +65,10 @@ class Attacker:
         """
         adversarial_images = []
 
-        with AdversarialEvaluator(evaluators=self._config.evaluators,
-                                    target_models=self._kwargs.get(
-                                        "target_models", [])
-                                    ) as evaluator:
+        with AdversarialEvaluator(
+            evaluators=self._config.evaluators,
+            target_models=self._kwargs.get("target_models", []),
+        ) as evaluator:
             data_iterator = self._get_iterator()
 
             self._model.eval()
@@ -82,19 +83,22 @@ class Attacker:
                     target_images = None
 
                 images, true_labels, target_labels = self._prepare_data(
-                    images, true_labels, target_labels)
+                    images, true_labels, target_labels
+                )
 
                 adv_images = self._generate_adversarial_images(
                     images,
                     target_labels if self._config.attack.targeted else true_labels,
-                    target_images
+                    target_images,
                 )
-                evaluator.update(model=self._model,
-                                    original_images=images,
-                                    true_labels=true_labels,
-                                    adversarial_images=adv_images,
-                                    is_targeted=self._config.attack.targeted,
-                                    target_labels=target_labels)
+                evaluator.update(
+                    model=self._model,
+                    original_images=images,
+                    true_labels=true_labels,
+                    adversarial_images=adv_images,
+                    is_targeted=self._config.attack.targeted,
+                    target_labels=target_labels,
+                )
 
                 if torch.cuda.is_available() and self._device.type == "cuda":
                     # Free up memory
@@ -122,11 +126,12 @@ class Attacker:
     def _get_predictions(self, images):
         return torch.argmax(self._model(images), dim=1)
 
-    def _generate_adversarial_images(self,
-                                     images: torch.Tensor,
-                                     labels: torch.Tensor,
-                                     target_images: Optional[torch.Tensor] = None
-                                     ):
+    def _generate_adversarial_images(
+        self,
+        images: torch.Tensor,
+        labels: torch.Tensor,
+        target_images: Optional[torch.Tensor] = None,
+    ):
         """
         Running the attack to generate adversarial images.
 
@@ -157,7 +162,15 @@ class Attacker:
     def _summarize_metric(self, name, value):
         local_results = torch.tensor(value, device=self._device)
         click.secho(
-            f"{name.replace('_', ' ').title()}: {local_results.item():.4f}", fg='green')
+            f"{name.replace('_', ' ').title()}: {local_results.item():.4f}", fg="green"
+        )
 
     def _get_iterator(self):
-        return tqdm(self._dataloader, leave=False, position=1, unit="batch", desc="Generating adversarial samples", colour="red")
+        return tqdm(
+            self._dataloader,
+            leave=False,
+            position=1,
+            unit="batch",
+            desc="Generating adversarial samples",
+            colour="red",
+        )

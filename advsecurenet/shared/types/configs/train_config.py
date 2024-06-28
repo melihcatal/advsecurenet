@@ -22,6 +22,7 @@ class TrainingProcessConfig:
     """
     Configuration class for the training process.
     """
+
     train_loader: DataLoader = None
     criterion: Union[str, nn.Module] = "cross_entropy"
     epochs: int = 10
@@ -34,6 +35,7 @@ class OptimizationConfig:
     """
     Configuration class for the optimization process.
     """
+
     optimizer: Union[str, Optimizer] = "adam"
     optimizer_kwargs: Optional[dict] = None
     scheduler: Optional[Union[str, nn.Module]] = None
@@ -42,9 +44,10 @@ class OptimizationConfig:
 
 @dataclass
 class CheckpointConfig:
-    """ 
+    """
     Configuration class for the checkpoint.
     """
+
     save_checkpoint: bool = False
     save_checkpoint_path: Optional[str] = None
     save_checkpoint_name: Optional[str] = None
@@ -58,13 +61,21 @@ class FinalModelConfig:
     """
     Configuration class for the final model.
     """
+
     save_final_model: bool = False
     save_model_path: Optional[str] = None
     save_model_name: Optional[str] = None
 
 
 @dataclass
-class TrainConfig(ModelConfig, TrainingProcessConfig, OptimizationConfig, CheckpointConfig, FinalModelConfig, DeviceConfig):
+class TrainConfig(
+    ModelConfig,
+    TrainingProcessConfig,
+    OptimizationConfig,
+    CheckpointConfig,
+    FinalModelConfig,
+    DeviceConfig,
+):
     """
     Dataclass to store the overall training configuration by aggregating other configurations.
     """

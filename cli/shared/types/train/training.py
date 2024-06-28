@@ -9,9 +9,10 @@ from cli.shared.types.utils.model import ModelCliConfigType
 
 @dataclass
 class Training:
-    """ 
+    """
     This dataclass is used to store the configuration of the training.
     """
+
     epochs: int
     learning_rate: float
     optimizer: str
@@ -36,6 +37,7 @@ class TrainingCliConfigType:
     """
     This dataclass is used to store the configuration of the training CLI.
     """
+
     model: ModelCliConfigType
     dataset: DatasetCliConfigType
     dataloader: DataLoaderCliConfigType

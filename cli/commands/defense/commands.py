@@ -9,7 +9,13 @@ def defense():
 
 
 @defense.command()
-@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the adversarial configuration yml file.')
+@click.option(
+    "-c",
+    "--config",
+    type=click.Path(exists=True),
+    default=None,
+    help="Path to the adversarial configuration yml file.",
+)
 def adversarial_training(config: str, **kwargs):
     """
     Command to execute adversarial training. It can be used to train a single model or an ensemble of models and attacks.

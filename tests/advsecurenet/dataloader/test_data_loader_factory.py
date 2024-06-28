@@ -7,8 +7,7 @@ from torch.utils.data import Dataset as TorchDataset
 from torch.utils.data.sampler import RandomSampler
 
 from advsecurenet.dataloader.data_loader_factory import DataLoaderFactory
-from advsecurenet.shared.types.configs.dataloader_config import \
-    DataLoaderConfig
+from advsecurenet.shared.types.configs.dataloader_config import DataLoaderConfig
 
 
 class MockDataset(TorchDataset):
@@ -34,7 +33,7 @@ def test_create_dataloader_with_config(mock_dataset):
         shuffle=True,
         drop_last=True,
         pin_memory=True,
-        sampler=None
+        sampler=None,
     )
     dataloader = DataLoaderFactory.create_dataloader(config)
     assert isinstance(dataloader, TorchDataLoader)
@@ -56,7 +55,7 @@ def test_create_dataloader_without_config(mock_dataset):
         shuffle=True,
         drop_last=True,
         pin_memory=True,
-        sampler=None
+        sampler=None,
     )
     assert isinstance(dataloader, TorchDataLoader)
     assert dataloader.dataset == mock_dataset
@@ -84,7 +83,7 @@ def test_create_dataloader_with_sampler_and_shuffle(mock_dataset):
         shuffle=True,
         drop_last=True,
         pin_memory=True,
-        sampler=Mock()
+        sampler=Mock(),
     )
     dataloader = DataLoaderFactory.create_dataloader(config)
     assert isinstance(dataloader, TorchDataLoader)
@@ -108,7 +107,7 @@ def test_create_dataloader_with_sampler_and_no_shuffle(mock_dataset):
         shuffle=False,
         drop_last=True,
         pin_memory=True,
-        sampler=Mock()
+        sampler=Mock(),
     )
     dataloader = DataLoaderFactory.create_dataloader(config)
     assert isinstance(dataloader, TorchDataLoader)

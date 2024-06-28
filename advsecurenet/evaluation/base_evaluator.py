@@ -35,14 +35,15 @@ class BaseEvaluator(ABC):
         """
 
     @abstractmethod
-    def update(self,
-               model: BaseModel,
-               original_images: torch.Tensor,
-               true_labels: torch.Tensor,
-               adversarial_images: torch.Tensor,
-               is_targeted: Optional[bool] = False,
-               target_labels: Optional[torch.Tensor] = None
-               ) -> None:
+    def update(
+        self,
+        model: BaseModel,
+        original_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+        is_targeted: Optional[bool] = False,
+        target_labels: Optional[torch.Tensor] = None,
+    ) -> None:
         """
         Updates the evaluator with new data for streaming mode.
 
@@ -61,12 +62,13 @@ class BaseEvaluator(ABC):
         Calculates the results for the streaming session.
         """
 
-    def save_results_to_csv(self,
-                            evaluation_results: dict,
-                            experiment_info: Optional[dict] = None,
-                            path: Optional[str] = None,
-                            file_name: Optional[str] = None
-                            ) -> None:
+    def save_results_to_csv(
+        self,
+        evaluation_results: dict,
+        experiment_info: Optional[dict] = None,
+        path: Optional[str] = None,
+        file_name: Optional[str] = None,
+    ) -> None:
         """
         Saves the evaluation results to a CSV file in a structured format.
 
@@ -80,7 +82,7 @@ class BaseEvaluator(ABC):
 
         # Create file name with timestamp if not provided
         if file_name is None:
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             file_name = f"{timestamp}_experiment.csv"
 
         # Create path if provided and does not exist
@@ -92,13 +94,16 @@ class BaseEvaluator(ABC):
 
         file_exists = os.path.exists(file_path)
 
-        with open(file_path, mode='a', newline='', encoding='utf-8') as file:
+        with open(file_path, mode="a", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
 
             # Write the experiment info and headers if file doesn't exist
             if not file_exists and experiment_info is not None:
                 writer.writerow(
-                    [f"Experiment conducted on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"])
+                    [
+                        f"Experiment conducted on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                    ]
+                )
                 for key, value in experiment_info.items():
                     writer.writerow([key, value])
 
@@ -110,6 +115,5 @@ class BaseEvaluator(ABC):
                 writer.writerow(headers)
 
             # Write the actual results
-            values = [str(value)
-                      for value in evaluation_results.values()]
+            values = [str(value) for value in evaluation_results.values()]
             writer.writerow(values)

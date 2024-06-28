@@ -8,10 +8,10 @@ from advsecurenet.attacks.gradient_based.fgsm import FGSM
 from advsecurenet.datasets import DatasetFactory
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
-from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
-    AttackerConfig
-from advsecurenet.shared.types.configs.dataloader_config import \
-    DataLoaderConfig
+from advsecurenet.shared.types.configs.attack_configs.attacker_config import (
+    AttackerConfig,
+)
+from advsecurenet.shared.types.configs.dataloader_config import DataLoaderConfig
 from advsecurenet.shared.types.configs.device_config import DeviceConfig
 from advsecurenet.shared.types.configs.model_config import CreateModelConfig
 
@@ -33,20 +33,18 @@ def config(device):
                 model_name="CustomMnistModel",
                 num_classes=10,
                 num_input_channels=1,
-                pretrained=False
+                pretrained=False,
             )
         ),
-        attack=FGSM(config=FgsmAttackConfig(
-            epsilon=0.3,
-            device=device_cfg
-        )),
+        attack=FGSM(config=FgsmAttackConfig(epsilon=0.3, device=device_cfg)),
         dataloader=DataLoaderConfig(
             # get the test dataset
             dataset=DatasetFactory.create_dataset(
-                dataset_type="MNIST", return_loaded=True)[1]
+                dataset_type="MNIST", return_loaded=True
+            )[1]
         ),
         device=device_cfg,
-        return_adversarial_images=True
+        return_adversarial_images=True,
     )
 
 
@@ -107,8 +105,9 @@ def test_get_predictions(config, kwargs):
 def test_generate_adversarial_images(config, kwargs):
     attacker = Attacker(config, **kwargs)
     # random mnist images
-    images = torch.rand(
-        (2, 1, 28, 28), dtype=torch.float32, requires_grad=True).to(attacker._device)
+    images = torch.rand((2, 1, 28, 28), dtype=torch.float32, requires_grad=True).to(
+        attacker._device
+    )
     labels = torch.tensor([0, 1]).to(attacker._device)
     adversarial_images = attacker._generate_adversarial_images(images, labels)
     assert isinstance(adversarial_images, torch.Tensor)
@@ -157,7 +156,9 @@ def test_get_iterator(config, kwargs):
 @patch("torch.cuda.is_available", return_value=True)
 @patch("advsecurenet.attacks.attacker.attacker.Attacker._setup_model")
 @patch("advsecurenet.attacks.attacker.attacker.Attacker._create_dataloader")
-def test_setup_device_default_cuda(mock_dataloader, mock_model, mock_cuda, config, kwargs):
+def test_setup_device_default_cuda(
+    mock_dataloader, mock_model, mock_cuda, config, kwargs
+):
     config.device.processor = None
     attacker = Attacker(config, **kwargs)
     assert attacker._device == torch.device("cuda")
@@ -168,7 +169,9 @@ def test_setup_device_default_cuda(mock_dataloader, mock_model, mock_cuda, confi
 @patch("torch.cuda.is_available", return_value=False)
 @patch("advsecurenet.attacks.attacker.attacker.Attacker._setup_model")
 @patch("advsecurenet.attacks.attacker.attacker.Attacker._create_dataloader")
-def test_setup_device_default_cpu(mock_dataloader, mock_model, mock_cuda, config, kwargs):
+def test_setup_device_default_cpu(
+    mock_dataloader, mock_model, mock_cuda, config, kwargs
+):
     config.device.processor = None
     attacker = Attacker(config, **kwargs)
     assert attacker._device == torch.device("cpu")

@@ -24,7 +24,11 @@ def test_cli_train_success(mock_CLITrainer, mock_load_and_instantiate_config):
     cli_train("config_path", extra_arg="value")
 
     mock_load_and_instantiate_config.assert_called_once_with(
-        "config_path", "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, extra_arg="value"
+        "config_path",
+        "train_config.yml",
+        ConfigType.TRAIN,
+        TrainingCliConfigType,
+        extra_arg="value",
     )
     mock_CLITrainer.assert_called_once_with(mock_config_data)
     mock_trainer_instance.train.assert_called_once()
@@ -42,14 +46,19 @@ def test_cli_train_train_failure(mock_CLITrainer, mock_load_and_instantiate_conf
     training_error = Exception("Training error")
     mock_trainer_instance.train.side_effect = training_error
 
-    with mock.patch.object(logger, 'error') as mock_logging_error:
+    with mock.patch.object(logger, "error") as mock_logging_error:
         with pytest.raises(Exception, match="Training error"):
             cli_train("config_path", extra_arg="value")
 
         mock_load_and_instantiate_config.assert_called_once_with(
-            "config_path", "train_config.yml", ConfigType.TRAIN, TrainingCliConfigType, extra_arg="value"
+            "config_path",
+            "train_config.yml",
+            ConfigType.TRAIN,
+            TrainingCliConfigType,
+            extra_arg="value",
         )
         mock_CLITrainer.assert_called_once_with(mock_config_data)
         mock_trainer_instance.train.assert_called_once()
         mock_logging_error.assert_called_once_with(
-            "Failed to train model: %s", training_error)
+            "Failed to train model: %s", training_error
+        )

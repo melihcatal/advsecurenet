@@ -1,6 +1,7 @@
 """
 This module contains utility functions for working with configuration data through the CLI.
 """
+
 import logging
 import os
 from dataclasses import fields
@@ -17,12 +18,11 @@ from advsecurenet.utils.dataclass import recursive_dataclass_instantiation
 config_path = pkg_resources.resource_filename("cli", "configs")
 CONFIG_FILE_ENDING = "_config.yml"
 # This will represent the specific class type of `config_class`
-T = TypeVar('T')
+T = TypeVar("T")
 logger = logging.getLogger(__name__)
 
 
-def build_config(config_data: Dict,
-                 config_type: Type[T]) -> T:
+def build_config(config_data: Dict, config_type: Type[T]) -> T:
     """
     Build a configuration object from the provided configuration data.
 
@@ -35,8 +35,9 @@ def build_config(config_data: Dict,
 
     """
     expected_keys = [f.name for f in fields(config_type)]
-    filtered_config_data = {k: config_data[k]
-                            for k in expected_keys if k in config_data}
+    filtered_config_data = {
+        k: config_data[k] for k in expected_keys if k in config_data
+    }
     return config_type(**filtered_config_data)
 
 
@@ -65,7 +66,9 @@ def deep_update(source: Dict, overrides: Dict) -> Dict:
     return source
 
 
-def load_configuration(config_type: ConfigType, config_file: str, **overrides: Dict) -> Dict:
+def load_configuration(
+    config_type: ConfigType, config_file: str, **overrides: Dict
+) -> Dict:
     """
     Loads and overrides the configuration.
 
@@ -100,12 +103,16 @@ def attack_config_check(overrides: Dict):
         ValueError: If the dataset name is 'custom' when not specifying a custom data directory.
     """
 
-    if overrides.get('dataset_name') == 'custom' and not overrides.get('custom_data_dir'):
+    if overrides.get("dataset_name") == "custom" and not overrides.get(
+        "custom_data_dir"
+    ):
         raise ValueError(
-            "Please provide a valid path for custom-data-dir when using the custom dataset.")
-    if overrides.get('dataset_name') != 'custom' and overrides.get('custom_data_dir'):
+            "Please provide a valid path for custom-data-dir when using the custom dataset."
+        )
+    if overrides.get("dataset_name") != "custom" and overrides.get("custom_data_dir"):
         raise ValueError(
-            "Please set dataset-name to 'custom' when specifying custom-data-dir.")
+            "Please set dataset-name to 'custom' when specifying custom-data-dir."
+        )
 
 
 CHECK_HANDLERS = {
@@ -124,9 +131,13 @@ def is_path_to_update(key: str, value: str, base_path: str) -> bool:
         bool: True if the path should be updated, False otherwise.
     """
     return (
-        isinstance(value, str) and not os.path.isabs(value) and
-        (os.path.exists(os.path.join(base_path, value))
-         or "dir" in key or "path" in key)
+        isinstance(value, str)
+        and not os.path.isabs(value)
+        and (
+            os.path.exists(os.path.join(base_path, value))
+            or "dir" in key
+            or "path" in key
+        )
     )
 
 
@@ -155,7 +166,9 @@ def update_list_paths(base_path: str, config: List[Any]) -> None:
         make_paths_absolute(base_path, item)
 
 
-def make_paths_absolute(base_path: str, config: Union[Dict[str, Any], List[Any]]) -> None:
+def make_paths_absolute(
+    base_path: str, config: Union[Dict[str, Any], List[Any]]
+) -> None:
     """
     Recursively update the paths in the configuration dictionary or list to be absolute paths.
     Args:
@@ -168,7 +181,13 @@ def make_paths_absolute(base_path: str, config: Union[Dict[str, Any], List[Any]]
         update_list_paths(base_path, config)
 
 
-def load_and_instantiate_config(config: str, default_config_file: str, config_type: ConfigType, config_class: Type[T], **kwargs: Dict[str, Any]) -> T:
+def load_and_instantiate_config(
+    config: str,
+    default_config_file: str,
+    config_type: ConfigType,
+    config_class: Type[T],
+    **kwargs: Dict[str, Any],
+) -> T:
     """Utility function to load and instantiate configuration.
 
     Args:
@@ -183,12 +202,14 @@ def load_and_instantiate_config(config: str, default_config_file: str, config_ty
     """
     if not config:
         click.secho(
-            "No configuration file provided! Using default configuration...", fg="blue")
+            "No configuration file provided! Using default configuration...", fg="blue"
+        )
         config = get_default_config_yml(default_config_file)
 
     # Load the configuration data
     config_data = load_configuration(
-        config_type=config_type, config_file=config, **kwargs)
+        config_type=config_type, config_file=config, **kwargs
+    )
 
     # Convert relative paths to absolute paths
     base_path = os.path.dirname(config)
@@ -227,33 +248,39 @@ def get_available_configs() -> list:
             # Evaluate __init__.py for title, description and INCLUDE_IN_CLI_CONFIGS
             if os.path.exists(init_file_path):
                 exec_namespace = {}
-                with open(init_file_path, 'r', encoding='utf-8') as f:
+                with open(init_file_path, "r", encoding="utf-8") as f:
                     exec_content = f.read()
                     exec(exec_content, {}, exec_namespace)
                     # Use custom title if provided
-                    title = exec_namespace.get('MODULE_TITLE', title).strip()
+                    title = exec_namespace.get("MODULE_TITLE", title).strip()
                     description = exec_namespace.get(
-                        'MODULE_DESCRIPTION', description).strip()
+                        "MODULE_DESCRIPTION", description
+                    ).strip()
                     include_in_cli = exec_namespace.get(
-                        'INCLUDE_IN_CLI_CONFIGS', include_in_cli)
+                        "INCLUDE_IN_CLI_CONFIGS", include_in_cli
+                    )
             if include_in_cli:
                 config_files = [
-                    file for file in files if file.endswith(CONFIG_FILE_ENDING)]
+                    file for file in files if file.endswith(CONFIG_FILE_ENDING)
+                ]
                 for config_file in config_files:
-                    configs.append({
-                        "title": title,
-                        "description": description,
-                        "config_file": config_file
-                    })
+                    configs.append(
+                        {
+                            "title": title,
+                            "description": description,
+                            "config_file": config_file,
+                        }
+                    )
         except Exception as e:
-            logger.error(
-                "Error occurred while reading configuration files: %s", e)
+            logger.error("Error occurred while reading configuration files: %s", e)
             return []
 
     return configs
 
 
-def generate_default_config_yaml(config_name: str, output_path: str, save=False, config_subdir=None) -> dict:
+def generate_default_config_yaml(
+    config_name: str, output_path: str, save=False, config_subdir=None
+) -> dict:
     """
     Generate a default configuration YAML based on the name of the configuration.
 
@@ -265,8 +292,7 @@ def generate_default_config_yaml(config_name: str, output_path: str, save=False,
         dict: The default configuration YAML as a dictionary.
     """
     if config_name is None or output_path is None:
-        raise ValueError(
-            "config_name and output_path must be specified and not None!")
+        raise ValueError("config_name and output_path must be specified and not None!")
 
     if not config_name.endswith(CONFIG_FILE_ENDING):
         config_name = config_name + CONFIG_FILE_ENDING
@@ -290,7 +316,7 @@ def generate_default_config_yaml(config_name: str, output_path: str, save=False,
         yaml_obj = YAML()
         print(f"Saving default config to {output_path}")
         # if the file does not exist, create it otherwise overwrite it
-        with open(output_path, 'w+', encoding='utf-8') as file:
+        with open(output_path, "w+", encoding="utf-8") as file:
             yaml_obj.dump(default_config, file)
             # yaml.dump(default_config, file)
 
@@ -298,7 +324,7 @@ def generate_default_config_yaml(config_name: str, output_path: str, save=False,
 
 
 def _include_yaml(loader: yaml.Loader, node: yaml.Node) -> Union[None, Dict]:
-    """ 
+    """
     Parse the !include tag in YAML files to include other YAML files.
 
     Args:
@@ -313,7 +339,7 @@ def _include_yaml(loader: yaml.Loader, node: yaml.Node) -> Union[None, Dict]:
     base_path = os.path.dirname(loader.name)
     included_file = os.path.join(base_path, node.value)
     try:
-        with open(included_file, 'r', encoding='utf-8') as f:
+        with open(included_file, "r", encoding="utf-8") as f:
             return yaml.load(f, Loader=yaml.FullLoader)
     except FileNotFoundError:
         logger.error("File not found: %s", included_file)
@@ -324,7 +350,7 @@ def _include_yaml(loader: yaml.Loader, node: yaml.Node) -> Union[None, Dict]:
 
 
 def read_yml_file(file_path: str) -> dict:
-    """ 
+    """
     Read a YAML file and return the data as a dictionary.
 
     Args:
@@ -334,8 +360,8 @@ def read_yml_file(file_path: str) -> dict:
         dict: The data from the YAML file as a dictionary.
     """
     # Add the custom constructor to the yaml loader
-    yaml.add_constructor('!include', _include_yaml)
-    with open(file_path, 'r', encoding='utf-8') as f:
+    yaml.add_constructor("!include", _include_yaml)
+    with open(file_path, "r", encoding="utf-8") as f:
         return yaml.load(f, Loader=yaml.FullLoader)
 
 
@@ -353,11 +379,13 @@ def get_default_config_yml(config_name: str, config_subdir: str = None) -> str:
     if config_name is None:
         raise ValueError("config_name must be specified and not None!")
     file_paths = []
-    start_dir = config_path if config_subdir is None else os.path.join(
-        config_path, config_subdir)
+    start_dir = (
+        config_path
+        if config_subdir is None
+        else os.path.join(config_path, config_subdir)
+    )
     for dirpath, _, files in os.walk(start_dir):
-        file_paths.extend([os.path.join(dirpath, f)
-                           for f in files if f == config_name])
+        file_paths.extend([os.path.join(dirpath, f) for f in files if f == config_name])
 
     if not file_paths:
         raise FileNotFoundError(f"Config file {config_name} not found!")

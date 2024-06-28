@@ -7,8 +7,10 @@ from torchvision.models.feature_extraction import create_feature_extractor
 
 from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.configs.attack_configs import (LotsAttackConfig,
-                                                              LotsAttackMode)
+from advsecurenet.shared.types.configs.attack_configs import (
+    LotsAttackConfig,
+    LotsAttackMode,
+)
 
 # create_feature_extractor raises a warning that is not relevant to the user
 warnings.filterwarnings("ignore", message="'has_cuda' is deprecated")
@@ -47,11 +49,13 @@ class LOTS(AdversarialAttack):
         super().__init__(config)
 
     @typing.no_type_check
-    def attack(self,
-               model: BaseModel,
-               x: torch.Tensor,
-               y: Optional[torch.Tensor] = None,
-               x_target: torch.Tensor = None) -> torch.Tensor:
+    def attack(
+        self,
+        model: BaseModel,
+        x: torch.Tensor,
+        y: Optional[torch.Tensor] = None,
+        x_target: torch.Tensor = None,
+    ) -> torch.Tensor:
         """
         Generates adversarial examples using the LOTS attack. Based on the provided mode, either the iterative or single attack will be used.
 
@@ -76,20 +80,23 @@ class LOTS(AdversarialAttack):
         optimizer = torch.optim.Adam([x], lr=self._learning_rate)
 
         if self._mode == LotsAttackMode.ITERATIVE:
-            return self._lots_iterative(model, x, x_target, feature_extractor_model, optimizer, y)
+            return self._lots_iterative(
+                model, x, x_target, feature_extractor_model, optimizer, y
+            )
         elif self._mode == LotsAttackMode.SINGLE:
             return self._lots_single(x, x_target, feature_extractor_model, optimizer)
         else:
             raise ValueError("Invalid mode provided.")
 
-    def _lots_iterative(self,
-                        model: torch.nn.Module,
-                        x: torch.Tensor,
-                        x_target: torch.Tensor,
-                        feature_extractor_model: torch.nn.Module,
-                        optimizer: torch.optim.Optimizer,
-                        y: Optional[torch.Tensor] = None
-                        ) -> torch.Tensor:
+    def _lots_iterative(
+        self,
+        model: torch.nn.Module,
+        x: torch.Tensor,
+        x_target: torch.Tensor,
+        feature_extractor_model: torch.nn.Module,
+        optimizer: torch.optim.Optimizer,
+        y: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
         """
         Performs the LOTS iterative attack.
 
@@ -104,8 +111,7 @@ class LOTS(AdversarialAttack):
         Returns:
             torch.Tensor: The perturbed input image.
         """
-        x_target_deep_feature = feature_extractor_model(x_target)[
-            "deep_feature_layer"]
+        x_target_deep_feature = feature_extractor_model(x_target)["deep_feature_layer"]
         successes = torch.zeros(x.size(0), dtype=torch.bool, device=x.device)
 
         for _ in range(self._max_iterations):
@@ -117,23 +123,26 @@ class LOTS(AdversarialAttack):
             if y is not None:
                 with torch.no_grad():
                     successes |= self._evaluate_adversarial_success(
-                        model, x, x_deep_features, x_target_deep_feature, y)
+                        model, x, x_deep_features, x_target_deep_feature, y
+                    )
                     if all(successes):
                         return x.clamp(0, 1).detach()
 
             loss = torch.nn.functional.mse_loss(
-                x_deep_features, x_target_deep_feature, reduction="sum")
+                x_deep_features, x_target_deep_feature, reduction="sum"
+            )
 
             loss.backward(retain_graph=True)
             optimizer.step()
         return x.clamp(0, 1).detach()
 
-    def _lots_single(self,
-                     x: torch.Tensor,
-                     x_target: torch.Tensor,
-                     feature_extractor_model: torch.nn.Module,
-                     optimizer: torch.optim.Optimizer
-                     ) -> torch.Tensor:
+    def _lots_single(
+        self,
+        x: torch.Tensor,
+        x_target: torch.Tensor,
+        feature_extractor_model: torch.nn.Module,
+        optimizer: torch.optim.Optimizer,
+    ) -> torch.Tensor:
         """
         Performs a single iteration of the LOTS attack.
 
@@ -147,26 +156,27 @@ class LOTS(AdversarialAttack):
         Returns:
             torch.Tensor: The perturbed image tensor after the attack.
         """
-        x_target_deep_feature = feature_extractor_model(x_target)[
-            "deep_feature_layer"]
+        x_target_deep_feature = feature_extractor_model(x_target)["deep_feature_layer"]
         x_deep_features = feature_extractor_model(x)["deep_feature_layer"]
 
         loss = torch.nn.functional.mse_loss(
-            x_deep_features, x_target_deep_feature, reduction="mean")
+            x_deep_features, x_target_deep_feature, reduction="mean"
+        )
         loss.backward(retain_graph=True)
         optimizer.step()
 
         return x.clamp(0, 1).detach()
 
-    def _evaluate_adversarial_success(self,
-                                      model: torch.nn.Module,
-                                      x: torch.Tensor,
-                                      x_deep_features: torch.Tensor,
-                                      x_target_deep_features: torch.Tensor,
-                                      y: Optional[torch.Tensor] = None
-                                      ) -> torch.Tensor:
+    def _evaluate_adversarial_success(
+        self,
+        model: torch.nn.Module,
+        x: torch.Tensor,
+        x_deep_features: torch.Tensor,
+        x_target_deep_features: torch.Tensor,
+        y: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
         """
-        Evaluates the success of adversarial attacks. 
+        Evaluates the success of adversarial attacks.
         If the epsilon value is provided, the distance between the deep features of the input and target tensors is calculated and compared with the epsilon value.
         If the epsilon value is not provided, the predicted classes are compared with the target classes.
 
@@ -180,8 +190,7 @@ class LOTS(AdversarialAttack):
         Returns:
             torch.Tensor: A tensor indicating the success of adversarial attacks.
         """
-        success_indices = torch.zeros(
-            x.size(0), dtype=torch.bool, device=x.device)
+        success_indices = torch.zeros(x.size(0), dtype=torch.bool, device=x.device)
         logits = model(x)
         pred_classes = torch.argmax(logits, dim=-1)
         pred_classes = self.device_manager.to_device(pred_classes)
@@ -191,8 +200,7 @@ class LOTS(AdversarialAttack):
             success_indices = pred_classes == y
 
         if self._epsilon is not None:
-            distances = torch.norm(
-                x_deep_features - x_target_deep_features, dim=1)
+            distances = torch.norm(x_deep_features - x_target_deep_features, dim=1)
             print(distances)
 
             success_distances = distances < self._epsilon
@@ -213,7 +221,9 @@ class LOTS(AdversarialAttack):
         # Validate config type
         if not isinstance(config, LotsAttackConfig):
             raise ValueError(
-                "Invalid config type provided. Expected LotsAttackConfig. But got: " + str(type(config)))
+                "Invalid config type provided. Expected LotsAttackConfig. But got: "
+                + str(type(config))
+            )
         # Validate mode type
         if isinstance(config.mode, str):
             try:
@@ -224,21 +234,26 @@ class LOTS(AdversarialAttack):
         if not isinstance(config.mode, LotsAttackMode):
             allowed_modes = ", ".join(mode.value for mode in LotsAttackMode)
             raise ValueError(
-                f"Invalid mode type provided. Allowed modes are: {allowed_modes}")
+                f"Invalid mode type provided. Allowed modes are: {allowed_modes}"
+            )
 
         # Validate epsilon, learning rate, and max_iterations
-        for attribute, name in [("epsilon", "Epsilon"),
-                                ("learning_rate", "Learning rate"),
-                                ("max_iterations", "Max iterations")]:
+        for attribute, name in [
+            ("epsilon", "Epsilon"),
+            ("learning_rate", "Learning rate"),
+            ("max_iterations", "Max iterations"),
+        ]:
             value = getattr(config, attribute)
             if value is not None and value < 0:
                 raise ValueError(
-                    f"Invalid {name.lower()} value provided. {name} must be greater than 0.")
+                    f"Invalid {name.lower()} value provided. {name} must be greater than 0."
+                )
 
         # Validate deep_feature_layer
         if config.deep_feature_layer is None:
             raise ValueError(
-                "Deep feature layer that you want to use for the attack must be provided.")
+                "Deep feature layer that you want to use for the attack must be provided."
+            )
 
     def _validate_layer(self, model: BaseModel) -> None:
         """
@@ -259,7 +274,8 @@ class LOTS(AdversarialAttack):
 
         if layer.replace("model.", "") not in model.get_layer_names():
             raise ValueError(
-                f"Layer '{layer}' not found in the model. Please provide a valid layer name.")
+                f"Layer '{layer}' not found in the model. Please provide a valid layer name."
+            )
 
         # if the layer name is valid but not prefixed with "model.", we add the prefix
         if not layer.startswith("model."):
@@ -294,6 +310,6 @@ class LOTS(AdversarialAttack):
 
         """
         feature_extractor_model = create_feature_extractor(
-            model,
-            {self._deep_feature_layer: "deep_feature_layer"})
+            model, {self._deep_feature_layer: "deep_feature_layer"}
+        )
         return self.device_manager.to_device(feature_extractor_model)

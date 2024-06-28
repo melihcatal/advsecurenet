@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import AttackConfig
 
 
 @dataclass(kw_only=True)
@@ -9,6 +8,7 @@ class CWAttackConfig(AttackConfig):
     """
     Carlini-Wagner attack configuration.
     """
+
     c_init: float = 0.1
     kappa: float = 0
     learning_rate: float = 0.01

@@ -3,8 +3,7 @@ import torch
 
 from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.configs.attack_configs import \
-    DeepFoolAttackConfig
+from advsecurenet.shared.types.configs.attack_configs import DeepFoolAttackConfig
 
 
 class DeepFool(AdversarialAttack):
@@ -20,7 +19,7 @@ class DeepFool(AdversarialAttack):
 
 
     References:
-            [1] Moosavi-Dezfooli, Seyed-Mohsen, et al. "Deepfool: a simple and accurate method to fool deep neural networks." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.  
+            [1] Moosavi-Dezfooli, Seyed-Mohsen, et al. "Deepfool: a simple and accurate method to fool deep neural networks." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.
     """
 
     def __init__(self, config: DeepFoolAttackConfig) -> None:
@@ -29,13 +28,14 @@ class DeepFool(AdversarialAttack):
         self.max_iterations: int = config.max_iterations
         super().__init__(config)
 
-    def attack(self,
-               model: BaseModel,
-               x: torch.tensor,  # (batch_size, channels, height, width)
-               y: torch.tensor,
-               *args,
-               **kwargs
-               ) -> torch.tensor:
+    def attack(
+        self,
+        model: BaseModel,
+        x: torch.tensor,  # (batch_size, channels, height, width)
+        y: torch.tensor,
+        *args,
+        **kwargs
+    ) -> torch.tensor:
         """
         Generates adversarial examples using the DeepFool attack.
 
@@ -65,12 +65,16 @@ class DeepFool(AdversarialAttack):
             differences = outputs - correct_logits[:, None]
 
             # Create a mask to invalidate the differences for the true class
-            true_class_mask = torch.arange(
-                self.num_classes, device=self.device_manager.get_current_device()) != y[:, None]
+            true_class_mask = (
+                torch.arange(
+                    self.num_classes, device=self.device_manager.get_current_device()
+                )
+                != y[:, None]
+            )
             differences = differences * true_class_mask.float()
 
             # Set the differences for the true class to a high value
-            differences[differences == 0] = float('inf')
+            differences[differences == 0] = float("inf")
 
             # Find the smallest positive difference
             min_differences, _ = differences.min(dim=1)
@@ -85,11 +89,11 @@ class DeepFool(AdversarialAttack):
                     gradient_np = gradient[i][c].cpu().numpy()
                     gradient_np = cv2.GaussianBlur(gradient_np, (3, 3), 0)
                     gradient[i][c] = self.device_manager.to_device(
-                        torch.tensor(gradient_np))
+                        torch.tensor(gradient_np)
+                    )
 
             # Adaptive Overshoot
-            current_overshoot = self.overshoot * \
-                (1 - (iteration / self.max_iterations))
+            current_overshoot = self.overshoot * (1 - (iteration / self.max_iterations))
 
             # Update adversarial example using GSM and the smoothed gradient
             x_adv = (x_adv + current_overshoot * gradient).detach()

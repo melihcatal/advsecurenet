@@ -11,11 +11,13 @@ def check_model_loaded(func):
     """
     Wrapper function to check if the model is loaded before calling the decorated function.
     """
+
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         if self.model is None:
             raise ValueError("Model is not loaded.")
         return func(self, *args, **kwargs)
+
     return wrapper
 
 
@@ -63,7 +65,7 @@ class BaseModel(ABC, nn.Module):
             x (torch.Tensor): The input tensor.
 
         Returns:
-            Tuple[torch.Tensor, torch.Tensor]: 
+            Tuple[torch.Tensor, torch.Tensor]:
                 - The predicted class index.
                 - The probability of the predicted class.
         """
@@ -126,7 +128,9 @@ class BaseModel(ABC, nn.Module):
         setattr(parent, name, new_layer)
 
     @check_model_loaded
-    def add_layer(self, new_layer: nn.Module, position: int = -1, inplace: bool = True) -> Optional[nn.Module]:
+    def add_layer(
+        self, new_layer: nn.Module, position: int = -1, inplace: bool = True
+    ) -> Optional[nn.Module]:
         """
         Inserts a new layer into the model at the specified position.
 
@@ -167,10 +171,9 @@ class BaseModel(ABC, nn.Module):
         Helper method to get the parent module and the attribute name of a layer.
         """
 
-        if '.' in layer_name:
-            parent_name, child_name = layer_name.rsplit('.', 1)
-            parent = dict(self.model.named_modules()).get(
-                parent_name, self.model)
+        if "." in layer_name:
+            parent_name, child_name = layer_name.rsplit(".", 1)
+            parent = dict(self.model.named_modules()).get(parent_name, self.model)
         else:
             parent = self.model
             child_name = layer_name

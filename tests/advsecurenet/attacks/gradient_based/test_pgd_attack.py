@@ -10,10 +10,10 @@ from advsecurenet.shared.types.configs.device_config import DeviceConfig
 class SimpleModel(nn.Module):
     def __init__(self):
         super(SimpleModel, self).__init__()
-        self.fc = nn.Linear(28*28, 10)
+        self.fc = nn.Linear(28 * 28, 10)
 
     def forward(self, x):
-        return self.fc(x.view(-1, 28*28))
+        return self.fc(x.view(-1, 28 * 28))
 
 
 @pytest.fixture
@@ -87,10 +87,10 @@ def test_clamping(pgd_attack, simple_model, sample_image, sample_label):
 @pytest.mark.comprehensive
 def test_targeted_attack(pgd_attack, simple_model, sample_image, sample_label):
     target_label = torch.tensor(
-        [2], device=pgd_attack.device_manager.initial_device)  # A different label
+        [2], device=pgd_attack.device_manager.initial_device
+    )  # A different label
     pgd_attack.targeted = True
-    adv_x_targeted = pgd_attack.attack(
-        simple_model, sample_image, target_label)
+    adv_x_targeted = pgd_attack.attack(simple_model, sample_image, target_label)
     assert not torch.equal(adv_x_targeted, sample_image)
 
 
@@ -98,6 +98,5 @@ def test_targeted_attack(pgd_attack, simple_model, sample_image, sample_label):
 @pytest.mark.comprehensive
 def test_untargeted_attack(pgd_attack, simple_model, sample_image, sample_label):
     pgd_attack.targeted = False
-    adv_x_untargeted = pgd_attack.attack(
-        simple_model, sample_image, sample_label)
+    adv_x_untargeted = pgd_attack.attack(simple_model, sample_image, sample_label)
     assert not torch.equal(adv_x_untargeted, sample_image)

@@ -13,5 +13,5 @@ __all__ = [
     "PGD",
     "LOTS",
     "DeepFool",
-    "DecisionBoundary"
+    "DecisionBoundary",
 ]

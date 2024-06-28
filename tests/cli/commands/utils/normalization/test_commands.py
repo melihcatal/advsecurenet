@@ -13,19 +13,20 @@ def runner():
 
 @pytest.mark.cli
 @pytest.mark.essential
-@patch('cli.logic.utils.normalization_params.cli_normalization_params')
+@patch("cli.logic.utils.normalization_params.cli_normalization_params")
 def test_normalization_params_command(mock_cli_normalization_params, runner):
-    result = runner.invoke(
-        normalization, ['get', '--dataset-name', 'CIFAR10'])
+    result = runner.invoke(normalization, ["get", "--dataset-name", "CIFAR10"])
     assert result.exit_code == 0
-    mock_cli_normalization_params.assert_called_once_with('CIFAR10')
+    mock_cli_normalization_params.assert_called_once_with("CIFAR10")
 
 
 @pytest.mark.cli
 @pytest.mark.essential
-@patch('cli.logic.utils.normalization_params.cli_normalization_params')
-def test_normalization_params_command_no_dataset_name(mock_cli_normalization_params, runner):
-    result = runner.invoke(normalization, ['get'])
+@patch("cli.logic.utils.normalization_params.cli_normalization_params")
+def test_normalization_params_command_no_dataset_name(
+    mock_cli_normalization_params, runner
+):
+    result = runner.invoke(normalization, ["get"])
     assert result.exit_code == 0
     mock_cli_normalization_params.assert_called_once_with(None)
 
@@ -33,6 +34,6 @@ def test_normalization_params_command_no_dataset_name(mock_cli_normalization_par
 @pytest.mark.cli
 @pytest.mark.essential
 def test_normalization_params_command_list(runner):
-    result = runner.invoke(normalization, ['list'])
+    result = runner.invoke(normalization, ["list"])
     assert "Available datasets:" in result.output
     assert result.exit_code == 0

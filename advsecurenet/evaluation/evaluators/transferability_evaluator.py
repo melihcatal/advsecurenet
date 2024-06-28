@@ -32,7 +32,9 @@ class TransferabilityEvaluator(BaseEvaluator):
         for model in self.target_models:
             model_name = self._get_model_name(model, model_names_count)
             self.transferability_data[model_name] = {
-                'successful_transfer': 0, 'successful_on_source': 0}
+                "successful_transfer": 0,
+                "successful_on_source": 0,
+            }
 
         self.total_successful_on_source = 0
 
@@ -40,7 +42,15 @@ class TransferabilityEvaluator(BaseEvaluator):
         self.reset()
         return self
 
-    def update(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor, is_targeted: bool = False, target_labels: Optional[torch.Tensor] = None) -> None:
+    def update(
+        self,
+        model: BaseModel,
+        original_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+        is_targeted: bool = False,
+        target_labels: Optional[torch.Tensor] = None,
+    ) -> None:
         """
         Update the transferability evaluator with new data.
 
@@ -56,26 +66,51 @@ class TransferabilityEvaluator(BaseEvaluator):
             None
         """
         device = next(model.parameters()).device
-        original_images, adversarial_images, true_labels, target_labels = self._prepare_tensors(
-            device, original_images, adversarial_images, true_labels, is_targeted, target_labels)
+        original_images, adversarial_images, true_labels, target_labels = (
+            self._prepare_tensors(
+                device,
+                original_images,
+                adversarial_images,
+                true_labels,
+                is_targeted,
+                target_labels,
+            )
+        )
 
         model.eval()
-        successful_on_source_mask, filtered_adversarial_images, filtered_true_labels, filtered_target_labels = self._get_successful_on_source_mask(
-            model, original_images, true_labels, adversarial_images, is_targeted, target_labels)
+        (
+            successful_on_source_mask,
+            filtered_adversarial_images,
+            filtered_true_labels,
+            filtered_target_labels,
+        ) = self._get_successful_on_source_mask(
+            model,
+            original_images,
+            true_labels,
+            adversarial_images,
+            is_targeted,
+            target_labels,
+        )
         if successful_on_source_mask.numel() == 0:
             return  # No successful adversarial examples to evaluate
 
-        self._evaluate_transferability(filtered_adversarial_images, filtered_true_labels,
-                                       successful_on_source_mask, is_targeted, filtered_target_labels)
+        self._evaluate_transferability(
+            filtered_adversarial_images,
+            filtered_true_labels,
+            successful_on_source_mask,
+            is_targeted,
+            filtered_target_labels,
+        )
 
-    def _get_successful_on_source_mask(self,
-                                       model: torch.nn.Module,
-                                       original_images: torch.Tensor,
-                                       true_labels: torch.Tensor,
-                                       adversarial_images: torch.Tensor,
-                                       is_targeted: bool,
-                                       target_labels: Optional[torch.Tensor]
-                                       ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
+    def _get_successful_on_source_mask(
+        self,
+        model: torch.nn.Module,
+        original_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+        is_targeted: bool,
+        target_labels: Optional[torch.Tensor],
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
         """
         Identifies the successful adversarial examples on the source model. This method filters the data based on the correct initial predictions. This is important to avoid evaluating the transferability of unsuccessful adversarial examples.
 
@@ -98,8 +133,7 @@ class TransferabilityEvaluator(BaseEvaluator):
         adversarial_images = adversarial_images.to(device)
         if is_targeted:
             if target_labels is None:
-                raise ValueError(
-                    "Target labels must be provided for targeted attacks.")
+                raise ValueError("Target labels must be provided for targeted attacks.")
             target_labels = target_labels.to(device)
 
         initial_predictions = model(original_images)
@@ -110,29 +144,48 @@ class TransferabilityEvaluator(BaseEvaluator):
         total_correct_initial = correct_initial_predictions_mask.sum().item()
 
         if total_correct_initial == 0:
-            return torch.tensor([], device=device), adversarial_images, true_labels, target_labels if is_targeted else None
+            return (
+                torch.tensor([], device=device),
+                adversarial_images,
+                true_labels,
+                target_labels if is_targeted else None,
+            )
 
         # Filter the data based on the correct initial predictions
-        filtered_adversarial_images = adversarial_images[correct_initial_predictions_mask]
+        filtered_adversarial_images = adversarial_images[
+            correct_initial_predictions_mask
+        ]
         filtered_true_labels = true_labels[correct_initial_predictions_mask]
-        filtered_target_labels = target_labels[correct_initial_predictions_mask] if is_targeted else None
+        filtered_target_labels = (
+            target_labels[correct_initial_predictions_mask] if is_targeted else None
+        )
 
         source_predictions = model(filtered_adversarial_images)
         source_labels = torch.argmax(source_predictions, dim=1)
 
-        successful_on_source_mask = (source_labels == filtered_target_labels) if is_targeted else (
-            source_labels != filtered_true_labels)
+        successful_on_source_mask = (
+            (source_labels == filtered_target_labels)
+            if is_targeted
+            else (source_labels != filtered_true_labels)
+        )
         self.total_successful_on_source += successful_on_source_mask.sum().item()
 
-        return successful_on_source_mask, filtered_adversarial_images, filtered_true_labels, filtered_target_labels
+        return (
+            successful_on_source_mask,
+            filtered_adversarial_images,
+            filtered_true_labels,
+            filtered_target_labels,
+        )
 
-    def _prepare_tensors(self,
-                         device: torch.device,
-                         original_images: torch.Tensor,
-                         adversarial_images: torch.Tensor,
-                         true_labels: torch.Tensor,
-                         is_targeted: bool,
-                         target_labels: Optional[torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
+    def _prepare_tensors(
+        self,
+        device: torch.device,
+        original_images: torch.Tensor,
+        adversarial_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        is_targeted: bool,
+        target_labels: Optional[torch.Tensor],
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, Optional[torch.Tensor]]:
         """
         Prepares the tensors for evaluation.
 
@@ -154,18 +207,19 @@ class TransferabilityEvaluator(BaseEvaluator):
 
         if is_targeted:
             if target_labels is None:
-                raise ValueError(
-                    "Target labels must be provided for targeted attacks.")
+                raise ValueError("Target labels must be provided for targeted attacks.")
             target_labels = target_labels.to(device)
 
         return original_images, adversarial_images, true_labels, target_labels
 
-    def _evaluate_transferability(self,
-                                  adversarial_images: torch.Tensor,
-                                  true_labels: torch.Tensor,
-                                  successful_on_source_mask: torch.Tensor,
-                                  is_targeted: bool,
-                                  target_labels: Optional[torch.Tensor]) -> None:
+    def _evaluate_transferability(
+        self,
+        adversarial_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        successful_on_source_mask: torch.Tensor,
+        is_targeted: bool,
+        target_labels: Optional[torch.Tensor],
+    ) -> None:
         """
         Evaluates the transferability of adversarial examples to target models.
 
@@ -181,18 +235,40 @@ class TransferabilityEvaluator(BaseEvaluator):
         for target_model in self.target_models:
             model_name = self._get_model_name(target_model, model_names_count)
             successful_transfer = self._evaluate_model_transferability(
-                target_model, adversarial_images, true_labels, successful_on_source_mask, is_targeted, target_labels)
+                target_model,
+                adversarial_images,
+                true_labels,
+                successful_on_source_mask,
+                is_targeted,
+                target_labels,
+            )
 
-            self.transferability_data[model_name]['successful_transfer'] += successful_transfer.item()
-            self.transferability_data[model_name]['successful_on_source'] += successful_on_source_mask.sum().item()
+            self.transferability_data[model_name][
+                "successful_transfer"
+            ] += successful_transfer.item()
+            self.transferability_data[model_name][
+                "successful_on_source"
+            ] += successful_on_source_mask.sum().item()
 
             # Move tensors to CPU to avoid memory leaks and GPU memory overflow
             if is_targeted and target_labels is not None:
-                adversarial_images, true_labels, successful_on_source_mask, target_labels = self._move_tensors_to_cpu(
-                    adversarial_images, true_labels, successful_on_source_mask, target_labels)
+                (
+                    adversarial_images,
+                    true_labels,
+                    successful_on_source_mask,
+                    target_labels,
+                ) = self._move_tensors_to_cpu(
+                    adversarial_images,
+                    true_labels,
+                    successful_on_source_mask,
+                    target_labels,
+                )
             else:
-                adversarial_images, true_labels, successful_on_source_mask = self._move_tensors_to_cpu(
-                    adversarial_images, true_labels, successful_on_source_mask)
+                adversarial_images, true_labels, successful_on_source_mask = (
+                    self._move_tensors_to_cpu(
+                        adversarial_images, true_labels, successful_on_source_mask
+                    )
+                )
 
     def _get_model_name(self, target_model, model_names_count):
         """
@@ -206,20 +282,21 @@ class TransferabilityEvaluator(BaseEvaluator):
             str: The unique name for the target model.
         """
         model_name = target_model._model_name
-        model_names_count[model_name] = model_names_count.get(
-            model_name, 0) + 1
+        model_names_count[model_name] = model_names_count.get(model_name, 0) + 1
         if model_names_count[model_name] == 1:
             return model_name
         else:
             return f"{model_name}_{model_names_count[model_name]}"
 
-    def _evaluate_model_transferability(self,
-                                        target_model: torch.nn.Module,
-                                        adversarial_images: torch.Tensor,
-                                        true_labels: torch.Tensor,
-                                        successful_on_source_mask: torch.Tensor,
-                                        is_targeted: bool,
-                                        target_labels: Optional[torch.Tensor]) -> torch.Tensor:
+    def _evaluate_model_transferability(
+        self,
+        target_model: torch.nn.Module,
+        adversarial_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        successful_on_source_mask: torch.Tensor,
+        is_targeted: bool,
+        target_labels: Optional[torch.Tensor],
+    ) -> torch.Tensor:
         """
         Evaluates the transferability of adversarial examples to a target model.
 
@@ -237,16 +314,24 @@ class TransferabilityEvaluator(BaseEvaluator):
         target_model.eval()
         device = next(target_model.parameters()).device
 
-        adv_images, labels, mask = map(lambda x: x.to(device),
-                                       [adversarial_images, true_labels, successful_on_source_mask])
+        adv_images, labels, mask = map(
+            lambda x: x.to(device),
+            [adversarial_images, true_labels, successful_on_source_mask],
+        )
         if is_targeted:
             target_labels = target_labels.to(device)
 
         target_predictions = target_model(adv_images)
         target_labels_pred = torch.argmax(target_predictions, dim=1)
 
-        successful_transfer = torch.sum(mask & (
-            (target_labels_pred == target_labels) if is_targeted else (target_labels_pred != labels)))
+        successful_transfer = torch.sum(
+            mask
+            & (
+                (target_labels_pred == target_labels)
+                if is_targeted
+                else (target_labels_pred != labels)
+            )
+        )
 
         return successful_transfer
 
@@ -272,7 +357,10 @@ class TransferabilityEvaluator(BaseEvaluator):
         """
         results = {}
         for model_name, data in self.transferability_data.items():
-            rate = (data['successful_transfer'] /
-                    self.total_successful_on_source) if self.total_successful_on_source > 0 else 0
+            rate = (
+                (data["successful_transfer"] / self.total_successful_on_source)
+                if self.total_successful_on_source > 0
+                else 0
+            )
             results[model_name] = rate
         return results

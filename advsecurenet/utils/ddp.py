@@ -15,8 +15,8 @@ def set_visible_gpus(gpu_ids: Optional[List[int]] = None) -> None:
         gpu_ids (Optional[List[int]]): The list of GPU IDs to use. Defaults to None. If None, all available GPUs are used.
     """
     if not torch.cuda.is_available():
-        if 'CUDA_VISIBLE_DEVICES' in os.environ:
-            del os.environ['CUDA_VISIBLE_DEVICES']
+        if "CUDA_VISIBLE_DEVICES" in os.environ:
+            del os.environ["CUDA_VISIBLE_DEVICES"]
         logger.error("CUDA is not available.")
         raise RuntimeError("CUDA is not available.")
 
@@ -27,6 +27,5 @@ def set_visible_gpus(gpu_ids: Optional[List[int]] = None) -> None:
             logger.error("Error getting CUDA device count. %s" % str(e))
             raise RuntimeError(f"Error getting CUDA device count: {str(e)}")
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(str(x) for x in gpu_ids)
-    logger.info(
-        "Set CUDA_VISIBLE_DEVICES to: %s" % os.environ['CUDA_VISIBLE_DEVICES'])
+    os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(str(x) for x in gpu_ids)
+    logger.info("Set CUDA_VISIBLE_DEVICES to: %s" % os.environ["CUDA_VISIBLE_DEVICES"])

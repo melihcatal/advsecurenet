@@ -14,7 +14,7 @@ def runner():
 @pytest.mark.cli
 @pytest.mark.essential
 def test_evaluate_help(runner):
-    result = runner.invoke(evaluate, ['--help'])
+    result = runner.invoke(evaluate, ["--help"])
     assert result.exit_code == 0
     assert "Usage:" in result.output
     assert "Command to evaluate models." in result.output

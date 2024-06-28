@@ -11,5 +11,6 @@ class AdversarialTrainingConfig(TrainConfig):
     """
     This class is used to store the configuration of the adversarial training defense.
     """
+
     models: List[BaseModel]
     attacks: List[AdversarialAttack]

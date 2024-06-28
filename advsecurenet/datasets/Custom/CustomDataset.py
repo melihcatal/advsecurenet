@@ -1,9 +1,7 @@
 from typing import Optional
 
-from advsecurenet.datasets.base_dataset import (BaseDataset,
-                                                ImageFolderBaseDataset)
-from advsecurenet.shared.types.configs.preprocess_config import \
-    PreprocessConfig
+from advsecurenet.datasets.base_dataset import BaseDataset, ImageFolderBaseDataset
+from advsecurenet.shared.types.configs.preprocess_config import PreprocessConfig
 
 
 class CustomDataset(ImageFolderBaseDataset, BaseDataset):

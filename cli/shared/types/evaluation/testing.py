@@ -11,6 +11,7 @@ class Testing:
     """
     This dataclass is used to store the configuration of the testing.
     """
+
     criterion: str
     topk: int
 
@@ -20,6 +21,7 @@ class TestingCliConfigType:
     """
     This dataclass is used to store the configuration of the testing CLI.
     """
+
     model: ModelCliConfigType
     dataset: DatasetCliConfigType
     dataloader: DataLoaderCliConfigType

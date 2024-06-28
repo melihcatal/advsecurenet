@@ -34,8 +34,9 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
             original_images (torch.Tensor): The original images.
             adversarial_images (torch.Tensor): The adversarial images.
         """
-        l0_distance, l2_distance, l_inf_distance = self.calculate_perturbation_distances(
-            original_images, adversarial_images)
+        l0_distance, l2_distance, l_inf_distance = (
+            self.calculate_perturbation_distances(original_images, adversarial_images)
+        )
 
         self.total_l0_distance += l0_distance
         self.total_l2_distance += l2_distance
@@ -53,13 +54,9 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
             return {
                 "L0": self.total_l0_distance / self.batch_size,
                 "L2": self.total_l2_distance / self.batch_size,
-                "Linf": self.total_l_inf_distance / self.batch_size
+                "Linf": self.total_l_inf_distance / self.batch_size,
             }
-        return {
-            "L0": 0.0,
-            "L2": 0.0,
-            "Linf": 0.0
-        }
+        return {"L0": 0.0, "L2": 0.0, "Linf": 0.0}
 
     def get_perturbation_distance(self, distance_type: str) -> float:
         """
@@ -80,11 +77,14 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
                 return self.total_l_inf_distance
             else:
                 raise ValueError(
-                    "Invalid distance type. Valid values are: L0, L2, Linf.")
+                    "Invalid distance type. Valid values are: L0, L2, Linf."
+                )
         else:
             return 0.0
 
-    def calculate_l0_distance(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> float:
+    def calculate_l0_distance(
+        self, original_images: torch.Tensor, adversarial_images: torch.Tensor
+    ) -> float:
         """
         Calculates the L0 distance between the original and adversarial images. L0 distance is the count of pixels that are different between the two images (i.e. the number of pixels that have been changed in the adversarial image compared to the original image).
 
@@ -97,16 +97,17 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         """
 
         # Calculating the L0 distance
-        l0_distance = (original_images !=
-                       adversarial_images).sum(dim=(1, 2, 3))
+        l0_distance = (original_images != adversarial_images).sum(dim=(1, 2, 3))
 
         # Convert to floating point before taking the mean
         l0_distance = l0_distance.float().mean()
 
         return l0_distance.item()
 
-    def calculate_l2_distance(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> float:
-        """ 
+    def calculate_l2_distance(
+        self, original_images: torch.Tensor, adversarial_images: torch.Tensor
+    ) -> float:
+        """
         Calculates the L2 distance between the original and adversarial images. L2 distance is the Euclidean distance between the two images.
 
         Args:
@@ -117,10 +118,15 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
             float: The mean L2 distance between the original and adversarial images.
         """
         l2_distance = torch.norm(
-            (original_images - adversarial_images).view(original_images.shape[0], -1), p=2, dim=1).mean()
+            (original_images - adversarial_images).view(original_images.shape[0], -1),
+            p=2,
+            dim=1,
+        ).mean()
         return l2_distance.item()
 
-    def calculate_l_inf_distance(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> float:
+    def calculate_l_inf_distance(
+        self, original_images: torch.Tensor, adversarial_images: torch.Tensor
+    ) -> float:
         """
         Calculates the L∞ distance between the original and adversarial images. L∞ distance is the maximum absolute difference between the two images in any pixel.
 
@@ -131,13 +137,20 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         Returns:
             float: The mean L∞ distance between the original and adversarial images.
         """
-        l_inf_distance = (original_images - adversarial_images).view(
-            original_images.shape[0], -1).abs().max(dim=1)[0].mean()
+        l_inf_distance = (
+            (original_images - adversarial_images)
+            .view(original_images.shape[0], -1)
+            .abs()
+            .max(dim=1)[0]
+            .mean()
+        )
         return l_inf_distance.item()
 
-    def calculate_perturbation_distances(self, original_images: torch.Tensor, adversarial_images: torch.Tensor) -> tuple[float, float, float]:
+    def calculate_perturbation_distances(
+        self, original_images: torch.Tensor, adversarial_images: torch.Tensor
+    ) -> tuple[float, float, float]:
         """
-        Calculates the L0, L2, and L∞ distances between the original and adversarial images. 
+        Calculates the L0, L2, and L∞ distances between the original and adversarial images.
 
         Args:
             original_images (torch.Tensor): The original images.
@@ -146,10 +159,9 @@ class PerturbationDistanceEvaluator(BaseEvaluator):
         Returns:
             Tuple[float, float, float]: The mean L0, L2, and L∞ distances between the original and adversarial images.
         """
-        l0_distance = self.calculate_l0_distance(
-            original_images, adversarial_images)
-        l2_distance = self.calculate_l2_distance(
-            original_images, adversarial_images)
+        l0_distance = self.calculate_l0_distance(original_images, adversarial_images)
+        l2_distance = self.calculate_l2_distance(original_images, adversarial_images)
         l_inf_distance = self.calculate_l_inf_distance(
-            original_images, adversarial_images)
+            original_images, adversarial_images
+        )
         return l0_distance, l2_distance, l_inf_distance

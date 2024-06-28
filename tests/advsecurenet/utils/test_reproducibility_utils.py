@@ -7,16 +7,19 @@ import numpy as np
 import pytest
 import torch
 
-from advsecurenet.utils.reproducibility_utils import (numpy_random_seed,
-                                                      numpy_unseed,
-                                                      python_random_seed,
-                                                      python_unseed,
-                                                      set_deterministic,
-                                                      set_nondeterministic,
-                                                      set_seed,
-                                                      torch_random_seed,
-                                                      torch_unseed,
-                                                      unique_seed, unseed)
+from advsecurenet.utils.reproducibility_utils import (
+    numpy_random_seed,
+    numpy_unseed,
+    python_random_seed,
+    python_unseed,
+    set_deterministic,
+    set_nondeterministic,
+    set_seed,
+    torch_random_seed,
+    torch_unseed,
+    unique_seed,
+    unseed,
+)
 
 
 @pytest.mark.advsecurenet
@@ -43,8 +46,8 @@ def test_torch_random_seed():
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('torch.cuda.is_available', return_value=True)
-@patch('torch.cuda.manual_seed')
+@patch("torch.cuda.is_available", return_value=True)
+@patch("torch.cuda.manual_seed")
 def test_torch_random_seed_cuda(mock_cuda_seed, mock_cuda_available):
     seed = 42
     torch_random_seed(seed)
@@ -146,10 +149,10 @@ def test_set_seed():
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.utils.reproducibility_utils.set_seed')
-@patch('advsecurenet.utils.reproducibility_utils.unseed')
-@patch('torch.cuda.is_available', return_value=True)
-@patch('torch.backends.cudnn')
+@patch("advsecurenet.utils.reproducibility_utils.set_seed")
+@patch("advsecurenet.utils.reproducibility_utils.unseed")
+@patch("torch.cuda.is_available", return_value=True)
+@patch("torch.backends.cudnn")
 def test_set_deterministic(mock_cudnn, mock_is_available, mock_unseed, mock_set_seed):
     set_deterministic(42)
 
@@ -161,11 +164,13 @@ def test_set_deterministic(mock_cudnn, mock_is_available, mock_unseed, mock_set_
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.utils.reproducibility_utils.set_seed')
-@patch('advsecurenet.utils.reproducibility_utils.unseed')
-@patch('torch.cuda.is_available', return_value=False)
-@patch('torch.backends.cudnn')
-def test_set_deterministic_no_cuda(mock_cudnn, mock_is_available, mock_unseed, mock_set_seed):
+@patch("advsecurenet.utils.reproducibility_utils.set_seed")
+@patch("advsecurenet.utils.reproducibility_utils.unseed")
+@patch("torch.cuda.is_available", return_value=False)
+@patch("torch.backends.cudnn")
+def test_set_deterministic_no_cuda(
+    mock_cudnn, mock_is_available, mock_unseed, mock_set_seed
+):
     set_deterministic(42)
 
     mock_set_seed.assert_called_once_with(42)
@@ -176,11 +181,13 @@ def test_set_deterministic_no_cuda(mock_cudnn, mock_is_available, mock_unseed, m
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.utils.reproducibility_utils.set_seed')
-@patch('advsecurenet.utils.reproducibility_utils.unseed')
-@patch('torch.cuda.is_available', return_value=True)
-@patch('torch.backends.cudnn')
-def test_set_nondeterministic(mock_cudnn, mock_is_available, mock_unseed, mock_set_seed):
+@patch("advsecurenet.utils.reproducibility_utils.set_seed")
+@patch("advsecurenet.utils.reproducibility_utils.unseed")
+@patch("torch.cuda.is_available", return_value=True)
+@patch("torch.backends.cudnn")
+def test_set_nondeterministic(
+    mock_cudnn, mock_is_available, mock_unseed, mock_set_seed
+):
     set_nondeterministic()
 
     mock_unseed.assert_called_once()
@@ -191,11 +198,13 @@ def test_set_nondeterministic(mock_cudnn, mock_is_available, mock_unseed, mock_s
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.utils.reproducibility_utils.set_seed')
-@patch('advsecurenet.utils.reproducibility_utils.unseed')
-@patch('torch.cuda.is_available', return_value=False)
-@patch('torch.backends.cudnn')
-def test_set_nondeterministic_no_cuda(mock_cudnn, mock_is_available, mock_unseed, mock_set_seed):
+@patch("advsecurenet.utils.reproducibility_utils.set_seed")
+@patch("advsecurenet.utils.reproducibility_utils.unseed")
+@patch("torch.cuda.is_available", return_value=False)
+@patch("torch.backends.cudnn")
+def test_set_nondeterministic_no_cuda(
+    mock_cudnn, mock_is_available, mock_unseed, mock_set_seed
+):
     set_nondeterministic()
 
     mock_unseed.assert_called_once()

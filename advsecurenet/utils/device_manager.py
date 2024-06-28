@@ -20,7 +20,7 @@ class DeviceManager:
         """
 
         if self.distributed_mode:
-            return torch.device(f'cuda:{torch.cuda.current_device()}')
+            return torch.device(f"cuda:{torch.cuda.current_device()}")
 
         if isinstance(self.initial_device, str):
             return torch.device(self.initial_device)
@@ -34,6 +34,5 @@ class DeviceManager:
         In single mode, it places tensors on the initialized device.
         """
         device = self.get_current_device()
-        processed_args = [
-            arg.to(device) if arg is not None else None for arg in args]
+        processed_args = [arg.to(device) if arg is not None else None for arg in args]
         return processed_args[0] if len(processed_args) == 1 else processed_args

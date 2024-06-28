@@ -10,6 +10,7 @@ class AdversarialEvaluationConfigType:
     """
     This dataclass is used to store the configuration of the evaluation.
     """
+
     target_models: List[ModelWithConfigDict]
     attack: AttackWithNameConfigDict
     evaluators: List[str]
@@ -20,4 +21,5 @@ class AdversarialEvaluationCliConfigType:
     """
     This dataclass is used to store the configuration of the evaluation CLI.
     """
+
     evaluation_config: AdversarialEvaluationConfigType

@@ -33,8 +33,7 @@ def test_device_config_field_names():
 @pytest.mark.cli
 @pytest.mark.essential
 def test_device_config_field_defaults():
-    config_fields = {
-        field.name: field.default for field in fields(DeviceConfig)}
+    config_fields = {field.name: field.default for field in fields(DeviceConfig)}
     assert config_fields["use_ddp"] == False
     assert config_fields["processor"] == "cpu"
     assert config_fields["gpu_ids"] == None
