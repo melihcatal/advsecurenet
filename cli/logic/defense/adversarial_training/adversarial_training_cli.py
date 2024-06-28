@@ -101,13 +101,10 @@ class ATCLITrainer(CLITrainer):
 
         return models
 
-    def _prepare_training_environment(self, rank: int | None = None) -> AdversarialTrainingConfig:
+    def _prepare_training_environment(self) -> AdversarialTrainingConfig:
 
         # configure the model that will be adversarially trained
-        if rank is not None:
-            model = self._initialize_model(rank)
-        else:
-            model = self._initialize_model()
+        model = self._initialize_model()
 
         train_loader = self._prepare_dataloader()
         train_config = self._prepare_train_config(model, train_loader)
@@ -135,7 +132,7 @@ class ATCLITrainer(CLITrainer):
         """
         # the model must be initialized in each process
 
-        config = self._prepare_training_environment(rank)
+        config = self._prepare_training_environment()
 
         ddp_trainer = DDPAdversarialTraining(
             config, rank, world_size)

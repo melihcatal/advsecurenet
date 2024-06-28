@@ -153,6 +153,21 @@ def test_save_images(mock_save, mock_dataset, target_generator):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
+@patch('advsecurenet.utils.adversarial_target_generator.Image.Image.save')
+def test_save_images_default_path(mock_save, mock_dataset, target_generator):
+    class_to_images = target_generator._generate_class_to_image_indices_map(
+        mock_dataset)
+    paired_images = target_generator._shuffle_and_pair_images_across_classes(
+        class_to_images)
+    target_generator._save_images(paired_images, mock_dataset)
+    assert mock_save.call_count == len(
+        paired_images) * 2  # Each pair saves two images
+    # Check that the default path is used
+    assert 'generated_images' in mock_save.call_args[0][0]
+
+
+@pytest.mark.advsecurenet
+@pytest.mark.essential
 def test_show_image_pair(mock_dataset, target_generator):
     # Set the matplotlib backend to a non-interactive one for testing
     plt.switch_backend('Agg')

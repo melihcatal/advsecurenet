@@ -24,10 +24,6 @@ class AdversarialTargetGenerator:
     The example can be found in `examples/attacks/targeted_attacks.ipynb`.
     """
 
-    def __init__(self, maps_path: Optional[str] = pkg_resources.resource_filename(
-            "advsecurenet", "data")):
-        self.maps_path = maps_path
-
     def generate_target_labels(self, data, targets: list = None, overwrite=False):
         """
         Generates target labels for the given data.
@@ -87,10 +83,8 @@ class AdversarialTargetGenerator:
 
         return target_images, target_labels
 
-    def _save_images(self, paired_images, data, save_path):
+    def _save_images(self, paired_images, data, save_path="./generated_images"):
         """Saves the generated target images."""
-        if save_path is None:
-            save_path = self.maps_path
         for i, pair in enumerate(paired_images):
             original_image, target_image = self._get_image_from_pair(
                 pair, data)

@@ -15,7 +15,7 @@ def mock_train_func():
 @patch('advsecurenet.distributed.ddp_coordinator.mp.set_start_method')
 def ddp_training_coordinator(mock_set_start_method, mock_train_func):
     return DDPCoordinator(
-        train_func=mock_train_func,
+        ddp_func=mock_train_func,
         world_size=2
     )
 
@@ -26,7 +26,7 @@ def ddp_training_coordinator(mock_set_start_method, mock_train_func):
 @patch('advsecurenet.distributed.ddp_coordinator.mp.set_start_method')
 def test_initialization(mock_set_start_method, mock_find_free_port, mock_train_func):
     coordinator = DDPCoordinator(
-        train_func=mock_train_func,
+        ddp_func=mock_train_func,
         world_size=2,
     )
     assert coordinator.port == 12345

@@ -177,13 +177,14 @@ class AdversarialTraining(Trainer):
         for data in train_loader:
             if len(data) == 4:
                 images, true_labels, target_images, target_labels = data
+                images, true_labels, target_images, target_labels = self._prepare_data(
+                    images, true_labels, target_images, target_labels)
+
             else:
                 images, true_labels = data
                 target_images = None
                 target_labels = None
-
-            images, true_labels, target_images, target_labels = self._prepare_data(
-                images, true_labels, target_images, target_labels)
+                images, true_labels = self._prepare_data(images, true_labels)
 
             adv_source, adv_targets = self._generate_adversarial_batch(
                 images,
