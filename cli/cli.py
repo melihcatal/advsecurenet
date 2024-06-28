@@ -11,7 +11,7 @@ from .commands.utils import utils
 
 
 @click.group()
-@click.version_option(version='0.1.9')
+@click.version_option(version='0.2.0')
 def main():
     """
     Welcome to AdvSecureNet CLI!
