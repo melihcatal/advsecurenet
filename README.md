@@ -14,14 +14,17 @@
 [![Unit Tests and Style Checks](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml/badge.svg?branch=develop)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml)
 [![Build and Deploy Sphinx Documentation](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml)
 [![Upload Python Package](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 <p align="center">
   <img src="https://drive.switch.ch/index.php/s/DAaKZEh9OeuvTEQ/download" alt="AdvSecureNet" width="400" />
 </p>
 
-AdvSecureNet is a Python library for Machine Learning Security, developed by [Melih Catal](https://github.com/melihcatal) at [University of Zurich](https://www.uzh.ch/en.html) as part of his Master's Thesis under the supervision of [Prof. Dr. Manuel Günther](https://www.ifi.uzh.ch/en/aiml/people/guenther.html). The main focus of the library is on adversarial attacks and defenses for vision tasks, with plans to extend support to other tasks such as natural language processing.
+AdvSecureNet is a Python library for Machine Learning Security, developed by [Melih Catal](https://github.com/melihcatal) at [University of Zurich](https://www.uzh.ch/en.html) as part of his Master’s Thesis under the supervision of [Prof. Dr. Manuel Günther](https://www.ifi.uzh.ch/en/aiml/people/guenther.html). The main focus of the library is on adversarial attacks and defenses for vision tasks, with plans to extend support to other tasks such as natural language processing.
 
-The library provides tools to generate adversarial examples, evaluate the robustness of machine learning models against adversarial attacks, and train robust machine learning models. Built on top of [PyTorch](https://pytorch.org/), it is designed to be modular and extensible, making it easy to run experiments with different configurations.
+The library provides tools to generate adversarial examples, evaluate the robustness of machine learning models against adversarial attacks, and train robust machine learning models.
+Built on top of [PyTorch](https://pytorch.org/), it is designed to be modular and extensible, making it easy to run experiments with different configurations.
+AdvSecureNet supports multi-GPU setups to enhance computational efficiency and fully supports both CLI and API interfaces, along with external YAML configuration files, enabling comprehensive testing and evaluation, facilitating the sharing and reproducibility of experiments.
 
 ## Table of Contents
 
@@ -29,13 +32,16 @@ The library provides tools to generate adversarial examples, evaluate the robust
 - [Supported Attacks](#supported-attacks)
 - [Supported Defenses](#supported-defenses)
 - [Supported Evaluation Metrics](#supported-evaluation-metrics)
-- [Installation](#installation)
 - [Why AdvSecureNet?](#why-advsecurenet)
+- [Comparison with Other Libraries](#comparison-with-other-libraries)
+- [Installation](#installation)
 - [Usage](#usage)
   - [Command Line Tool](#command-line-tool)
   - [Python Package](#python-package)
 - [Examples](#examples)
 - [Architecture](#architecture)
+- [Testing](#testing)
+- [Quality Assurance](#quality-assurance)
 - [License](#license)
 - [Further Information](#further-information)
 
@@ -85,22 +91,6 @@ The library provides tools to generate adversarial examples, evaluate the robust
 - [PSNR - Peak Signal-to-Noise Ratio](https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio)
 - [SSIM - Structural Similarity Index](https://en.wikipedia.org/wiki/Structural_similarity)
 
-## Installation
-
-You can install the library using `pip`:
-
-```bash
-pip install advsecurenet
-```
-
-Or install it from source:
-
-```bash
-git clone https://github.com/melihcatal/advsecurenet.git
-cd advsecurenet
-pip install -e .
-```
-
 ## Why AdvSecureNet?
 
 - **Research-Oriented**: Easily run and share experiments with different configurations using YAML configuration files.
@@ -124,6 +114,39 @@ pip install -e .
 - **Comprehensive Documentation**: Detailed documentation to help you get started and make the most of the library.
 
 - **Open Source**: Free and open-source under the MIT license, allowing you to use, modify, and distribute the library.
+
+## Comparison with Other Libraries
+
+AdvSecureNet stands out among adversarial machine learning toolkits like IBM ART, AdverTorch, SecML, FoolBox, ARES, and CleverHans. Key advantages include:
+
+• **Active Maintenance:** Ensures ongoing support and updates.
+• **Comprehensive Training Support:** One of the few toolkits supporting both adversarial and ensemble adversarial training.
+• **Multi-GPU Support:** The first toolkit with native multi-GPU support for attacks, defenses, and evaluations, ideal for large-scale experiments.
+• **Flexible Interfaces:** The first toolkit that fully supports CLI, API usage, and external YAML configuration files for reproducibility for all features.
+• **Performance:** AdvSecureNet excels in performance, significantly reducing execution times on multi-GPU setups. For example, the multi-GPU PGD attack time (107 seconds) is faster than ARES’s best single GPU time (183 seconds). Adversarial training time is reduced from 304 seconds on a single GPU to 166 seconds with 7 GPUs, a speedup of 1.83x.
+
+<img width="586" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/33a4678c-4e22-4dc8-9929-d7c5c2e3c03b">
+
+<img width="592" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/48744f4c-afae-48ff-8c39-2dea55ba8a3a">
+
+[1] SecML supports attacks from CleverHans and FoolBox
+[2] This feature is only available for adversarial training.
+
+## Installation
+
+You can install the library using `pip`:
+
+```bash
+pip install advsecurenet
+```
+
+Or install it from source:
+
+```bash
+git clone https://github.com/melihcatal/advsecurenet.git
+cd advsecurenet
+pip install -e .
+```
 
 ## Usage
 
@@ -176,22 +199,53 @@ The high-level architecture of the toolkit is shown in the figure below.
 
 The toolkit is designed to be modular and extensible. CLI and Python API are implemented separately, however, they share the same core components and they have the same package structure for the sake of consistency. Tests are implemented for both CLI and Python API to ensure the correctness of the implementation and again they follow the same structure. The toolkit is designed to be easily extensible, new attacks, defenses, and evaluation metrics can be added by implementing the corresponding classes and registering them in the corresponding registries.
 
-## Comparison with Other Libraries
+## Testing
 
-AdvSecureNet stands out among adversarial machine learning toolkits like IBM ART, AdverTorch, SecML, FoolBox, ARES, and CleverHans. Key advantages include:
+The library is tested using `pytest` and coverage is measured using `coverage`. You can run the tests using the following command:
 
-• **Active Maintenance:** Ensures ongoing support and updates.
-• **Comprehensive Training Support:** One of the few toolkits supporting both adversarial and ensemble adversarial training.
-• **Multi-GPU Support:** The first toolkit with native multi-GPU support for attacks, defenses, and evaluations, ideal for large-scale experiments.
-• **Flexible Interfaces:** The first toolkit that fully supports CLI, API usage, and external YAML configuration files for reproducibility for all features.
-• **Performance:** AdvSecureNet excels in performance, significantly reducing execution times on multi-GPU setups. For example, the multi-GPU PGD attack time (107 seconds) is faster than ARES’s best single GPU time (183 seconds). Adversarial training time is reduced from 304 seconds on a single GPU to 166 seconds with 7 GPUs, a speedup of 1.83x.
+```bash
+pytest tests/
+```
 
-<img width="586" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/33a4678c-4e22-4dc8-9929-d7c5c2e3c03b">
+Some tests take longer to run. To speed up the tests, you can use the `--device` option to run tests on a specific device (e.g., `--device cuda:0`).
 
-<img width="592" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/48744f4c-afae-48ff-8c39-2dea55ba8a3a">
+```bash
+pytest tests/ --device cuda:0
+```
 
-[1] SecML supports attacks from CleverHans and FoolBox
-[2] This feature is only available for adversarial training.
+Tests are categorized into the following groups:
+
+- `cli:` tests for the command line interface
+- `advsecurenet:` tests for the Python API
+- `essential:` tests for essential functionality (e.g., smoke and unit tests)
+- `comprehensive:` tests for comprehensive functionality (e.g., integration tests)
+- `extended:` tests for extended functionality (e.g., performance tests, security tests)
+
+You can run tests for a specific group using the `m` option and the group name. For example, to run tests for the CLI:
+
+```bash
+pytest tests/ -m cli
+```
+
+CI/CD pipelines are set up to run tests automatically on every push and pull request. You can see the status of the tests in the badges at the top of the README.
+
+## Quality Assurance
+
+AdvSecureNet is designed with a strong emphasis on code quality and maintainability. The toolkit follows best practices in software engineering and ensures high standards through the following measures:
+
+- **PEP 8 Compliance**: The codebase adheres to PEP 8 guidelines, the de facto coding standard for Python. We use [Black](https://github.com/psf/black) for automatic code formatting to maintain consistent style and readability.
+
+- **Static Code Analysis**: We employ [Pylint](https://www.pylint.org/) for static code analysis and [MyPy](http://mypy-lang.org/) for type checking. These tools help catch potential errors and enforce coding standards.
+
+- **Code Quality and Complexity**: Tools like [SonarQube](https://www.sonarqube.org/) and [Radon](https://radon.readthedocs.io/) provide insights into code quality and complexity. These tools are integrated into our CI/CD pipelines to ensure that the code remains clean and maintainable.
+
+- **Comprehensive Testing**: The project features a robust testing suite, ensuring that all components are thoroughly tested. This helps in maintaining the reliability and stability of the toolkit.
+
+- **Continuous Integration/Continuous Deployment (CI/CD)**: CI/CD pipelines are set up to automate the testing, analysis, and deployment processes. This ensures that any changes to the codebase are automatically verified for quality and correctness before being merged.
+
+- **Documentation**: Comprehensive documentation is available on [GitHub Pages](https://melihcatal.github.io/advsecurenet/), providing detailed guidance on installation, usage, and API references. This ensures that users and contributors can easily understand and work with the toolkit.
+
+By adhering to these practices and leveraging these tools, AdvSecureNet maintains a high standard of code quality, ensuring a reliable and user-friendly experience for developers and researchers alike.
 
 ## License
 
