@@ -1,16 +1,23 @@
+AdvSecureNet Documentation
+==========================
+
 .. include:: introduction.rst
+.. include:: evaluations.rst
+.. include:: attacks.rst
+.. include:: defenses.rst
+.. toctree::
+   :maxdepth: 1
 
-.. toctree::
-    :maxdepth: 4
-    
-    introduction
-    
-.. toctree::
-    :maxdepth: 6
-    
-    advsecurenet
+   introduction
+   attacks
+   defenses
+   evaluations
+   api
 
-.. toctree::
-    :maxdepth: 6
-    
-    cli
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

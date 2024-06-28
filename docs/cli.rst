@@ -1,4 +1,4 @@
-cli package
+CLI Package
 ===========
 
 -----------
@@ -13,17 +13,4 @@ cli package
 
 ----------
 
-cli.cli module
---------------
 
-.. automodule:: cli.cli
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
----------------
-
-.. automodule:: cli
-   :members:
-   :undoc-members:
-   :show-inheritance:

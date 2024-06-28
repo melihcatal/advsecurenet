@@ -9,7 +9,7 @@
 import os
 import sys
 
-project = 'advsecurenet'
+project = 'AdvSecureNet'
 copyright = '2023, Melih Catal'
 author = 'Melih Catal'
 

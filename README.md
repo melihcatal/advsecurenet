@@ -28,6 +28,7 @@ The library provides tools to generate adversarial examples, evaluate the robust
 - [Features](#features)
 - [Supported Attacks](#supported-attacks)
 - [Supported Defenses](#supported-defenses)
+- [Supported Evaluation Metrics](#supported-evaluation-metrics)
 - [Installation](#installation)
 - [Why AdvSecureNet?](#why-advsecurenet)
 - [Usage](#usage)
@@ -40,11 +41,19 @@ The library provides tools to generate adversarial examples, evaluate the robust
 
 ## Features
 
-- Generate adversarial examples
-- Evaluate model robustness against adversarial attacks
-- Train robust machine learning models
-- Modular and extensible design
-- Native multi-GPU support
+**Adversarial Attacks:** AdvSecureNet supports a diverse range of evasion attacks on computer vision tasks, including gradient-based, decision-based, single-step, iterative, white-box, black-box, targeted, and untargeted attacks, enabling comprehensive testing and evaluation of neural network robustness against various types of adversarial examples.
+
+**Adversarial Defenses:** The toolkit includes adversarial training and ensemble adversarial training. Adversarial training incorporates adversarial examples into the training process to improve model robustness, while ensemble adversarial training uses multiple models or attacks for a more resilient defense strategy.
+
+**Evaluation Metrics:** AdvSecureNet supports metrics like accuracy, robustness, transferability, and similarity. Accuracy measures performance on clean data, robustness assesses resistance to attacks, transferability evaluates how well adversarial examples deceive different models, and similarity quantifies perceptual differences using PSNR and SSIM.
+
+**Multi-GPU Support:** AdvSecureNet is optimized for multi-GPU setups, enhancing the efficiency of training, evaluation, and adversarial attack generation, especially for large models and datasets or complex methods. By utilizing multiple GPUs in parallel, AdvSecureNet aims to reduce computational time, making it ideal for large-scale experiments and deep learning models.
+
+**CLI and API Interfaces:** AdvSecureNet offers both CLI and API interfaces. The CLI allows for quick execution of attacks, defenses, and evaluations, while the API provides advanced integration and extension within user applications.
+
+**External Configuration Files:** The toolkit supports YAML configuration files for easy parameter tuning and experimentation. This feature enables users to share experiments, reproduce results, and manage setups effectively, facilitating collaboration and comparison.
+
+**Built-in Models and Datasets Support:** AdvSecureNet supports all PyTorch vision library models and well-known datasets like CIFAR-10, CIFAR-100, MNIST, FashionMNIST, and SVHN. Users can start without additional setup, but the toolkit also allows for custom datasets and models, offering flexibility for various research and applications.
 
 ## Supported Attacks
 
@@ -59,6 +68,20 @@ The library provides tools to generate adversarial examples, evaluate the robust
 
 - [Adversarial Training](https://arxiv.org/abs/1412.6572)
 - [Ensemble Adversarial Training](https://arxiv.org/abs/1705.07204)
+
+## Supported Evaluation Metrics
+
+- Benign Accuracy
+- Attack Success Rate
+- Transferability
+- Perturbation Distance
+- Robustness Gap
+- Perturbation Effectiveness
+
+### Similarity Metrics
+
+- [PSNR - Peak Signal-to-Noise Ratio](https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio)
+- [SSIM - Structural Similarity Index](https://en.wikipedia.org/wiki/Structural_similarity)
 
 ## Installation
 
@@ -124,15 +147,39 @@ advsecurenet evaluate adversarial -c ./evaluate_adversarial.yml
 
 You can import the library as a Python package. You can use the `advsecurenet` module to access the library. You can find the available modules and classes in the [documentation](http://melihcatal.github.io/advsecurenet/).
 
+![image](https://github.com/melihcatal/advsecurenet/assets/46859098/f3f86817-8ac3-4523-8f5e-cc9d4b4cbcf3)
+_Usage example of AdvSecureNet demonstrating the equivalence between a YAML configuration file with a command-line interface (CLI) command and a corresponding Python API implementation._
+
 ## Examples
 
 Examples of different use cases can be found in the [examples](./examples/) directory.
 
 ## Architecture
 
-The high-level architecture of the library is shown in the figure below.
+The high-level architecture of the toolkit is shown in the figure below.
 
-![advsecurenet_arch-2](https://github.com/melihcatal/advsecurenet/assets/46859098/cd3823b7-1402-4711-a1ab-e13b270de5d4)
+![advsecurenet_arch](https://drive.switch.ch/index.php/s/SdKAyOZs1d9bcin/download)
+
+![cli-arch](https://drive.switch.ch/index.php/s/ZbjIHBHql0dV6n0/download)
+
+The toolkit is designed to be modular and extensible. CLI and Python API are implemented separately, however, they share the same core components and they have the same package structure for the sake of consistency. Tests are implemented for both CLI and Python API to ensure the correctness of the implementation and again they follow the same structure. The toolkit is designed to be easily extensible, new attacks, defenses, and evaluation metrics can be added by implementing the corresponding classes and registering them in the corresponding registries.
+
+## Comparison with Other Libraries
+
+AdvSecureNet stands out among adversarial machine learning toolkits like IBM ART, AdverTorch, SecML, FoolBox, ARES, and CleverHans. Key advantages include:
+
+• **Active Maintenance:** Ensures ongoing support and updates.
+• **Comprehensive Training Support:** One of the few toolkits supporting both adversarial and ensemble adversarial training.
+• **Multi-GPU Support:** The first toolkit with native multi-GPU support for attacks, defenses, and evaluations, ideal for large-scale experiments.
+• **Flexible Interfaces:** The first toolkit that fully supports CLI, API usage, and external YAML configuration files for reproducibility for all features.
+• **Performance:** AdvSecureNet excels in performance, significantly reducing execution times on multi-GPU setups. For example, the multi-GPU PGD attack time (107 seconds) is faster than ARES’s best single GPU time (183 seconds). Adversarial training time is reduced from 304 seconds on a single GPU to 166 seconds with 7 GPUs, a speedup of 1.83x.
+
+<img width="586" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/33a4678c-4e22-4dc8-9929-d7c5c2e3c03b">
+
+<img width="592" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/48744f4c-afae-48ff-8c39-2dea55ba8a3a">
+
+[1] SecML supports attacks from CleverHans and FoolBox
+[2] This feature is only available for adversarial training.
 
 ## License
 
@@ -140,4 +187,4 @@ This project is licensed under the terms of the MIT license. See [LICENSE](./LIC
 
 ## Further Information
 
-More information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/).
+More information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/) and in the paper when it is published (hopefully soon :smile:).
