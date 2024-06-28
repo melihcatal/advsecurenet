@@ -55,6 +55,8 @@ The library provides tools to generate adversarial examples, evaluate the robust
 
 **Built-in Models and Datasets Support:** AdvSecureNet supports all PyTorch vision library models and well-known datasets like CIFAR-10, CIFAR-100, MNIST, FashionMNIST, and SVHN. Users can start without additional setup, but the toolkit also allows for custom datasets and models, offering flexibility for various research and applications.
 
+**Automated Adversarial Target Generation:** AdvSecureNet can automatically generate adversarial targets for targeted attacks, simplifying the process and ensuring consistent and reliable results. As a user, you don't need to manually specify targets. This feature is especially useful for targeted attacks on large datasets. You can also provide custom targets if you prefer.
+
 ## Supported Attacks
 
 - [FGSM - FGSM Targeted](https://arxiv.org/abs/1412.6572)
@@ -112,6 +114,16 @@ pip install -e .
 - **Bening Use Case Support**: Train and evaluate models on benign data.
 
 - **Native Multi-GPU Support**: Efficiently run large-scale experiments utilizing multiple GPUs.
+
+- **CLI and API Support**: Use the command line interface for quick experiments or the Python API for advanced integration.
+
+- **Automated Adversarial Target Generation**: Simplify targeted attacks by letting the library generate targets automatically.
+
+- **Active Maintenance**: Regular updates and improvements to ensure the library remains relevant and useful.
+
+- **Comprehensive Documentation**: Detailed documentation to help you get started and make the most of the library.
+
+- **Open Source**: Free and open-source under the MIT license, allowing you to use, modify, and distribute the library.
 
 ## Usage
 
