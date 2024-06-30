@@ -165,19 +165,14 @@ AdvSecureNet stands out among adversarial machine learning toolkits like
 IBM ART, AdverTorch, SecML, FoolBox, ARES, and CleverHans. Key
 advantages include:
 
-• **Active Maintenance:** Ensures ongoing support and updates. •
-**Comprehensive Training Support:** One of the few toolkits supporting
-both adversarial and ensemble adversarial training. • **Multi-GPU
-Support:** The first toolkit with native multi-GPU support for attacks,
-defenses, and evaluations, ideal for large-scale experiments. •
-**Flexible Interfaces:** The first toolkit that fully supports CLI, API
-usage, and external YAML configuration files for reproducibility for all
-features. • **Performance:** AdvSecureNet excels in performance,
-significantly reducing execution times on multi-GPU setups. For example,
-the multi-GPU PGD attack time (107 seconds) is faster than ARES’s best
-single GPU time (183 seconds). Adversarial training time is reduced from
-304 seconds on a single GPU to 166 seconds with 7 GPUs, a speedup of
-1.83x.
+- **Active Maintenance:** Ensures ongoing support and updates. 
+- **Comprehensive Training Support:** One of the few toolkits supporting both adversarial and ensemble adversarial training. 
+- **Multi-GPU Support:** The first toolkit with native multi-GPU support for attacks, defenses, and evaluations, ideal for large-scale experiments. 
+- **Flexible Interfaces:** The first toolkit that fully supports CLI, API usage, and external YAML configuration files for reproducibility for all features. 
+- **Performance:** AdvSecureNet excels in performance, significantly reducing execution times on multi-GPU setups.
+
+|comparison_table| 
+|performance_comparision|
 
 [1] SecML supports attacks from CleverHans and FoolBox [2] This feature
 is only available for adversarial training.
@@ -403,3 +398,5 @@ This project is licensed under the terms of the MIT license. See
 .. |Code Style: Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
 .. |image| image:: https://github.com/melihcatal/advsecurenet/assets/46859098/f3f86817-8ac3-4523-8f5e-cc9d4b4cbcf3
+.. |comparison_table| image:: https://github.com/melihcatal/advsecurenet/assets/46859098/0e0498dc-d3ea-41c4-a634-b4df5bbb0ce1
+.. |performance_comparision| image:: https://github.com/melihcatal/advsecurenet/assets/46859098/e88658d3-1852-43ed-8c37-530e7fb7a0ce
