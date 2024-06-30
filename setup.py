@@ -8,7 +8,7 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), encoding="utf-8"
 
 setup(
     name="advsecurenet",
-    version="0.2.1",
+    version="0.2.2",
     description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
     long_description=long_description,
     long_description_content_type="text/markdown",
