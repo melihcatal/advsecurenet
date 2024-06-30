@@ -125,9 +125,9 @@ AdvSecureNet stands out among adversarial machine learning toolkits like IBM ART
 • **Flexible Interfaces:** The first toolkit that fully supports CLI, API usage, and external YAML configuration files for reproducibility for all features.
 • **Performance:** AdvSecureNet excels in performance, significantly reducing execution times on multi-GPU setups. For example, the multi-GPU PGD attack time (107 seconds) is faster than ARES’s best single GPU time (183 seconds). Adversarial training time is reduced from 304 seconds on a single GPU to 166 seconds with 7 GPUs, a speedup of 1.83x.
 
-<img width="586" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/33a4678c-4e22-4dc8-9929-d7c5c2e3c03b">
+<img width="592" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/e88658d3-1852-43ed-8c37-530e7fb7a0ce">
 
-<img width="592" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/48744f4c-afae-48ff-8c39-2dea55ba8a3a">
+<img width="586" alt="image" src="https://github.com/melihcatal/advsecurenet/assets/46859098/0e0498dc-d3ea-41c4-a634-b4df5bbb0ce1">
 
 [1] SecML supports attacks from CleverHans and FoolBox
 [2] This feature is only available for adversarial training.
