@@ -1,5 +1,13 @@
 # AdvSecureNet
 
+#### Build and CI/CD Status
+
+[![Unit Tests and Style Checks](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml/badge.svg?branch=develop)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml)
+[![Documentation](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml)
+[![PyPI](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml)
+
+#### Code Quality and Coverage
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=bugs)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
@@ -11,10 +19,12 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=melihcatal_advsecurenet&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=melihcatal_advsecurenet)
-[![Unit Tests and Style Checks](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml/badge.svg?branch=develop)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-ci.yml)
-[![Build and Deploy Sphinx Documentation](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/documentation.yml)
-[![Upload Python Package](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml/badge.svg)](https://github.com/melihcatal/advsecurenet/actions/workflows/python-publish.yml)
+
+#### Package Information
+
+[![PyPI version](https://badge.fury.io/py/advsecurenet.svg)](https://badge.fury.io/py/advsecurenet)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![GitFlow Workflow](https://img.shields.io/badge/Workflow-GitFlow-brightgreen)](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
 <p align="center">
   <img src="https://drive.switch.ch/index.php/s/DAaKZEh9OeuvTEQ/download" alt="AdvSecureNet" width="400" />
@@ -26,15 +36,17 @@ The library provides tools to generate adversarial examples, evaluate the robust
 Built on top of [PyTorch](https://pytorch.org/), it is designed to be modular and extensible, making it easy to run experiments with different configurations.
 AdvSecureNet supports multi-GPU setups to enhance computational efficiency and fully supports both CLI and API interfaces, along with external YAML configuration files, enabling comprehensive testing and evaluation, facilitating the sharing and reproducibility of experiments.
 
+The full documentation is available [here](https://melihcatal.github.io/advsecurenet/).
+
 ## Table of Contents
 
+- [Installation](#installation)
 - [Features](#features)
 - [Supported Attacks](#supported-attacks)
 - [Supported Defenses](#supported-defenses)
 - [Supported Evaluation Metrics](#supported-evaluation-metrics)
 - [Why AdvSecureNet?](#why-advsecurenet)
 - [Comparison with Other Libraries](#comparison-with-other-libraries)
-- [Installation](#installation)
 - [Usage](#usage)
   - [Command Line Tool](#command-line-tool)
   - [Python Package](#python-package)
@@ -44,6 +56,22 @@ AdvSecureNet supports multi-GPU setups to enhance computational efficiency and f
 - [Quality Assurance](#quality-assurance)
 - [License](#license)
 - [Further Information](#further-information)
+
+## Installation
+
+You can install the library using `pip`:
+
+```bash
+pip install advsecurenet
+```
+
+Or install it from source:
+
+```bash
+git clone https://github.com/melihcatal/advsecurenet.git
+cd advsecurenet
+pip install -e .
+```
 
 ## Features
 
@@ -101,7 +129,7 @@ AdvSecureNet supports multi-GPU setups to enhance computational efficiency and f
 
 - **Supports Various Evaluation Metrics**: Evaluate the robustness of models, performance of adversarial attacks, and defenses.
 
-- **Bening Use Case Support**: Train and evaluate models on benign data.
+- **Benign Use Case Support**: Train and evaluate models on benign data.
 
 - **Native Multi-GPU Support**: Efficiently run large-scale experiments utilizing multiple GPUs.
 
@@ -131,22 +159,6 @@ AdvSecureNet stands out among adversarial machine learning toolkits like IBM ART
 
 [1] SecML supports attacks from CleverHans and FoolBox
 [2] This feature is only available for adversarial training.
-
-## Installation
-
-You can install the library using `pip`:
-
-```bash
-pip install advsecurenet
-```
-
-Or install it from source:
-
-```bash
-git clone https://github.com/melihcatal/advsecurenet.git
-cd advsecurenet
-pip install -e .
-```
 
 ## Usage
 
@@ -246,6 +258,10 @@ AdvSecureNet is designed with a strong emphasis on code quality and maintainabil
 - **Documentation**: Comprehensive documentation is available on [GitHub Pages](https://melihcatal.github.io/advsecurenet/), providing detailed guidance on installation, usage, and API references. This ensures that users and contributors can easily understand and work with the toolkit.
 
 By adhering to these practices and leveraging these tools, AdvSecureNet maintains a high standard of code quality, ensuring a reliable and user-friendly experience for developers and researchers alike.
+
+## How to Contribute
+
+Thank you for considering contributing to AdvSecureNet! The modular and extensible design of the library makes it easy to add new features, attacks, defenses, and evaluation metrics. Please refer to the [documentation](https://melihcatal.github.io/advsecurenet/contribution.html) for guidelines on how to contribute.
 
 ## License
 

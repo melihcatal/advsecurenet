@@ -1,11 +1,21 @@
 AdvSecureNet
 ============
 
+Build and CI/CD Status
+~~~~~~~~~~~~~~~~~~~~~~~~~
+|Unit Tests and Style
+Checks| |Build and Deploy Sphinx Documentation| |Upload Python Package|
+
+Code Quality and Coverage
+~~~~~~~~~~~~~~~~~~~~~~~~~
 |Quality Gate Status| |Bugs| |Code Smells| |Coverage| |Duplicated Lines
 (%)| |Lines of Code| |Reliability Rating| |Security Rating| |Technical
-Debt| |Maintainability Rating| |Vulnerabilities| |Unit Tests and Style
-Checks| |Build and Deploy Sphinx Documentation| |Upload Python Package|
-|Code Style: Black|
+Debt| |Maintainability Rating| |Vulnerabilities| 
+
+Package Information
+~~~~~~~~~~~~~~~~~~~~~~~~~
+|Code Style: Black| |pypi| |gitflow|
+
 
 .. raw:: html
 
@@ -137,7 +147,7 @@ Why AdvSecureNet?
 -  **Supports Various Evaluation Metrics**: Evaluate the robustness of
    models, performance of adversarial attacks, and defenses.
 
--  **Bening Use Case Support**: Train and evaluate models on benign
+-  **Benign Use Case Support**: Train and evaluate models on benign
    data.
 
 -  **Native Multi-GPU Support**: Efficiently run large-scale experiments
@@ -400,3 +410,7 @@ This project is licensed under the terms of the MIT license. See
 .. |image| image:: https://github.com/melihcatal/advsecurenet/assets/46859098/f3f86817-8ac3-4523-8f5e-cc9d4b4cbcf3
 .. |comparison_table| image:: https://github.com/melihcatal/advsecurenet/assets/46859098/0e0498dc-d3ea-41c4-a634-b4df5bbb0ce1
 .. |performance_comparision| image:: https://github.com/melihcatal/advsecurenet/assets/46859098/e88658d3-1852-43ed-8c37-530e7fb7a0ce
+.. |pypi| image:: https://img.shields.io/pypi/v/advsecurenet
+   :target: https://pypi.org/project/advsecurenet/
+.. |gitflow| image:: https://img.shields.io/badge/git-flow-blue
+   :target: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
