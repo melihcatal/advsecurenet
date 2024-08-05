@@ -54,6 +54,7 @@ The full documentation is available [here](https://melihcatal.github.io/advsecur
 - [Architecture](#architecture)
 - [Testing](#testing)
 - [Quality Assurance](#quality-assurance)
+- [How to Contribute](#how-to-contribute)
 - [License](#license)
 - [Further Information](#further-information)
 
