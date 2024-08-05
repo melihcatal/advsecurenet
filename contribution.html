@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Contribute? &mdash; AdvSecureNet  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Adversarial Attacks" href="attacks.html" />
+    <link rel="prev" title="AdvSecureNet" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            AdvSecureNet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">AdvSecureNet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Contribute?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reporting-bugs">Reporting Bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing-code">Contributing Code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#code-quality-standards">Code Quality Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-new-feature">Creating a New Feature</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-new-attack">Creating a New Attack</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-new-defense">Creating a New Defense</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-new-evaluation-metric">Creating a New Evaluation Metric</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="attacks.html">Adversarial Attacks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defenses.html">Adversarial Defenses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluations.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AdvSecureNet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to Contribute?</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contribution.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-contribute">
+<h1>How to Contribute?<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h1>
+<p>Thank you for considering contributing to <code class="docutils literal notranslate"><span class="pre">AdvSecureNet</span></code>. We welcome
+all contributions, including new features, bug fixes, and documentation
+improvements. To make the process seamless, we have prepared a guide for
+different types of contributions.</p>
+<section id="reporting-bugs">
+<h2>Reporting Bugs<a class="headerlink" href="#reporting-bugs" title="Link to this heading"></a></h2>
+<p>If you find a bug in the project, please open an issue on the GitHub
+repository. When reporting a bug, include the following details:</p>
+<ul class="simple">
+<li><p>A detailed description of the issue.</p></li>
+<li><p>Steps to reproduce the issue.</p></li>
+<li><p>The version of the project you are using.</p></li>
+<li><p>The operating system you are running.</p></li>
+<li><p>The Python version.</p></li>
+<li><p>If applicable:</p>
+<ul>
+<li><p>The CUDA version.</p></li>
+</ul>
+</li>
+<li><p>Any other relevant information.</p></li>
+</ul>
+<p>An example of a good bug report would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Description</span><span class="p">:</span> <span class="p">[</span><span class="n">Detailed</span> <span class="n">description</span> <span class="n">of</span> <span class="n">the</span> <span class="n">issue</span><span class="p">]</span>
+
+<span class="n">Steps</span> <span class="n">to</span> <span class="n">Reproduce</span><span class="p">:</span>
+
+<span class="mf">1.</span>  <span class="p">[</span><span class="n">Step</span> <span class="n">one</span><span class="p">]</span>
+<span class="mf">2.</span>  <span class="p">[</span><span class="n">Step</span> <span class="n">two</span><span class="p">]</span>
+<span class="mf">3.</span>  <span class="p">[</span><span class="n">Step</span> <span class="n">three</span><span class="p">]</span>
+
+<span class="n">Version</span><span class="p">:</span> <span class="p">[</span><span class="n">Project</span> <span class="n">version</span><span class="p">]</span>
+<span class="n">OS</span><span class="p">:</span> <span class="p">[</span><span class="n">Operating</span> <span class="n">system</span><span class="p">]</span>
+<span class="n">Python</span><span class="p">:</span> <span class="p">[</span><span class="n">Python</span> <span class="n">version</span> <span class="p">]</span>
+<span class="n">CUDA</span><span class="p">:</span> <span class="p">[</span><span class="n">CUDA</span> <span class="n">version</span> <span class="k">if</span> <span class="n">applicable</span><span class="p">]</span>
+<span class="n">Other</span><span class="p">:</span> <span class="p">[</span><span class="n">Any</span> <span class="n">other</span> <span class="n">relevant</span> <span class="n">information</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="contributing-code">
+<h2>Contributing Code<a class="headerlink" href="#contributing-code" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">AdvSecureNet</span></code> has two main components: the API and the CLI. You can
+contribute to either component. The high-level process is the same:</p>
+<ol class="arabic simple">
+<li><p>Fork the repository.</p></li>
+<li><p>Create a new branch for your changes.</p></li>
+<li><p>Make your changes.</p></li>
+<li><p>Write tests for your changes.</p></li>
+<li><p>Run the tests.</p></li>
+<li><p>Document your changes.</p></li>
+<li><p>Submit a pull request.</p></li>
+<li><p>Stay tuned for feedback.</p></li>
+</ol>
+<section id="code-quality-standards">
+<h3>Code Quality Standards<a class="headerlink" href="#code-quality-standards" title="Link to this heading"></a></h3>
+<p>To ensure code quality, follow these standards:</p>
+<ul class="simple">
+<li><p>Format code using <code class="docutils literal notranslate"><span class="pre">black</span></code>.</p></li>
+<li><p>Lint code using <code class="docutils literal notranslate"><span class="pre">pylint</span></code>.</p></li>
+<li><p>Test code using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p></li>
+<li><p>Document code using <code class="docutils literal notranslate"><span class="pre">sphinx</span></code>.</p></li>
+<li><p>Type-check code using <code class="docutils literal notranslate"><span class="pre">mypy</span></code>.</p></li>
+<li><p>Have your code reviewed by at least one other contributor before
+merging.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">AdvSecureNet</span></code> uses <code class="docutils literal notranslate"><span class="pre">Gitflow</span></code> as its branching model:</p>
+<ul class="simple">
+<li><p>Develop new features in a <code class="docutils literal notranslate"><span class="pre">feature</span></code> branch.</p></li>
+<li><p>Develop bug fixes in a <code class="docutils literal notranslate"><span class="pre">hotfix</span></code> branch.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">main</span></code> branch is reserved for stable releases.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch is used for development.</p></li>
+</ul>
+<p>When submitting a pull request, target the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch. For more
+information on <code class="docutils literal notranslate"><span class="pre">Gitflow</span></code>, refer to <a class="reference external" href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">this
+guide</a>.</p>
+</section>
+<section id="creating-a-new-feature">
+<h3>Creating a New Feature<a class="headerlink" href="#creating-a-new-feature" title="Link to this heading"></a></h3>
+<p>You have three options for creating a new feature:</p>
+<ul class="simple">
+<li><p>A new attack</p></li>
+<li><p>A new defense</p></li>
+<li><p>A new evaluation metric / evaluator</p></li>
+</ul>
+<p>Depending on the feature type and the target component (API or CLI), the
+process will differ. Refer to the following sections for more
+information.</p>
+<section id="creating-a-new-attack">
+<h4>Creating a New Attack<a class="headerlink" href="#creating-a-new-attack" title="Link to this heading"></a></h4>
+<section id="api">
+<h5>API<a class="headerlink" href="#api" title="Link to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">advsecurenet</span></code> package contains an <code class="docutils literal notranslate"><span class="pre">attacks</span></code> module with various
+submodules based on attack types (e.g., gradient-based, decision-based).
+If your attack does not fit into any existing submodule, feel free to
+create a new one. Currently, <code class="docutils literal notranslate"><span class="pre">AdvSecureNet</span></code> supports evasion attacks
+on computer vision models only. All attacks should inherit from the
+<code class="docutils literal notranslate"><span class="pre">AdversarialAttack</span></code> class, an abstract base class that defines the
+interface for all attacks. The <code class="docutils literal notranslate"><span class="pre">AdversarialAttack</span></code> class is defined in
+the <code class="docutils literal notranslate"><span class="pre">attacks.base</span></code> module. Additionally, each attack should have its
+own configuration class, which defines the parameters of the attack.
+This approach keeps the attack class clean and makes it easier to use
+the attack in the CLI. The configuration class should be defined in the
+<code class="docutils literal notranslate"><span class="pre">shared.types.configs.attack_configs</span></code> folder and should inherit from
+the <code class="docutils literal notranslate"><span class="pre">AttackConfig</span></code> class. The <code class="docutils literal notranslate"><span class="pre">AttackConfig</span></code> class, also defined in
+the <code class="docutils literal notranslate"><span class="pre">shared.types.configs.attack_configs</span></code> folder, contains the
+<code class="docutils literal notranslate"><span class="pre">device</span></code> attribute, specifying the device on which the attack should
+run, and a flag indicating whether the attack is targeted or untargeted.</p>
+<p>Follow these steps to create a new attack:</p>
+<ol class="arabic simple">
+<li><p>Create a new submodule in the <code class="docutils literal notranslate"><span class="pre">attacks</span></code> module.</p></li>
+<li><p>Create a class for your attack that inherits from the
+<code class="docutils literal notranslate"><span class="pre">AdversarialAttack</span></code> class.</p></li>
+<li><p>Create a configuration class for your attack that inherits from the
+<code class="docutils literal notranslate"><span class="pre">AttackConfig</span></code> class.</p></li>
+<li><p>Implement the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method, accepting the configuration as an
+argument.</p></li>
+<li><p>Implement the <code class="docutils literal notranslate"><span class="pre">attack</span></code> method, taking the model, input, and target
+as arguments and returning the adversarial example.</p></li>
+</ol>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">advsecurenet.attacks.base</span> <span class="kn">import</span> <span class="n">AdversarialAttack</span>
+<span class="kn">from</span> <span class="nn">advsecurenet.shared.types.configs.attack_configs</span> <span class="kn">import</span> <span class="n">AttackConfig</span>
+<span class="kn">from</span> <span class="nn">advsecurenet.models.base_model</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RandomNoiseAttackConfig</span><span class="p">(</span><span class="n">AttackConfig</span><span class="p">):</span>
+    <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">RandomNoiseAttack</span><span class="p">(</span><span class="n">AdversarialAttack</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">RandomNoiseAttackConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">epsilon</span>
+
+    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span>
+        <span class="k">return</span> <span class="nb">input</span> <span class="o">+</span> <span class="n">noise</span>
+</pre></div>
+</div>
+<p>Using a dataclass for the configuration class makes it easy to create
+instances of the class with default values. It also prevents users from
+passing invalid arguments to the attack. Using <code class="docutils literal notranslate"><span class="pre">kw_only=True</span></code> ensures
+that users have to pass the arguments by keyword, which makes the code
+more readable and less error-prone. Additionally, it facilitates the
+future extension of the configuration class with new parameters without
+breaking the existing code.</p>
+</section>
+<section id="cli">
+<h5>CLI<a class="headerlink" href="#cli" title="Link to this heading"></a></h5>
+<p>To use your attack in the CLI, follow these additional steps:</p>
+<ol class="arabic simple">
+<li><p>Create Default YAML Configuration Files</p></li>
+</ol>
+<p>1.1. For Adversarial Training Command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>•   Create a configuration file for the attack parameters in the `cli/configs/attacks/base` folder.
+•   Create another configuration file for the attack itself (including other necessary parameters) in the cli/configs/attacks folder.
+</pre></div>
+</div>
+<p>This separation makes it easier to use the attack both in the
+adversarial training command and as a standalone attack.</p>
+<p>Example of a configuration file for the attack parameters:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Description: Base configuration file for the attack parameters. Located in the cli/configs/attacks/base folder</span>
+<span class="nt">target_parameters</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../shared/attack_target_config.yml</span><span class="w"> </span><span class="c1"># Targeted attack configs</span>
+<span class="nt">attack_parameters</span><span class="p">:</span>
+<span class="nt">epsilon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.3</span><span class="w"> </span><span class="c1"># The epsilon value to be used for the FGSM attack. The higher the value, the more the perturbation</span>
+</pre></div>
+</div>
+<p>Example of a configuration file for the attack:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Description: Configuration file for the attack. Located in the cli/configs/attacks folder</span>
+
+<span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../shared/model_config.yml</span>
+<span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./shared/attack_dataset_config.yml</span>
+<span class="nt">dataloader</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../shared/dataloader_config.yml</span>
+<span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../shared/device_config.yml</span>
+<span class="nt">attack_procedure</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./shared/attack_procedure_config.yml</span>
+
+<span class="c1"># Attack Specific Configuration</span>
+<span class="nt">attack_config</span><span class="p">:</span><span class="w"> </span><span class="kt">!include</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./base/attack_base_config.yml</span>
+</pre></div>
+</div>
+<p>The first file contains the parameters specific to the attack, while the
+second file contains the parameters common to all attacks. The first
+file is used when another command wants to use the attack as a
+parameter, which means that command takes care of the essential
+parameters like the model, dataset, etc. The second file is used when
+the attack is used as a standalone command, which means that the attack
+command needs to configure the necessary parameters to prepare the
+environment for the attack and then run the attack.</p>
+<ol class="arabic simple" start="2">
+<li><p>Create a configuration dataclass for your attack in the
+<code class="docutils literal notranslate"><span class="pre">cli/shared/types/attack/attacks</span></code> folder.</p></li>
+<li><p>Update the attack mapping in the
+<code class="docutils literal notranslate"><span class="pre">cli/shared/utils/attack_mappings.py</span></code> file to include your attack.</p></li>
+<li><p>Finally, update the <code class="docutils literal notranslate"><span class="pre">cli/commands/attack/commands.py</span></code> module to
+include your attack as a subcommand.</p></li>
+</ol>
+</section>
+</section>
+<section id="creating-a-new-defense">
+<h4>Creating a New Defense<a class="headerlink" href="#creating-a-new-defense" title="Link to this heading"></a></h4>
+<section id="api-1">
+<span id="id1"></span><h5>API<a class="headerlink" href="#api-1" title="Link to this heading"></a></h5>
+<p>There is no base class for defenses in <code class="docutils literal notranslate"><span class="pre">AdvSecureNet</span></code>. However, each
+defense should have its own configuration class similar to attacks.
+Follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Create a new submodule in the <code class="docutils literal notranslate"><span class="pre">defenses</span></code> module.</p></li>
+<li><p>Create a configuration class for your defense.</p></li>
+<li><p>Create a class for your defense and use the configuration class you
+created to initialize the defense in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method.</p></li>
+</ol>
+</section>
+<section id="cli-1">
+<span id="id2"></span><h5>CLI<a class="headerlink" href="#cli-1" title="Link to this heading"></a></h5>
+<p>Since there isn’t a <code class="docutils literal notranslate"><span class="pre">defender</span></code> module to run the defenses, unlike the
+attacks, you need to create the logic for the defense in the
+<code class="docutils literal notranslate"><span class="pre">cli/logic/defense</span></code> folder. To add your defense to the CLI:</p>
+<ol class="arabic simple">
+<li><p>Create a default YAML configuration file for your defense in the
+<code class="docutils literal notranslate"><span class="pre">cli/configs/defenses</span></code> folder.</p></li>
+<li><p>Create a configuration dataclass for your defense in the
+<code class="docutils literal notranslate"><span class="pre">cli/shared/types/defense/defenses</span></code> folder.</p></li>
+<li><p>Implement the defense logic in the <code class="docutils literal notranslate"><span class="pre">cli/logic/defense</span></code> folder.</p></li>
+<li><p>Add the defense to the <code class="docutils literal notranslate"><span class="pre">cli/commands/defense/commands.py</span></code> module.</p></li>
+</ol>
+</section>
+</section>
+<section id="creating-a-new-evaluation-metric">
+<h4>Creating a New Evaluation Metric<a class="headerlink" href="#creating-a-new-evaluation-metric" title="Link to this heading"></a></h4>
+<section id="api-2">
+<span id="id3"></span><h5>API<a class="headerlink" href="#api-2" title="Link to this heading"></a></h5>
+<p>Evaluation metrics are used to assess the performance of attacks,
+defenses or models. The <code class="docutils literal notranslate"><span class="pre">advsecurenet</span></code> package includes an
+<code class="docutils literal notranslate"><span class="pre">evaluation</span></code> module that contains all the evaluation metrics. Each
+evaluation metric should inherit from the <code class="docutils literal notranslate"><span class="pre">BaseEvaluator</span></code> class, an
+abstract base class that defines the interface for all evaluation
+metrics. The evaluators are context managers, allowing them to be used
+in a <code class="docutils literal notranslate"><span class="pre">with</span></code> statement to automatically clean up any resources they
+use. The <code class="docutils literal notranslate"><span class="pre">BaseEvaluator</span></code> class is defined in the
+<code class="docutils literal notranslate"><span class="pre">evaluation.base_evaluator</span></code> module.</p>
+<ol class="arabic simple">
+<li><p>Create a new class for your evaluation metric that inherits from the
+<code class="docutils literal notranslate"><span class="pre">BaseEvaluator</span></code> class in the <code class="docutils literal notranslate"><span class="pre">evaluation.evaluators</span></code> folder.</p></li>
+<li><p>Implement the <code class="docutils literal notranslate"><span class="pre">update</span></code> method of your evaluation metric class. This
+method defines how the evaluation metric should be updated when a new
+sample is evaluated.</p></li>
+<li><p>Implement the <code class="docutils literal notranslate"><span class="pre">get_results</span></code> method of your evaluation metric class.
+This method should return the final result of the evaluation metric.</p></li>
+<li><p>If the evaluator is an adversarial evaluator, update the
+<code class="docutils literal notranslate"><span class="pre">advsecurenet.shared.adversarial_evaluators</span></code> module to include your
+evaluator.</p></li>
+</ol>
+</section>
+<section id="cli-2">
+<span id="id4"></span><h5>CLI<a class="headerlink" href="#cli-2" title="Link to this heading"></a></h5>
+<p>Evaluation metrics are automatically available in the CLI once the API
+is updated. No additional steps are needed. This is because the CLI uses
+the attacker to run evaluation metrics, and they are not run
+independently.</p>
+</section>
+</section>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<p>Improving documentation is always appreciated. If you find any part of
+the codebase that is not well-documented or could be improved, please
+open a pull request with your changes. We value any help in making the
+documentation more comprehensive and easier to understand.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="AdvSecureNet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="attacks.html" class="btn btn-neutral float-right" title="Adversarial Attacks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Melih Catal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
