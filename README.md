@@ -25,9 +25,12 @@
 [![PyPI version](https://badge.fury.io/py/advsecurenet.svg)](https://badge.fury.io/py/advsecurenet)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![GitFlow Workflow](https://img.shields.io/badge/Workflow-GitFlow-brightgreen)](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+[![Documentation](https://img.shields.io/badge/documentation-blue.svg)](https://melihcatal.github.io/advsecurenet/)
 
 <p align="center">
-  <img src="https://drive.switch.ch/index.php/s/DAaKZEh9OeuvTEQ/download" alt="AdvSecureNet" width="400" />
+  <a href="https://melihcatal.github.io/advsecurenet/">
+    <img src="https://drive.switch.ch/index.php/s/DAaKZEh9OeuvTEQ/download" alt="AdvSecureNet" width="400" />
+  </a>
 </p>
 
 AdvSecureNet is a Python library for Machine Learning Security, developed by [Melih Catal](https://github.com/melihcatal) at [University of Zurich](https://www.uzh.ch/en.html) as part of his Master’s Thesis under the supervision of [Prof. Dr. Manuel Günther](https://www.ifi.uzh.ch/en/aiml/people/guenther.html). The main focus of the library is on adversarial attacks and defenses for vision tasks, with plans to extend support to other tasks such as natural language processing.
