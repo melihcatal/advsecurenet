@@ -290,4 +290,5 @@ This project is licensed under the terms of the MIT license. See [LICENSE](./LIC
 
 ## Further Information
 
-More information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/). If you have any questions or feedback, please feel free to reach out to us via GitHub issues or email.
+More information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/) and the paper [AdvSecureNet: A Python Toolkit for Adversarial Machine Learning](https://arxiv.org/abs/2409.02629).
+If you have any questions or feedback, please feel free to reach out to us via GitHub issues or email.
