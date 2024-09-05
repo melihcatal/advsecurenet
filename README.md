@@ -58,6 +58,7 @@ The full documentation is available [here](https://melihcatal.github.io/advsecur
 - [Testing](#testing)
 - [Quality Assurance](#quality-assurance)
 - [How to Contribute](#how-to-contribute)
+- [Citation](#citation)
 - [License](#license)
 - [Further Information](#further-information)
 
@@ -267,10 +268,26 @@ By adhering to these practices and leveraging these tools, AdvSecureNet maintain
 
 Thank you for considering contributing to AdvSecureNet! The modular and extensible design of the library makes it easy to add new features, attacks, defenses, and evaluation metrics. Please refer to the [documentation](https://melihcatal.github.io/advsecurenet/contribution.html) for guidelines on how to contribute.
 
+## Citation
+
+To cite AdvSecureNet in your research, please use the following BibTeX entry:
+
+```bibtex
+@misc{catal2024advsecurenetpythontoolkitadversarial,
+      title={AdvSecureNet: A Python Toolkit for Adversarial Machine Learning},
+      author={Melih Catal and Manuel Günther},
+      year={2024},
+      eprint={2409.02629},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2409.02629},
+}
+```
+
 ## License
 
 This project is licensed under the terms of the MIT license. See [LICENSE](./LICENSE) for more details.
 
 ## Further Information
 
-More information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/) and in the paper when it is published (hopefully soon :smile:).
+More information about the library can be found in the [documentation](http://melihcatal.github.io/advsecurenet/). If you have any questions or feedback, please feel free to reach out to us via GitHub issues or email.
