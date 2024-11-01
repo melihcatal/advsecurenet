@@ -16,7 +16,7 @@ class PGD(AdversarialAttack):
         device (torch.device): Device to use for the attack. Defaults to "cpu".
 
     References:
-        [1] Madry, Aleksander, et al. "Towards deep learning models resistant to adversarial attacks." arXiv preprint arXiv:1706.06083 (2017).  
+        [1] Madry, Aleksander, et al. "Towards deep learning models resistant to adversarial attacks." arXiv preprint arXiv:1706.06083 (2017).
     """
 
     def __init__(self, config: PgdAttackConfig) -> None:
@@ -25,7 +25,9 @@ class PGD(AdversarialAttack):
         self.num_iter: int = config.num_iter
         super().__init__(config)
 
-    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs) -> torch.Tensor:
+    def attack(
+        self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs
+    ) -> torch.Tensor:
         """
         Performs the PGD attack on the specified model and input.
 
@@ -48,7 +50,9 @@ class PGD(AdversarialAttack):
         adv_x = torch.clamp(x + delta, 0, 1)
         return adv_x.detach()
 
-    def _pgd_step(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, delta: torch.Tensor) -> torch.Tensor:
+    def _pgd_step(
+        self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, delta: torch.Tensor
+    ) -> torch.Tensor:
         """
         Perform a single PGD step.
         """
@@ -67,11 +71,12 @@ class PGD(AdversarialAttack):
         loss.backward()
 
         # PGD step
-        delta_prime = (delta_prime + self.alpha *
-                       delta_prime.grad.detach().sign()).clamp(-self.epsilon, self.epsilon)
+        delta_prime = (
+            delta_prime + self.alpha * delta_prime.grad.detach().sign()
+        ).clamp(-self.epsilon, self.epsilon)
 
         # Projection step
         # keep pixel values in [0,1]
-        delta_prime = torch.min(torch.max(delta_prime, -x), 1-x)
+        delta_prime = torch.min(torch.max(delta_prime, -x), 1 - x)
 
         return delta_prime

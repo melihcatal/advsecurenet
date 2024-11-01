@@ -6,8 +6,7 @@ import pytest
 import torch
 from torch import nn
 
-from advsecurenet.utils.model_utils import (download_weights, load_model,
-                                            save_model)
+from advsecurenet.utils.model_utils import download_weights, load_model, save_model
 
 
 class SimpleModel(nn.Module):
@@ -54,7 +53,7 @@ def test_save_model_distributed():
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.utils.model_utils.requests.get')
+@patch("advsecurenet.utils.model_utils.requests.get")
 def test_download_weights(mock_get):
     model_name = "resnet50"
     dataset_name = "cifar10"
@@ -62,14 +61,15 @@ def test_download_weights(mock_get):
 
     # Mock the response of the requests.get call
     mock_response = MagicMock()
-    mock_response.iter_content = MagicMock(return_value=[b'1234'])
-    mock_response.headers = {'content-length': '4'}
+    mock_response.iter_content = MagicMock(return_value=[b"1234"])
+    mock_response.headers = {"content-length": "4"}
     mock_response.raise_for_status = MagicMock()
     mock_get.return_value = mock_response
 
     with tempfile.TemporaryDirectory() as temp_dir:
-        download_weights(model_name=model_name,
-                         dataset_name=dataset_name, save_path=temp_dir)
+        download_weights(
+            model_name=model_name, dataset_name=dataset_name, save_path=temp_dir
+        )
         assert os.path.exists(os.path.join(temp_dir, filename))
 
 
@@ -82,10 +82,11 @@ def test_download_weights_already_exists():
 
     with tempfile.TemporaryDirectory() as temp_dir:
         # Create a file to simulate already downloaded weights
-        with open(os.path.join(temp_dir, filename), 'w') as f:
+        with open(os.path.join(temp_dir, filename), "w") as f:
             f.write("dummy content")
 
-        with patch('advsecurenet.utils.model_utils.requests.get') as mock_get:
-            download_weights(model_name=model_name,
-                             dataset_name=dataset_name, save_path=temp_dir)
+        with patch("advsecurenet.utils.model_utils.requests.get") as mock_get:
+            download_weights(
+                model_name=model_name, dataset_name=dataset_name, save_path=temp_dir
+            )
             mock_get.assert_not_called()

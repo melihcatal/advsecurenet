@@ -13,7 +13,10 @@ def test_scheduler_enum_values():
     assert Scheduler.COSINE_ANNEALING_LR.value == lr_scheduler.CosineAnnealingLR
     assert Scheduler.CYCLIC_LR.value == lr_scheduler.CyclicLR
     assert Scheduler.ONE_CYCLE_LR.value == lr_scheduler.OneCycleLR
-    assert Scheduler.COSINE_ANNEALING_WARM_RESTARTS.value == lr_scheduler.CosineAnnealingWarmRestarts
+    assert (
+        Scheduler.COSINE_ANNEALING_WARM_RESTARTS.value
+        == lr_scheduler.CosineAnnealingWarmRestarts
+    )
     assert Scheduler.LAMBDA_LR.value == lr_scheduler.LambdaLR
     assert Scheduler.POLY_LR.value == lr_scheduler.PolynomialLR
     assert Scheduler.LINEAR_LR.value == lr_scheduler.LinearLR
@@ -29,7 +32,10 @@ def test_scheduler_enum_names():
     assert Scheduler.COSINE_ANNEALING_LR.name == "COSINE_ANNEALING_LR"
     assert Scheduler.CYCLIC_LR.name == "CYCLIC_LR"
     assert Scheduler.ONE_CYCLE_LR.name == "ONE_CYCLE_LR"
-    assert Scheduler.COSINE_ANNEALING_WARM_RESTARTS.name == "COSINE_ANNEALING_WARM_RESTARTS"
+    assert (
+        Scheduler.COSINE_ANNEALING_WARM_RESTARTS.name
+        == "COSINE_ANNEALING_WARM_RESTARTS"
+    )
     assert Scheduler.LAMBDA_LR.name == "LAMBDA_LR"
     assert Scheduler.POLY_LR.name == "POLY_LR"
     assert Scheduler.LINEAR_LR.name == "LINEAR_LR"

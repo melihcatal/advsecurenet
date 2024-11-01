@@ -32,7 +32,7 @@ def mock_config(mock_model, mock_test_loader):
         test_loader=mock_test_loader,
         processor=torch.device("cpu"),
         criterion="cross_entropy",
-        topk=5
+        topk=5,
     )
 
 
@@ -54,7 +54,9 @@ def test_tester_test_method(mock_config, mock_model):
     # Example output for batch size 5, 10 classes
     mock_model.return_value = torch.randn(5, 10)
 
-    with patch("advsecurenet.evaluation.tester.tqdm", return_value=mock_config.test_loader):
+    with patch(
+        "advsecurenet.evaluation.tester.tqdm", return_value=mock_config.test_loader
+    ):
         test_loss, accuracy_topk = tester.test()
 
     assert isinstance(test_loss, float)
@@ -70,7 +72,10 @@ def test_validate_topk(mock_config, mock_model):
     tester._validate()
 
     mock_config.topk = 11
-    with pytest.raises(ValueError, match="Top-k value must be less than or equal to the number of classes."):
+    with pytest.raises(
+        ValueError,
+        match="Top-k value must be less than or equal to the number of classes.",
+    ):
         tester = Tester(mock_config)
         tester._validate()
 

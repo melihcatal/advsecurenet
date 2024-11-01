@@ -9,9 +9,12 @@ def models():
 
 
 @models.command()
-@click.option('-m', '--model-type',
-              default='all',
-              help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.")
+@click.option(
+    "-m",
+    "--model-type",
+    default="all",
+    help="The type of model to list. 'custom' for custom models, 'standard' for standard models, and 'all' for all models. Default is 'all'.",
+)
 def list(model_type: str):
     """Command to list available models.
 
@@ -28,8 +31,20 @@ def list(model_type: str):
 
 
 @models.command()
-@click.option('-m', '--model-name', default=None, help='Name of the model to inspect (e.g. "resnet18").')
-@click.option('-n', '--normalization', is_flag=True, type=click.BOOL, default=False, help='Whether to include normalization layer in the model summary.')
+@click.option(
+    "-m",
+    "--model-name",
+    default=None,
+    help='Name of the model to inspect (e.g. "resnet18").',
+)
+@click.option(
+    "-n",
+    "--normalization",
+    is_flag=True,
+    type=click.BOOL,
+    default=False,
+    help="Whether to include normalization layer in the model summary.",
+)
 def layers(model_name: str, normalization: bool):
     """Command to list the layers of a model.
 

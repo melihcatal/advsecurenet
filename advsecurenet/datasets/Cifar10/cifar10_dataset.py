@@ -4,8 +4,7 @@ from torchvision import datasets
 
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.shared.normalization_params import NormalizationParameters
-from advsecurenet.shared.types.configs.preprocess_config import \
-    PreprocessConfig
+from advsecurenet.shared.types.configs.preprocess_config import PreprocessConfig
 
 
 class CIFAR10Dataset(BaseDataset):

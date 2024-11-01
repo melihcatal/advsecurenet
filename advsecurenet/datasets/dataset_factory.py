@@ -7,8 +7,7 @@ from advsecurenet.datasets.ImageNet import ImageNetDataset
 from advsecurenet.datasets.MNIST import FashionMNISTDataset, MNISTDataset
 from advsecurenet.datasets.svhn import SVHNDataset
 from advsecurenet.shared.types import DatasetType
-from advsecurenet.shared.types.configs.preprocess_config import \
-    PreprocessConfig
+from advsecurenet.shared.types.configs.preprocess_config import PreprocessConfig
 
 DATASET_MAP = {
     DatasetType.CIFAR10: CIFAR10Dataset,
@@ -17,9 +16,7 @@ DATASET_MAP = {
     DatasetType.FASHION_MNIST: FashionMNISTDataset,
     DatasetType.CIFAR100: CIFAR100Dataset,
     DatasetType.SVHN: SVHNDataset,
-
     DatasetType.CUSTOM: CustomDataset,
-
 }
 
 
@@ -27,11 +24,14 @@ class DatasetFactory:
     """
     A factory class to create datasets.
     """
+
     @staticmethod
-    def create_dataset(dataset_type: Union[DatasetType, str],
-                       preprocess_config: Optional[PreprocessConfig] = None,
-                       return_loaded: Optional[bool] = False,
-                       **kwargs) -> Union[BaseDataset, tuple[BaseDataset, BaseDataset]]:
+    def create_dataset(
+        dataset_type: Union[DatasetType, str],
+        preprocess_config: Optional[PreprocessConfig] = None,
+        return_loaded: Optional[bool] = False,
+        **kwargs
+    ) -> Union[BaseDataset, tuple[BaseDataset, BaseDataset]]:
         """
         Returns a dataset for the given dataset type.
 
@@ -51,7 +51,8 @@ class DatasetFactory:
                 dataset_type = DatasetType(dataset_type.upper())
             except ValueError as exc:
                 raise TypeError(
-                    'dataset_type must be of type DatasetType or a valid string value from DatasetType.') from exc
+                    "dataset_type must be of type DatasetType or a valid string value from DatasetType."
+                ) from exc
 
         dataset_cls = DATASET_MAP[dataset_type]
 

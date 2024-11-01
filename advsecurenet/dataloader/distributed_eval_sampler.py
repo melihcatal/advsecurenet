@@ -1,4 +1,3 @@
-
 import torch
 import torch.distributed as dist
 from torch.utils.data import Sampler
@@ -63,13 +62,11 @@ class DistributedEvalSampler(Sampler):
     def __init__(self, dataset, num_replicas=None, rank=None, shuffle=False, seed=0):
         if num_replicas is None:
             if not dist.is_available():
-                raise RuntimeError(
-                    "Requires distributed package to be available")
+                raise RuntimeError("Requires distributed package to be available")
             num_replicas = dist.get_world_size()
         if rank is None:
             if not dist.is_available():
-                raise RuntimeError(
-                    "Requires distributed package to be available")
+                raise RuntimeError("Requires distributed package to be available")
             rank = dist.get_rank()
         self.dataset = dataset
         self.num_replicas = num_replicas
@@ -80,7 +77,7 @@ class DistributedEvalSampler(Sampler):
         # true value without extra samples
         self.total_size = len(self.dataset)
         indices = list(range(self.total_size))
-        indices = indices[self.rank:self.total_size:self.num_replicas]
+        indices = indices[self.rank : self.total_size : self.num_replicas]
         # true value without extra samples
         self.num_samples = len(indices)
 
@@ -101,7 +98,7 @@ class DistributedEvalSampler(Sampler):
         # assert len(indices) == self.total_size
 
         # subsample
-        indices = indices[self.rank:self.total_size:self.num_replicas]
+        indices = indices[self.rank : self.total_size : self.num_replicas]
         assert len(indices) == self.num_samples
 
         return iter(indices)

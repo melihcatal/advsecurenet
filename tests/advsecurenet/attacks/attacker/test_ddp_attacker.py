@@ -14,10 +14,10 @@ from advsecurenet.datasets import DatasetFactory
 from advsecurenet.distributed.ddp_base_task import DDPBaseTask
 from advsecurenet.models.model_factory import ModelFactory
 from advsecurenet.shared.types.configs.attack_configs import FgsmAttackConfig
-from advsecurenet.shared.types.configs.attack_configs.attacker_config import \
-    AttackerConfig
-from advsecurenet.shared.types.configs.dataloader_config import \
-    DataLoaderConfig
+from advsecurenet.shared.types.configs.attack_configs.attacker_config import (
+    AttackerConfig,
+)
+from advsecurenet.shared.types.configs.dataloader_config import DataLoaderConfig
 from advsecurenet.shared.types.configs.device_config import DeviceConfig
 from advsecurenet.shared.types.configs.model_config import CreateModelConfig
 
@@ -30,11 +30,7 @@ def processor(request):
 
 @pytest.fixture
 def attacker_config(processor):
-    device_cfg = DeviceConfig(
-        processor=processor,
-        use_ddp=True,
-        gpu_ids=[0, 1]
-    )
+    device_cfg = DeviceConfig(processor=processor, use_ddp=True, gpu_ids=[0, 1])
 
     return AttackerConfig(
         model=ModelFactory.create_model(
@@ -42,25 +38,23 @@ def attacker_config(processor):
                 model_name="CustomMnistModel",
                 num_classes=10,
                 num_input_channels=1,
-                pretrained=False
+                pretrained=False,
             )
         ),
-        attack=FGSM(config=FgsmAttackConfig(
-            epsilon=0.3,
-            device=device_cfg
-        )),
+        attack=FGSM(config=FgsmAttackConfig(epsilon=0.3, device=device_cfg)),
         dataloader=DataLoaderConfig(
             # get the test dataset
             dataset=DatasetFactory.create_dataset(
-                dataset_type="MNIST", return_loaded=True)[1]
+                dataset_type="MNIST", return_loaded=True
+            )[1]
         ),
-        device=device_cfg
+        device=device_cfg,
     )
 
 
 @pytest.fixture
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_device')
+@patch("advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model")
+@patch("advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_device")
 def ddp_attacker(mock_device, mock_model, attacker_config):
     rank = 0
     world_size = 2
@@ -78,28 +72,32 @@ def test_ddp_attacker_initialization(ddp_attacker):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model')
-@patch('advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_device')
+@patch("advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_model")
+@patch("advsecurenet.attacks.attacker.ddp_attacker.DDPBaseTask._setup_device")
 def test_execute_attack(mock_device, mock_setup_model, attacker_config):
     attacker_config.return_adversarial_images = True
 
     ddp_attacker = DDPAttacker(config=attacker_config, rank=0, world_size=2)
-    with mock.patch.object(ddp_attacker, '_execute_attack', return_value=['dummy_image']) as mock_execute_attack, \
-            mock.patch.object(ddp_attacker, '_store_results') as mock_store_results:
+    with mock.patch.object(
+        ddp_attacker, "_execute_attack", return_value=["dummy_image"]
+    ) as mock_execute_attack, mock.patch.object(
+        ddp_attacker, "_store_results"
+    ) as mock_store_results:
         ddp_attacker.execute()
         mock_execute_attack.assert_called_once()
-        mock_store_results.assert_called_once_with(['dummy_image'])
+        mock_store_results.assert_called_once_with(["dummy_image"])
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 def test_store_results(ddp_attacker):
-    adv_images = ['dummy_image']
-    output_path = f'./adv_images_{ddp_attacker._rank}.pkl'
-    with mock.patch('builtins.open', mock.mock_open()) as mock_file, \
-            mock.patch('pickle.dump') as mock_pickle_dump:
+    adv_images = ["dummy_image"]
+    output_path = f"./adv_images_{ddp_attacker._rank}.pkl"
+    with mock.patch("builtins.open", mock.mock_open()) as mock_file, mock.patch(
+        "pickle.dump"
+    ) as mock_pickle_dump:
         ddp_attacker._store_results(adv_images)
-        mock_file.assert_called_once_with(output_path, 'wb')
+        mock_file.assert_called_once_with(output_path, "wb")
         mock_pickle_dump.assert_called_once_with(adv_images, mock_file())
 
 
@@ -107,15 +105,15 @@ def test_store_results(ddp_attacker):
 @pytest.mark.essential
 def test_gather_results():
     world_size = 2
-    dummy_images = ['dummy_image']
+    dummy_images = ["dummy_image"]
     for rank in range(world_size):
-        output_path = f'./adv_images_{rank}.pkl'
-        with open(output_path, 'wb') as f:
+        output_path = f"./adv_images_{rank}.pkl"
+        with open(output_path, "wb") as f:
             pickle.dump(dummy_images, f)
     gathered_images = DDPAttacker.gather_results(world_size)
     assert gathered_images == dummy_images * world_size
     for rank in range(world_size):
-        output_path = f'./adv_images_{rank}.pkl'
+        output_path = f"./adv_images_{rank}.pkl"
         assert not os.path.exists(output_path)
 
 
@@ -124,6 +122,6 @@ def test_gather_results():
 def test_get_iterator(ddp_attacker):
     iterator = ddp_attacker._get_iterator()
     if ddp_attacker._rank == 0:
-        assert hasattr(iterator, '__iter__')
+        assert hasattr(iterator, "__iter__")
     else:
-        assert not hasattr(iterator, '__iter__')
+        assert not hasattr(iterator, "__iter__")

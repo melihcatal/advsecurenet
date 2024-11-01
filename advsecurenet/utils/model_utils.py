@@ -12,11 +12,12 @@ from tqdm.auto import tqdm
 logger = logging.getLogger(__name__)
 
 
-def save_model(model: nn.Module,
-               filename: str,
-               filepath: Optional[str] = None,
-               distributed: bool = False,
-               ):
+def save_model(
+    model: nn.Module,
+    filename: str,
+    filepath: Optional[str] = None,
+    distributed: bool = False,
+):
     """
     Saves the model weights to the given filepath.
 
@@ -41,11 +42,14 @@ def save_model(model: nn.Module,
         torch.save(model.module.state_dict(), os.path.join(filepath, filename))
     else:
         torch.save(model.state_dict(), os.path.join(filepath, filename))
-    click.echo(click.style(
-        f"Saved model to {os.path.join(filepath, filename)}", fg="green"))
+    click.echo(
+        click.style(f"Saved model to {os.path.join(filepath, filename)}", fg="green")
+    )
 
 
-def load_model(model, filename, filepath=None, device: torch.device = torch.device("cpu")):
+def load_model(
+    model, filename, filepath=None, device: torch.device = torch.device("cpu")
+):
     """
     Loads the model weights from the given filepath.
 
@@ -66,17 +70,20 @@ def load_model(model, filename, filepath=None, device: torch.device = torch.devi
     # add .pth extension if not present
     if not filename.endswith(".pth"):
         filename = filename + ".pth"
-    model.load_state_dict(torch.load(os.path.join(
-        filepath, filename), map_location=device))
+    model.load_state_dict(
+        torch.load(os.path.join(filepath, filename), map_location=device)
+    )
     return model
 
 
-def download_weights(model_name: Optional[str] = None,
-                     dataset_name: Optional[str] = None,
-                     filename: Optional[str] = None,
-                     save_path: Optional[str] = pkg_resources.resource_filename(
-                         "advsecurenet", "weights")
-                     ) -> None:
+def download_weights(
+    model_name: Optional[str] = None,
+    dataset_name: Optional[str] = None,
+    filename: Optional[str] = None,
+    save_path: Optional[str] = pkg_resources.resource_filename(
+        "advsecurenet", "weights"
+    ),
+) -> None:
     """
     Downloads model weights from a remote source based on the model and dataset names.
 
@@ -101,7 +108,8 @@ def download_weights(model_name: Optional[str] = None,
     if not filename:
         if model_name is None or dataset_name is None:
             raise ValueError(
-                "Both model_name and dataset_name must be provided if filename is not specified.")
+                "Both model_name and dataset_name must be provided if filename is not specified."
+            )
         filename = f"{model_name}_{dataset_name}_weights.pth"
 
     remote_url = os.path.join(base_url, filename)
@@ -119,21 +127,21 @@ def download_weights(model_name: Optional[str] = None,
             response = requests.get(remote_url, stream=True, timeout=10)
             response.raise_for_status()  # Raise an error for bad responses
 
-            total_size = int(response.headers.get('content-length', 0))
+            total_size = int(response.headers.get("content-length", 0))
             block_size = 8192
 
-            progress_bar = tqdm(total=total_size, unit='B',
-                                unit_scale=True, desc=filename)
+            progress_bar = tqdm(
+                total=total_size, unit="B", unit_scale=True, desc=filename
+            )
 
-            with open(local_file_path, 'wb') as f:
+            with open(local_file_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=block_size):
                     f.write(chunk)
                     progress_bar.update(len(chunk))
 
             progress_bar.close()
 
-            logger.info("Successfully downloaded weights to %s",
-                        local_file_path)
+            logger.info("Successfully downloaded weights to %s", local_file_path)
         except (Exception, KeyboardInterrupt) as e:
             os.remove(local_file_path)
             logger.error("Error occurred while downloading weights: %s", e)

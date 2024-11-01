@@ -14,10 +14,10 @@ from advsecurenet.shared.types.configs.model_config import ExternalModelConfig
 @pytest.fixture
 def mock_config():
     config = ExternalModelConfig(
-        model_name='MockModel',
-        model_arch_path='/path/to/mock_model.py',
+        model_name="MockModel",
+        model_arch_path="/path/to/mock_model.py",
         pretrained=False,
-        model_weights_path='/path/to/mock_model_weights.pth'
+        model_weights_path="/path/to/mock_model_weights.pth",
     )
     return config
 
@@ -38,28 +38,30 @@ def mock_model_class():
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('os.path.exists', return_value=True)
-@patch('importlib.util.spec_from_file_location')
-@patch('importlib.util.module_from_spec')
-def test_load_model(mock_spec, mock_module_from_spec, mock_exists, mock_config, mock_model_class):
+@patch("os.path.exists", return_value=True)
+@patch("importlib.util.spec_from_file_location")
+@patch("importlib.util.module_from_spec")
+def test_load_model(
+    mock_spec, mock_module_from_spec, mock_exists, mock_config, mock_model_class
+):
     # Mocking the importlib functionality
     spec_mock = MagicMock()
     mock_spec.return_value = spec_mock
     module_mock = MagicMock()
-    setattr(module_mock, 'MockModel', mock_model_class)
+    setattr(module_mock, "MockModel", mock_model_class)
     mock_module_from_spec.return_value = module_mock
 
     # Initialize ExternalModel
     external_model = ExternalModel(config=mock_config)
 
     # Assertions
-    mock_exists.assert_called_once_with('/path/to/mock_model.py')
+    mock_exists.assert_called_once_with("/path/to/mock_model.py")
     assert isinstance(external_model.model, MagicMock)
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('os.path.exists', return_value=False)
+@patch("os.path.exists", return_value=False)
 def test_load_model_file_not_found(mock_exists, mock_config):
     with pytest.raises(FileNotFoundError):
         external_model = ExternalModel(config=mock_config)
@@ -68,11 +70,16 @@ def test_load_model_file_not_found(mock_exists, mock_config):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('os.path.exists', return_value=True)
-@patch('importlib.util.spec_from_file_location')
-@patch('importlib.util.module_from_spec')
-@patch('advsecurenet.models.external_model.ExternalModel._ensure_model_class_exists', side_effect=ValueError)
-def test_load_model_class_not_found(mock_module_from_spec, mock_spec, mock_exists, mock_config):
+@patch("os.path.exists", return_value=True)
+@patch("importlib.util.spec_from_file_location")
+@patch("importlib.util.module_from_spec")
+@patch(
+    "advsecurenet.models.external_model.ExternalModel._ensure_model_class_exists",
+    side_effect=ValueError,
+)
+def test_load_model_class_not_found(
+    mock_module_from_spec, mock_spec, mock_exists, mock_config
+):
     # Mocking the importlib functionality
     spec_mock = MagicMock()
     mock_spec.return_value = spec_mock
@@ -89,16 +96,23 @@ def test_load_model_class_not_found(mock_module_from_spec, mock_spec, mock_exist
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('os.path.exists', return_value=True)
-@patch('importlib.util.spec_from_file_location')
-@patch('importlib.util.module_from_spec')
-@patch('torch.load')
-def test_load_model_with_pretrained(mock_torch_load, mock_spec, mock_module_from_spec, mock_exists, mock_config, mock_model_class):
+@patch("os.path.exists", return_value=True)
+@patch("importlib.util.spec_from_file_location")
+@patch("importlib.util.module_from_spec")
+@patch("torch.load")
+def test_load_model_with_pretrained(
+    mock_torch_load,
+    mock_spec,
+    mock_module_from_spec,
+    mock_exists,
+    mock_config,
+    mock_model_class,
+):
     # Mocking the importlib functionality
     spec_mock = MagicMock()
     mock_spec.return_value = spec_mock
     module_mock = MagicMock()
-    setattr(module_mock, 'MockModel', mock_model_class)
+    setattr(module_mock, "MockModel", mock_model_class)
     mock_module_from_spec.return_value = module_mock
 
     # Update config to use pretrained weights
@@ -108,8 +122,9 @@ def test_load_model_with_pretrained(mock_torch_load, mock_spec, mock_module_from
     external_model = ExternalModel(config=mock_config)
 
     # Assertions
-    mock_exists.assert_called_once_with('/path/to/mock_model.py')
-    mock_torch_load.assert_called_once_with('/path/to/mock_model_weights.pth')
+    mock_exists.assert_called_once_with("/path/to/mock_model.py")
+    mock_torch_load.assert_called_once_with("/path/to/mock_model_weights.pth")
     print(
-        f"external model model: {external_model.model} type: {type(external_model.model)}")
+        f"external model model: {external_model.model} type: {type(external_model.model)}"
+    )
     assert isinstance(external_model.model, MagicMock)

@@ -41,24 +41,25 @@ class Tester:
                 test_loss += self._loss_fn(output, target).item()
 
                 # Top-k accuracy
-                _, pred_topk = output.topk(
-                    self._topk, dim=1, largest=True, sorted=True)
-                correct_topk += sum(target[i] in pred_topk[i]
-                                    for i in range(target.size(0)))
+                _, pred_topk = output.topk(self._topk, dim=1, largest=True, sorted=True)
+                correct_topk += sum(
+                    target[i] in pred_topk[i] for i in range(target.size(0))
+                )
 
         dataset = cast(Sized, self._test_loader.dataset)
         test_loss /= len(dataset)
 
-        accuracy_topk = 100. * correct_topk / len(dataset)
+        accuracy_topk = 100.0 * correct_topk / len(dataset)
 
         print(
-            f'\nTest set: Average loss: {test_loss:.4f}, '
-            f'Top-{self._topk} Accuracy: {correct_topk}/{len(self._test_loader.dataset)} ({accuracy_topk:.2f}%)')
+            f"\nTest set: Average loss: {test_loss:.4f}, "
+            f"Top-{self._topk} Accuracy: {correct_topk}/{len(self._test_loader.dataset)} ({accuracy_topk:.2f}%)"
+        )
 
         return test_loss, accuracy_topk
 
     def _validate(self) -> None:
-        """ 
+        """
         Validates the configuration.
 
         Raises:
@@ -69,4 +70,5 @@ class Tester:
             raise ValueError("Top-k value must be greater than 0.")
         if self._topk > self._model._num_classes:
             raise ValueError(
-                "Top-k value must be less than or equal to the number of classes.")
+                "Top-k value must be less than or equal to the number of classes."
+            )

@@ -6,6 +6,4 @@ adversarial_training:
   # --- Target Model and Attack Configurations ---
   models: null # List of models used for generating adversarial examples.
   attacks: # List of attacks used for generating adversarial examples.
-    - Attack1: # Name of the attack.
-        config: path/to/attack1_config.yml # Path to the attack configuration file.
-
+    - attack1: config_file.yml

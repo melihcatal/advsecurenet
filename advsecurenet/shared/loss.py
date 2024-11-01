@@ -7,6 +7,7 @@ class Loss(Enum):
     """
     Supported loss functions for training the model. Taken from https://pytorch.org/docs/stable/nn.html#loss-functions
     """
+
     CROSS_ENTROPY = nn.CrossEntropyLoss
     NLL_LOSS = nn.NLLLoss
     MARGIN_RANKING_LOSS = nn.MarginRankingLoss

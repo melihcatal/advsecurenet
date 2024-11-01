@@ -13,14 +13,12 @@ class StandardModel(BaseModel):
     This class is used to load standard models from torchvision.models. It supports loading pretrained models and
     modifying the model after loading.
 
-    Args: 
+    Args:
         config (StandardModelConfig): The configuration for the standard model.
 
     """
 
-    def __init__(self,
-                 config: StandardModelConfig,
-                 **kwargs):
+    def __init__(self, config: StandardModelConfig, **kwargs):
 
         self._model_name = config.model_name
         self._pretrained = config.pretrained
@@ -45,7 +43,9 @@ class StandardModel(BaseModel):
         model_fn = getattr(models, self._model_name)
         if self._pretrained:
             self.model = model_fn(weights=self._weights)
-            if self._num_classes != 1000:  # ImageNet has 1000 classes, pretrained models are trained on ImageNet
+            if (
+                self._num_classes != 1000
+            ):  # ImageNet has 1000 classes, pretrained models are trained on ImageNet
                 self.modify_model()
         else:
             # if not pretrained, load the model without weights and with the specified number of classes
@@ -59,8 +59,9 @@ class StandardModel(BaseModel):
         named_children_list = list(self.model.named_children())
         for name, module in reversed(named_children_list):
             if isinstance(module, nn.Linear):
-                setattr(self.model, name, nn.Linear(
-                    module.in_features, self._num_classes))
+                setattr(
+                    self.model, name, nn.Linear(module.in_features, self._num_classes)
+                )
                 break
 
     @staticmethod

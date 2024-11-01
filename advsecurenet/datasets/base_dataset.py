@@ -8,12 +8,14 @@ from torchvision import datasets
 from torchvision.transforms import v2 as transforms
 
 from advsecurenet.shared.types.configs.preprocess_config import (
-    PreprocessConfig, PreprocessStep)
+    PreprocessConfig,
+    PreprocessStep,
+)
 from advsecurenet.shared.types.dataset import DataType
 
 
-class ImageFolderBaseDataset():
-    """ 
+class ImageFolderBaseDataset:
+    """
     A mixin class for datasets that use the ImageFolder format.
     """
 
@@ -23,12 +25,15 @@ class ImageFolderBaseDataset():
         """
         return datasets.ImageFolder
 
-    def _create_dataset(self,
-                        dataset_class: datasets,
-                        transform: transforms.Compose,
-                        root: Optional[str] = None,
-                        ):
-        """ 
+    def _create_dataset(
+        self,
+        dataset_class: datasets,
+        transform: transforms.Compose,
+        root: Optional[str] = None,
+        # (kwargs is needed for the consistency of the method signature)
+        **kwargs,
+    ):
+        """
         Creates the dataset.
         """
         return dataset_class(
@@ -38,7 +43,7 @@ class ImageFolderBaseDataset():
 
 
 class DatasetWrapper(TorchDataset):
-    """ 
+    """
     A wrapper class for PyTorch datasets that allows for easy access to the underlying dataset and having customized parameters.
     """
 
@@ -74,9 +79,7 @@ class BaseDataset(TorchDataset, ABC):
         This module uses v2 of the torchvision transforms. Please refer to the official PyTorch documentation for more information about the possible transforms.
     """
 
-    def __init__(self,
-                 preprocess_config: Optional[PreprocessConfig] = None
-                 ):
+    def __init__(self, preprocess_config: Optional[PreprocessConfig] = None):
         self._dataset: DatasetWrapper
         self.mean: List[float] = []
         self.std: List[float] = []
@@ -94,11 +97,13 @@ class BaseDataset(TorchDataset, ABC):
         Returns the dataset class.
         """
 
-    def load_dataset(self,
-                     root: Optional[str] = None,
-                     train: Optional[bool] = True,
-                     download: Optional[bool] = True,
-                     **kwargs) -> DatasetWrapper:
+    def load_dataset(
+        self,
+        root: Optional[str] = None,
+        train: Optional[bool] = True,
+        download: Optional[bool] = True,
+        **kwargs,
+    ) -> DatasetWrapper:
         """
         Loads the dataset.
 
@@ -124,13 +129,10 @@ class BaseDataset(TorchDataset, ABC):
             root=root,
             train=train,
             download=download,
-            **kwargs
+            **kwargs,
         )
 
-        self._dataset = DatasetWrapper(
-            dataset=dataset,
-            name=self.name
-        )
+        self._dataset = DatasetWrapper(dataset=dataset, name=self.name)
         self.data_type = DataType.TRAIN if train else DataType.TEST
         return self._dataset
 
@@ -148,33 +150,46 @@ class BaseDataset(TorchDataset, ABC):
         available_transforms = self._available_transforms()
         if name not in available_transforms:
             raise ValueError(
-                f"Transform {name} is not available. Available transforms are: {list(available_transforms)}")
+                f"Transform {name} is not available. Available transforms are: {list(available_transforms)}"
+            )
         return getattr(transforms, name)
 
     def _convert_param(self, value):
         """Convert parameter strings to appropriate types, especially for torch types."""
         if isinstance(value, str) and "." in value and "torch" in value:
             try:
-                return torch.__dict__[value.split('.')[-1]]
+                return torch.__dict__[value.split(".")[-1]]
             except KeyError as exc:
-                raise ValueError(f'Invalid torch parameter: {value}') from exc
+                raise ValueError(f"Invalid torch parameter: {value}") from exc
         return value
 
-    def _construct_transforms(self, preprocess_steps: List[Union[PreprocessStep, dict]]) -> List[Union[transforms.Compose, transforms.Transform]]:
+    def _construct_transforms(
+        self, preprocess_steps: List[Union[PreprocessStep, dict]]
+    ) -> List[Union[transforms.Compose, transforms.Transform]]:
         """Construct a list of transforms based on configuration steps."""
 
         preprocess_steps: List[PreprocessStep] = self._to_preprocess_step(
-            preprocess_steps)
+            preprocess_steps
+        )
 
         transform_steps = []
         for step in preprocess_steps:
             transform = self._get_transform(step.name)
-            params = {k: self._convert_param(
-                v) for k, v in step.params.items() if v is not None} if step.params else {}
+            params = (
+                {
+                    k: self._convert_param(v)
+                    for k, v in step.params.items()
+                    if v is not None
+                }
+                if step.params
+                else {}
+            )
             transform_steps.append(transform(**params))
         return transform_steps
 
-    def _to_preprocess_step(self, preprocess_steps: List[Union[PreprocessStep, dict]]) -> List[PreprocessStep]:
+    def _to_preprocess_step(
+        self, preprocess_steps: List[Union[PreprocessStep, dict]]
+    ) -> List[PreprocessStep]:
         """
         Converts a list of steps to a PreprocessStep object.
 
@@ -185,33 +200,34 @@ class BaseDataset(TorchDataset, ABC):
             List[PreprocessStep]: The list of preprocess steps as PreprocessStep objects.
         """
         if any(isinstance(step, dict) for step in preprocess_steps):
-            preprocess_steps = [PreprocessStep(**step) if isinstance(
-                step, dict) else step for step in preprocess_steps]
+            preprocess_steps = [
+                PreprocessStep(**step) if isinstance(step, dict) else step
+                for step in preprocess_steps
+            ]
 
         return preprocess_steps
 
-    def _create_dataset(self,
-                        dataset_class: datasets,
-                        transform: transforms.Compose,
-                        root: Optional[str] = None,
-                        train: Optional[bool] = True,
-                        download: Optional[bool] = True,
-                        **kwargs):
+    def _create_dataset(
+        self,
+        dataset_class: datasets,
+        transform: transforms.Compose,
+        root: Optional[str] = None,
+        train: Optional[bool] = True,
+        download: Optional[bool] = True,
+        **kwargs,
+    ):
         return dataset_class(
-            root=root,
-            train=train,
-            transform=transform,
-            download=download,
-            **kwargs
+            root=root, train=train, transform=transform, download=download, **kwargs
         )
 
     def _available_transforms(self) -> List[str]:
-        """ 
+        """
         Returns the available transforms.
         """
         available_transforms = transforms.__dict__.keys()
         available_transforms = [
-            t for t in available_transforms if not t.startswith("_")]
+            t for t in available_transforms if not t.startswith("_")
+        ]
         return available_transforms
 
     def __len__(self) -> int:

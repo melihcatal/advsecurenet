@@ -1,6 +1,7 @@
 """
 This helpers module contans more general helper functions that are not specific to a command type.
 """
+
 import csv
 import json
 import os
@@ -11,9 +12,11 @@ from torchvision.transforms.functional import to_pil_image
 from tqdm.auto import tqdm
 
 
-def save_images(images: Union[torch.Tensor, List[torch.Tensor]],
-                path: str = None,
-                prefix: str = "image") -> None:
+def save_images(
+    images: Union[torch.Tensor, List[torch.Tensor]],
+    path: str = None,
+    prefix: str = "image",
+) -> None:
     """
     Save each image tensor in a batch or a list of batches to the given path. If no path is provided, the images are saved to the current directory.
 
@@ -32,8 +35,7 @@ def save_images(images: Union[torch.Tensor, List[torch.Tensor]],
         images = [images]
 
     # Calculate total number of images
-    total_images = sum(len(batch) if len(batch.shape)
-                       == 4 else 1 for batch in images)
+    total_images = sum(len(batch) if len(batch.shape) == 4 else 1 for batch in images)
 
     # Initialize tqdm progress bar with total number of images
     with tqdm(total=total_images, desc="Saving images", unit="image") as pbar:
@@ -59,7 +61,7 @@ def save_images(images: Union[torch.Tensor, List[torch.Tensor]],
 
 def to_bchw_format(tensor):
     """
-    Converts a tensor from BHWC (batch, height, width, channels) format to BCHW (batch, channels, height, width) format. 
+    Converts a tensor from BHWC (batch, height, width, channels) format to BCHW (batch, channels, height, width) format.
 
     Args:
         tensor (torch.Tensor): Input tensor.
@@ -72,7 +74,7 @@ def to_bchw_format(tensor):
 
     Examples:
 
-        >>> tensor = torch.randn(10, 32, 32, 3) 
+        >>> tensor = torch.randn(10, 32, 32, 3)
         >>> tensor.shape
         torch.Size([10, 32, 32, 3])
         >>> tensor = to_bchw_format(tensor)
@@ -86,7 +88,8 @@ def to_bchw_format(tensor):
     if len(tensor.shape) == 4 and (tensor.shape[3] == 3 or tensor.shape[3] == 1):
         return tensor.permute(0, 3, 1, 2)
     raise ValueError(
-        "Tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images")
+        "Tensor dimensions do not match expected BHWC or BCHW formats for RGB or grayscale images"
+    )
 
 
 def get_device_from_cfg(config) -> torch.device:
@@ -116,7 +119,12 @@ def get_device_from_cfg(config) -> torch.device:
     return device
 
 
-def read_data_from_file(file_path: str, cast_type: Type = str, return_type: Type = list, separator: str = '/n') -> Union[List[Any], set, tuple, torch.Tensor]:
+def read_data_from_file(
+    file_path: str,
+    cast_type: Type = str,
+    return_type: Type = list,
+    separator: str = "/n",
+) -> Union[List[Any], set, tuple, torch.Tensor]:
     """
     Reads data from a file and returns it in the specified format. The function supports text, CSV, and JSON files.
 
@@ -129,11 +137,12 @@ def read_data_from_file(file_path: str, cast_type: Type = str, return_type: Type
     Returns:
         Union[List[Any], set, tuple, torch.Tensor]: The data read from the file in the specified format.
     """
+
     def read_text_file(file_path: str, cast_type: Type, separator: str) -> List[Any]:
         items = []
         with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
-            if separator == '/n':
+            if separator == "/n":
                 for line in content.splitlines():
                     stripped_line = line.strip()
                     if stripped_line:
@@ -165,11 +174,11 @@ def read_data_from_file(file_path: str, cast_type: Type = str, return_type: Type
     _, file_extension = os.path.splitext(file_path)
     file_extension = file_extension.lower()
 
-    if file_extension == '.txt':
+    if file_extension == ".txt":
         data = read_text_file(file_path, cast_type, separator)
-    elif file_extension == '.json':
+    elif file_extension == ".json":
         data = read_json_file(file_path)
-    elif file_extension == '.csv':
+    elif file_extension == ".csv":
         data = read_csv_file(file_path, cast_type, separator)
     else:
         raise ValueError(f"Unsupported file extension: {file_extension}")

@@ -5,10 +5,15 @@ import torch
 from torchvision import datasets
 from torchvision.transforms import v2 as transforms
 
-from advsecurenet.datasets.base_dataset import (BaseDataset, DatasetWrapper,
-                                                ImageFolderBaseDataset)
+from advsecurenet.datasets.base_dataset import (
+    BaseDataset,
+    DatasetWrapper,
+    ImageFolderBaseDataset,
+)
 from advsecurenet.shared.types.configs.preprocess_config import (
-    PreprocessConfig, PreprocessStep)
+    PreprocessConfig,
+    PreprocessStep,
+)
 from advsecurenet.shared.types.dataset import DataType
 
 
@@ -21,13 +26,17 @@ def test_image_folder_base_dataset_get_dataset_class():
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.datasets.base_dataset.datasets.ImageFolder.__init__', return_value=None)
+@patch(
+    "advsecurenet.datasets.base_dataset.datasets.ImageFolder.__init__",
+    return_value=None,
+)
 def test_image_folder_base_dataset_create_dataset(mock_image_folder):
     dataset = ImageFolderBaseDataset()
     mock_transform = MagicMock()
     mock_root = "mock/root"
     dataset_instance = dataset._create_dataset(
-        datasets.ImageFolder, mock_transform, mock_root)
+        datasets.ImageFolder, mock_transform, mock_root
+    )
     assert isinstance(dataset_instance, datasets.ImageFolder)
 
 
@@ -48,10 +57,15 @@ class MockBaseDataset(BaseDataset):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.datasets.base_dataset.pkg_resources.resource_filename', return_value='/mock/data')
-@patch('advsecurenet.datasets.base_dataset.datasets.FakeData', autospec=True)
-@patch('advsecurenet.datasets.base_dataset.BaseDataset._create_dataset')
-def test_base_dataset_load_dataset(mock_create_dataset, mock_dataset_class, mock_resource_filename):
+@patch(
+    "advsecurenet.datasets.base_dataset.pkg_resources.resource_filename",
+    return_value="/mock/data",
+)
+@patch("advsecurenet.datasets.base_dataset.datasets.FakeData", autospec=True)
+@patch("advsecurenet.datasets.base_dataset.BaseDataset._create_dataset")
+def test_base_dataset_load_dataset(
+    mock_create_dataset, mock_dataset_class, mock_resource_filename
+):
     mock_create_dataset.return_value = MagicMock()
     preprocess_config = PreprocessConfig()
     dataset = MockBaseDataset(preprocess_config)
@@ -59,8 +73,7 @@ def test_base_dataset_load_dataset(mock_create_dataset, mock_dataset_class, mock
     mock_transform = MagicMock()
     dataset.get_transforms = MagicMock(return_value=mock_transform)
 
-    loaded_dataset = dataset.load_dataset(
-        train=True, download=True)
+    loaded_dataset = dataset.load_dataset(train=True, download=True)
     assert isinstance(loaded_dataset, DatasetWrapper)
     assert dataset.data_type == DataType.TRAIN
 
@@ -93,31 +106,37 @@ def test_base_dataset_get_transforms_dict():
 @pytest.mark.essential
 def test_base_dataset_get_transform():
     dataset = MockBaseDataset()
-    transform = dataset._get_transform('ToTensor')
+    transform = dataset._get_transform("ToTensor")
     assert transform == transforms.ToTensor
 
     with pytest.raises(ValueError):
-        dataset._get_transform('NonExistentTransform')
+        dataset._get_transform("NonExistentTransform")
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 def test_to_preprocess_step_with_dicts():
     dataset = MockBaseDataset()
-    input_steps = [{'name': 'step1', 'params': {'param1': 'value1'}}, {
-        'name': 'step2', 'params': {'param2': 'value2'}}]
+    input_steps = [
+        {"name": "step1", "params": {"param1": "value1"}},
+        {"name": "step2", "params": {"param2": "value2"}},
+    ]
     result = dataset._to_preprocess_step(input_steps)
     assert all(isinstance(step, PreprocessStep) for step in result)
-    assert result == [PreprocessStep(name='step1', params={
-                                     'param1': 'value1'}), PreprocessStep(name='step2', params={'param2': 'value2'})]
+    assert result == [
+        PreprocessStep(name="step1", params={"param1": "value1"}),
+        PreprocessStep(name="step2", params={"param2": "value2"}),
+    ]
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 def test_to_preprocess_step_with_preprocess_steps():
     dataset = MockBaseDataset()
-    input_steps = [PreprocessStep(name='step1', params={
-                                  'param1': 'value1'}), PreprocessStep(name='step2', params={'param2': 'value2'})]
+    input_steps = [
+        PreprocessStep(name="step1", params={"param1": "value1"}),
+        PreprocessStep(name="step2", params={"param2": "value2"}),
+    ]
     result = dataset._to_preprocess_step(input_steps)
     assert result == input_steps
 
@@ -126,23 +145,29 @@ def test_to_preprocess_step_with_preprocess_steps():
 @pytest.mark.essential
 def test_to_preprocess_step_with_mixed_input():
     dataset = MockBaseDataset()
-    input_steps = [{'name': 'step1', 'params': {'param1': 'value1'}},
-                   PreprocessStep(name='step2', params={'param2': 'value2'})]
+    input_steps = [
+        {"name": "step1", "params": {"param1": "value1"}},
+        PreprocessStep(name="step2", params={"param2": "value2"}),
+    ]
     result = dataset._to_preprocess_step(input_steps)
     assert all(isinstance(step, PreprocessStep) for step in result)
-    assert result == [PreprocessStep(name='step1', params={
-                                     'param1': 'value1'}), PreprocessStep(name='step2', params={'param2': 'value2'})]
+    assert result == [
+        PreprocessStep(name="step1", params={"param1": "value1"}),
+        PreprocessStep(name="step2", params={"param2": "value2"}),
+    ]
 
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 def test_to_preprocess_step_with_empty_params():
     dataset = MockBaseDataset()
-    input_steps = [{'name': 'step1'}, {'name': 'step2', 'params': None}]
+    input_steps = [{"name": "step1"}, {"name": "step2", "params": None}]
     result = dataset._to_preprocess_step(input_steps)
     assert all(isinstance(step, PreprocessStep) for step in result)
-    assert result == [PreprocessStep(
-        name='step1', params=None), PreprocessStep(name='step2', params=None)]
+    assert result == [
+        PreprocessStep(name="step1", params=None),
+        PreprocessStep(name="step2", params=None),
+    ]
 
 
 @pytest.mark.advsecurenet
@@ -156,7 +181,7 @@ def test_base_dataset_convert_param():
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.datasets.base_dataset.transforms.Compose', autospec=True)
+@patch("advsecurenet.datasets.base_dataset.transforms.Compose", autospec=True)
 def test_base_dataset_construct_transforms_dict(mock_transforms_compose):
     preprocess_steps = [{"name": "ToTensor"}]
     dataset = MockBaseDataset()
@@ -169,7 +194,7 @@ def test_base_dataset_construct_transforms_dict(mock_transforms_compose):
 
 @pytest.mark.advsecurenet
 @pytest.mark.essential
-@patch('advsecurenet.datasets.base_dataset.transforms.Compose', autospec=True)
+@patch("advsecurenet.datasets.base_dataset.transforms.Compose", autospec=True)
 def test_base_dataset_construct_transforms(mock_transforms_compose):
     preprocess_steps = [PreprocessStep(name="ToTensor")]
     dataset = MockBaseDataset()
@@ -185,7 +210,7 @@ def test_base_dataset_construct_transforms(mock_transforms_compose):
 def test_base_dataset_available_transforms():
     dataset = MockBaseDataset()
     available_transforms = dataset._available_transforms()
-    assert 'ToTensor' in available_transforms
+    assert "ToTensor" in available_transforms
 
 
 @pytest.mark.advsecurenet

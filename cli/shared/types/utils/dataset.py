@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from advsecurenet.shared.types.configs.preprocess_config import \
-    PreprocessConfig
+from advsecurenet.shared.types.configs.preprocess_config import PreprocessConfig
 
 
 @dataclass
@@ -10,6 +9,7 @@ class DatasetCliConfigType:
     """
     This dataclass is used to store the configuration of the dataset CLI.
     """
+
     dataset_name: str
     num_classes: int
     train_dataset_path: Optional[str] = None
@@ -28,5 +28,6 @@ class AttacksDatasetCliConfigType(DatasetCliConfigType):
         random_sample_size (Optional[int]): The size of the random sample to be taken from the dataset.
 
     """
+
     dataset_part: Optional[str] = "test"
     random_sample_size: Optional[int] = None

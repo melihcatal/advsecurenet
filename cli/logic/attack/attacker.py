@@ -11,10 +11,8 @@ from advsecurenet.datasets.base_dataset import DatasetWrapper
 from advsecurenet.datasets.targeted_adv_dataset import AdversarialDataset
 from advsecurenet.distributed.ddp_coordinator import DDPCoordinator
 from advsecurenet.shared.types.attacks import AttackType
-from advsecurenet.shared.types.configs.dataloader_config import \
-    DataLoaderConfig
-from advsecurenet.utils.adversarial_target_generator import \
-    AdversarialTargetGenerator
+from advsecurenet.shared.types.configs.dataloader_config import DataLoaderConfig
+from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 from advsecurenet.utils.ddp import set_visible_gpus
 from cli.shared.types.attack import BaseAttackCLIConfigType
 from cli.shared.types.utils.target import TargetCLIConfigType
@@ -30,7 +28,9 @@ class CLIAttacker:
     Attacker class for the CLI. This module parses the CLI arguments and executes the attack.
     """
 
-    def __init__(self, config: BaseAttackCLIConfigType, attack_type: AttackType, **kwargs):
+    def __init__(
+        self, config: BaseAttackCLIConfigType, attack_type: AttackType, **kwargs
+    ):
         self._config: BaseAttackCLIConfigType = config
         self._attack_type: AttackType = attack_type
         self._adv_target_generator = AdversarialTargetGenerator()
@@ -43,8 +43,10 @@ class CLIAttacker:
         """
         logger.info("Starting %s attack.", self._attack_type.value)
         if self._config.device.use_ddp:
-            logger.info("Using DDP for attack with the following GPUs: %s",
-                        self._config.device.gpu_ids)
+            logger.info(
+                "Using DDP for attack with the following GPUs: %s",
+                self._config.device.gpu_ids,
+            )
             self._execute_ddp_attack()
 
         else:
@@ -52,11 +54,10 @@ class CLIAttacker:
             self._execute_attack()
 
         click.secho("Attack completed successfully.", fg="green")
-        logger.info("%s attack completed successfully.",
-                    self._attack_type.value)
+        logger.info("%s attack completed successfully.", self._attack_type.value)
 
     def _execute_attack(self):
-        """ 
+        """
         Non-Distributed attack function. Initializes the attacker and runs the attack.
         """
         config = self._prepare_attack_config()
@@ -69,8 +70,7 @@ class CLIAttacker:
         DDP Training function. Initializes the DDPCoordinator and runs the training.
         """
         if self._config.device.gpu_ids is None or len(self._config.device.gpu_ids) == 0:
-            self._config.device.gpu_ids = list(
-                range(torch.cuda.device_count()))
+            self._config.device.gpu_ids = list(range(torch.cuda.device_count()))
 
         world_size = len(self._config.device.gpu_ids)
         set_visible_gpus(self._config.device.gpu_ids)
@@ -87,11 +87,10 @@ class CLIAttacker:
         ddp_attacker = DDPAttacker(attack_config, rank, world_size)
         ddp_attacker.execute()
 
-    def _save_images_if_needed(self,
-                               adv_imgs: Optional[list] = None,
-                               world_size: Optional[int] = None
-                               ):
-        """ 
+    def _save_images_if_needed(
+        self, adv_imgs: Optional[list] = None, world_size: Optional[int] = None
+    ):
+        """
         Save the adversarial images if needed. If the attack is distributed, gather the results from all processes.
 
         Args:
@@ -100,7 +99,12 @@ class CLIAttacker:
 
         """
 
-        if self._config.attack_procedure.save_result_images and self._config.device.use_ddp and (world_size or len(self._config.device.gpu_ids)) and not adv_imgs:
+        if (
+            self._config.attack_procedure.save_result_images
+            and self._config.device.use_ddp
+            and (world_size or len(self._config.device.gpu_ids))
+            and not adv_imgs
+        ):
             logger.info("Gathering results from all processes.")
             adv_imgs = DDPAttacker.gather_results(world_size)
 
@@ -133,7 +137,7 @@ class CLIAttacker:
             dataloader=dataloader_config,
             device=self._config.device,
             return_adversarial_images=self._config.attack_procedure.save_result_images,
-            evaluators=self._kwargs.get("evaluators", ["attack_success_rate"])
+            evaluators=self._kwargs.get("evaluators", ["attack_success_rate"]),
         )
 
         return config
@@ -144,14 +148,17 @@ class CLIAttacker:
                 file_path=self._config.attack_config.target_parameters.target_labels_path,
                 cast_type=int,
                 return_type=list,
-                separator=self._config.attack_config.target_parameters.target_labels_separator)
+                separator=self._config.attack_config.target_parameters.target_labels_separator,
+            )
             return target_labels
         return None
 
     def _create_attack(self):
         attack_config = self._config.attack_config.attack_parameters
         try:
-            attack_config.targeted = self._config.attack_config.target_parameters.targeted or False
+            attack_config.targeted = (
+                self._config.attack_config.target_parameters.targeted or False
+            )
         except AttributeError:
             attack_config.targeted = False
 
@@ -170,11 +177,13 @@ class CLIAttacker:
             shuffle=self._config.dataloader.default.shuffle,
             drop_last=self._config.dataloader.default.drop_last,
             pin_memory=self._config.dataloader.default.pin_memory,
-            sampler=None  # this will be set by the attacker later
+            sampler=None,  # this will be set by the attacker later
         )
         return dataloader_config
 
-    def _prepare_dataset(self) -> Union[torch.utils.data.TensorDataset, AdversarialDataset]:
+    def _prepare_dataset(
+        self,
+    ) -> Union[torch.utils.data.TensorDataset, AdversarialDataset]:
         """
         Prepare the dataset.
 
@@ -191,7 +200,8 @@ class CLIAttacker:
         all_data = self._sample_data_if_required(all_data)
 
         all_data = self._generate_or_assign_target_labels(
-            all_data, target_parameters, target_labels)
+            all_data, target_parameters, target_labels
+        )
 
         return all_data
 
@@ -200,7 +210,10 @@ class CLIAttacker:
         Check if target labels are available and return them if they are.
 
         """
-        if target_parameters and (target_parameters.target_labels_config.target_labels_path or target_parameters.target_labels_config.target_labels):
+        if target_parameters and (
+            target_parameters.target_labels_config.target_labels_path
+            or target_parameters.target_labels_config.target_labels
+        ):
             return self._get_target_labels()
         return None
 
@@ -211,7 +224,11 @@ class CLIAttacker:
         elif dataset_part == "test":
             return self._validate_dataset_availability(test_data, "test")
         else:
-            return train_data + test_data if train_data and test_data else train_data or test_data
+            return (
+                train_data + test_data
+                if train_data and test_data
+                else train_data or test_data
+            )
 
     def _sample_data_if_required(self, all_data):
         sample_size = self._config.dataset.random_sample_size
@@ -219,38 +236,47 @@ class CLIAttacker:
             return self._sample_data(all_data, sample_size)
         return all_data
 
-    def _generate_or_assign_target_labels(self, all_data, target_parameters, target_labels):
+    def _generate_or_assign_target_labels(
+        self, all_data, target_parameters, target_labels
+    ):
         if target_parameters and target_parameters.targeted:
             if target_parameters.auto_generate_target:
                 logger.info("Generating target labels and images.")
                 all_data = self._generate_target(all_data)
                 logger.info(
-                    "Target labels and images generated successfully. Total length of the dataset: %s", len(all_data))
+                    "Target labels and images generated successfully. Total length of the dataset: %s",
+                    len(all_data),
+                )
             elif target_labels:
                 all_data = AdversarialDataset(
-                    base_dataset=all_data, target_labels=target_labels)
+                    base_dataset=all_data, target_labels=target_labels
+                )
                 logger.info(
-                    "Target labels are provided. Total length of the dataset: %s", len(all_data))
+                    "Target labels are provided. Total length of the dataset: %s",
+                    len(all_data),
+                )
         return all_data
 
     def _generate_target(self, data: DatasetWrapper) -> AdversarialDataset:
         # if the attack is lots and targeted and auto_generate_target is set to True, generate target labels and target images
         if self._attack_type == AttackType.LOTS:
-            target_images, target_labels = self._adv_target_generator.generate_target_images_and_labels(
-                data=data)
+            target_images, target_labels = (
+                self._adv_target_generator.generate_target_images_and_labels(data=data)
+            )
             logger.info("Successfully extracted target labels and images.")
 
             adv_data = AdversarialDataset(
                 base_dataset=data,
                 target_labels=target_labels,
-                target_images=target_images
+                target_images=target_images,
             )
         else:
             target_labels = self._adv_target_generator.generate_target_labels(
-                data, overwrite=True)
+                data=data, overwrite=True
+            )
             adv_data = AdversarialDataset(
-                base_dataset=data,
-                target_labels=target_labels)
+                base_dataset=data, target_labels=target_labels
+            )
 
         return adv_data
 
@@ -289,7 +315,8 @@ class CLIAttacker:
         """
         Save the adversarial images.
         """
-        save_images(images=adv_images,
-                    path=self._config.attack_procedure.result_images_dir or "results",
-                    prefix=self._config.attack_procedure.result_images_prefix or "adv"
-                    )
+        save_images(
+            images=adv_images,
+            path=self._config.attack_procedure.result_images_dir or "results",
+            prefix=self._config.attack_procedure.result_images_prefix or "adv",
+        )

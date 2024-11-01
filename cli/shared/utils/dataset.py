@@ -4,11 +4,15 @@ from torch.utils.data import Dataset as TorchDataset
 
 from advsecurenet.datasets import DatasetFactory
 from advsecurenet.shared.types.dataset import DatasetType
-from cli.shared.types.utils.dataset import (AttacksDatasetCliConfigType,
-                                            DatasetCliConfigType)
+from cli.shared.types.utils.dataset import (
+    AttacksDatasetCliConfigType,
+    DatasetCliConfigType,
+)
 
 
-def get_datasets(config: DatasetCliConfigType, **kwargs) -> Tuple[Optional[TorchDataset], Optional[TorchDataset]]:
+def get_datasets(
+    config: DatasetCliConfigType, **kwargs
+) -> Tuple[Optional[TorchDataset], Optional[TorchDataset]]:
     """
     Load the datasets conditionally based on provided paths.
 
@@ -30,25 +34,26 @@ def get_datasets(config: DatasetCliConfigType, **kwargs) -> Tuple[Optional[Torch
     def load_dataset_part(train: bool, path: Optional[str]) -> Optional[TorchDataset]:
         try:
             return dataset_obj.load_dataset(
-                train=train,
-                root=path,
-                download=config.download,
-                **kwargs
+                train=train, root=path, download=config.download, **kwargs
             )
         except FileNotFoundError:
             return None
 
     if isinstance(config, AttacksDatasetCliConfigType):
         config = cast(AttacksDatasetCliConfigType, config)
-        train_data = load_dataset_part(
-            train=True, path=config.train_dataset_path) if config.dataset_part in ["train", "all"] else None
-        test_data = load_dataset_part(
-            train=False, path=config.test_dataset_path) if config.dataset_part in ["test", "all"] else None
+        train_data = (
+            load_dataset_part(train=True, path=config.train_dataset_path)
+            if config.dataset_part in ["train", "all"]
+            else None
+        )
+        test_data = (
+            load_dataset_part(train=False, path=config.test_dataset_path)
+            if config.dataset_part in ["test", "all"]
+            else None
+        )
     else:
-        train_data = load_dataset_part(
-            train=True, path=config.train_dataset_path)
-        test_data = load_dataset_part(
-            train=False, path=config.test_dataset_path)
+        train_data = load_dataset_part(train=True, path=config.train_dataset_path)
+        test_data = load_dataset_part(train=False, path=config.test_dataset_path)
 
     return train_data, test_data
 
@@ -67,7 +72,9 @@ def _validate_dataset_name(dataset_name: str) -> str:
     try:
         DatasetType(dataset_name)
     except ValueError as e:
-        raise ValueError("Unsupported dataset name! Choose from: " +
-                         ", ".join([e.value for e in DatasetType])) from e
+        raise ValueError(
+            "Unsupported dataset name! Choose from: "
+            + ", ".join([e.value for e in DatasetType])
+        ) from e
 
     return dataset_name

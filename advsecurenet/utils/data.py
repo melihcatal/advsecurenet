@@ -5,7 +5,9 @@ import torch
 from torch.utils.data import Subset, TensorDataset, random_split
 
 
-def get_subset_data(data: torch.utils.data.Dataset, num_samples: int, random_seed: Optional[int] = None) -> torch.utils.data.Dataset:
+def get_subset_data(
+    data: torch.utils.data.Dataset, num_samples: int, random_seed: Optional[int] = None
+) -> torch.utils.data.Dataset:
     """
     Returns a subset of the given dataset.
 
@@ -26,7 +28,9 @@ def get_subset_data(data: torch.utils.data.Dataset, num_samples: int, random_see
     return subset
 
 
-def unnormalize_data(data: torch.Tensor, mean: torch.Tensor, std: torch.Tensor) -> torch.Tensor:
+def unnormalize_data(
+    data: torch.Tensor, mean: torch.Tensor, std: torch.Tensor
+) -> torch.Tensor:
     """
     Unnormalizes the given data using the given mean and standard deviation.
 
@@ -39,7 +43,9 @@ def unnormalize_data(data: torch.Tensor, mean: torch.Tensor, std: torch.Tensor) 
         torch.Tensor: The unnormalized data.
     """
     device = data.device
-    return data * torch.tensor(std, device=device).view(1, -1, 1, 1) + torch.tensor(mean, device=device).view(1, -1, 1, 1)
+    return data * torch.tensor(std, device=device).view(1, -1, 1, 1) + torch.tensor(
+        mean, device=device
+    ).view(1, -1, 1, 1)
 
 
 def split_data(x, y, test_size=0.2, val_size=0.25, random_state=None):
@@ -79,7 +85,8 @@ def split_data(x, y, test_size=0.2, val_size=0.25, random_state=None):
 
     # Perform random splits
     train_dataset, val_dataset, test_dataset = random_split(
-        dataset, [train_samples, val_samples, test_samples])
+        dataset, [train_samples, val_samples, test_samples]
+    )
 
     # Separate features and targets for each split
     x_train = [x[0] for x in train_dataset]

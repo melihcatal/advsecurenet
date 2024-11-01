@@ -36,7 +36,7 @@ def mock_model(device):
             model_name="CustomCifar10Model",
             num_classes=10,
             num_input_channels=3,
-            pretrained=False
+            pretrained=False,
         )
     )
     model = model.to(device)
@@ -71,15 +71,22 @@ def test_cw_attack_init(mock_config):
 
 @pytest.mark.advsecurenet
 @pytest.mark.comprehensive
-@patch('advsecurenet.attacks.gradient_based.cw.CWAttack._run_attack', return_value=torch.randn((1, 3, 32, 32), dtype=torch.float32))
-@patch('advsecurenet.attacks.gradient_based.cw.CWAttack._is_successful', return_value=torch.tensor([True], dtype=torch.bool))
-def test_attack(mock_run_attack, mock_is_successful, mock_config, mock_model, mock_tensors):
+@patch(
+    "advsecurenet.attacks.gradient_based.cw.CWAttack._run_attack",
+    return_value=torch.randn((1, 3, 32, 32), dtype=torch.float32),
+)
+@patch(
+    "advsecurenet.attacks.gradient_based.cw.CWAttack._is_successful",
+    return_value=torch.tensor([True], dtype=torch.bool),
+)
+def test_attack(
+    mock_run_attack, mock_is_successful, mock_config, mock_model, mock_tensors
+):
     x, y = mock_tensors
 
     # Move the mock return values to the device of x
     mock_run_attack.return_value = mock_run_attack.return_value.to(x.device)
-    mock_is_successful.return_value = mock_is_successful.return_value.to(
-        x.device)
+    mock_is_successful.return_value = mock_is_successful.return_value.to(x.device)
 
     attack = CWAttack(mock_config)
     adv_x = attack.attack(mock_model, x, y)

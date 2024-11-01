@@ -9,8 +9,11 @@ from advsecurenet.models.custom_model import CustomModel
 from advsecurenet.models.external_model import ExternalModel
 from advsecurenet.models.standard_model import StandardModel
 from advsecurenet.shared.types.configs.model_config import (
-    CreateModelConfig, CustomModelConfig, ExternalModelConfig,
-    StandardModelConfig)
+    CreateModelConfig,
+    CustomModelConfig,
+    ExternalModelConfig,
+    StandardModelConfig,
+)
 from advsecurenet.shared.types.model import ModelType
 from advsecurenet.utils.reproducibility_utils import set_seed
 
@@ -49,12 +52,12 @@ class ModelFactory:
             return ModelType.CUSTOM
 
         raise ValueError(
-            "Unsupported model. If you are trying to load an external model, please set is_external=True in the CreateModelConfig.")
+            "Unsupported model. If you are trying to load an external model, please set is_external=True in the CreateModelConfig."
+        )
 
     @staticmethod
-    def create_model(config: Optional[CreateModelConfig] = None,
-                     **kwargs) -> BaseModel:
-        """ 
+    def create_model(config: Optional[CreateModelConfig] = None, **kwargs) -> BaseModel:
+        """
         This function creates a model based on the CreateModelConfig.
 
         Args:
@@ -90,12 +93,11 @@ class ModelFactory:
                     num_classes=config.num_classes,
                     model_arch_path=config.model_arch_path,
                     pretrained=config.pretrained,
-                    model_weights_path=config.model_weights_path
+                    model_weights_path=config.model_weights_path,
                 )
                 return ExternalModel(cfg, **kwargs)
 
-            inferred_type: ModelType = ModelFactory.infer_model_type(
-                config.model_name)
+            inferred_type: ModelType = ModelFactory.infer_model_type(config.model_name)
 
             ModelFactory._validate_create_model_config(inferred_type, config)
 
@@ -106,7 +108,7 @@ class ModelFactory:
                     model_name=config.model_name,
                     num_classes=config.num_classes,
                     pretrained=config.pretrained,
-                    weights=config.weights
+                    weights=config.weights,
                 )
                 return StandardModel(cfg, **kwargs)
 
@@ -118,7 +120,7 @@ class ModelFactory:
                     num_classes=config.num_classes,
                     num_input_channels=config.num_input_channels,
                     custom_models_path=config.custom_models_path,
-                    pretrained=config.pretrained
+                    pretrained=config.pretrained,
                 )
                 return CustomModel(cfg, **kwargs)
         except Exception as e:
@@ -130,16 +132,22 @@ class ModelFactory:
     def _validate_create_model_config(
         inferred_type: ModelType, config: CreateModelConfig
     ):
-        """ 
+        """
         This function validates the CreateModelConfig based on the inferred model type.
         """
         if inferred_type == ModelType.CUSTOM and config.pretrained:
             raise ValueError(
-                "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
+                "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model."
+            )
 
-        if inferred_type == ModelType.STANDARD and config.pretrained and config.random_seed is not None:
+        if (
+            inferred_type == ModelType.STANDARD
+            and config.pretrained
+            and config.random_seed is not None
+        ):
             raise ValueError(
-                "Pretrained standard models do not support random seed. They already have a fixed set of weights :)")
+                "Pretrained standard models do not support random seed. They already have a fixed set of weights :)"
+            )
 
     @staticmethod
     def available_models() -> list[str]:
@@ -194,11 +202,14 @@ class ModelFactory:
         inferred_type: ModelType = ModelFactory.infer_model_type(model_name)
         if inferred_type == ModelType.CUSTOM:
             raise ValueError(
-                "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model.")
+                "Custom models do not support pretrained weights. Instead, you can load the weights after loading the model."
+            )
         return StandardModel.available_weights(model_name)
 
     @staticmethod
-    def add_layer(model: nn.Module, new_layer: nn.Module, position: int = -1) -> nn.Module:
+    def add_layer(
+        model: nn.Module, new_layer: nn.Module, position: int = -1
+    ) -> nn.Module:
         """
         Inserts a new layer into an existing PyTorch model at the specified position. If the model is not a Sequential model,
         it will be converted into one.

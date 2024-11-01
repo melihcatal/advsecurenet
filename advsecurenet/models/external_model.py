@@ -13,9 +13,7 @@ class ExternalModel(BaseModel):
     This class is used to load external models that are not provided by the package. These models are loaded from external Python files.
     """
 
-    def __init__(self,
-                 config: ExternalModelConfig,
-                 **kwargs):
+    def __init__(self, config: ExternalModelConfig, **kwargs):
 
         self._model_name = config.model_name
         self._model_arch_path = config.model_arch_path
@@ -32,11 +30,13 @@ class ExternalModel(BaseModel):
         """
         if not os.path.exists(self._model_arch_path):
             raise FileNotFoundError(
-                f"Model architecture file not found at {self._model_arch_path}")
+                f"Model architecture file not found at {self._model_arch_path}"
+            )
 
         # Dynamically import the external model based on its path
         spec = importlib.util.spec_from_file_location(
-            self._model_name, self._model_arch_path)
+            self._model_name, self._model_arch_path
+        )
         custom_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(custom_module)
 
@@ -48,18 +48,15 @@ class ExternalModel(BaseModel):
         self.model = model_class()
         if self._pretrained:
             try:
-                self.model.load_state_dict(torch.load(
-                    self._model_weights_path))
+                self.model.load_state_dict(torch.load(self._model_weights_path))
             except Exception as e:
-                raise ValueError(
-                    f"Error loading model weights! Details: {e}") from e
+                raise ValueError(f"Error loading model weights! Details: {e}") from e
 
     def models(self):
         """
         Returns a list of available external models.
         """
-        raise NotImplementedError(
-            "This method is not applicable for external models.")
+        raise NotImplementedError("This method is not applicable for external models.")
 
     def _ensure_model_class_exists(self, module: ModuleType) -> None:
         """
@@ -73,4 +70,5 @@ class ExternalModel(BaseModel):
         """
         if not hasattr(module, self._model_name):
             raise ValueError(
-                f"Model class {self._model_name} not found in module {self._model_arch_path}")
+                f"Model class {self._model_name} not found in module {self._model_arch_path}"
+            )

@@ -1,4 +1,5 @@
 import logging
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -7,7 +8,7 @@ from advsecurenet.shared.types.configs.configs import ConfigType
 from cli.logic.evaluation.test.test import cli_test
 from cli.shared.types.evaluation.testing import TestingCliConfigType
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("cli.logic.evaluation.test.test")
 
 
 @patch("cli.logic.evaluation.test.test.load_and_instantiate_config")
@@ -24,7 +25,7 @@ def test_cli_test_success(mock_CLITester, mock_load_and_instantiate_config):
         default_config_file="test_config.yml",
         config_type=ConfigType.TEST,
         config_class=TestingCliConfigType,
-        extra_arg="value"
+        extra_arg="value",
     )
     mock_CLITester.assert_called_once_with(mock_config_data)
     mock_tester_instance.test.assert_called_once()
@@ -40,7 +41,7 @@ def test_cli_test_test_failure(mock_CLITester, mock_load_and_instantiate_config)
     test_error = Exception("Test error")
     mock_tester_instance.test.side_effect = test_error
 
-    with patch("logging.error") as mock_logging_error:
+    with mock.patch.object(logger, "error") as mock_logging_error:
         with pytest.raises(Exception, match="Test error"):
             cli_test("config_path", extra_arg="value")
 
@@ -49,9 +50,10 @@ def test_cli_test_test_failure(mock_CLITester, mock_load_and_instantiate_config)
             default_config_file="test_config.yml",
             config_type=ConfigType.TEST,
             config_class=TestingCliConfigType,
-            extra_arg="value"
+            extra_arg="value",
         )
         mock_CLITester.assert_called_once_with(mock_config_data)
         mock_tester_instance.test.assert_called_once()
         mock_logging_error.assert_called_once_with(
-            "Failed to test model: %s", test_error)
+            "Failed to test model: %s", test_error
+        )

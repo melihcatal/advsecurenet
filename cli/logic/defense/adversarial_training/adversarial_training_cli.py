@@ -1,4 +1,3 @@
-
 from dataclasses import asdict
 from typing import List
 
@@ -6,16 +5,14 @@ import click
 
 from advsecurenet.attacks.base.adversarial_attack import AdversarialAttack
 from advsecurenet.defenses.adversarial_training import AdversarialTraining
-from advsecurenet.defenses.ddp_adversarial_training import \
-    DDPAdversarialTraining
+from advsecurenet.defenses.ddp_adversarial_training import DDPAdversarialTraining
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import AttackConfig
 from advsecurenet.shared.types.configs.configs import ConfigType
-from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import \
-    AdversarialTrainingConfig
-from advsecurenet.utils.adversarial_target_generator import \
-    AdversarialTargetGenerator
+from advsecurenet.shared.types.configs.defense_configs.adversarial_training_config import (
+    AdversarialTrainingConfig,
+)
+from advsecurenet.utils.adversarial_target_generator import AdversarialTargetGenerator
 from cli.logic.train.trainer import CLITrainer
 from cli.shared.types.defense.adversarial_training import ATCliConfigType
 from cli.shared.types.utils.model import ModelCliConfigType
@@ -90,10 +87,10 @@ class ATCLITrainer(CLITrainer):
         models = [
             create_model(
                 load_and_instantiate_config(
-                    config=model_config.get('config'),
+                    config=model_config.get("config"),
                     default_config_file="model_config.yml",
                     config_type=ConfigType.MODEL,
-                    config_class=ModelCliConfigType
+                    config_class=ModelCliConfigType,
                 )
             )
             for model_config in self.at_config.models
@@ -101,13 +98,10 @@ class ATCLITrainer(CLITrainer):
 
         return models
 
-    def _prepare_training_environment(self, rank: int | None = None) -> AdversarialTrainingConfig:
+    def _prepare_training_environment(self) -> AdversarialTrainingConfig:
 
         # configure the model that will be adversarially trained
-        if rank is not None:
-            model = self._initialize_model(rank)
-        else:
-            model = self._initialize_model()
+        model = self._initialize_model()
 
         train_loader = self._prepare_dataloader()
         train_config = self._prepare_train_config(model, train_loader)
@@ -119,9 +113,7 @@ class ATCLITrainer(CLITrainer):
         models.append(model)
 
         config = AdversarialTrainingConfig(
-            models=models,
-            attacks=attacks,
-            **asdict(train_config)
+            models=models, attacks=attacks, **asdict(train_config)
         )
         return config
 
@@ -135,10 +127,9 @@ class ATCLITrainer(CLITrainer):
         """
         # the model must be initialized in each process
 
-        config = self._prepare_training_environment(rank)
+        config = self._prepare_training_environment()
 
-        ddp_trainer = DDPAdversarialTraining(
-            config, rank, world_size)
+        ddp_trainer = DDPAdversarialTraining(config, rank, world_size)
         ddp_trainer.train()
 
     def _execute_training(self) -> None:

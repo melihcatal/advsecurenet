@@ -26,10 +26,34 @@ def list():
 
 
 @configs.command()
-@click.option('-c', '--config-name', default=None, help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.')
-@click.option('-s', '--save', type=click.BOOL, is_flag=True, default=False, help='Whether to save the configuration file to the current directory. Defaults to False.')
-@click.option('-p', '--print-output', 'print_output', is_flag=True, default=False, help='Whether to print the configuration file to the console. Defaults to False.')
-@click.option('-o', '--output-path', default=None, help='The directory to save the configuration file to. If not specified, defaults to the current working directory.')
+@click.option(
+    "-c",
+    "--config-name",
+    default=None,
+    help='Name of the configuration file to use. If you are unsure, use the "configs" command to list available configuration files.',
+)
+@click.option(
+    "-s",
+    "--save",
+    type=click.BOOL,
+    is_flag=True,
+    default=False,
+    help="Whether to save the configuration file to the current directory. Defaults to False.",
+)
+@click.option(
+    "-p",
+    "--print-output",
+    "print_output",
+    is_flag=True,
+    default=False,
+    help="Whether to print the configuration file to the console. Defaults to False.",
+)
+@click.option(
+    "-o",
+    "--output-path",
+    default=None,
+    help="The directory to save the configuration file to. If not specified, defaults to the current working directory.",
+)
 def get(config_name: str, save: bool, print_output: bool, output_path: str):
     """
     Generate a default configuration file based on the name of the configuration to use.

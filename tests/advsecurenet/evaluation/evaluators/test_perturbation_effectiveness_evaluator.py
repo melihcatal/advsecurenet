@@ -1,7 +1,8 @@
 import pytest
 
-from advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator import \
-    PerturbationEffectivenessEvaluator
+from advsecurenet.evaluation.evaluators.perturbation_effectiveness_evaluator import (
+    PerturbationEffectivenessEvaluator,
+)
 
 
 @pytest.fixture
@@ -55,11 +56,13 @@ def test_get_results(evaluator):
 @pytest.mark.essential
 def test_calculate_perturbation_effectiveness_score(evaluator):
     score = evaluator.calculate_perturbation_effectiveness_score(
-        attack_success_rate=0.8, perturbation_distance=0.5)
+        attack_success_rate=0.8, perturbation_distance=0.5
+    )
     assert score == 0.8 / 0.5
 
     score = evaluator.calculate_perturbation_effectiveness_score(
-        attack_success_rate=0.6, perturbation_distance=0.4)
+        attack_success_rate=0.6, perturbation_distance=0.4
+    )
     assert score == 0.6 / 0.4
 
 

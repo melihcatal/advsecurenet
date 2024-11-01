@@ -40,7 +40,9 @@ def test_get_current_device_single(device_manager_single):
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 @patch("torch.cuda.current_device", return_value=1)
-def test_get_current_device_distributed(mock_current_device, device_manager_distributed):
+def test_get_current_device_distributed(
+    mock_current_device, device_manager_distributed
+):
     current_device = device_manager_distributed.get_current_device()
     assert current_device == torch.device("cuda:1")
     mock_current_device.assert_called_once()
@@ -59,7 +61,7 @@ def test_to_device_single(device_manager_single):
 @patch("torch.cuda.current_device", return_value=0)
 def test_to_device_distributed(mock_current_device, device_manager_distributed):
     tensor = torch.randn(3, 3)
-    with patch.object(tensor, 'to', return_value=MagicMock()) as mock_to:
+    with patch.object(tensor, "to", return_value=MagicMock()) as mock_to:
         device_tensor = device_manager_distributed.to_device(tensor)
         mock_current_device.assert_called_once()
         mock_to.assert_called_once_with(torch.device("cuda:0"))
@@ -79,12 +81,17 @@ def test_to_device_multiple_tensors_single(device_manager_single):
 @pytest.mark.advsecurenet
 @pytest.mark.essential
 @patch("torch.cuda.current_device", return_value=0)
-def test_to_device_multiple_tensors_distributed(mock_current_device, device_manager_distributed):
+def test_to_device_multiple_tensors_distributed(
+    mock_current_device, device_manager_distributed
+):
     tensor1 = torch.randn(3, 3)
     tensor2 = torch.randn(2, 2)
 
-    with patch.object(tensor1, 'to', return_value=MagicMock()) as mock_to_tensor1, \
-            patch.object(tensor2, 'to', return_value=MagicMock()) as mock_to_tensor2:
+    with patch.object(
+        tensor1, "to", return_value=MagicMock()
+    ) as mock_to_tensor1, patch.object(
+        tensor2, "to", return_value=MagicMock()
+    ) as mock_to_tensor2:
 
         device_tensors = device_manager_distributed.to_device(tensor1, tensor2)
 

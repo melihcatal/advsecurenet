@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import AttackConfig
 
 
 class LotsAttackMode(Enum):
@@ -11,6 +10,7 @@ class LotsAttackMode(Enum):
         - ITERATIVE: Iterative mode. Runs the attack for the specified number of iterations.
         - SINGLE: Single mode. Runs the attack for a single iteration.
     """
+
     ITERATIVE = "iterative"
     SINGLE = "single"
 
@@ -28,9 +28,10 @@ class LotsAttackConfig(AttackConfig):
         verbose (bool): Whether to print verbose output during the attack. Defaults to True.
         device (torch.device): The device to be used for the attack.
     """
+
     deep_feature_layer: str
     mode: LotsAttackMode = LotsAttackMode.SINGLE
     epsilon: float = 0.1
-    learning_rate: float = 1./255.
+    learning_rate: float = 1.0 / 255.0
     max_iterations: int = 1000
     verbose: bool = True

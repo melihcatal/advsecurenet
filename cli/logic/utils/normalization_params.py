@@ -61,4 +61,5 @@ def _validate_dataset_name(dataset_name: str) -> None:
     params = NormalizationParameters.get_params(dataset_name)
     if params is None:
         raise click.ClickException(
-            f"Dataset '{dataset_name}' is not supported. Supported datasets are: {NormalizationParameters.list_datasets()}")
+            f"Dataset '{dataset_name}' is not supported. Supported datasets are: {NormalizationParameters.list_datasets()}"
+        )

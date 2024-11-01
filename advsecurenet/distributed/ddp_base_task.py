@@ -5,7 +5,7 @@ from advsecurenet.models.base_model import BaseModel
 
 
 class DDPBaseTask:
-    """ 
+    """
     Base class for DistributedDataParallel tasks.
 
     Args:
@@ -23,7 +23,7 @@ class DDPBaseTask:
         """
         Initializes the device based on the rank of the current process.
 
-        Returns:   
+        Returns:
             torch.device: The device.
         """
         torch.cuda.set_device(self._rank)

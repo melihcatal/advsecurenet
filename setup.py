@@ -2,23 +2,23 @@ import os
 
 from setuptools import find_packages, setup
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding='utf-8') as f:
+with open(os.path.join(os.path.dirname(__file__), "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 
 setup(
     name="advsecurenet",
-    version="0.1.8",
+    version="0.2.3",
     description="AdvSecureNet | Adversarial Secure Networks | Machine Learning Security",
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     author="Melih Catal",
-    author_email="melih.catal@uzh.ch",
+    author_email="melihcatal@gmail.com",
     url="https://github.com/melihcatal/advsecurenet",
     packages=find_packages(),
     include_package_data=True,
-    package_data={'': ['*.yml']},
-    python_requires='>=3.10',
+    package_data={"": ["*.yml"]},
+    python_requires=">=3.10",
     install_requires=[
         "click",
         "torch",
@@ -32,11 +32,11 @@ setup(
         "scikit-image",
         "einops",
         "filetype",
-        "requests"
+        "requests",
     ],
     entry_points={
-        'console_scripts': [
-            'advsecurenet=cli.cli:main',
+        "console_scripts": [
+            "advsecurenet=cli.cli:main",
         ],
     },
 )

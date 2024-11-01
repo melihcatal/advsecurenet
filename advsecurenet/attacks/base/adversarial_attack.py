@@ -4,8 +4,7 @@ from typing import Tuple, Union
 import torch
 
 from advsecurenet.models.base_model import BaseModel
-from advsecurenet.shared.types.configs.attack_configs.attack_config import \
-    AttackConfig
+from advsecurenet.shared.types.configs.attack_configs.attack_config import AttackConfig
 from advsecurenet.utils.device_manager import DeviceManager
 
 
@@ -16,17 +15,15 @@ class AdversarialAttack(ABC):
 
     def __init__(self, config: AttackConfig) -> None:
         self.device_manager = DeviceManager(
-            device=config.device.processor,
-            distributed_mode=config.device.use_ddp)
+            device=config.device.processor, distributed_mode=config.device.use_ddp
+        )
         self.name: str = self.__class__.__name__
         self.targeted: bool = config.targeted
 
     @abstractmethod
-    def attack(self,
-               model: BaseModel,
-               x: torch.Tensor,
-               y: torch.Tensor,
-               *args, **kwargs) -> Union[torch.Tensor, Tuple[torch.Tensor, bool]]:
+    def attack(
+        self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs
+    ) -> Union[torch.Tensor, Tuple[torch.Tensor, bool]]:
         """
         Performs the attack on the specified model and input.
 

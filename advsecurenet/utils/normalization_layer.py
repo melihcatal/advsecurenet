@@ -10,10 +10,12 @@ class NormalizationLayer(nn.Module):
     Each channel can have its own mean and standard deviation.
     """
 
-    def __init__(self,
-                 mean: Union[List[float], torch.Tensor],
-                 std: Union[List[float], torch.Tensor]):
-        """ 
+    def __init__(
+        self,
+        mean: Union[List[float], torch.Tensor],
+        std: Union[List[float], torch.Tensor],
+    ):
+        """
         Constructor for the normalization layer.
 
         Args:
@@ -29,7 +31,7 @@ class NormalizationLayer(nn.Module):
         Forward pass of the normalization layer.
         Assumes x is in shape [N, C, H, W].
 
-        Args: 
+        Args:
             x (torch.Tensor): Input tensor to normalize.
 
         Returns:

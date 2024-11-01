@@ -68,7 +68,8 @@ class CLITrainer:
 
         if self.config.training.verbose:
             click.echo(
-                f"Running DDP training on {world_size} GPUs with the following IDs: {self.config.device.gpu_ids}")
+                f"Running DDP training on {world_size} GPUs with the following IDs: {self.config.device.gpu_ids}"
+            )
 
         ddp_trainer.run()
 
@@ -119,22 +120,28 @@ class CLITrainer:
         """
         Initialize the dataloader for single process training.
 
-        Returns:      
+        Returns:
 
-            torch.utils.data.DataLoader: The training dataloader.      
+            torch.utils.data.DataLoader: The training dataloader.
         """
         train_data_loader = get_dataloader(
             config=self.config.dataloader,
             dataset=self.train_dataset,
-            dataset_type='train',
-            use_ddp=self.config.device.use_ddp
+            dataset_type="train",
+            use_ddp=self.config.device.use_ddp,
         )
         return train_data_loader
 
-    def _prepare_train_config(self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader) -> TrainConfig:
+    def _prepare_train_config(
+        self, model: BaseModel, train_data_loader: torch.utils.data.DataLoader
+    ) -> TrainConfig:
         """
         Prepare the training config.
         """
         config = TrainConfig(
-            model=model, train_loader=train_data_loader, **asdict(self.config.training), **asdict(self.config.device))
+            model=model,
+            train_loader=train_data_loader,
+            **asdict(self.config.training),
+            **asdict(self.config.device),
+        )
         return config

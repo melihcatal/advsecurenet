@@ -8,7 +8,9 @@ from cli.logic.evaluation.test.tester import CLITester
 @patch("cli.logic.evaluation.test.tester.get_datasets")
 @patch("cli.logic.evaluation.test.tester.get_dataloader")
 @patch("cli.logic.evaluation.test.tester.Tester")
-def test_clitester_test(mock_Tester, mock_get_dataloader, mock_get_datasets, mock_create_model):
+def test_clitester_test(
+    mock_Tester, mock_get_dataloader, mock_get_datasets, mock_create_model
+):
     # Setup
     mock_config = MagicMock()
     mock_model = MagicMock()
@@ -27,15 +29,17 @@ def test_clitester_test(mock_Tester, mock_get_dataloader, mock_get_datasets, moc
     mock_get_dataloader.assert_called_once_with(
         mock_config.dataloader,
         dataset=mock_test_dataset,
-        dataset_type='test',
+        dataset_type="test",
     )
-    mock_Tester.assert_called_once_with(TestConfig(
-        model=mock_model,
-        test_loader=mock_test_loader,
-        criterion=mock_config.testing.criterion,
-        processor=mock_config.device.processor,
-        topk=mock_config.testing.topk,
-    ))
+    mock_Tester.assert_called_once_with(
+        TestConfig(
+            model=mock_model,
+            test_loader=mock_test_loader,
+            criterion=mock_config.testing.criterion,
+            processor=mock_config.device.processor,
+            topk=mock_config.testing.topk,
+        )
+    )
     mock_Tester.return_value.test.assert_called_once()
 
 

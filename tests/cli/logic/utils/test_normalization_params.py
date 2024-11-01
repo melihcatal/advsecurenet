@@ -4,8 +4,10 @@ import click
 import pytest
 
 from advsecurenet.shared.normalization_params import NormalizationParameters
-from cli.logic.utils.normalization_params import (_validate_dataset_name,
-                                                  cli_normalization_params)
+from cli.logic.utils.normalization_params import (
+    _validate_dataset_name,
+    cli_normalization_params,
+)
 
 
 @pytest.mark.cli
@@ -13,7 +15,7 @@ from cli.logic.utils.normalization_params import (_validate_dataset_name,
 @patch("click.echo")
 def test_cli_normalization_params_no_dataset(mock_echo):
     datasets = ["CIFAR-10", "MNIST", "ImageNet"]
-    with patch.object(NormalizationParameters, 'DATASETS', datasets):
+    with patch.object(NormalizationParameters, "DATASETS", datasets):
         cli_normalization_params(None)
 
     # Check that the available datasets are printed
@@ -39,16 +41,21 @@ def test_cli_normalization_params_valid_dataset(mock_get_params, mock_secho):
 
     mock_get_params.assert_called_with(dataset_name)
     mock_secho.assert_any_call(
-        f"Normalization parameters for {dataset_name}:", bold=True)
+        f"Normalization parameters for {dataset_name}:", bold=True
+    )
     mock_secho.assert_any_call(f"Mean: {normalization_params.mean}", bold=True)
     mock_secho.assert_any_call(
-        f"Standard Deviation: {normalization_params.std}", bold=True)
+        f"Standard Deviation: {normalization_params.std}", bold=True
+    )
     click.echo("")
 
 
 @pytest.mark.cli
 @pytest.mark.essential
-@patch("advsecurenet.shared.normalization_params.NormalizationParameters.get_params", return_value=None)
+@patch(
+    "advsecurenet.shared.normalization_params.NormalizationParameters.get_params",
+    return_value=None,
+)
 def test_validate_dataset_name_invalid(mock_get_params):
     dataset_name = "UnsupportedDataset"
     with pytest.raises(click.ClickException):

@@ -8,8 +8,9 @@ import torch
 from advsecurenet.attacks.gradient_based.fgsm import FGSM
 from advsecurenet.models.base_model import BaseModel
 from advsecurenet.models.model_factory import ModelFactory
-from advsecurenet.shared.types.configs.attack_configs.fgsm_attack_config import \
-    FgsmAttackConfig
+from advsecurenet.shared.types.configs.attack_configs.fgsm_attack_config import (
+    FgsmAttackConfig,
+)
 from advsecurenet.shared.types.configs.device_config import DeviceConfig
 from advsecurenet.shared.types.configs.model_config import CreateModelConfig
 
@@ -39,7 +40,7 @@ def mock_model(device):
             model_name="CustomCifar10Model",
             num_classes=10,
             num_input_channels=3,
-            pretrained=False
+            pretrained=False,
         )
     )
     model = model.to(device)

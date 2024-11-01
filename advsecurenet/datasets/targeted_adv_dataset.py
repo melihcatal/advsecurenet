@@ -15,11 +15,12 @@ class AdversarialDataset(BaseDataset):
         target_images (Optional[List[torch.Tensor]], optional): The target images for the adversarial attack. Defaults to None.
     """
 
-    def __init__(self,
-                 base_dataset: BaseDataset,
-                 target_labels: Optional[Union[List[int],
-                                               torch.Tensor]] = None,
-                 target_images: Optional[Union[List[torch.Tensor], torch.Tensor]] = None):
+    def __init__(
+        self,
+        base_dataset: BaseDataset,
+        target_labels: Optional[Union[List[int], torch.Tensor]] = None,
+        target_images: Optional[Union[List[torch.Tensor], torch.Tensor]] = None,
+    ):
         super().__init__()
         self.base_dataset = base_dataset
 
@@ -31,7 +32,11 @@ class AdversarialDataset(BaseDataset):
             raise ValueError(
                 f"The target labels and the base dataset must have the same length. Target labels: {len(target_labels)}, Base dataset: {len(base_dataset)}"
             )
-        if target_images is not None and target_labels is not None and len(target_images) != len(target_labels):
+        if (
+            target_images is not None
+            and target_labels is not None
+            and len(target_images) != len(target_labels)
+        ):
             raise ValueError(
                 f"The target images and target labels must have the same length. Target images: {len(target_images)}, Target labels: {len(target_labels)}"
             )
@@ -52,7 +57,9 @@ class AdversarialDataset(BaseDataset):
         """
         images, true_labels = self.base_dataset[idx]
         target_labels = self.target_labels[idx] if self.target_labels else true_labels
-        target_images = self.target_images[idx] if self.target_images is not None else images
+        target_images = (
+            self.target_images[idx] if self.target_images is not None else images
+        )
         return images, true_labels, target_images, target_labels
 
     def get_dataset_class(self):

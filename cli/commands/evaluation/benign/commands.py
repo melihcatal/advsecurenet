@@ -9,14 +9,39 @@ def benign():
 
 
 @benign.command()
-@click.option('-c', '--config', type=click.Path(exists=True), default=None, help='Path to the evaluation configuration yml file.')
-@click.option('--model-name', default=None, help='Name of the model to evaluate (e.g. "resnet18").')
-@click.option('--dataset-name', default=None, help='Name of the dataset to evaluate on (e.g. "cifar10").')
-@click.option('--model-weights', default=None, help='Path to the model weights to evaluate. Defaults to the weights directory.')
-@click.option('-p', '--processor', default=None, help='The processor to evaluate on. Defaults to CPU')
-@click.option('--batch-size', default=None, help='Batch size for evaluation.')
-@click.option('--loss', default=None, help='Loss function to use for evaluation.')
-@click.option('--topk', '-tk', default=None, help='Top k accuracy to calculate.', type=int)
+@click.option(
+    "-c",
+    "--config",
+    type=click.Path(exists=True),
+    default=None,
+    help="Path to the evaluation configuration yml file.",
+)
+@click.option(
+    "--model-name",
+    default=None,
+    help='Name of the model to evaluate (e.g. "resnet18").',
+)
+@click.option(
+    "--dataset-name",
+    default=None,
+    help='Name of the dataset to evaluate on (e.g. "cifar10").',
+)
+@click.option(
+    "--model-weights",
+    default=None,
+    help="Path to the model weights to evaluate. Defaults to the weights directory.",
+)
+@click.option(
+    "-p",
+    "--processor",
+    default=None,
+    help="The processor to evaluate on. Defaults to CPU",
+)
+@click.option("--batch-size", default=None, help="Batch size for evaluation.")
+@click.option("--loss", default=None, help="Loss function to use for evaluation.")
+@click.option(
+    "--topk", "-tk", default=None, help="Top k accuracy to calculate.", type=int
+)
 def test(config: str, **kwargs):
     """
     Command to test a model on a dataset. This command does not evaluate the model on adversarial examples.

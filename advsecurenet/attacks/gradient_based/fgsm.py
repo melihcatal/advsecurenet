@@ -23,7 +23,9 @@ class FGSM(AdversarialAttack):
         self.epsilon: float = config.epsilon
         super().__init__(config)
 
-    def attack(self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs) -> torch.Tensor:
+    def attack(
+        self, model: BaseModel, x: torch.Tensor, y: torch.Tensor, *args, **kwargs
+    ) -> torch.Tensor:
         """
         Generates adversarial examples using the FGSM attack.
 
@@ -47,7 +49,9 @@ class FGSM(AdversarialAttack):
         perturbed_image = self._fgsm_attack(x, x.grad.data)
         return perturbed_image.detach()
 
-    def _fgsm_attack(self, image: torch.Tensor, data_grad: torch.Tensor) -> torch.Tensor:
+    def _fgsm_attack(
+        self, image: torch.Tensor, data_grad: torch.Tensor
+    ) -> torch.Tensor:
         # Collect the element-wise sign of the data gradient
         sign_data_grad = data_grad.sign()
 

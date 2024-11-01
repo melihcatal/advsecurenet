@@ -13,6 +13,7 @@ class TestConfig:
     """
     This dataclass is used to store the configuration of the test CLI.
     """
+
     model: BaseModel
     test_loader: DataLoader
     criterion: Union[str, nn.Module] = "cross_entropy"

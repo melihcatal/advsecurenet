@@ -24,7 +24,12 @@ def list():
 
 
 @normalization.command()
-@click.option('-d', '--dataset-name', default=None, help='Name of the dataset to inspect (e.g. "CIFAR10").')
+@click.option(
+    "-d",
+    "--dataset-name",
+    default=None,
+    help='Name of the dataset to inspect (e.g. "CIFAR10").',
+)
 def get(dataset_name: str):
     """Command to list the normalization values for a dataset.
 

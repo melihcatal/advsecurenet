@@ -3,8 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from advsecurenet.datasets.base_dataset import BaseDataset
-from advsecurenet.shared.types.configs.dataloader_config import \
-    DataLoaderConfig
+from advsecurenet.shared.types.configs.dataloader_config import DataLoaderConfig
 from cli.shared.utils.dataloader import get_dataloader
 
 
@@ -28,7 +27,7 @@ def test_get_dataloader_default(mock_secho, mock_create_dataloader):
             shuffle=mock_loader_config.shuffle,
             drop_last=mock_loader_config.drop_last,
             pin_memory=mock_loader_config.pin_memory,
-            sampler=None
+            sampler=None,
         )
     )
     assert dataloader == mock_create_dataloader()
@@ -44,8 +43,7 @@ def test_get_dataloader_train(mock_secho, mock_create_dataloader):
     mock_loader_config = MagicMock()
     mock_config.train = mock_loader_config
 
-    dataloader = get_dataloader(
-        mock_config, mock_dataset, dataset_type="train")
+    dataloader = get_dataloader(mock_config, mock_dataset, dataset_type="train")
 
     mock_create_dataloader.assert_called_once_with(
         DataLoaderConfig(
@@ -55,7 +53,7 @@ def test_get_dataloader_train(mock_secho, mock_create_dataloader):
             shuffle=mock_loader_config.shuffle,
             drop_last=mock_loader_config.drop_last,
             pin_memory=mock_loader_config.pin_memory,
-            sampler=None
+            sampler=None,
         )
     )
     assert dataloader == mock_create_dataloader()
@@ -81,7 +79,7 @@ def test_get_dataloader_test(mock_secho, mock_create_dataloader):
             shuffle=mock_loader_config.shuffle,
             drop_last=mock_loader_config.drop_last,
             pin_memory=mock_loader_config.pin_memory,
-            sampler=None
+            sampler=None,
         )
     )
     assert dataloader == mock_create_dataloader()
@@ -95,8 +93,16 @@ def test_get_dataloader_test(mock_secho, mock_create_dataloader):
 @patch("torch.distributed.is_initialized", return_value=True)
 @patch("torch.distributed.get_rank", return_value=0)
 @patch("torch.utils.data.distributed.DistributedSampler", autospec=True)
-@patch('cli.shared.utils.dataloader.logger')
-def test_get_dataloader_ddp(mock_logger, mock_DistributedSampler, mock_get_rank, mock_is_initialized, mock_get_world_size, mock_secho, mock_create_dataloader):
+@patch("cli.shared.utils.dataloader.logger")
+def test_get_dataloader_ddp(
+    mock_logger,
+    mock_DistributedSampler,
+    mock_get_rank,
+    mock_is_initialized,
+    mock_get_world_size,
+    mock_secho,
+    mock_create_dataloader,
+):
     mock_config = MagicMock()
     mock_dataset = MagicMock(spec=BaseDataset)
     mock_loader_config = MagicMock()
@@ -104,10 +110,12 @@ def test_get_dataloader_ddp(mock_logger, mock_DistributedSampler, mock_get_rank,
     mock_loader_config.shuffle = True
 
     dataloader = get_dataloader(
-        mock_config, mock_dataset, dataset_type="train", use_ddp=True)
+        mock_config, mock_dataset, dataset_type="train", use_ddp=True
+    )
 
     mock_logger.warning.assert_called_once_with(
-        "Disabling shuffle for Distributed Data Parallel.")
+        "Disabling shuffle for Distributed Data Parallel."
+    )
     assert dataloader == mock_create_dataloader()
 
 

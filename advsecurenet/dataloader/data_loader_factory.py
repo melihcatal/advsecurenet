@@ -9,8 +9,7 @@ from torch.utils.data import DataLoader as TorchDataLoader
 from torch.utils.data import Dataset as TorchDataset
 from torch.utils.data.distributed import DistributedSampler
 
-from advsecurenet.shared.types.configs.dataloader_config import \
-    DataLoaderConfig
+from advsecurenet.shared.types.configs.dataloader_config import DataLoaderConfig
 
 
 def dataclass_to_dict(instance):
@@ -34,12 +33,14 @@ class DataLoaderFactory:
     """
     The DataLoaderFactory class that creates a DataLoader for the given dataset.
 
-    Attributes: 
+    Attributes:
         None
     """
+
     @staticmethod
-    def create_dataloader(config: Optional[DataLoaderConfig] = None,
-                          **kwargs) -> TorchDataLoader:
+    def create_dataloader(
+        config: Optional[DataLoaderConfig] = None, **kwargs
+    ) -> TorchDataLoader:
         """
         A static method that creates a DataLoader for the given dataset with the given parameters.
 
@@ -70,8 +71,7 @@ class DataLoaderFactory:
             config = DataLoaderConfig(**kwargs)
 
         if not isinstance(config.dataset, TorchDataset):
-            raise ValueError(
-                "Invalid dataset type provided. Expected TorchDataset.")
+            raise ValueError("Invalid dataset type provided. Expected TorchDataset.")
 
         if config.sampler is not None and config.shuffle:
             config.shuffle = False

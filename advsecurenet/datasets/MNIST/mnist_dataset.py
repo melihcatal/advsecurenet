@@ -4,8 +4,7 @@ from torchvision import datasets
 
 from advsecurenet.datasets.base_dataset import BaseDataset
 from advsecurenet.shared.normalization_params import NormalizationParameters
-from advsecurenet.shared.types.configs.preprocess_config import \
-    PreprocessConfig
+from advsecurenet.shared.types.configs.preprocess_config import PreprocessConfig
 
 
 class MNISTDataset(BaseDataset):
@@ -31,6 +30,7 @@ class MNISTDataset(BaseDataset):
         self.crop_size = (28, 28)
         self.name = "mnist"
         self.num_classes = 10
+        self.num_input_channels = 1
 
     def get_dataset_class(self):
         return datasets.MNIST

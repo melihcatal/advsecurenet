@@ -2,11 +2,11 @@ from dataclasses import fields, is_dataclass
 from typing import Optional, Type, TypeVar, Union, get_args, get_origin
 
 # This is needed to support recursive dataclass instantiation
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def flatten_dataclass(instance: object) -> dict:
-    """ 
+    """
     Recursively flatten dataclass instances into a single dictionary. Recursion is used to flatten nested dataclasses.
 
     Args:
@@ -28,9 +28,11 @@ def flatten_dataclass(instance: object) -> dict:
     return result
 
 
-def filter_for_dataclass(data: Union[dict, object], dataclass_type: type, convert: Optional[bool] = False) -> Union[dict, object]:
+def filter_for_dataclass(
+    data: Union[dict, object], dataclass_type: type, convert: Optional[bool] = False
+) -> Union[dict, object]:
     """
-    Filter a dictionary to only include keys that are valid fields of the given dataclass type. 
+    Filter a dictionary to only include keys that are valid fields of the given dataclass type.
 
     Args:
         data (Union[dict, dataclass]): The data to filter. If a dataclass instance is provided, it will be flattened first.
@@ -43,8 +45,7 @@ def filter_for_dataclass(data: Union[dict, object], dataclass_type: type, conver
     if is_dataclass(data):
         data = flatten_dataclass(data)
     valid_keys = {field.name for field in fields(dataclass_type)}
-    filtered_data = {key: value for key,
-                     value in data.items() if key in valid_keys}
+    filtered_data = {key: value for key, value in data.items() if key in valid_keys}
     if convert:
         return recursive_dataclass_instantiation(dataclass_type, filtered_data)
     return filtered_data
@@ -65,8 +66,11 @@ def recursive_dataclass_instantiation(cls: Type[T], data: dict) -> T:
         return data
 
     field_types = {f.name: f.type for f in fields(cls)}
-    new_data = {key: process_field(
-        field_types[key], value) for key, value in data.items() if key in field_types}
+    new_data = {
+        key: process_field(field_types[key], value)
+        for key, value in data.items()
+        if key in field_types
+    }
 
     return cls(**new_data)
 
@@ -109,12 +113,12 @@ def is_list_of_dataclass(field_type: Type, value) -> bool:
 
 
 def process_generic_type(origin, args, value):
-    additional_fields = {field.name: arg for field,
-                         arg in zip(fields(origin), args)}
+    additional_fields = {field.name: arg for field, arg in zip(fields(origin), args)}
     for additional_key, additional_type in additional_fields.items():
         if additional_key in value and isinstance(value[additional_key], dict):
             value[additional_key] = recursive_dataclass_instantiation(
-                additional_type, value[additional_key])
+                additional_type, value[additional_key]
+            )
         else:
             value[additional_key] = value.get(additional_key)
     return recursive_dataclass_instantiation(origin, value)

@@ -30,10 +30,11 @@ def get_loss_function(criterion: Union[str, nn.Module], **kwargs) -> nn.Module:
         if isinstance(criterion, str):
             if criterion.upper() not in Loss.__members__:
                 raise ValueError(
-                    "Unsupported loss function! Choose from: " + ", ".join([e.name for e in Loss]))
+                    "Unsupported loss function! Choose from: "
+                    + ", ".join([e.name for e in Loss])
+                )
             criterion_function_class = Loss[criterion.upper()].value
             criterion = criterion_function_class(**kwargs)
         elif not isinstance(criterion, nn.Module):
-            raise ValueError(
-                "Criterion must be a string or an instance of nn.Module.")
+            raise ValueError("Criterion must be a string or an instance of nn.Module.")
     return cast(nn.Module, criterion)

@@ -7,12 +7,10 @@ from advsecurenet.shared.types.configs.model_config import CustomModelConfig
 
 class CustomModel(BaseModel):
     """
-    This class is used to load a custom model. It is a subclass of BaseModel. 
+    This class is used to load a custom model. It is a subclass of BaseModel.
     """
 
-    def __init__(self,
-                 config: CustomModelConfig,
-                 **kwargs):
+    def __init__(self, config: CustomModelConfig, **kwargs):
         self._custom_models_path = config.custom_models_path
         self._model_name = config.model_name
         self._num_classes = config.num_classes
@@ -35,18 +33,24 @@ class CustomModel(BaseModel):
         """
 
         # Dynamically import the custom model based on its name
-        custom_module_name = f"advsecurenet.models.{self._custom_models_path}.{self._model_name}"
+        custom_module_name = (
+            f"advsecurenet.models.{self._custom_models_path}.{self._model_name}"
+        )
         custom_module = importlib.import_module(custom_module_name)
 
         # Assume the model class inside the custom model file has the same name as the file
         if not hasattr(custom_module, self._model_name):
             raise ValueError(
-                f"Model class {self._model_name} not found in module {custom_module_name}")
+                f"Model class {self._model_name} not found in module {custom_module_name}"
+            )
 
         model_class = getattr(custom_module, self._model_name)
 
         self.model = model_class(
-            num_classes=self._num_classes, num_input_channels=self._num_input_channels, **self._kwargs)
+            num_classes=self._num_classes,
+            num_input_channels=self._num_input_channels,
+            **self._kwargs,
+        )
 
         # Perform necessary modifications after model load
         self.modify_model()
@@ -68,19 +72,24 @@ class CustomModel(BaseModel):
         """
 
         # Path to the CustomModels directory
-        custom_models_dir = os.path.join(os.path.dirname(
-            os.path.abspath(__file__)), "CustomModels")
+        custom_models_dir = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "CustomModels"
+        )
 
         # List all python files in the CustomModels directory
-        all_files = [f for f in os.listdir(custom_models_dir) if os.path.isfile(
-            os.path.join(custom_models_dir, f)) and f.endswith('.py')]
+        all_files = [
+            f
+            for f in os.listdir(custom_models_dir)
+            if os.path.isfile(os.path.join(custom_models_dir, f)) and f.endswith(".py")
+        ]
 
         # Extract the model names by stripping the '.py' from filenames
         model_names = [os.path.splitext(f)[0] for f in all_files]
 
         # remove __init__ from model names
         model_names = [
-            model_name for model_name in model_names if model_name != "__init__"]
+            model_name for model_name in model_names if model_name != "__init__"
+        ]
 
         return model_names
 
@@ -89,5 +98,4 @@ class CustomModel(BaseModel):
         """
         Not applicable for custom models.
         """
-        raise NotImplementedError(
-            "This method is not applicable for custom models.")
+        raise NotImplementedError("This method is not applicable for custom models.")

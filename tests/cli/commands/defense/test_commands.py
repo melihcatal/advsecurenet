@@ -12,7 +12,7 @@ def runner():
 @pytest.mark.cli
 @pytest.mark.essential
 def test_defense_adversarial_training_help(runner):
-    result = runner.invoke(defense, ['adversarial-training', '--help'])
+    result = runner.invoke(defense, ["adversarial-training", "--help"])
     assert result.exit_code == 0
     assert "Usage:" in result.output
     assert "Command to execute adversarial training." in result.output

@@ -7,8 +7,7 @@ import torch.distributed as dist
 from tqdm.auto import tqdm
 
 from advsecurenet.attacks.attacker import Attacker, AttackerConfig
-from advsecurenet.dataloader.distributed_eval_sampler import \
-    DistributedEvalSampler
+from advsecurenet.dataloader.distributed_eval_sampler import DistributedEvalSampler
 from advsecurenet.distributed.ddp_base_task import DDPBaseTask
 
 
@@ -25,13 +24,10 @@ class DDPAttacker(DDPBaseTask, Attacker):
     def __init__(self, config: AttackerConfig, rank: int, world_size: int) -> None:
         self._rank = rank
         self._world_size = world_size
-        DDPBaseTask.__init__(self,
-                             model=config.model,
-                             rank=rank,
-                             world_size=world_size
-                             )
+        DDPBaseTask.__init__(self, model=config.model, rank=rank, world_size=world_size)
         config.dataloader.sampler = DistributedEvalSampler(
-            config.dataloader.dataset, world_size, rank)
+            config.dataloader.dataset, world_size, rank
+        )
         Attacker.__init__(self, config)
 
     def execute(self):
@@ -52,8 +48,8 @@ class DDPAttacker(DDPBaseTask, Attacker):
         """
         gathered_adv_images = []
         for rank in range(world_size):
-            output_path = f'./adv_images_{rank}.pkl'
-            with open(output_path, 'rb') as f:
+            output_path = f"./adv_images_{rank}.pkl"
+            with open(output_path, "rb") as f:
                 batch_images = pickle.load(f)
                 gathered_adv_images.extend(batch_images)
             os.remove(output_path)
@@ -63,8 +59,8 @@ class DDPAttacker(DDPBaseTask, Attacker):
         """
         Store results temporarily for gathering.
         """
-        output_path = f'./adv_images_{self._rank}.pkl'
-        with open(output_path, 'wb') as f:
+        output_path = f"./adv_images_{self._rank}.pkl"
+        with open(output_path, "wb") as f:
             pickle.dump(adv_images, f)
 
     def _get_iterator(self) -> iter:
@@ -76,7 +72,14 @@ class DDPAttacker(DDPBaseTask, Attacker):
         """
         if self._rank == 0:
             # Only initialize tqdm in the master process
-            return tqdm(self._dataloader, leave=False, position=1, unit="batch", desc="Generating adversarial samples", colour="red")
+            return tqdm(
+                self._dataloader,
+                leave=False,
+                position=1,
+                unit="batch",
+                desc="Generating adversarial samples",
+                colour="red",
+            )
         else:
             return self._dataloader
 
@@ -85,4 +88,6 @@ class DDPAttacker(DDPBaseTask, Attacker):
         dist.all_reduce(local_results, op=dist.ReduceOp.AVG)
         if self._rank == 0:
             click.secho(
-                f"{name.replace('_', ' ').title()}: {local_results.item():.4f}", fg='green')
+                f"{name.replace('_', ' ').title()}: {local_results.item():.4f}",
+                fg="green",
+            )

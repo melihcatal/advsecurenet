@@ -25,7 +25,13 @@ class RobustnessGapEvaluator(BaseEvaluator):
         self.total_correct_adv = 0
         self.total_samples = 0
 
-    def update(self, model: BaseModel, original_images: torch.Tensor, true_labels: torch.Tensor, adversarial_images: torch.Tensor):
+    def update(
+        self,
+        model: BaseModel,
+        original_images: torch.Tensor,
+        true_labels: torch.Tensor,
+        adversarial_images: torch.Tensor,
+    ):
         """
         Updates the evaluator with new data for streaming mode.
 
@@ -35,7 +41,8 @@ class RobustnessGapEvaluator(BaseEvaluator):
             adversarial_images (torch.Tensor): The adversarial images.
         """
         clean_accuracy, adversarial_accuracy = self._calculate_acc(
-            model, original_images, adversarial_images, true_labels)
+            model, original_images, adversarial_images, true_labels
+        )
 
         self.total_correct_clean += clean_accuracy
         self.total_correct_adv += adversarial_accuracy
@@ -54,16 +61,22 @@ class RobustnessGapEvaluator(BaseEvaluator):
             return {
                 "clean_accuracy": clean_accuracy,
                 "adversarial_accuracy": adversarial_accuracy,
-                "robustness_gap": clean_accuracy - adversarial_accuracy
+                "robustness_gap": clean_accuracy - adversarial_accuracy,
             }
         else:
             return {
                 "clean_accuracy": 0.0,
                 "adversarial_accuracy": 0.0,
-                "robustness_gap": 0.0
+                "robustness_gap": 0.0,
             }
 
-    def _calculate_acc(self, model: BaseModel, clean_images: torch.Tensor, adv_images: torch.Tensor, labels: torch.Tensor) -> Tuple[float, float]:
+    def _calculate_acc(
+        self,
+        model: BaseModel,
+        clean_images: torch.Tensor,
+        adv_images: torch.Tensor,
+        labels: torch.Tensor,
+    ) -> Tuple[float, float]:
         """
         Calculates the number of correctly classified images.
         """
@@ -74,7 +87,6 @@ class RobustnessGapEvaluator(BaseEvaluator):
             clean_predict_labels = torch.argmax(clean_predictions, dim=1)
             adv_predict_labels = torch.argmax(adv_predictions, dim=1)
 
-            clean_correct_predictions = torch.sum(
-                clean_predict_labels == labels)
+            clean_correct_predictions = torch.sum(clean_predict_labels == labels)
             adv_correct_predictions = torch.sum(adv_predict_labels == labels)
         return clean_correct_predictions.item(), adv_correct_predictions.item()

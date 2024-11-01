@@ -7,6 +7,7 @@ class Scheduler(Enum):
     """
     Supported schedulers for learning rate decay. Taken from https://pytorch.org/docs/stable/optim.html
     """
+
     REDUCE_LR_ON_PLATEAU = lr_scheduler.ReduceLROnPlateau
     STEP_LR = lr_scheduler.StepLR
     MULTI_STEP_LR = lr_scheduler.MultiStepLR
