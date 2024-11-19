@@ -58,17 +58,17 @@ The following tables highlight how AdvSecureNet compares to other libraries in t
 
 | Feature                        | AdvSecureNet | IBM Art | AdverTorch | SecML[@melis2019secml] | FoolBox[@rauber2017foolbox] | Ares [@dong2020benchmarkingares] | CleverHans |
 | ------------------------------ | ------------ | ------- | ---------- | ---------------------- | --------------------------- | -------------------------------- | ---------- |
-| **Actively Maintained**        | ✅           | ✅      | ❌         | ❌                     | ❌                          | ❌                               | ❌         |
+| **Actively Maintained**        | Yes          | Yes     | No         | No                     | No                          | No                               | No         |
 | **Last Year of Contribution**  | 2024         | 2024    | 2022       | 2024                   | 2024                        | 2023                             | 2023       |
-| **PyTorch Support**            | ✅           | ✅      | ✅         | ✅                     | ✅                          | ✅                               | ✅         |
-| **TensorFlow Support**         | ❌           | ✅      | ❌         | ✅                     | ✅                          | ❌                               | ✅         |
+| **PyTorch Support**            | Yes          | Yes     | Yes        | Yes                    | Yes                         | Yes                              | Yes        |
+| **TensorFlow Support**         | No           | Yes     | No         | Yes                    | Yes                         | No                               | Yes        |
 | **Number of Attacks**          | 8            | 60      | 17         | 39                     | 31                          | 28                               | 8          |
 | **Number of Defenses**         | 2            | 37      | 3          | -                      | -                           | 3                                | 1          |
 | **Evaluation Metrics**         | 6            | 5       | -          | -                      | 2                           | 1                                | 2          |
-| **Built-in Multi-GPU Support** | ✅           | ❌      | ❌         | ❌                     | ❌                          | Limited                          | ❌         |
-| **API Usage**                  | ✅           | ✅      | ✅         | ✅                     | ✅                          | ✅                               | ✅         |
-| **CLI Usage**                  | ✅           | ❌      | ❌         | ❌                     | ❌                          | Limited                          | ❌         |
-| **External Config File**       | ✅           | ❌      | ❌         | ❌                     | ❌                          | Limited                          | ❌         |
+| **Built-in Multi-GPU Support** | Yes          | No      | No         | No                     | No                          | Limited                          | No         |
+| **API Usage**                  | Yes          | Yes     | Yes        | Yes                    | Yes                         | Yes                              | Yes        |
+| **CLI Usage**                  | Yes          | No      | No         | No                     | No                          | Limited                          | No         |
+| **External Config File**       | Yes          | No      | No         | No                     | No                          | Limited                          | No         |
 
 The following table highlights the performance of AdvSecureNet compared to other toolkits:
 
